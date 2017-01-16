@@ -37,6 +37,7 @@ public class PopulationManager : MonoBehaviour {
 		if(newPopulationSpawn >= 1 && population < maxPopulation)
 		{
 			updatePopulation(Mathf.RoundToInt(newPopulationSpawn));
+			newPopulationSpawn -= 1;
 		} else if(newPopulationSpawn <= -1)
 		{
 			updatePopulation(Mathf.RoundToInt(newPopulationSpawn));
@@ -51,11 +52,13 @@ public class PopulationManager : MonoBehaviour {
 	}
 
 	void getDemand()
+	// Retrieves demand from demand manager
 	{
 		residentialDemand = demandManager.getDemand("residential");
 	}
 
 	void updatePopulationIncreaseRate()
+	// Sets increase rate to residential demand
 	{
 		populationIncreaseRate = residentialDemand;
 	}

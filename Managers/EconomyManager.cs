@@ -10,9 +10,9 @@ public class EconomyManager : MonoBehaviour {
 	PopulationManager populationManager;
 
 	float balance;
-	public int rawIncome;
+	public int rawIncome; // Gross income
 	int numRoads;
-	float income;
+	float income; // Net income, after expenses
 	int population;
 	int buildings;
 
@@ -23,13 +23,11 @@ public class EconomyManager : MonoBehaviour {
 		populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
 	}
 
-	// Use this for initialization
 	void Start () 
 	{
 		income = rawIncome;
 	}
-	
-	// Update is called once per frame
+
 	void Update () 
 	{
 		numRoads = itemManager.getNumRoads();
@@ -40,11 +38,13 @@ public class EconomyManager : MonoBehaviour {
 	}
 
 	void updateBalance() 
+	// Reduces balance by income and time
 	{
 		balance += income * Time.deltaTime;
 	}
 
 	void updateIncome()
+	// Recalculates income
 	{
 		float roadExpenses = calculateRoadExpenses();
 		float populationIncome = calculatePopulationIncome();
@@ -53,11 +53,13 @@ public class EconomyManager : MonoBehaviour {
 	}
 
 	float calculatePopulationIncome()
+	// TODO: Make a more interesting algorithm here
 	{
 		return population;
 	}
 
 	float calculateRoadExpenses() 
+	// Calculates how much is spent on road maintenance
 	{
 		float rawRoadIncome = numRoads / 5;
 
@@ -65,11 +67,13 @@ public class EconomyManager : MonoBehaviour {
 	}
 
 	void reduceBalance(float amount)
+	// Decreases balance by "amount"
 	{
 		balance -= amount;
 	}
 
 	void getPopulation()
+	// Retrieves population from the pop manager
 	{
 		population = populationManager.population;
 	}

@@ -5,6 +5,7 @@ using UnityEngine;
 public class GenerateItems : MonoBehaviour {
 
 	public GameObject controller;
+	ItemManager itemManager;
 
 	public GameObject[] lrgCommercial;
 	public GameObject[] lrgIndustrial;
@@ -100,6 +101,8 @@ public class GenerateItems : MonoBehaviour {
 
 	void Start()
 		{
+		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
+
 		lrgCommercial = new GameObject[6] {lrgCommercial1, lrgCommercial2, lrgCommercial3, lrgCommercial4, lrgCommercial5, lrgCommercial6 };
 		lrgResidential = new GameObject[2] { lrgResidential1, lrgResidential2 };
 		lrgIndustrial = new GameObject[6] {lrgIndustrial1, lrgIndustrial2, lrgIndustrial3, lrgIndustrial4, lrgIndustrial5, lrgIndustrial6 };
@@ -121,6 +124,7 @@ public class GenerateItems : MonoBehaviour {
     public void GenerateButton1()
     {
     	int index;
+    	itemManager.addCommercial(5);
 		RandomGenerator(lrgCommercial, out index);
 		Object.Instantiate(lrgCommercial[index], controller.transform.position , Quaternion.identity);
     }
@@ -128,6 +132,7 @@ public class GenerateItems : MonoBehaviour {
 	public void GenerateButton2()
 	{
     	int index;
+    	itemManager.addResidential(5);
 		RandomGenerator(lrgResidential, out index);
 		Object.Instantiate(lrgResidential[index], controller.transform.position , Quaternion.identity);
     }
@@ -135,6 +140,7 @@ public class GenerateItems : MonoBehaviour {
 	public void GenerateButton3()
 	{
     	int index;
+    	itemManager.addIndustrial(5);
 		RandomGenerator(lrgIndustrial, out index);
 		Object.Instantiate(lrgIndustrial[index], controller.transform.position , Quaternion.identity);
     }
@@ -143,6 +149,7 @@ public class GenerateItems : MonoBehaviour {
 	public void GenerateButton4()
 	{
     	int index;
+    	itemManager.addCommercial(1);
 		RandomGenerator(smlCommercial, out index);
 		Object.Instantiate(smlCommercial[index], controller.transform.position , Quaternion.identity);
     }
@@ -151,14 +158,16 @@ public class GenerateItems : MonoBehaviour {
 	public void GenerateButton5()
 	{
     	int index;
-		RandomGenerator(smlResidential, out index);
+		itemManager.addIndustrial(1);
+		RandomGenerator(smlIndustrial, out index);
 		Object.Instantiate(smlIndustrial[index], controller.transform.position , Quaternion.identity);
     }
 
 	public void GenerateButton6()
 	{
     	int index;
-		RandomGenerator(smlIndustrial, out index);
+		itemManager.addResidential(1);
+		RandomGenerator(smlResidential, out index);
 		Object.Instantiate(smlResidential[index], controller.transform.position , Quaternion.identity);
     }
 

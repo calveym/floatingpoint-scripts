@@ -6,8 +6,6 @@ using VRTK;
 public class RoadDeleter : VRTK_InteractableObject {
 
 	private GameObject controller;
-	RoadPositionList roadList;
-	private List<Vector3> roadPositions;
 	private RoadGenerator roadGenerator;
 	private RaycastHit hit;
 	private Vector3 newPosition;
@@ -18,7 +16,6 @@ public class RoadDeleter : VRTK_InteractableObject {
 	protected override void Update () {
 		base.Update();
 		roadGenerator = GameObject.FindGameObjectsWithTag("table")[0].GetComponent<RoadGenerator>();
-		roadPositions = GameObject.FindGameObjectsWithTag("table")[0].GetComponent<RoadGenerator>().roadPositions;
 	}
 
 	public override void StartUsing (GameObject usingObject) {
