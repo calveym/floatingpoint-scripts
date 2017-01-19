@@ -8,17 +8,21 @@ public class ItemManager : MonoBehaviour {
 	EconomyManager economyManager;
 	RoadGenerator roadGenerator;
 
-	// Declare number of object types
+    // Declare number of object types
+    GameObject[] residential;
+    GameObject[] commercial;
+    GameObject[] industrial;
+    GameObject[] transport;
+    GameObject[] leisure;
 	int numResidential;
 	int numCommercial;
 	int numIndustrial;
 	int numRoads;
 
 	// Declare max capacity for object types
-	int commercialCap;
-	int residentialCap;
-	int industrialCap;
-
+	public int commercialCap;
+	public int residentialCap;
+	public int industrialCap;
 
 	void Awake ()
 	// Get manager instances
@@ -28,8 +32,14 @@ public class ItemManager : MonoBehaviour {
 	}
 
 	void Update ()
+    // Updates state
 	{
 		numRoads = getNumRoads();
+        residential = GameObject.FindGameObjectsWithTag("residential");
+        commercial = GameObject.FindGameObjectsWithTag("commercial");
+        industrial = GameObject.FindGameObjectsWithTag("industrial");
+        transport = GameObject.FindGameObjectsWithTag("transport");
+        leisure = GameObject.FindGameObjectsWithTag("leisure");
 	}
 
 	public int getNumRoads()

@@ -21,6 +21,7 @@ public class DemandManager : MonoBehaviour {
 	}
 
 	public float getDemand(string type)
+	// Returns demand, for use by other classes
 	{
 		if(type == "residential")
 		{
@@ -38,6 +39,7 @@ public class DemandManager : MonoBehaviour {
 	}
 
 	void updateDemand()
+	// Creates new demand values. TODO: do this.
 	{
 		
 	}
