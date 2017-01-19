@@ -18,7 +18,6 @@ public class RoadDeleter : VRTK_InteractableObject {
 
 	protected override void Update () {
 		base.Update();
-		Debug.Log("runs");
 		roadGenerator = GameObject.Find("Island").GetComponent<RoadGenerator>();
 	}
 

@@ -20,7 +20,7 @@ public class EconomyManager : MonoBehaviour {
     int commercialCap;
     int industrialCap;
 	
-    // Declares public variables
+    // Declares public variables 
     public int residentialTaxRate;
     public int commercialTaxRate;
     public int industrialTaxRate;
@@ -45,7 +45,7 @@ public class EconomyManager : MonoBehaviour {
 		numRoads = itemManager.getNumRoads();
 		getPopulation();
         getCapacity();
-
+   
 		updateBalance();
 		updateIncome();
 	}
@@ -72,8 +72,15 @@ public class EconomyManager : MonoBehaviour {
         float commercialIncome = calculateCommercialIncome();
         float industrialIncome = calculateIndustrialIncome();
 
-		income = rawIncome + residentialIncome - roadExpenses;
+        float expenses = roadExpenses + calculateCapacityExpenses();
+		income = rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses;
 	}
+
+    float calculateCapacityExpenses()
+    // Returns all expenses from capacity
+    {
+        return residentialCap + commercialCap + industrialCap;
+    }
 
 	float calculateResidentialIncome()
 	// Tax income from all residential properties
@@ -83,40 +90,48 @@ public class EconomyManager : MonoBehaviour {
             return 0;
         } else
         {
-            return population / residentialCap * residentialTaxRate;
+            return population * residentialTaxRate;
         }
 	}
 
     float calculateCommercialIncome()
+    // Tax income for all commercial buildings
     {
-        if (commercialCap == 0)
+        if (commercialCap == 0 || population == 0)
         {
             return 0;
         }
+        else if(population >= commercialCap)
+        {
+            return commercialCap * commercialTaxRate;
+        }
         else
         {
-            return population * commercialCap * commercialTaxRate;
+            return population * commercialTaxRate;
         }
     }
 
     float calculateIndustrialIncome()
+    // Tax income for industrial buildings
     {
         if (industrialCap == 0)
         {
             return 0;
         }
+        else if (population >= industrialCap)
+        {
+            return commercialCap * industrialTaxRate;
+        }
         else
         {
-            return population / industrialCap * industrialTaxRate;
+            return population * industrialTaxRate;
         }
     }
 
 	float calculateRoadExpenses() 
 	// Calculates how much is spent on road maintenance
 	{
-		float rawRoadIncome = numRoads / 5;
-
-		return rawRoadIncome;
+		return numRoads / 5;
 	}
 
 	void reduceBalance(float amount)
