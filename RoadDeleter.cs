@@ -24,9 +24,9 @@ public class RoadDeleter : VRTK_InteractableObject {
 	public override void StartUsing (GameObject usingObject) {
 		base.StartUsing (usingObject);
 		if (Physics.Raycast (controller.transform.position, controller.transform.forward, out hit, 1000.0f)) {
-			round(hit.point, out newPosition);
+			// round(hit.point, out newPosition);
 			if(hit.transform.gameObject.tag == "road") {
-				roadGenerator.removeRoad(newPosition);
+				roadGenerator.removeRoad(hit.point);
 				roadGenerator.destroy();
 				roadGenerator.reDrawRoads();
 			}

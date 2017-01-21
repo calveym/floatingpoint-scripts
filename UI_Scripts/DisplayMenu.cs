@@ -1,46 +1,64 @@
-﻿
-    using System.Collections;
+﻿    using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
     using VRTK;
 
     public class DisplayMenu : MonoBehaviour
     {
-    public VRTK_ControllerEvents events;
-    public GameObject panel;
+    // Add the three panels that make up the buttons    
+    public GameObject panel1;
+    public GameObject panel2;
+    public GameObject panel3;
 
     private void Start()
+    // Sets listeners and deactivates all panels at start
     {
-        panel.SetActive(false);
+        panel1.SetActive(false);
+        panel2.SetActive(false);
+        panel3.SetActive(false);
+        GetComponent<VRTK_ControllerEvents>().TouchpadTouchStart += new ControllerInteractionEventHandler(DoTouchpadTouchStart);
+        GetComponent<VRTK_ControllerEvents>().TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
     }
 
-    void OnEnable()
-    { 
-            events.TouchpadTouchStart += new ControllerInteractionEventHandler(DoTouchpadTouched);
-            events.TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadNotTouched);
-
-    }
-
-    void OnDisable()
+    void DoTouchpadTouchStart(object sender, ControllerInteractionEventArgs e)
+    // TouchpadTouched event
     {
-        events.TouchpadTouchStart -= new ControllerInteractionEventHandler(DoTouchpadTouched);
-        events.TouchpadTouchEnd -= new ControllerInteractionEventHandler(DoTouchpadNotTouched);
+        Vector2 position = GetComponent<VRTK_ControllerEvents>().GetTouchpadAxis();
+        activatePanel(position);
     }
 
 
-
-
-    void DoTouchpadTouched(object sender, ControllerInteractionEventArgs e)
+    void DoTouchpadTouchEnd(object sender, ControllerInteractionEventArgs e)
+    // TouchpadReleased event
     {
-        panel.SetActive(true);
+        Vector2 position = GetComponent<VRTK_ControllerEvents>().GetTouchpadAxis();
+        deactivatePanel(position);
     }
 
-
-    void DoTouchpadNotTouched(object sender, ControllerInteractionEventArgs e)
+    void activatePanel(Vector2 position)
+    // Activates correct panel
     {
-        panel.SetActive(false);
+        if (position.x < 0.33f)
+        {
+            panel1.SetActive(true);
+        }
+        else if (0.33f <= position.x && position.x < 0.66f)
+        {
+            panel2.SetActive(true);
+        }
+        else if (position.x >= 0.66f)
+        {
+            panel3.SetActive(true);
+        }
     }
 
+    void deactivatePanel(Vector2 position)
+    // Deactivates all panels
+    {
+        panel1.SetActive(false);
+        panel2.SetActive(false);
+        panel3.SetActive(false);
+    }
 }
 
 
