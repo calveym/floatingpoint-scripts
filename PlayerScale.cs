@@ -26,7 +26,6 @@ public class PlayerScale : MonoBehaviour {
     	}
     	else 
     	{
-            Debug.Log("Off");
 			previousCameraPosition = cameraEye.transform.position;
 			cameraRig.transform.localScale = new Vector3(1f, 1f, 1f);
 			cameraRig.transform.position += new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
