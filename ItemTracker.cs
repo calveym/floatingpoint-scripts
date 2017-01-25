@@ -8,16 +8,10 @@ public class ItemTracker : MonoBehaviour {
     public string type;
     public int capacity;
 
-    public void addType(string typeInput)
+    public void setValues(string typeInput, int pressedButton)
     // Type accessor
     {
         type = typeInput;
-    }
-
-    public void addCapacity(int capInput)
-    // Capacity accessor
-    {
-        capacity = capInput;
+		capacity = pressedButton;
     }
 }
- 
