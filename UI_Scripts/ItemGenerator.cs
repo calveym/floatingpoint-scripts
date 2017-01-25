@@ -181,6 +181,7 @@ public class ItemGenerator : MonoBehaviour {
     // Instantiates new object from array
     {
         int r = (int)Mathf.Round(Random.Range(0f, modelArray.Length));
+		r -= 1;
         Vector3 spawnPosition = initiator.transform.position;
         GameObject newObject = Instantiate(modelArray[r], spawnPosition, Quaternion.identity);
 		ItemTracker itemTracker = newObject.GetComponent<ItemTracker>();

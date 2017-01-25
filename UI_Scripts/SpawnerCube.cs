@@ -1,7 +1,7 @@
 ﻿using VRTK;
 using UnityEngine;
 
-public class SpawnerCube : MonoBehaviour
+public class SpawnerCube : VRTK_InteractableObject
 {
     DisplayMenu displayMenu;
     string modelName;
@@ -12,9 +12,11 @@ public class SpawnerCube : MonoBehaviour
         modelName = gameObject.name;
     }
 
-	void OnTriggerEnter (Collider other)
+	public override void StartUsing (GameObject usingObject)
 	{
-		Debug.Log("Triggered");
+        base.StartUsing(usingObject);
+
+		Debug.Log("Cube being used");
         ChooseModel();
 	}
 
