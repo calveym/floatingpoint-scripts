@@ -2,8 +2,9 @@
 using UnityEngine.UI;
 using VRTK;
 
-    public class DisplayMenu : MonoBehaviour
-    {
+public class DisplayMenu : MonoBehaviour
+{
+
     // Add the three panels that make up the buttons    
     public GameObject panel;
     public GameObject Model1;
@@ -12,63 +13,58 @@ using VRTK;
     public GameObject Model4;
     public GameObject Model5;
 
-    public Button B1;
-    public Button B2;
-    public Button B3;
-
     VRTK_ControllerEvents events;
+    ItemGenerator itemGenerator;
     int pressedButton;
 
     private void Start()
     // Sets listeners and deactivates all panels at start
     {
-        deactivateAll();
+        DeactivateAll();
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchStart += new ControllerInteractionEventHandler(DoTouchpadTouchStart);
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
-        events = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
+        itemGenerator = GameObject.Find("LeftController").GetComponent<ItemGenerator>();
     }
 
     void DoTouchpadTouchStart(object sender, ControllerInteractionEventArgs e)
     // TouchpadTouched event
     {
-        Vector2 position = GetComponent<VRTK_ControllerEvents>().GetTouchpadAxis();
-        activatePanel(position);
+        ActivatePanel();
     }
 
 
     void DoTouchpadTouchEnd(object sender, ControllerInteractionEventArgs e)
     // TouchpadReleased event
     {
-        Vector2 position = events.GetTouchpadAxis();
-        deactivateAll();
+        DeactivateAll();
     }
 
-    void activatePanel(Vector2 position)
+    void ActivatePanel()
     // Activates panel and models
     {
+        Vector2 position = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().GetTouchpadAxis();
+
         Model1.SetActive(true);
         Model2.SetActive(true);
         Model3.SetActive(true);
         Model4.SetActive(true);
         Model5.SetActive(true);
 
-        Debug.Log(position);
-
-        if (position.x < 0.33f)
+        if (position.x < -0.33f)
         {
-            buttonOnePressed();
+            ButtonOnePressed();
         }
-        else if (0.33f <= position.x && position.x < 0.66f)
+        else if (-0.33f <= position.x && position.x < 0.33f)
         {
-            buttonTwoPressed();
+            ButtonTwoPressed();
         }
         else if (position.x >= 0.66f)
         {
-            buttonThreePressed();
+            ButtonThreePressed();
         }
     }
 
-    void deactivateAll()
+    void DeactivateAll()
     // Deactivates all UI elements   
     {
         panel.SetActive(false);
@@ -80,28 +76,40 @@ using VRTK;
         pressedButton = 0;
     }
 
-    public void buttonOnePressed()
+    public void ButtonOnePressed()
     {
         Debug.Log("Button 1 pressed");
         pressedButton = 1;
-        B1.Select();
+        SwapModels(1);
         panel.SetActive(true);
     }
 
-    public void buttonTwoPressed()
+    public void ButtonTwoPressed()
     {
         Debug.Log("Button 2 pressed");
         pressedButton = 2;
-        B2.Select();
+        SwapModels(2);
         panel.SetActive(true);
     }
 
-    public void buttonThreePressed()
+    public void ButtonThreePressed()
     {
         Debug.Log("Button 3 pressed");
         pressedButton = 3;
-        B3.Select();
+        SwapModels(3);
         panel.SetActive(true);
+    }
+
+    public void InitiateSpawn(GameObject initiator)
+    // Adds pressedButton to spawn logic
+    {
+        itemGenerator.StartSpawn(pressedButton, initiator);
+    }
+
+    void SwapModels(int modelNumber)
+    // TODO: create model swapping logic
+    {
+
     }
 }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GenerateItems : MonoBehaviour {
-    // TODO: Overhaul this script. Should be simpler, the tracking information needs to be added as well.
+    // DEPRECATED: ItemGenerator is the replacement generation algorithm
 
 	public GameObject controller;
 	ItemManager itemManager;
