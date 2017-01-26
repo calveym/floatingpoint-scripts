@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using VRTK;
+using System;
 
 public class DisplayMenu : MonoBehaviour
 {
 
-    // Add the three panels that make up the buttons    
+    // Add the three panels that make up the buttons
     public GameObject panel;
     public GameObject Model1;
     public GameObject Model2;
@@ -16,14 +17,17 @@ public class DisplayMenu : MonoBehaviour
     VRTK_ControllerEvents events;
     ItemGenerator itemGenerator;
     int pressedButton;
+	public GameObject wireframeModels;
+	public GameObject controllerLeft;
 
     private void Start()
     // Sets listeners and deactivates all panels at start
     {
-        DeactivateAll();
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchStart += new ControllerInteractionEventHandler(DoTouchpadTouchStart);
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
         itemGenerator = GameObject.Find("LeftController").GetComponent<ItemGenerator>();
+
+		DeactivateAll();
     }
 
     void DoTouchpadTouchStart(object sender, ControllerInteractionEventArgs e)
@@ -43,6 +47,7 @@ public class DisplayMenu : MonoBehaviour
     // Activates panel and models
     {
         Vector2 position = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().GetTouchpadAxis();
+		// Debug.Log(GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>());
 
         Model1.SetActive(true);
         Model2.SetActive(true);
@@ -62,11 +67,14 @@ public class DisplayMenu : MonoBehaviour
         {
             ButtonThreePressed();
         }
+
+		// Debug.Log(Model1.transform.parent);
     }
 
     void DeactivateAll()
-    // Deactivates all UI elements   
+    // Deactivates all UI elements
     {
+		// Deactivates
         panel.SetActive(false);
         Model1.SetActive(false);
         Model2.SetActive(false);
@@ -78,7 +86,7 @@ public class DisplayMenu : MonoBehaviour
 
     public void ButtonOnePressed()
     {
-        Debug.Log("Button 1 pressed");
+        // Debug.Log("Button 1 pressed");
         pressedButton = 1;
         SwapModels(1);
         panel.SetActive(true);
@@ -86,7 +94,7 @@ public class DisplayMenu : MonoBehaviour
 
     public void ButtonTwoPressed()
     {
-        Debug.Log("Button 2 pressed");
+        // Debug.Log("Button 2 pressed");
         pressedButton = 2;
         SwapModels(2);
         panel.SetActive(true);
@@ -94,7 +102,7 @@ public class DisplayMenu : MonoBehaviour
 
     public void ButtonThreePressed()
     {
-        Debug.Log("Button 3 pressed");
+        // Debug.Log("Button 3 pressed");
         pressedButton = 3;
         SwapModels(3);
         panel.SetActive(true);
@@ -109,8 +117,7 @@ public class DisplayMenu : MonoBehaviour
     void SwapModels(int modelNumber)
     // TODO: create model swapping logic
     {
-
     }
+
+
 }
-
-

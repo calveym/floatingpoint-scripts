@@ -34,7 +34,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 	public void removeRoad(Vector3 position) {
 
 		for(int i = 0; i < roadPositions.Count; i++) {
-	
+
 			if(V3Equal(roadPositions[i] , position)) {
 				roadPositions.RemoveAt(i);
 			}
@@ -93,9 +93,9 @@ public class RoadGenerator : VRTK_InteractableObject {
 	public override void StartUsing (GameObject usingObject) {
 		base.StartUsing (usingObject);
 		if (Physics.Raycast (controller.transform.position, controller.transform.forward, out hit, 1000.0f)) {
-			Debug.Log(hit.point);
+			// Debug.Log(hit.point);
 			round (hit.point, out newPosition);
-			Debug.Log(hit.point);
+			// Debug.Log(hit.point);
 			roadPositions.Add(newPosition);
 			destroy();
 			reDrawRoads();
@@ -180,7 +180,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 	}
 
 	public void destroy() {
-		Debug.Log("Runs destroy:");
+		// Debug.Log("Runs destroy:");
 		GameObject[] allRoads;
 		allRoads = GameObject.FindGameObjectsWithTag("road");
 		for(int i = 0; i < allRoads.Length; i++) {
@@ -189,7 +189,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 	}
 
 	public void reDrawRoads() {
-		Debug.Log("Runs redraw:");
+		// Debug.Log("Runs redraw:");
 		GameObject correctRoad;
 		for(int i = 0; i < roadPositions.Count; i++) {
 			findCorrectRoad (roadPositions[i], out correctRoad);

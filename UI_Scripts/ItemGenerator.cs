@@ -115,6 +115,8 @@ public class ItemGenerator : MonoBehaviour {
     public void StartSpawn(int pressedButton, GameObject initiator)
     // Starts spawn cycle by selecting correct model
     {
+		// Debug.Log(pressedButton);
+		// Debug.Log(initiator);
         if(pressedButton == 1 && initiator.name == "Model1")
         {
             Spawn(smlRes, initiator, pressedButton);
@@ -180,12 +182,22 @@ public class ItemGenerator : MonoBehaviour {
     void Spawn(GameObject[] modelArray, GameObject initiator, int pressedButton)
     // Instantiates new object from array
     {
-        int r = (int)Mathf.Round(Random.Range(0f, modelArray.Length));
-		r -= 1;
+        RemoveChildren(initiator);
+        int r = (int)Mathf.Round(Random.Range(0f, modelArray.Length - 1));
         Vector3 spawnPosition = initiator.transform.position;
         GameObject newObject = Instantiate(modelArray[r], spawnPosition, Quaternion.identity);
 		ItemTracker itemTracker = newObject.GetComponent<ItemTracker>();
 		AddObjectInfo(newObject, itemTracker, pressedButton);
+		newObject.transform.parent = initiator.transform;
+		newObject.layer = 5;
+		newObject.GetComponent<Rigidbody>().isKinematic = true;
+    }
+    void RemoveChildren(GameObject initiator)
+    {
+        if(initiator.transform.childCount == 1)
+        {
+            initiator.transform.GetChild(0).transform.parent = null;
+        }
     }
 
 	void AddObjectInfo(GameObject newObject, ItemTracker itemTracker, int pressedButton)

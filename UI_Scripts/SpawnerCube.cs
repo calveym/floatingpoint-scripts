@@ -1,46 +1,49 @@
-﻿using VRTK;
+
+ ﻿using VRTK;
 using UnityEngine;
 
-public class SpawnerCube : VRTK_InteractableObject
+public class SpawnerCube : MonoBehaviour
 {
     DisplayMenu displayMenu;
     string modelName;
+	int count;
 
-    private void Start()
+    void Start()
     {
+		count = 0;
         displayMenu = GameObject.Find("LeftController").GetComponent<DisplayMenu>();
         modelName = gameObject.name;
+		displayMenu.InitiateSpawn(gameObject);
     }
 
-	public override void StartUsing (GameObject usingObject)
+	void OnTriggerEnter()
 	{
-        base.StartUsing(usingObject);
-
-		Debug.Log("Cube being used");
-        ChooseModel();
+		++count;
 	}
 
-    void ChooseModel()
-    {
-        if (modelName == "Model1")
-        {
-            displayMenu.InitiateSpawn(gameObject);
-        }
-        else if (modelName == "Model2")
-        {
-            displayMenu.InitiateSpawn(gameObject);
-        }
-        else if (modelName == "Model3")
-        {
-            displayMenu.InitiateSpawn(gameObject);
-        }
-        else if (modelName == "Model4")
-        {
-            displayMenu.InitiateSpawn(gameObject);
-        }
-        else if (modelName == "Model5")
-        {
-            displayMenu.InitiateSpawn(gameObject);
-        }
-    }
+	void OnTriggerExit(Collider other)
+	{
+		--count;
+		if(IsTriggerEmpty() && (other.gameObject.tag == "residential" || other.gameObject.tag == "commercial" || other.gameObject.tag == "industrial" || other.gameObject.tag == "foliage" || other.gameObject.tag == "leisure"))
+		{
+			Debug.Log(other.gameObject.tag);
+
+			EnablePhysics(other.gameObject);
+			displayMenu.InitiateSpawn(gameObject);
+			other.gameObject.layer = 0;
+
+		}
+	}
+
+	void EnablePhysics(GameObject building)
+	{
+		building.GetComponent<Rigidbody>().useGravity = true;
+		building.GetComponent<Rigidbody>().isKinematic = false;
+		building.GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+	}
+
+	bool IsTriggerEmpty()
+	{
+		return count == 0;
+	}
 }
