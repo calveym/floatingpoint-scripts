@@ -1,4 +1,5 @@
 using VRTK;
+using VRTK.GrabAttachMechanics;
 using UnityEngine;
 
 public class SpawnerCube : MonoBehaviour
@@ -6,7 +7,10 @@ public class SpawnerCube : MonoBehaviour
     DisplayMenu displayMenu;
     string modelName;
 	int count;
-    GameObject recentBuilding;
+    bool waitRemove;
+    GameObject currentObject;
+    GameObject leavingObject;
+    GameObject mainCamera;
 
     void Start()
     // Prepares state
@@ -14,14 +18,44 @@ public class SpawnerCube : MonoBehaviour
 		count = 0;
         displayMenu = GameObject.Find("LeftController").GetComponent<DisplayMenu>();
         modelName = gameObject.name;
-		recentBuilding = displayMenu.InitiateSpawn(gameObject);
 
-		GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().GripReleased += new ControllerInteractionEventHandler(DoGripReleased);
+        mainCamera = GameObject.FindGameObjectsWithTag("MainCamera")[0];
+		GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff += 
+            new ControllerInteractionEventHandler(DoRemoveObject);
     }
 
-    void DoGripReleased(object sender, ControllerInteractionEventArgs e)
-	{
-	    transform.DetachChildren();
+    void Update()
+    // Runs trigger and child checks
+    {
+        if (currentObject == null)
+        {
+            currentObject = displayMenu.InitiateSpawn(gameObject);
+        }
+        else if (transform.childCount > 1)
+        {
+            transform.DetachChildren();
+            currentObject.transform.parent = gameObject.transform;
+        }
+        else if(TriggerCheck(0))
+        {
+            transform.DetachChildren();
+            currentObject = displayMenu.InitiateSpawn(gameObject);
+        }
+        gameObject.transform.LookAt(mainCamera.transform);
+    }
+
+    void DoRemoveObject(object sender, ControllerInteractionEventArgs e)
+    // Removes parents if leavingObject
+    {
+        if(waitRemove == true)
+        {
+            leavingObject.transform.parent = null;
+            EnablePhysics(leavingObject);
+            VRTK_ChildOfControllerGrabAttach grab = leavingObject.AddComponent<VRTK_ChildOfControllerGrabAttach>() as VRTK_ChildOfControllerGrabAttach;
+            Destroy(leavingObject.GetComponent<VRTK_FixedJointGrabAttach>());
+            grab.precisionGrab = true;
+            waitRemove = false;
+        }
 	}
 
 	void OnTriggerEnter()
@@ -33,11 +67,13 @@ public class SpawnerCube : MonoBehaviour
     // Runs when an object leaves cube trigger. Activates new building spawn
 	{
 		--count;
-		if(IsTriggerEmpty() && (other.gameObject.tag == "residential" || other.gameObject.tag == "commercial" || other.gameObject.tag == "industrial" || other.gameObject.tag == "foliage" || other.gameObject.tag == "leisure"))
+		if(other.gameObject == currentObject && (other.gameObject.tag == "residential" || other.gameObject.tag == "commercial" || other.gameObject.tag == "industrial" || other.gameObject.tag == "foliage" || other.gameObject.tag == "leisure"))
 		{
-			EnablePhysics(other.gameObject);
-			recentBuilding = displayMenu.InitiateSpawn(gameObject);
-			other.gameObject.layer = 0;
+            leavingObject = other.gameObject;
+            EnablePhysics(leavingObject);
+            currentObject = displayMenu.InitiateSpawn(gameObject);
+			leavingObject.layer = 0;
+            waitRemove = true; // Initiates remove tracker, used when controller releases building in DoRemoveObject()
 		}
 	}
 
@@ -46,7 +82,6 @@ public class SpawnerCube : MonoBehaviour
 	{
 		building.GetComponent<Rigidbody>().useGravity = true;
 		building.GetComponent<Rigidbody>().isKinematic = false;
-		building.GetComponent<VRTK_InteractableObject>().isGrabbable = true;
 	}
 
 	bool TriggerCheck(int numObjects)
