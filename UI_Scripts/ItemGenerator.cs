@@ -112,74 +112,78 @@ public class ItemGenerator : MonoBehaviour {
 		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
     }
 
-    public void StartSpawn(int pressedButton, GameObject initiator)
+    public GameObject StartSpawn(int pressedButton, GameObject initiator)
     // Starts spawn cycle by selecting correct model
     {
 		// Debug.Log(pressedButton);
 		// Debug.Log(initiator);
         if(pressedButton == 1 && initiator.name == "Model1")
         {
-            Spawn(smlRes, initiator, pressedButton);
+            return Spawn(smlRes, initiator, pressedButton);
         }
         else if (pressedButton == 1 && initiator.name == "Model2")
         {
-            Spawn(smlCom, initiator, pressedButton);
+            return Spawn(smlCom, initiator, pressedButton);
         }
         else if(pressedButton == 1 && initiator.name == "Model3")
         {
-            Spawn(smlInd, initiator, pressedButton);
+            return Spawn(smlInd, initiator, pressedButton);
         }
         else if(pressedButton == 1 && initiator.name == "Model4")
         {
-            Spawn(smlFol, initiator, pressedButton);
+            return Spawn(smlFol, initiator, pressedButton);
         }
         else if(pressedButton == 1 && initiator.name == "Model5")
         {
-            Spawn(smlLes, initiator, pressedButton);
+            return Spawn(smlLes, initiator, pressedButton);
         }
         else if (pressedButton == 2 && initiator.name == "Model1")
         {
-            Spawn(midRes, initiator, pressedButton);
+            return Spawn(midRes, initiator, pressedButton);
         }
         else if (pressedButton == 2 && initiator.name == "Model2")
         {
-            Spawn(midCom, initiator, pressedButton);
+            return Spawn(midCom, initiator, pressedButton);
         }
         else if (pressedButton == 2 && initiator.name == "Model3")
         {
-            Spawn(midInd, initiator, pressedButton);
+            return Spawn(midInd, initiator, pressedButton);
         }
         else if (pressedButton == 2 && initiator.name == "Model4")
         {
-            Spawn(midFol, initiator, pressedButton);
+            return Spawn(midFol, initiator, pressedButton);
         }
         else if (pressedButton == 2 && initiator.name == "Model5")
         {
-            Spawn(midLes, initiator, pressedButton);
+            return Spawn(midLes, initiator, pressedButton);
         }
         else if (pressedButton == 3 && initiator.name == "Model1")
         {
-            Spawn(lrgRes, initiator, pressedButton);
+            return Spawn(lrgRes, initiator, pressedButton);
         }
         else if (pressedButton == 3 && initiator.name == "Model2")
         {
-            Spawn(lrgCom, initiator, pressedButton);
+            return Spawn(lrgCom, initiator, pressedButton);
         }
         else if (pressedButton == 3 && initiator.name == "Model3")
         {
-            Spawn(lrgInd, initiator, pressedButton);
+            return Spawn(lrgInd, initiator, pressedButton);
         }
         else if (pressedButton == 3 && initiator.name == "Model4")
         {
-            Spawn(lrgFol, initiator, pressedButton);
+            return Spawn(lrgFol, initiator, pressedButton);
         }
         else if (pressedButton == 3 && initiator.name == "Model5")
         {
-            Spawn(lrgLes, initiator, pressedButton);
+            return Spawn(lrgLes, initiator, pressedButton);
         }
+		else
+		{
+			return new GameObject();
+		}
     }
 
-    void Spawn(GameObject[] modelArray, GameObject initiator, int pressedButton)
+    GameObject Spawn(GameObject[] modelArray, GameObject initiator, int pressedButton)
     // Instantiates new object from array
     {
         RemoveChildren(initiator);
@@ -191,6 +195,7 @@ public class ItemGenerator : MonoBehaviour {
 		newObject.transform.parent = initiator.transform;
 		newObject.layer = 5;
 		newObject.GetComponent<Rigidbody>().isKinematic = true;
+		return newObject;
     }
     void RemoveChildren(GameObject initiator)
     {

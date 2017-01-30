@@ -108,10 +108,10 @@ public class DisplayMenu : MonoBehaviour
         panel.SetActive(true);
     }
 
-    public void InitiateSpawn(GameObject initiator)
+    public GameObject InitiateSpawn(GameObject initiator)
     // Adds pressedButton to spawn logic
     {
-        itemGenerator.StartSpawn(pressedButton, initiator);
+        return itemGenerator.StartSpawn(pressedButton, initiator);
     }
 
     void SwapModels(int modelNumber)
