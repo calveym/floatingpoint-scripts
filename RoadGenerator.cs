@@ -96,7 +96,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 		base.StartUsing (usingObject);
 		if (Physics.Raycast (controller.transform.position, controller.transform.forward, out hit, 1000.0f)) {
 			// Debug.Log(hit.point);
-			round (hit.point, out newPosition);
+			Round (hit.point, out newPosition);
 			// Debug.Log(hit.point);
 			roadPositions.Add(newPosition);
 			destroy();
@@ -104,7 +104,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 		}
 	}
 
-	private void round (Vector3 point, out Vector3 newPosition)
+	public void Round (Vector3 point, out Vector3 newPosition)
     {
 		newPosition = new Vector3(Mathf.Round(point.x) * gridSize.x,
 			10.01f,

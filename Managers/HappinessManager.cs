@@ -23,15 +23,17 @@ public class HappinessManager : MonoBehaviour {
     float leisureHappiness;
     float taxHappiness;
 
-    // Use this for initialization
-    void Start () {
+    void Start ()
+    // Set values pre-initialization
+    {
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
     }
 	
-	// Update is called once per frame
-	void Update () {
+	void Update ()
+    // Set values pre-initialization
+    {
         population = populationManager.population;
         availableResidential = populationManager.AvailableResidential();
 
@@ -44,16 +46,19 @@ public class HappinessManager : MonoBehaviour {
 	}
 
     void SetHappiness()
+    // Sets happiness value from components
     {
         happiness = jobHappiness + foliageHappiness + leisureHappiness + taxHappiness;
     }
 
     void SetJobs()
+    // Job availability
     {
         availableJobs = industrialCap + commercialCap - population;
     }
 
     void SetJobHappiness()
+    // Job happiness algorithm
     {
         SetJobs();
         if (availableJobs / availableResidential >= 1)
@@ -68,11 +73,13 @@ public class HappinessManager : MonoBehaviour {
     }
 
     void SetFoliageHappiness()
+    // Foliage happiness algorithm
     {
         foliageHappiness = foliageCap / (population * 10);
     }
 
     void SetLeisureHappiness()
+    // Leisure happiness algorithm
     {
         leisureHappiness = leisureCap / population;
     }

@@ -86,13 +86,7 @@ public class EconomyManager : MonoBehaviour {
 	float calculateResidentialIncome()
 	// Tax income from all residential properties
 	{
-        if(residentialCap == 0)
-        {
-            return 0;
-        } else
-        {
-            return population * residentialTaxRate;
-        }
+        return population * (1 + 0.01f * residentialTaxRate);
 	}
 
     float calculateCommercialIncome()
@@ -104,11 +98,11 @@ public class EconomyManager : MonoBehaviour {
         }
         else if(population >= commercialCap)
         {
-            return commercialCap * commercialTaxRate;
+            return commercialCap * (1 + 0.01f * commercialTaxRate);
         }
         else
         {
-            return population * commercialTaxRate;
+            return population * (1 + 0.01f * commercialTaxRate);
         }
     }
 
@@ -121,11 +115,11 @@ public class EconomyManager : MonoBehaviour {
         }
         else if (population >= industrialCap)
         {
-            return commercialCap * industrialTaxRate;
+            return industrialCap * (1 + 0.01f * industrialTaxRate);
         }
         else
         {
-            return population * industrialTaxRate;
+            return population * (1 + 0.01f * industrialTaxRate);
         }
     }
 
