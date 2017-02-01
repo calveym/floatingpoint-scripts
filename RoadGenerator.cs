@@ -27,15 +27,17 @@ public class RoadGenerator : VRTK_InteractableObject {
 
 	public List<Vector3> roadPositions;
 
-	public bool V3Equal(Vector3 a, Vector3 b){
+	public bool V3Equal(Vector3 a, Vector3 b)
+    {
 		return Vector3.SqrMagnitude(a - b) < 3.162f;
 	}
 
-	public void removeRoad(Vector3 position) {
-
-		for(int i = 0; i < roadPositions.Count; i++) {
-
-			if(V3Equal(roadPositions[i] , position)) {
+	public void removeRoad(Vector3 position)
+    {
+		for(int i = 0; i < roadPositions.Count; i++)
+        {
+			if(V3Equal(roadPositions[i] , position))
+            {
 				roadPositions.RemoveAt(i);
 			}
 		}
@@ -102,13 +104,15 @@ public class RoadGenerator : VRTK_InteractableObject {
 		}
 	}
 
-	private void round (Vector3 point, out Vector3 newPosition) {
+	private void round (Vector3 point, out Vector3 newPosition)
+    {
 		newPosition = new Vector3(Mathf.Round(point.x) * gridSize.x,
 			10.01f,
 			Mathf.Round(point.z) * gridSize.z);
 	}
 
-	private void findCorrectRoad(Vector3 newPosition, out GameObject correctRoad) {
+	private void findCorrectRoad(Vector3 newPosition, out GameObject correctRoad)
+    {
 		checkRoadUp (newPosition, out up);
 		checkRoadDown(newPosition, out down);
 		checkRoadLeft(newPosition, out left);
@@ -122,7 +126,8 @@ public class RoadGenerator : VRTK_InteractableObject {
 
 		string surroundingRoadString = "";
 
-		for(int x = 0; x < surroundingRoads.Count; x++) {
+		for(int x = 0; x < surroundingRoads.Count; x++)
+        {
 			if(surroundingRoads[x] == true) {
 				surroundingRoadString += "1";
 			} else {
@@ -133,44 +138,56 @@ public class RoadGenerator : VRTK_InteractableObject {
 		lookUp (surroundingRoadString, newPosition, out correctRoad);
 	}
 
-	private void checkRoadRight(Vector3 newPosition, out bool exists){
+	private void checkRoadRight(Vector3 newPosition, out bool exists)
+    {
 		exists = false;
-		for(int i = 0; i < roadPositions.Count; i++) {
-			if(roadPositions[i] == new Vector3(newPosition.x + 1f, newPosition.y, newPosition.z)) {
+		for(int i = 0; i < roadPositions.Count; i++)
+        {
+			if(roadPositions[i] == new Vector3(newPosition.x + 1f, newPosition.y, newPosition.z))
+            {
 				exists = true;
 			}
 		}
 	}
 
-	private void checkRoadLeft(Vector3 newPosition, out bool exists){
+	private void checkRoadLeft(Vector3 newPosition, out bool exists)
+    {
 		exists = false;
-		for(int i = 0; i < roadPositions.Count; i++) {
-			if(roadPositions[i] == new Vector3(newPosition.x - 1f, newPosition.y, newPosition.z)) {
+		for(int i = 0; i < roadPositions.Count; i++)
+        {
+			if(roadPositions[i] == new Vector3(newPosition.x - 1f, newPosition.y, newPosition.z))
+            {
 				exists = true;
 			}
 		}
 	}
 
-	private void checkRoadDown(Vector3 newPosition, out bool exists){
+	private void checkRoadDown(Vector3 newPosition, out bool exists)
+    {
 
 		exists = false;
 		for(int i = 0; i < roadPositions.Count; i++) {
-			if(roadPositions[i] == new Vector3(newPosition.x, newPosition.y, newPosition.z - 1f)) {
+			if(roadPositions[i] == new Vector3(newPosition.x, newPosition.y, newPosition.z - 1f))
+        {
 				exists = true;
 			}
 		}
 	}
 
-	private void checkRoadUp(Vector3 newPosition, out bool exists){
+	private void checkRoadUp(Vector3 newPosition, out bool exists)
+    {
 		exists = false;
-		for(int i = 0; i < roadPositions.Count; i++) {
-			if(roadPositions[i] == new Vector3(newPosition.x, newPosition.y, newPosition.z + 1f)) {
+		for(int i = 0; i < roadPositions.Count; i++)
+        {
+			if(roadPositions[i] == new Vector3(newPosition.x, newPosition.y, newPosition.z + 1f))
+            {
 				exists = true;
 			}
 		}
 	}
 
-	private void lookUp(string surroundingRoadString, Vector3 newPosition, out GameObject correctRoad) {
+	private void lookUp(string surroundingRoadString, Vector3 newPosition, out GameObject correctRoad)
+    {
 		GameObject correctRoadObject;
 		Quaternion correctRoadRotation;
 		roadObject.TryGetValue(surroundingRoadString, out correctRoadObject);
@@ -179,21 +196,30 @@ public class RoadGenerator : VRTK_InteractableObject {
 		correctRoad.tag = "road";
 	}
 
-	public void destroy() {
+	public void destroy()
+    {
 		// Debug.Log("Runs destroy:");
 		GameObject[] allRoads;
 		allRoads = GameObject.FindGameObjectsWithTag("road");
-		for(int i = 0; i < allRoads.Length; i++) {
+		for(int i = 0; i < allRoads.Length; i++)
+        {
 			Destroy(allRoads[i].gameObject);
 		}
 	}
 
-	public void reDrawRoads() {
+	public void reDrawRoads()
+    {
 		// Debug.Log("Runs redraw:");
 		GameObject correctRoad;
-		for(int i = 0; i < roadPositions.Count; i++) {
+		for(int i = 0; i < roadPositions.Count; i++)
+        {
 			findCorrectRoad (roadPositions[i], out correctRoad);
 		}
 	}
+
+    public bool CheckSurroundingRoads(Vector3 position)
+    {
+        return true;
+    }
 
 }

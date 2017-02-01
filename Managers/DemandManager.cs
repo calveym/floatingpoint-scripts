@@ -14,45 +14,14 @@ public class DemandManager : MonoBehaviour {
 		commercialDemand = 1;
 		industrialDemand = 1;
 	}
-	
-	void Update () 
-	{
-		updateDemand();
-	}
 
-	public float getDemand(string type)
-	// Returns demand, for use by other classes
-	{
-		if(type == "residential")
-		{
-			return residentialDemand;
-		} else if(type == "commercial")
-		{
-			return commercialDemand;
-		} else if(type == "industrial")
-		{
-			return industrialDemand;
-		} else 
-		{
-		return 0f;
-		}
-	}
+    void Update()
+    {
+        // get the latest tracking information, then check residential demand - 
+    } 
 
-	void updateDemand()
-	// Creates new demand values. TODO: do this.
-	{
-		
-	}
+    void SetResidentialDemand()
+    {
 
-	public void incrementResidential(int number)
-	// Updates residential demand after population change
-	{
-		if(number > 0)
-		{
-			residentialDemand -= 0.1f;
-		} else if(number < 0)
-		{
-			residentialDemand += 0.1f;
-		}
-	}
+    }
 }

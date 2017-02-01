@@ -108,4 +108,5 @@ public class ItemManager : MonoBehaviour {
 	{
 		return residentialCap;
 	}
+
 }

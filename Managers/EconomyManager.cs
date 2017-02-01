@@ -14,6 +14,7 @@ public class EconomyManager : MonoBehaviour {
 	int numRoads;
 	float income; // Net income, after expenses
 	int population;
+    float happiness;
 
     // Tracked items
     int residentialCap;
@@ -43,14 +44,14 @@ public class EconomyManager : MonoBehaviour {
     // Updates state and recalculates balance and income
 	{
 		numRoads = itemManager.getNumRoads();
-		getPopulation();
-        getCapacity();
+		setPopulation();
+        setCapacity();
    
 		updateBalance();
 		updateIncome();
 	}
 
-    void getCapacity()
+    void setCapacity()
     // Updates capacity from itemManager
     {
         residentialCap = itemManager.residentialCap;
@@ -140,9 +141,29 @@ public class EconomyManager : MonoBehaviour {
 		balance -= amount;
 	}
 
-	void getPopulation()
+	void setPopulation()
 	// Retrieves population from the pop manager
 	{
 		population = populationManager.population;
 	}
+
+    public float GetBalance()
+    {
+        return balance;
+    }
+
+    public float GetIncome()
+    {
+        return income;
+    }
+
+    public int GetPopulation()
+    {
+        return population;
+    }
+
+    public float GetHappiness()
+    {
+        return happiness;
+    }
 }

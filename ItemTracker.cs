@@ -10,7 +10,7 @@ public class ItemTracker : MonoBehaviour {
 
     private void Update()
     {
-        if(transform.parent == null)
+        if(transform.parent == null && gameObject.tag != "road")
         {
             GetComponent<Rigidbody>().isKinematic = false;
             GetComponent<Rigidbody>().useGravity = true;

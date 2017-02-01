@@ -13,6 +13,7 @@ public class DisplayMenu : MonoBehaviour
     public GameObject Model3;
     public GameObject Model4;
     public GameObject Model5;
+    public GameObject Clipboard;
 
     VRTK_ControllerEvents events;
     ItemGenerator itemGenerator;
@@ -54,6 +55,7 @@ public class DisplayMenu : MonoBehaviour
         Model3.SetActive(true);
         Model4.SetActive(true);
         Model5.SetActive(true);
+        Clipboard.SetActive(true);
 
         if (position.x < -0.33f)
         {
@@ -81,6 +83,7 @@ public class DisplayMenu : MonoBehaviour
         Model3.SetActive(false);
         Model4.SetActive(false);
         Model5.SetActive(false);
+        Clipboard.SetActive(false);
         pressedButton = 0;
     }
 

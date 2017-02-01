@@ -5,7 +5,6 @@ using UnityEngine;
 public class SpawnerCube : MonoBehaviour
 {
     DisplayMenu displayMenu;
-    string modelName;
 	int count;
     bool waitRemove;
     GameObject currentObject;
@@ -17,7 +16,6 @@ public class SpawnerCube : MonoBehaviour
     {
 		count = 0;
         displayMenu = GameObject.Find("LeftController").GetComponent<DisplayMenu>();
-        modelName = gameObject.name;
 
         mainCamera = GameObject.FindGameObjectsWithTag("MainCamera")[0];
 		GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff += 

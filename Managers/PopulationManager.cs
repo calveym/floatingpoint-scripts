@@ -7,13 +7,18 @@ public class PopulationManager : MonoBehaviour {
 
 	DemandManager demandManager;
 	ItemManager itemManager;
+    HappinessManager happinessManager;
 
 	float newPopulationSpawn;
 	float populationIncreaseRate;
 	float residentialDemand;
 	int maxPopulation;
+    float happiness;
 
-	public int population;
+    public int population;
+    int residentialCap;
+    int industrialCap;
+    int commercialCap;
 
 	void Awake () 
 	// Set values pre-initialization
@@ -22,44 +27,32 @@ public class PopulationManager : MonoBehaviour {
 		populationIncreaseRate = 0;
 
 		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
+        happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
 		demandManager = GameObject.Find("Managers").GetComponent<DemandManager>();
 	}
 	
 	void Update ()
 	// Updates values & calls increasePopulation if conditions are met
-	{
-		maxPopulation = itemManager.getMaxPop();
-		getDemand();
-
-		updatePopulationIncreaseRate();
-		newPopulationSpawn += populationIncreaseRate * Time.deltaTime;
-
-		if(newPopulationSpawn >= 1 && population < maxPopulation)
-		{
-			updatePopulation(Mathf.RoundToInt(newPopulationSpawn));
-			newPopulationSpawn -= 1;
-		} else if(newPopulationSpawn <= -1)
-		{
-			updatePopulation(Mathf.RoundToInt(newPopulationSpawn));
-		}
+	{   
+        if (population < itemManager.getMaxPop())
+        {
+            IncrementPopulation();
+        }
 	}
 
-	void updatePopulation(int number)
-	// Increments population by number
-	{
-		population += number;
-		demandManager.incrementResidential(number);
-	}
+    void IncrementPopulation()
+    {
+        happiness = happinessManager.happiness;
+        residentialDemand += happiness * Time.deltaTime;
+    if (residentialDemand >= 1 )
+        {
+            ++population;
+            --residentialDemand;
+        }
+    }
 
-	void getDemand()
-	// Retrieves demand
-	{
-		residentialDemand = demandManager.getDemand("residential");
-	}
-
-	void updatePopulationIncreaseRate()
-	// Sets increase rate to residential demand
-	{
-		populationIncreaseRate = residentialDemand;
-	}
+    public int AvailableResidential()
+    {
+        return residentialCap - population;
+    }
 }
