@@ -58,12 +58,15 @@ public class PopulationManager : MonoBehaviour {
     // Updates list of properties with vacancies
     {
         vacantResidential = null;
-        for (int i = 0; i < residentialTrackers.Count; i = i + 1)
+        if (residentialTrackers != null)
         {
-            if (residentialTrackers[i].NumVacancies() > 0)
+            for (int i = 0; i < residentialTrackers.Count; i = i + 1)
             {
-                vacantResidential.Add(residentialTrackers[i]);
-                numVacancies.Add(residentialTrackers[i].NumVacancies());
+                if (residentialTrackers[i].NumVacancies() > 0)
+                {
+                    vacantResidential.Add(residentialTrackers[i]);
+                    numVacancies.Add(residentialTrackers[i].NumVacancies());
+                }
             }
         }
     }

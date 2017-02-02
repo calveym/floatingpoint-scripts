@@ -43,11 +43,16 @@ public class HappinessManager : MonoBehaviour {
         SetTaxHappiness();
 
         SetHappiness();
+        Debug.Log(happiness);
 	}
 
     void SetHappiness()
     // Sets happiness value from components
     {
+        Debug.Log(jobHappiness);
+        Debug.Log(foliageHappiness);
+        Debug.Log(leisureHappiness);
+        Debug.Log(taxHappiness);
         happiness = jobHappiness + foliageHappiness + leisureHappiness + taxHappiness;
     }
 
@@ -61,13 +66,19 @@ public class HappinessManager : MonoBehaviour {
     // Job happiness algorithm
     {
         SetJobs();
-        if (availableJobs / availableResidential >= 1)
+        if(availableJobs != 0 && availableResidential != 0)
         {
-            jobHappiness = 25;
+            if (availableResidential / availableJobs <= 1)
+            {
+                jobHappiness = 25;
+            }
+            {
+                jobHappiness = (availableJobs / availableResidential * 25);
+            }
         }
         else
         {
-            jobHappiness = (availableJobs / availableResidential * 25);
+            jobHappiness = 0;
         }
 
     }
@@ -75,19 +86,27 @@ public class HappinessManager : MonoBehaviour {
     void SetFoliageHappiness()
     // Foliage happiness algorithm
     {
-        foliageHappiness = foliageCap / (population * 10);
+        if (population != 0)
+        {
+            foliageHappiness = foliageCap / (population * 10);
+        }
+        else foliageHappiness = 25;
     }
 
     void SetLeisureHappiness()
     // Leisure happiness algorithm
     {
-        leisureHappiness = leisureCap / population;
+        if(population != 0)
+        {
+            leisureHappiness = leisureCap / population;
+        }
     }
 
     void SetTaxHappiness()
     // IDEA: Make this more of an overall metric of cost of living
     {
         taxHappiness = 100 - ((economyManager.residentialTaxRate * 2) + economyManager.industrialTaxRate + economyManager.commercialTaxRate);
+        taxHappiness = taxHappiness / 4;
     }
 }
 
