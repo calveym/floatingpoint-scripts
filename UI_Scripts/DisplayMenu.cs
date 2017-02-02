@@ -27,7 +27,6 @@ public class DisplayMenu : MonoBehaviour
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchStart += new ControllerInteractionEventHandler(DoTouchpadTouchStart);
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
         itemGenerator = GameObject.Find("LeftController").GetComponent<ItemGenerator>();
-
 		DeactivateAll();
     }
 
@@ -84,7 +83,6 @@ public class DisplayMenu : MonoBehaviour
         Model4.SetActive(false);
         Model5.SetActive(false);
         Clipboard.SetActive(false);
-        pressedButton = 0;
     }
 
     public void ButtonOnePressed()

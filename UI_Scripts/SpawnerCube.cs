@@ -5,6 +5,8 @@ using UnityEngine;
 public class SpawnerCube : MonoBehaviour
 {
     DisplayMenu displayMenu;
+    ItemManager itemManager;
+
 	int count;
     bool waitRemove;
     GameObject currentObject;
@@ -16,6 +18,7 @@ public class SpawnerCube : MonoBehaviour
     {
 		count = 0;
         displayMenu = GameObject.Find("LeftController").GetComponent<DisplayMenu>();
+        itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
 
         mainCamera = GameObject.FindGameObjectsWithTag("MainCamera")[0];
 		GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff += 
@@ -52,6 +55,7 @@ public class SpawnerCube : MonoBehaviour
             VRTK_ChildOfControllerGrabAttach grab = leavingObject.AddComponent<VRTK_ChildOfControllerGrabAttach>() as VRTK_ChildOfControllerGrabAttach;
             Destroy(leavingObject.GetComponent<VRTK_FixedJointGrabAttach>());
             grab.precisionGrab = true;
+            leavingObject.GetComponent<ItemTracker>().SetUsable();
             waitRemove = false;
         }
 	}

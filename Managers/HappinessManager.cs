@@ -34,8 +34,7 @@ public class HappinessManager : MonoBehaviour {
 	void Update ()
     // Set values pre-initialization
     {
-        population = populationManager.population;
-        availableResidential = populationManager.AvailableResidential();
+        UpdateValues();
 
         SetJobHappiness();
         SetFoliageHappiness();
@@ -43,16 +42,21 @@ public class HappinessManager : MonoBehaviour {
         SetTaxHappiness();
 
         SetHappiness();
-        Debug.Log(happiness);
 	}
+
+    void UpdateValues()
+    {
+        population = populationManager.population;
+        foliageCap = itemManager.foliageCap;
+        availableResidential = populationManager.AvailableResidential();
+        residentialCap = itemManager.residentialCap;
+        commercialCap = itemManager.commercialCap;
+        industrialCap = itemManager.industrialCap;
+    }
 
     void SetHappiness()
     // Sets happiness value from components
     {
-        Debug.Log(jobHappiness);
-        Debug.Log(foliageHappiness);
-        Debug.Log(leisureHappiness);
-        Debug.Log(taxHappiness);
         happiness = jobHappiness + foliageHappiness + leisureHappiness + taxHappiness;
     }
 

@@ -30,10 +30,10 @@ public class EconomyManager : MonoBehaviour {
     void Awake ()
     // Finds instances of all objects and sets up values
     {
-        residentialTaxRate = 5;
-        commercialTaxRate = 5;
-        industrialTaxRate = 5;
-        rawIncome = 5;
+        residentialTaxRate = 15;
+        commercialTaxRate = 15;
+        industrialTaxRate = 15;
+        rawIncome = 25;
 		balance = 1000;
 		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
 		populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();

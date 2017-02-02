@@ -12,7 +12,7 @@ public class PlayerScale : MonoBehaviour {
 
 	void Start()
     {
-        GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(DoButtonOnePressed);
+        GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(DoButtonOnePressed);
     }
     
     void DoButtonOnePressed(object sender, ControllerInteractionEventArgs e)

@@ -18,6 +18,7 @@ public class UpdateUI : MonoBehaviour {
     Text happinessText;
 
     EconomyManager economyManager;
+    HappinessManager happinessManager;
 
 	// Use this for initialization
 	void Start () {
@@ -27,15 +28,17 @@ public class UpdateUI : MonoBehaviour {
         balanceText = GameObject.Find("BalanceText").GetComponent<Text>();
         populationText = GameObject.Find("PopulationText").GetComponent<Text>();
         happinessText = GameObject.Find("HappinessText").GetComponent<Text>();
+        happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log(economyManager);
         timePassed += Time.deltaTime;
         if(timePassed >= 1)
         {
             UpdateManagerVariables();
+            Debug.Log(happiness);
+            Debug.Log(population);
             UpdateUIVariables();
             timePassed = 0;
         }
@@ -46,15 +49,25 @@ public class UpdateUI : MonoBehaviour {
         balance = economyManager.GetBalance();
         income = economyManager.GetIncome();
         population = economyManager.GetPopulation();
-        happiness = economyManager.GetHappiness();
+        happiness = happinessManager.happiness;
     } 
 
     void UpdateUIVariables()
     {
         incomeText.text = SetIncomeString();
         balanceText.text = SetBalanceString();
-        populationText.text = population.ToString();
-        happinessText.text = happiness.ToString();
+        populationText.text = SetPopulationString();
+        happinessText.text = SetHappinessString();
+    }
+
+    string SetPopulationString()
+    {
+        return "Population: " + population.ToString();
+    }
+
+    string SetHappinessString()
+    {
+        return "Happiness: " + happiness.ToString();
     }
 
     string SetIncomeString()
