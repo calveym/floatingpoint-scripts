@@ -54,7 +54,7 @@ public class RoadSnap : MonoBehaviour {
             Vector3 newPosition;
             roadGenerator.Round(transform.position, out newPosition);
             transform.position = newPosition;
-            transform.rotation = Quaternion.Euler(0f, 0f, 0f); // TODO: Change this! Make it round the rotation as well
+            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
     }
 }
