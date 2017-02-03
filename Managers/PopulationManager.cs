@@ -41,7 +41,6 @@ public class PopulationManager : MonoBehaviour {
 	{
         UpdateValues();
         RunChecks();
-        Debug.Log(population);
 	}
 
     void UpdateValues()

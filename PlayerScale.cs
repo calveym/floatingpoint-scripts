@@ -27,7 +27,7 @@ public class PlayerScale : MonoBehaviour {
     	else 
     	{
 			previousCameraPosition = cameraEye.transform.position;
-			cameraRig.transform.localScale = new Vector3(1f, 1f, 1f);
+			cameraRig.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 			cameraRig.transform.position += new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
 			isCameraSmall = !isCameraSmall;
     	}
