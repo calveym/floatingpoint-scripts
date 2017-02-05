@@ -12,13 +12,27 @@ public class RoadSnap : MonoBehaviour {
 	Renderer rend;
 	Collider[] hitColliders;
 
+	GameObject nearestBuilding;
+	MeshRenderer targetRend;
+	MeshRenderer thisRend;
+	Vector3 targetPosition;
+	float distanceToMoveX;
+	float distanceToMoveZ;
+	float spacing;
+	float frontTargetPoint;
+	float frontThisPoint;
+	float pointDifference;
+
 	void Update() {
 		// checks if object is used, and if there is a nearby object with the matching tag
 		if (objectUsed) {
-			hitColliders = Physics.OverlapSphere (transform.position, 1f);
+			hitColliders = Physics.OverlapSphere (transform.position, 1.5f);
 			foreach (Collider hitcol in hitColliders) {
-				if (hitcol.CompareTag("residential")) {
-					Debug.Log (hitcol);
+				if (hitcol.CompareTag ("residential")) {
+					nearestBuilding = hitcol.gameObject;
+					Debug.Log (nearestBuilding);
+				} else {
+					nearestBuilding = null;
 				}
 			}
 		}
@@ -49,8 +63,9 @@ public class RoadSnap : MonoBehaviour {
 	{
 		if(objectUsed == true)
 		{
-			InitiateSnapCheck();
+			setPosition ();
 			objectUsed = false;
+
 		}
 	}
 
@@ -62,6 +77,32 @@ public class RoadSnap : MonoBehaviour {
 			objectUsed = true;
 
 		}
+	}
+
+	void setPosition() {
+
+
+		targetRend = nearestBuilding.GetComponent<MeshRenderer>();
+		thisRend = gameObject.GetComponent<MeshRenderer> ();
+
+		targetPosition = nearestBuilding.transform.position;
+		spacing = 0.1f;
+
+		distanceToMoveX = (targetRend.bounds.size.x / 2) + (thisRend.bounds.size.x / 2) + spacing;
+		distanceToMoveZ = (targetRend.bounds.size.z / 2) + (thisRend.bounds.size.z / 2) + spacing;
+
+		frontTargetPoint = nearestBuilding.transform.position.x + (targetRend.bounds.size.x / 2);
+		frontThisPoint = transform.position.x -(thisRend.bounds.size.x / 2);
+		pointDifference = Mathf.Abs (frontThisPoint) - Mathf.Abs (frontTargetPoint);
+
+
+		// set x position
+		transform.position = new Vector3(targetPosition.x + distanceToMoveX, targetPosition.y, targetPosition.z);
+
+		// set z position, and align x axis
+		//transform.position = new Vector3(transform.position.x + pointDifference, targetPosition.y, targetPosition.z - distanceToMoveZ);
+
+
 	}
 
 	void InitiateSnapCheck()
