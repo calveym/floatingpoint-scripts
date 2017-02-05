@@ -20,7 +20,6 @@ public class PopulationManager : MonoBehaviour {
     public int population;
     public int unallocatedPopulation;
     public int totalPopulation;
-    public int populationCap;
 
     int residentialCap;
     int industrialCap;
@@ -47,7 +46,8 @@ public class PopulationManager : MonoBehaviour {
     void UpdateValues()
     // Retrieves necessary values from other managers
     {
-        populationCap = itemManager.residentialCap;
+        residentialCap = itemManager.residentialCap;
+        residentialTrackers = itemManager.residentialTrackers;
         totalPopulation = population + unallocatedPopulation;
         happiness = happinessManager.happiness;
 
@@ -57,13 +57,17 @@ public class PopulationManager : MonoBehaviour {
     void UpdateVacancies()
     // Updates list of properties with vacancies
     {
-        vacantResidential = null;
-        for (int i = 0; i < residentialTrackers.Count; i = i + 1)
+        vacantResidential = new List<ItemTracker>();
+        numVacancies = new List<int>();
+        if (residentialTrackers != null)
         {
-            if (residentialTrackers[i].NumVacancies() > 0)
+            for (int i = 0; i < residentialTrackers.Count; i++)
             {
-                vacantResidential.Add(residentialTrackers[i]);
-                numVacancies.Add(residentialTrackers[i].NumVacancies());
+                if (residentialTrackers[i].NumVacancies() > 0 && residentialTrackers[i].usable == true)
+                {
+                    vacantResidential.Add(residentialTrackers[i]);
+                    numVacancies.Add(residentialTrackers[i].NumVacancies());
+                }
             }
         }
     }
@@ -80,19 +84,21 @@ public class PopulationManager : MonoBehaviour {
     {
         if(unallocatedPopulation > 0 && AvailableResidential() > 0)
         {
-            for (int i = 0; i < vacantResidential.Count; i += 1)
+            for (int i = 0; i < vacantResidential.Count; i++)
             {
                 int numAdded = 0;
                 if(unallocatedPopulation > numVacancies[i])
                 {
                     numAdded = numVacancies[i];
                 }
-                else if(unallocatedPopulation < numVacancies[i] && unallocatedPopulation > 0)
+                else if(unallocatedPopulation <= numVacancies[i])
                 {
                     numAdded = unallocatedPopulation;
                 }
-                vacantResidential[i].AddUsers(numVacancies[i]);
+                population += numAdded;
+                unallocatedPopulation -= numAdded;
                 numVacancies[i] -= numAdded;
+                vacantResidential[i].AddUsers(numAdded);
             }
         }
     }
@@ -110,11 +116,11 @@ public class PopulationManager : MonoBehaviour {
     // Tries to increase population
     {
         happiness = happinessManager.happiness;
-        residentialDemand += happiness * Time.deltaTime;
-    if (residentialDemand >= 1 )
+        residentialDemand += happiness * Time.deltaTime * 0.05f;
+        if (residentialDemand >= 1 )
         {
-            ++unallocatedPopulation;
-            --residentialDemand;
+            unallocatedPopulation++;
+            residentialDemand--;
         }
     }
 

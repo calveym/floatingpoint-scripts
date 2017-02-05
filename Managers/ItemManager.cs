@@ -9,10 +9,10 @@ public class ItemManager : MonoBehaviour {
 	RoadGenerator roadGenerator;
 
     // Declare number of object types
-	List<GameObject> residential = new List<GameObject>();
-	List<GameObject> commercial = new List<GameObject>();
+	public List<GameObject> residential = new List<GameObject>();
+	public List<GameObject> commercial = new List<GameObject>();
 	List<GameObject> industrial = new List<GameObject>();
-    List<ItemTracker> residentialTrackers = new List<ItemTracker>();
+    public List<ItemTracker> residentialTrackers = new List<ItemTracker>();
 	List<GameObject> leisure = new List<GameObject>();
 	List<GameObject> transport = new List<GameObject>();
 	List<GameObject> foliage = new List<GameObject>();
@@ -60,16 +60,15 @@ public class ItemManager : MonoBehaviour {
 	public void addResidential(int capacity, GameObject newObject)
 	// Adds a residential building to the total
 	{
-		residentialCap += (capacity * capacity + 1);
+		residentialCap += (capacity);
 		numResidential += 1;
 		residential.Add(newObject);
-        residentialTrackers.Add(newObject.GetComponent<ItemTracker>());
 	}
 
 	public void addCommercial(int capacity, GameObject newObject)
 	// Adds a commercial building to the total
 	{
-		commercialCap += (capacity * capacity + 1);
+		commercialCap += (capacity);
 		numCommercial += 1;
 		commercial.Add(newObject);
     }
@@ -77,7 +76,7 @@ public class ItemManager : MonoBehaviour {
     public void addIndustrial(int capacity, GameObject newObject)
 	// Adds an industrial building to the total
 	{
-		industrialCap += (capacity * capacity + 1);
+		industrialCap += (capacity);
 		numIndustrial += 1;
 		industrial.Add(newObject);
     }
@@ -85,7 +84,7 @@ public class ItemManager : MonoBehaviour {
     public void addLeisure(int capacity, GameObject newObject)
     // Add a leisure building
 	{
-		leisureCap += (capacity * capacity + 1);
+		leisureCap += (capacity);
 		numLeisure += 1;
 		leisure.Add(newObject);
 	}
@@ -93,7 +92,7 @@ public class ItemManager : MonoBehaviour {
 	public void addFoliage(int capacity, GameObject newObject)
     // Add foliage
 	{
-		foliageCap += (capacity * capacity + 1);
+		foliageCap += (capacity);
 		numFoliage += 1;
 		foliage.Add(newObject);
 	}

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using VRTK;
 using UnityEngine;
 
 public class ItemTracker : MonoBehaviour {
@@ -7,22 +8,26 @@ public class ItemTracker : MonoBehaviour {
     // Declare variables
     PopulationManager populationManager;
     EconomyManager economyManager;
+    ItemManager itemManager;
     
     public string type;
     public int capacity;
     public float income;
     public int users;
+    public bool usable;
+    public bool validPosition;
+    GameObject tooltip;
 
-    private void Start()
+    private void Awake()
     // Sets start variables
     {
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
+        itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
+        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
+        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
 
-        income = 0;
-        users = 0;
-        type = null;
-        capacity = 1;
+        usable = false;
     }
 
     private void Update()
@@ -39,7 +44,7 @@ public class ItemTracker : MonoBehaviour {
     void RunChecks()
     // Runs checks to make sure current state is legal
     {
-        OverCapacity();
+        // OverCapacity();
         EnablePhysics();
     }
 
@@ -51,6 +56,27 @@ public class ItemTracker : MonoBehaviour {
             GetComponent<Rigidbody>().isKinematic = false;
             GetComponent<Rigidbody>().useGravity = true;
         }
+    }
+
+    void EnableObjectTooltip(object sender, ControllerInteractionEventArgs e)
+    // Enables, resets position and resets text for object tooltips
+    {
+        if(tooltip != null)
+        {
+            Destroy(tooltip);
+        }
+        tooltip = Instantiate(GameObject.Find("ObjectTooltip"), gameObject.transform);
+        tooltip.GetComponent<VRTK_ObjectTooltip>().UpdateText("Income: " + income.ToString());
+        tooltip.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
+        tooltip.transform.position = gameObject.transform.position + new Vector3(0f, 2.5f, 0f);
+        tooltip.transform.localScale = new Vector3(100f, 100f, 100f);
+        tooltip.transform.LookAt(GameObject.Find("Camera (eye)").transform);
+    }
+
+    void DisableObjectTooltip(object sender, ControllerInteractionEventArgs e)
+    // Removes object tooltips
+    {
+        Destroy(tooltip.gameObject);
     }
 
     void DeallocateUsers(int numUsers)
@@ -73,15 +99,19 @@ public class ItemTracker : MonoBehaviour {
     // Type setter
     {
         type = typeInput;
-		capacity = (pressedButton * pressedButton) + 1;
+		capacity = (pressedButton * pressedButton + 1);
     }
 
     public void AddUsers(int numUsers)
     // Adds numUsers to users if capacity is not exceeded
     {
-        if(numUsers + users < capacity)
+        if (numUsers + users <= capacity)
         {
             users += numUsers;
+        }
+        else
+        {
+            Debug.Log("ERROR: user mismatch");
         }
     }
 
@@ -103,5 +133,32 @@ public class ItemTracker : MonoBehaviour {
     // Returns building capacity
     {
         return capacity;
+    }
+
+    public void SetUsable()
+    // Separate parts called when objects are enabled. Add additional setup calls here
+    {
+        usable = true;
+        if(type == "residential")
+        {
+            itemManager.addResidential(capacity, gameObject);
+            itemManager.residentialTrackers.Add(gameObject.GetComponent<ItemTracker>());
+        }
+        else if(type == "commercial")
+        {
+            itemManager.addCommercial(capacity, gameObject);
+        }
+        else if(type == "industrial")
+        {
+            itemManager.addIndustrial(capacity, gameObject);
+        }
+        else if(type == "foliage")
+        {
+            itemManager.addFoliage(capacity, gameObject);
+        }
+        else if(type == "leisure")
+        {
+            itemManager.addLeisure(capacity, gameObject);
+        }
     }
 }

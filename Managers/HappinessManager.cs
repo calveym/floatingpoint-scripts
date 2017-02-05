@@ -34,8 +34,7 @@ public class HappinessManager : MonoBehaviour {
 	void Update ()
     // Set values pre-initialization
     {
-        population = populationManager.population;
-        availableResidential = populationManager.AvailableResidential();
+        UpdateValues();
 
         SetJobHappiness();
         SetFoliageHappiness();
@@ -44,6 +43,16 @@ public class HappinessManager : MonoBehaviour {
 
         SetHappiness();
 	}
+
+    void UpdateValues()
+    {
+        population = populationManager.population;
+        foliageCap = itemManager.foliageCap;
+        availableResidential = populationManager.AvailableResidential();
+        residentialCap = itemManager.residentialCap;
+        commercialCap = itemManager.commercialCap;
+        industrialCap = itemManager.industrialCap;
+    }
 
     void SetHappiness()
     // Sets happiness value from components
@@ -61,13 +70,19 @@ public class HappinessManager : MonoBehaviour {
     // Job happiness algorithm
     {
         SetJobs();
-        if (availableJobs / availableResidential >= 1)
+        if(availableJobs != 0 && availableResidential != 0)
         {
-            jobHappiness = 25;
+            if (availableResidential / availableJobs <= 1)
+            {
+                jobHappiness = 25;
+            }
+            {
+                jobHappiness = (availableJobs / availableResidential * 25);
+            }
         }
         else
         {
-            jobHappiness = (availableJobs / availableResidential * 25);
+            jobHappiness = 0;
         }
 
     }
@@ -75,19 +90,27 @@ public class HappinessManager : MonoBehaviour {
     void SetFoliageHappiness()
     // Foliage happiness algorithm
     {
-        foliageHappiness = foliageCap / (population * 10);
+        if (population != 0)
+        {
+            foliageHappiness = foliageCap / (population * 10);
+        }
+        else foliageHappiness = 25;
     }
 
     void SetLeisureHappiness()
     // Leisure happiness algorithm
     {
-        leisureHappiness = leisureCap / population;
+        if(population != 0)
+        {
+            leisureHappiness = leisureCap / population;
+        }
     }
 
     void SetTaxHappiness()
     // IDEA: Make this more of an overall metric of cost of living
     {
         taxHappiness = 100 - ((economyManager.residentialTaxRate * 2) + economyManager.industrialTaxRate + economyManager.commercialTaxRate);
+        taxHappiness = taxHappiness / 4;
     }
 }
 

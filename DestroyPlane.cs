@@ -13,7 +13,11 @@ public class DestroyPlane : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
         string tag = other.gameObject.tag;
-        if (tag == "residential")
+        if (tag == "mayorsoffice")
+        {
+            other.gameObject.transform.position = new Vector3(0f, 10f, 0f);
+        }
+        else if (tag == "residential")
         {
             itemManager.removeResidential(other.gameObject);
         }

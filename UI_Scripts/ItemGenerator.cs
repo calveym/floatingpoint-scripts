@@ -211,27 +211,22 @@ public class ItemGenerator : MonoBehaviour {
 		if(newObject.tag == "residential")
 		{
 			itemTracker.setValues("residential", pressedButton);
-			itemManager.addResidential(pressedButton, newObject);
 		}
 		else if(newObject.tag == "commercial")
 		{
 			itemTracker.setValues("commercial", pressedButton);
-			itemManager.addCommercial(pressedButton, newObject);
 		}
 		else if(newObject.tag == "industrial")
 		{
 			itemTracker.setValues("industrial", pressedButton);
-			itemManager.addIndustrial(pressedButton, newObject);
 		}
 		else if(newObject.tag == "foliage")
 		{
 			itemTracker.setValues("foliage", pressedButton);
-			itemManager.addFoliage(pressedButton, newObject);
 		}
 		else if(newObject.tag == "leisure")
 		{
 			itemTracker.setValues("leisure", pressedButton);
-			itemManager.addLeisure(pressedButton, newObject);
 		}
 	}
 }
