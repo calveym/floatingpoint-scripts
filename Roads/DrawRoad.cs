@@ -9,11 +9,6 @@ public class DrawRoad : MonoBehaviour {
     VRTK_ControllerEvents rightControllerEvents;
     VRTK_ControllerEvents leftControllerEvents;
 
-    Vector2 pointOne;
-    Vector2 pointTwo;
-    Vector2 pointThree;
-    Vector2 pointFour;
-
     // Use this for initialization
     void Start () {
         hitPositions = new List<Vector3>();
@@ -33,12 +28,13 @@ public class DrawRoad : MonoBehaviour {
     void DoTriggerRelease(object sender, ControllerInteractionEventArgs e)
     {
         StopCoroutine(RecordHitPositions());
-        ProcessHitPositions(hitPositions);
+        Vector2[] points = ProcessHitPositions(hitPositions);
         RemoveHitPositions();
-        GenerateMeshGeometry();
+        GenerateMeshGeometry(points);
     }
 
     IEnumerator RecordHitPositions()
+    // Enum for recording hit positions. Runs once every frame, records positions to list
     {
         while (rightControllerEvents.triggerClicked)
         {
@@ -54,32 +50,43 @@ public class DrawRoad : MonoBehaviour {
         }
     }
 	
-    void ProcessHitPositions(List<Vector3> hitPositions)
+    Vector2[] ProcessHitPositions(List<Vector3> hitPositions)
     {
-        pointOne = GeneratePointOne(hitPositions);
-        pointTwo = GeneratePointTwo(hitPositions);
-        pointThree = GeneratePointThree(hitPositions);
-        pointFour = GeneratePointFour(hitPositions);
+        Vector2 pointOne; // Defines bezier start point
+        Vector2 pointTwo; // Defines bezier start angle
+        Vector2 pointThree; // Defines bezier end angle
+        Vector2 pointFour; // Defines bezier end point
+
+        if (hitPositions.Count >= 4)
+        {
+            pointOne = GeneratePointOne(hitPositions);
+            pointTwo = GeneratePointTwo(hitPositions);
+            pointThree = GeneratePointThree(hitPositions);
+            pointFour = GeneratePointFour(hitPositions);
+        }
+        Vector2[] points = new Vector2[4];
+
+        return points;
     }
 
     Vector2 GeneratePointOne(List<Vector3> hitPositions)
     {
-        return new Vector2(0f, 0f);
+        return hitPositions[0];
     }
 
     Vector2 GeneratePointTwo(List<Vector3> hitPositions)
     {
-        return new Vector2(0f, 0f);
+        return hitPositions[1];
     }
 
     Vector2 GeneratePointThree(List<Vector3> hitPositions)
     {
-        return new Vector2(0f, 0f);
+        return hitPositions[-2];
     }
 
     Vector2 GeneratePointFour(List<Vector3> hitPositions)
     {
-        return new Vector2(0f, 0f);
+        return hitPositions[-1];
     }
 
     void RemoveHitPositions()
@@ -87,7 +94,7 @@ public class DrawRoad : MonoBehaviour {
 
     }
 
-    void GenerateMeshGeometry()
+    void GenerateMeshGeometry(Vector2[] points)
     {
 
     }
