@@ -18,7 +18,7 @@ public class NightTime : MonoBehaviour {
 	void Update()
 	{
 		time = GameObject.FindGameObjectWithTag ("TimeManager").GetComponent<TimeOfDayManager> ().timeline;
-		if (time <= 5.49f || time>= 18.49f) 
+		if (time <= 5.49f || time>= 18.00f) 
 		{
 			Buildinglight.SetColor ("_EmissionColor", Color.yellow);
 			Streetlight.SetColor ("_EmissionColor", Color.yellow);
