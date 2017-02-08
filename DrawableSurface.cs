@@ -20,10 +20,9 @@ public class DrawableSurface : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        if (allInk.Count >= 100)
+        if (allInk.Count >= 20 && gameObject.tag == "contract")
         {
-            Destroy(allInk[0].gameObject);
-            allInk.RemoveAt(0);
+            gameObject.GetComponent<Contract>().Sign();
         }
 	}
 
