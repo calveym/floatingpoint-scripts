@@ -27,14 +27,13 @@ public class DrawRoad : MonoBehaviour {
 
     void DoTriggerRelease(object sender, ControllerInteractionEventArgs e)
     {
-        StopCoroutine(RecordHitPositions());
         Vector2[] points = ProcessHitPositions(hitPositions);
         RemoveHitPositions();
         GenerateMeshGeometry(points);
     }
 
     IEnumerator RecordHitPositions()
-    // Enum for recording hit positions. Runs once every frame, records positions to list
+    // Coroutine for recording hit positions. Runs once every frame, records positions to list
     {
         while (rightControllerEvents.triggerClicked)
         {

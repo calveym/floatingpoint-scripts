@@ -9,7 +9,7 @@ public class SpawnerCube : MonoBehaviour
 
 	int count;
     bool waitRemove;
-    GameObject currentObject;
+    public GameObject currentObject;
     GameObject leavingObject;
     GameObject mainCamera;
 

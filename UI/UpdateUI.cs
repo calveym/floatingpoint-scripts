@@ -37,8 +37,6 @@ public class UpdateUI : MonoBehaviour {
         if(timePassed >= 1)
         {
             UpdateManagerVariables();
-            Debug.Log(happiness);
-            Debug.Log(population);
             UpdateUIVariables();
             timePassed = 0;
         }

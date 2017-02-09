@@ -23,6 +23,7 @@ public class PlayerScale : MonoBehaviour {
 			cameraRig.transform.localScale = new Vector3(10f, 10f, 10f);
 			cameraRig.transform.position -= new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
 			isCameraSmall = !isCameraSmall;
+            GetComponent<VRTK_TouchpadWalking>().maxWalkSpeed = 2f;
     	}
     	else 
     	{
@@ -30,7 +31,8 @@ public class PlayerScale : MonoBehaviour {
 			cameraRig.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 			cameraRig.transform.position += new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
 			isCameraSmall = !isCameraSmall;
-    	}
+            GetComponent<VRTK_TouchpadWalking>().maxWalkSpeed = 0.4f;
+        }
     }
 
 }

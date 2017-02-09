@@ -7,11 +7,12 @@ public class DrawableSurface : MonoBehaviour {
     GameObject ink;
     List<GameObject> allInk;
     GameObject penTip;
-
+    public static bool drawable;
 
 	// Use this for initialization
 	void Start ()
     {
+        drawable = true;
         allInk = new List<GameObject>();
         ink = GameObject.Find("Ink");
         penTip = GameObject.Find("PenTip");
@@ -30,7 +31,8 @@ public class DrawableSurface : MonoBehaviour {
     {
         if(other.gameObject == penTip)
         {
-            GameObject newInk = Instantiate(ink, penTip.transform.position, Quaternion.Euler(0, 0, 0), gameObject.transform);
+            Debug.Log(other.gameObject);
+            GameObject newInk = Instantiate(ink, penTip.transform.position, Quaternion.Euler(0, 0, 0));
             allInk.Add(newInk);
         }
     }
