@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class ContractManager : MonoBehaviour {
 
-	public Contract[] allContracts;
-	public Contract[] majorContracts;
-	public Contract[] minorContracts;
-	public Contract[] acceptedContracts;
-	public Contract[] declinedContracts;
-	public Contract[] completedContracts;
-	public Contract[] failedContracts;
+	public List<Contract> allContracts;
+	public List<Contract> acceptedContracts;
+	public List<Contract> declinedContracts;
+	public List<Contract> completedContracts;
+	public List<Contract> failedContracts;
+
+	GameObject contractPrefab; // Basic contract- contains the model, gameObject, blank text fields. GenerateContract adds the contract component.
 
 	EconomyManager economyManager;
 	HappinessManager happinessManager;
@@ -19,7 +19,17 @@ public class ContractManager : MonoBehaviour {
 
 	void Awake()
 	{
+		contractPrefab = GameObject.Find("ContractPrefab");
+		economyManager = GameObject.Find("EconomyManager");
+		happinessManager = GameObject.Find("HappinessManager");
+		itemManager = GameObject.Find("itemManager");
+		populationManager = GameObject.Find("populationManager");
 
+		allContracts = new List<Contract>;
+		acceptedContracts = new List<Contract>;
+		declinedContracts = new List<Contract>;
+		completedContracts = new List<Contract>;
+		failedContracts = new List<Contract>;
 	}
 
 	void Update()
@@ -30,7 +40,10 @@ public class ContractManager : MonoBehaviour {
 
 	void CheckNumContracts()
 	{
-
+		if (allContracts.Count <= 1)
+		{
+			GenerateContract();
+		}
 	}
 
 	void CheckContractsCompleted()
@@ -38,10 +51,9 @@ public class ContractManager : MonoBehaviour {
 		// for every accepted contract, run it's Completed() function. If true, carry out reward.
 	}
 
-	void GenerateNewContract()
+	void GenerateContract()
 	{
-
+		GameObject newContract = Instantiate(ContractPrefab);
+		Contract contract = newContract.GetComponent<Contract>();
 	}
-
-
 }

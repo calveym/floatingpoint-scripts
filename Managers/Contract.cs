@@ -19,10 +19,13 @@ public class Contract: MonoBehaviour {
 
   // Requirements, start as null, assigned to false
   public bool completed;
-  public int requiredPopulationChange;
-  public string requiredBuildingType;
-  public int requiredBuildingAmount;
-  public string requiredBuildingAction;
+  public int requiredPopulation;
+  public int requiredResidential;
+  public int requiredCommercial;
+  public int requiredIndustrial;
+  public int requiredFoliage;
+  public int requiredLeisure;
+  public string requirements
 
   public string rewardType;
   public int rewardAmount;
@@ -47,7 +50,31 @@ public class Contract: MonoBehaviour {
 
   void AssignRequirements(string incomingReq)
   {
-    req = incomingReq;
+    requirements = incomingReq;
+    DecodeRequirements();
+  }
+
+  void DecodeRequirements()
+  // translates input string of reqs into ints, and sets required vars
+  {
+    requiredPopulation = requirements[0];
+    requiredResidential = requirements[1];
+    requiredCommercial = requirements[2];
+    requiredIndustrial = requirements[3];
+    requiredFoliage = requirements[4];
+    requiredLeisure = requirements[5];
+  }
+
+  void Sign()
+  // activates contract
+  {
+
+  }
+
+  bool Completed()
+  // checks and returns whether the contract is completed (all requirements satisfied)
+  {
+    return false;
   }
 
 
