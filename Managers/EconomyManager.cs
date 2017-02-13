@@ -20,8 +20,8 @@ public class EconomyManager : MonoBehaviour {
     int residentialCap;
     int commercialCap;
     int industrialCap;
-	
-    // Declares public variables 
+
+    // Declares public variables
     public int residentialTaxRate;
     public int commercialTaxRate;
     public int industrialTaxRate;
@@ -46,7 +46,7 @@ public class EconomyManager : MonoBehaviour {
 		numRoads = itemManager.getNumRoads();
 		setPopulation();
         setCapacity();
-   
+
 		updateBalance();
 		updateIncome();
 	}
@@ -59,7 +59,7 @@ public class EconomyManager : MonoBehaviour {
         industrialCap = itemManager.industrialCap;
     }
 
-	void updateBalance() 
+	void updateBalance()
 	// Reduces balance by income and time
 	{
 		balance += income * Time.deltaTime;
@@ -89,41 +89,41 @@ public class EconomyManager : MonoBehaviour {
         return population * (1 + 0.01f * residentialTaxRate);
 	}
 
-    float calculateCommercialIncome()
-    // Tax income for all commercial buildings
-    {
-        if (commercialCap == 0 || population == 0)
-        {
-            return 0;
-        }
-        else if(population >= commercialCap)
-        {
-            return commercialCap * (1 + 0.01f * commercialTaxRate);
-        }
-        else
-        {
-            return population * (1 + 0.01f * commercialTaxRate);
-        }
-    }
+  float calculateCommercialIncome()
+  // Tax income for all commercial buildings
+  {
+      if (commercialCap == 0 || population == 0)
+      {
+          return 0;
+      }
+      else if(population >= commercialCap)
+      {
+          return commercialCap * (1 + 0.01f * commercialTaxRate);
+      }
+      else
+      {
+          return population * (1 + 0.01f * commercialTaxRate);
+      }
+  }
 
-    float calculateIndustrialIncome()
-    // Tax income for industrial buildings
-    {
-        if (industrialCap == 0)
-        {
-            return 0;
-        }
-        else if (population >= industrialCap)
-        {
-            return industrialCap * (1 + 0.01f * industrialTaxRate);
-        }
-        else
-        {
-            return population * (1 + 0.01f * industrialTaxRate);
-        }
-    }
+  float calculateIndustrialIncome()
+  // Tax income for industrial buildings
+  {
+      if (industrialCap == 0)
+      {
+          return 0;
+      }
+      else if (population >= industrialCap)
+      {
+          return industrialCap * (1 + 0.01f * industrialTaxRate);
+      }
+      else
+      {
+          return population * (1 + 0.01f * industrialTaxRate);
+      }
+  }
 
-	float calculateRoadExpenses() 
+	float calculateRoadExpenses()
 	// Calculates how much is spent on road maintenance
 	{
 		return numRoads / 5;
