@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using VRTK;
-using System;
+using System.Collections;
 
 public class DisplayMenu : MonoBehaviour
 {
@@ -17,17 +17,19 @@ public class DisplayMenu : MonoBehaviour
 
     VRTK_ControllerEvents events;
     ItemGenerator itemGenerator;
+    int previousPressedButton;
     int pressedButton;
-	public GameObject wireframeModels;
-	public GameObject controllerLeft;
+    public GameObject wireframeModels;
+    public GameObject controllerLeft;
 
     private void Start()
     // Sets listeners and deactivates all panels at start
     {
+        events = GetComponent<VRTK_ControllerEvents>();
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchStart += new ControllerInteractionEventHandler(DoTouchpadTouchStart);
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
         itemGenerator = GameObject.Find("LeftController").GetComponent<ItemGenerator>();
-		DeactivateAll();
+        DeactivateAll();
     }
 
     void DoTouchpadTouchStart(object sender, ControllerInteractionEventArgs e)
@@ -46,30 +48,51 @@ public class DisplayMenu : MonoBehaviour
     void ActivatePanel()
     // Activates panel and models
     {
-        Vector2 position = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().GetTouchpadAxis();
-		// Debug.Log(GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>());
-
+        ButtonPressed(1);
+        StartCoroutine("UpdateTouchpadAxis");
         Model1.SetActive(true);
         Model2.SetActive(true);
         Model3.SetActive(true);
         Model4.SetActive(true);
         Model5.SetActive(true);
         Clipboard.SetActive(true);
-
-        if (position.x < -0.33f)
-        {
-            ButtonOnePressed();
-        }
-        else if (-0.33f <= position.x && position.x < 0.33f)
-        {
-            ButtonTwoPressed();
-        }
-        else if (position.x >= 0.66f)
-        {
-            ButtonThreePressed();
-        }
-
 		// Debug.Log(Model1.transform.parent);
+    }
+
+    int GetPressedButton(float position)
+    {
+        if (position < -0.33f)
+        {
+            return 1;
+        }
+        else if (-0.33f <= position && position < 0.33f)
+        {
+            return 2;
+        }
+        else if (position >= 0.66f)
+        {
+            return 3;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    IEnumerator UpdateTouchpadAxis()
+    // Coroutine for updating touchpad axis. Runs once per frame.
+    {
+        while (events.touchpadTouched)
+        {
+            Vector2 position = SteamVR_Controller.Input(2).GetAxis();
+            
+            if(GetPressedButton(position.x) != pressedButton)
+            {
+                ButtonPressed(GetPressedButton(position.x));
+                SwapModels();
+            }
+            yield return null;
+        }
     }
 
     void DeactivateAll()
@@ -85,27 +108,9 @@ public class DisplayMenu : MonoBehaviour
         Clipboard.SetActive(false);
     }
 
-    public void ButtonOnePressed()
+    public void ButtonPressed(int button)
     {
-        // Debug.Log("Button 1 pressed");
-        pressedButton = 1;
-        SwapModels(1);
-        panel.SetActive(true);
-    }
-
-    public void ButtonTwoPressed()
-    {
-        // Debug.Log("Button 2 pressed");
-        pressedButton = 2;
-        SwapModels(2);
-        panel.SetActive(true);
-    }
-
-    public void ButtonThreePressed()
-    {
-        // Debug.Log("Button 3 pressed");
-        pressedButton = 3;
-        SwapModels(3);
+        pressedButton = button;
         panel.SetActive(true);
     }
 
@@ -115,9 +120,14 @@ public class DisplayMenu : MonoBehaviour
         return itemGenerator.StartSpawn(pressedButton, initiator);
     }
 
-    void SwapModels(int modelNumber)
+    void SwapModels()
     // TODO: create model swapping logic
     {
+        Destroy(Model1.GetComponent<SpawnerCube>().currentObject);
+        Destroy(Model2.GetComponent<SpawnerCube>().currentObject);
+        Destroy(Model3.GetComponent<SpawnerCube>().currentObject);
+        Destroy(Model4.GetComponent<SpawnerCube>().currentObject);
+        Destroy(Model5.GetComponent<SpawnerCube>().currentObject);
     }
 
 
