@@ -14,11 +14,6 @@ public class OfficeTeleport : MonoBehaviour
         atOffice = false;
     }
 
-    private void Update()
-    {
-
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.name == "[MayorsOffice]")
