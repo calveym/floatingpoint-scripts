@@ -14,28 +14,25 @@ public class RoadDeleter : VRTK_InteractableObject {
 	void Start ()
 	{
 		controller = GameObject.Find("Controller (left)");
-	}
-
-	protected override void Update () {
-		base.Update();
 		roadGenerator = GameObject.Find("Island").GetComponent<RoadGenerator>();
 	}
 
-	public override void StartUsing (GameObject usingObject) {
+	public override void StartUsing (GameObject usingObject)
+	{
 		base.StartUsing (usingObject);
-		if (Physics.Raycast (controller.transform.position, controller.transform.forward, out hit, 1000.0f)) {
-			// round(hit.point, out newPosition);
-			if(hit.transform.gameObject.tag == "road") {
-				roadGenerator.removeRoad(hit.point);
-				roadGenerator.destroy();
-				roadGenerator.reDrawRoads();
-			}
+		Physics.Raycast (controller.transform.position, controller.transform.forward, out hit, 1000.0f);
+		if(hit.transform.gameObject.tag == "road") {
+			roadGenerator.removeRoad(hit.point);
+			roadGenerator.destroy();
+			roadGenerator.reDrawRoads();
 		}
 	}
 
-	private void round (Vector3 point, out Vector3 newPosition) {
-		newPosition = new Vector3(Mathf.Round(point.x) * gridSize.x,
+	public Vector3 Round (Vector3 point)
+  {
+		newPosition = new Vector3(Mathf.Round(point.x * 100) / 100,
 			10.01f,
-			Mathf.Round(point.z) * gridSize.z);
+			Mathf.Round(point.z * 100) / 100);
+		return newPosition;
 	}
 }
