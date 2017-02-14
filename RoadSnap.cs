@@ -23,15 +23,6 @@ public class RoadSnap : MonoBehaviour {
 	float frontThisPoint;
 	float pointDifference;
 
-	void OnCollisionEnter(Collision collision)
-	{
-		if (collision.gameObject.tag == "residential") {
-			//Debug.Log ("Match");
-			//Physics.IgnoreCollision (collision.gameObject.GetComponent<Collider>(), gameObject.GetComponent<Collider>(), true);
-			gameObject.GetComponent<Collider>().enabled = false;
-		}
-	}
-
 	void Update() {
 		// checks if object is used, and if there is a nearby object with the matching tag
 		if (objectUsed) {
@@ -39,7 +30,6 @@ public class RoadSnap : MonoBehaviour {
 			foreach (Collider hitcol in hitColliders) {
 				if (hitcol.CompareTag ("residential")) {
 					nearestBuilding = hitcol.gameObject;
-					// Debug.Log (nearestBuilding);
 				} else {
 					nearestBuilding = null;
 				}
@@ -70,14 +60,18 @@ public class RoadSnap : MonoBehaviour {
 	void DoGrabRelease(object sender, ControllerInteractionEventArgs e)
 	// Grab end event listener
 	{
-		if(objectUsed == true)
-		{
+		if (objectUsed == true) {
 			if (nearestBuilding) {
+				gameObject.GetComponent<BoxCollider> ().enabled = false;
 				setPosition ();
+				gameObject.GetComponent<BoxCollider> ().enabled = true;
+			} else {
+				GetComponent<BoxCollider> ().enabled = true;
 			}
+
 			objectUsed = false;
 
-		}
+		} 
 	}
 
 	void DoGrabStart(object sender, ControllerInteractionEventArgs e)
@@ -85,12 +79,14 @@ public class RoadSnap : MonoBehaviour {
 	{
 		if(interact.IsGrabbed() == true)
 		{
+			// gameObject.GetComponent<Collider> ().enabled = false;
 			objectUsed = true;
 
 		}
 	}
 
 	void setPosition() {
+
 
 		targetRend = nearestBuilding.GetComponent<MeshRenderer>();
 		thisRend = gameObject.GetComponent<MeshRenderer> ();
@@ -107,6 +103,7 @@ public class RoadSnap : MonoBehaviour {
 
 		// set x position
 		transform.position = new Vector3(targetPosition.x + distanceToMoveX, targetPosition.y, targetPosition.z);
+		//gameObject.GetComponent<Collider> ().enabled = true;
 
 		// set z position, and align x axis
 		//transform.position = new Vector3(transform.position.x + pointDifference, targetPosition.y, targetPosition.z - distanceToMoveZ);
