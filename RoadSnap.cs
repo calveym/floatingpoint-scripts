@@ -23,6 +23,15 @@ public class RoadSnap : MonoBehaviour {
 	float frontThisPoint;
 	float pointDifference;
 
+	void OnCollisionEnter(Collision collision)
+	{
+		if (collision.gameObject.tag == "residential") {
+			//Debug.Log ("Match");
+			//Physics.IgnoreCollision (collision.gameObject.GetComponent<Collider>(), gameObject.GetComponent<Collider>(), true);
+			gameObject.GetComponent<Collider>().enabled = false;
+		}
+	}
+
 	void Update() {
 		// checks if object is used, and if there is a nearby object with the matching tag
 		if (objectUsed) {
@@ -35,14 +44,6 @@ public class RoadSnap : MonoBehaviour {
 					nearestBuilding = null;
 				}
 			}
-		}
-	}
-
-	void OnCollisionEnter(Collision collision)
-	{
-		if (collision.gameObject.tag == "residential") {
-			Physics.IgnoreCollision (collision.gameObject.GetComponent<Collider>(), gameObject.GetComponent<Collider>(), true);
-			Debug.Log ("Collision:" + collision.gameObject + " & " + gameObject.GetComponent<Collider>());
 		}
 	}
 
