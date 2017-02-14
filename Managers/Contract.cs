@@ -16,9 +16,10 @@ public class Contract: MonoBehaviour {
   public string descShort;
   public string descLong;
   public string type;
+  public int level;
+  public bool completed;
 
   // Requirements, start as null, assigned to false
-  public bool completed;
   public int requiredPopulation;
   public int requiredResidential;
   public int requiredCommercial;
@@ -40,12 +41,14 @@ public class Contract: MonoBehaviour {
     CheckCompleted();
   }
 
-  void Create(string incomingName, string incomingDescShort, string incomingDescLong, string incomingType)
+  void Create(string incomingName, bool incomingMajor, string incomingDescShort, string incomingDescLong, string incomingType, int incomingLevel)
   {
     name = incomingName;
+    major = incomingMajor;
     descShort = incomingDescShort;
     descLong = incomingDescLong;
     type = incomingType;
+    level = incomingLevel;
   }
 
   void AssignRequirements(string incomingReq)

@@ -5,6 +5,7 @@ using UnityEngine;
 public class ContractManager : MonoBehaviour {
 
 	public List<Contract> allContracts;
+	public List<Contract> majorContracts;
 	public List<Contract> acceptedContracts;
 	public List<Contract> declinedContracts;
 	public List<Contract> completedContracts;
@@ -26,6 +27,7 @@ public class ContractManager : MonoBehaviour {
 		populationManager = GameObject.Find("populationManager");
 
 		allContracts = new List<Contract>;
+		majorContracts = new List<Contract>;
 		acceptedContracts = new List<Contract>;
 		declinedContracts = new List<Contract>;
 		completedContracts = new List<Contract>;

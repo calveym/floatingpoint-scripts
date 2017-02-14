@@ -85,7 +85,7 @@ public class DisplayMenu : MonoBehaviour
         while (events.touchpadTouched)
         {
             Vector2 position = SteamVR_Controller.Input(2).GetAxis();
-            
+
             if(GetPressedButton(position.x) != pressedButton)
             {
                 ButtonPressed(GetPressedButton(position.x));
@@ -121,7 +121,6 @@ public class DisplayMenu : MonoBehaviour
     }
 
     void SwapModels()
-    // TODO: create model swapping logic
     {
         Destroy(Model1.GetComponent<SpawnerCube>().currentObject);
         Destroy(Model2.GetComponent<SpawnerCube>().currentObject);
