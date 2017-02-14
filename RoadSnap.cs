@@ -30,11 +30,19 @@ public class RoadSnap : MonoBehaviour {
 			foreach (Collider hitcol in hitColliders) {
 				if (hitcol.CompareTag ("residential")) {
 					nearestBuilding = hitcol.gameObject;
-					Debug.Log (nearestBuilding);
+					// Debug.Log (nearestBuilding);
 				} else {
 					nearestBuilding = null;
 				}
 			}
+		}
+	}
+
+	void OnCollisionEnter(Collision collision)
+	{
+		if (collision.gameObject.tag == "residential") {
+			Physics.IgnoreCollision (collision.gameObject.GetComponent<Collider>(), gameObject.GetComponent<Collider>(), true);
+			Debug.Log ("Collision:" + collision.gameObject + " & " + gameObject.GetComponent<Collider>());
 		}
 	}
 
@@ -63,7 +71,9 @@ public class RoadSnap : MonoBehaviour {
 	{
 		if(objectUsed == true)
 		{
-			setPosition ();
+			if (nearestBuilding) {
+				setPosition ();
+			}
 			objectUsed = false;
 
 		}
@@ -81,7 +91,6 @@ public class RoadSnap : MonoBehaviour {
 
 	void setPosition() {
 
-
 		targetRend = nearestBuilding.GetComponent<MeshRenderer>();
 		thisRend = gameObject.GetComponent<MeshRenderer> ();
 
@@ -94,7 +103,6 @@ public class RoadSnap : MonoBehaviour {
 		frontTargetPoint = nearestBuilding.transform.position.x + (targetRend.bounds.size.x / 2);
 		frontThisPoint = transform.position.x -(thisRend.bounds.size.x / 2);
 		pointDifference = Mathf.Abs (frontThisPoint) - Mathf.Abs (frontTargetPoint);
-
 
 		// set x position
 		transform.position = new Vector3(targetPosition.x + distanceToMoveX, targetPosition.y, targetPosition.z);
@@ -110,7 +118,7 @@ public class RoadSnap : MonoBehaviour {
 	{
 		if(roadGenerator.CheckSurroundingRoads(transform.position))
 		{
-			Debug.Log ("Running!");
+			// Debug.Log ("Running!");
 			Vector3 newPosition;
 			roadGenerator.Round(transform.position, out newPosition);
 			// transform.position = newPosition;
