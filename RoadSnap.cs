@@ -28,8 +28,19 @@ public class RoadSnap : MonoBehaviour {
 		if (objectUsed) {
 			hitColliders = Physics.OverlapSphere (transform.position, 1.5f);
 			foreach (Collider hitcol in hitColliders) {
-				if (hitcol.CompareTag ("residential")) {
+				if (hitcol.CompareTag ("residential") && hitcol != GetComponent<Collider>()) {
 					nearestBuilding = hitcol.gameObject;
+
+					if (Mathf.Abs((nearestBuilding.transform.position.x - transform.position.x)) < Mathf.Abs((nearestBuilding.transform.position.z - transform.position.z))) {
+						Debug.Log ("Closer to z");
+					}
+
+					if (Mathf.Abs((nearestBuilding.transform.position.x - transform.position.x)) > Mathf.Abs((nearestBuilding.transform.position.z - transform.position.z))) {
+						Debug.Log ("Closer to x");
+					}
+
+					//Debug.Log (nearestBuilding);
+					//Debug.Log(nearestBuilding.GetComponent<Renderer>().bounds.ClosestPoint(transform.position));
 				} else {
 					nearestBuilding = null;
 				}
@@ -70,7 +81,6 @@ public class RoadSnap : MonoBehaviour {
 			}
 
 			objectUsed = false;
-
 		} 
 	}
 
@@ -78,8 +88,7 @@ public class RoadSnap : MonoBehaviour {
 	// Grab start event listener
 	{
 		if(interact.IsGrabbed() == true)
-		{
-			// gameObject.GetComponent<Collider> ().enabled = false;
+		{	
 			objectUsed = true;
 
 		}
@@ -102,7 +111,7 @@ public class RoadSnap : MonoBehaviour {
 		pointDifference = Mathf.Abs (frontThisPoint) - Mathf.Abs (frontTargetPoint);
 
 		// set x position
-		transform.position = new Vector3(targetPosition.x + distanceToMoveX, targetPosition.y, targetPosition.z);
+		transform.position = new Vector3(targetPosition.x - distanceToMoveX, targetPosition.y, targetPosition.z);
 		//gameObject.GetComponent<Collider> ().enabled = true;
 
 		// set z position, and align x axis
