@@ -63,6 +63,7 @@ public class ItemManager : MonoBehaviour {
 		residentialCap += (capacity);
 		numResidential += 1;
 		residential.Add(newObject);
+		Contract.IncrementResidential();
 	}
 
 	public void addCommercial(int capacity, GameObject newObject)
@@ -71,6 +72,7 @@ public class ItemManager : MonoBehaviour {
 		commercialCap += (capacity);
 		numCommercial += 1;
 		commercial.Add(newObject);
+		Contract.IncrementCommercial();
     }
 
     public void addIndustrial(int capacity, GameObject newObject)
@@ -79,7 +81,8 @@ public class ItemManager : MonoBehaviour {
 		industrialCap += (capacity);
 		numIndustrial += 1;
 		industrial.Add(newObject);
-    }
+		Contract.IncrementCommercial();
+		}
 
     public void addLeisure(int capacity, GameObject newObject)
     // Add a leisure building
@@ -87,6 +90,7 @@ public class ItemManager : MonoBehaviour {
 		leisureCap += (capacity);
 		numLeisure += 1;
 		leisure.Add(newObject);
+		Contract.IncrementLeisure();
 	}
 
 	public void addFoliage(int capacity, GameObject newObject)
@@ -95,6 +99,7 @@ public class ItemManager : MonoBehaviour {
 		foliageCap += (capacity);
 		numFoliage += 1;
 		foliage.Add(newObject);
+		Contract.IncrementLeisure();
 	}
 
     public void removeResidential(GameObject removeObject)

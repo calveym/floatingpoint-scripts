@@ -5,7 +5,7 @@ using UnityEngine;
 public class ContractManager : MonoBehaviour {
 
 	public List<Contract> allContracts;
-	public List<Contract> majorContracts;
+	// public List<Contract> majorContracts;
 	public List<Contract> acceptedContracts;
 	public List<Contract> declinedContracts;
 	public List<Contract> completedContracts;
@@ -27,7 +27,7 @@ public class ContractManager : MonoBehaviour {
 		populationManager = GameObject.Find("populationManager");
 
 		allContracts = new List<Contract>;
-		majorContracts = new List<Contract>;
+		// majorContracts = new List<Contract>;
 		acceptedContracts = new List<Contract>;
 		declinedContracts = new List<Contract>;
 		completedContracts = new List<Contract>;
@@ -50,12 +50,23 @@ public class ContractManager : MonoBehaviour {
 
 	void CheckContractsCompleted()
 	{
-		// for every accepted contract, run it's Completed() function. If true, carry out reward.
+		for(i = acceptedContracts.Count - 1; i > 0; i--)
+		{
+			if(acceptedContracts[i].Completed())
+			{
+				Contract contract = acceptedContracts[i];
+				acceptedContracts.RemoveAt(i);
+				completedContracts.Add(contract);
+			}
+		}
 	}
 
 	void GenerateContract()
 	{
 		GameObject newContract = Instantiate(ContractPrefab);
 		Contract contract = newContract.GetComponent<Contract>();
+		contract.Create("Test contract", false, "Increase population by 5", "The regional government has created a scheme to encourage population growth. Increase your population by 5 to complete", "0", "0");
+		contract.AssignRequirements("500000");
+		allContracts.Add(contract);
 	}
 }

@@ -17,7 +17,7 @@ public class Contract: MonoBehaviour {
   public string descLong;
   public string type;
   public int level;
-  public bool completed;
+  public bool active;
 
   // Requirements, start as null, assigned to false
   public int requiredPopulation;
@@ -26,22 +26,48 @@ public class Contract: MonoBehaviour {
   public int requiredIndustrial;
   public int requiredFoliage;
   public int requiredLeisure;
-  public string requirements
+  public string requirements;
 
   public string rewardType;
   public int rewardAmount;
-
-  void Awake()
-  {
-
-  }
 
   void Update()
   {
     CheckCompleted();
   }
 
+  public static void IncrementPopulation(int numAdded)
+  {
+    requiredPopulation -= numAdded;
+  }
+
+  public static void IncrementResidential()
+  {
+    requiredResidential--;
+  }
+
+  public static void IncrementCommercial()
+  {
+    requiredCommercial--;
+  }
+
+  public static void IncrementIndustrial()
+  {
+    requiredIndustrial--;
+  }
+
+  public static void IncrementFoliage()
+  {
+    requiredFoliage--;
+  }
+
+  public static void IncrementLeisure()
+  {
+    requiredLeisure--;
+  }
+
   void Create(string incomingName, bool incomingMajor, string incomingDescShort, string incomingDescLong, string incomingType, int incomingLevel)
+  // Sets basic info
   {
     name = incomingName;
     major = incomingMajor;
@@ -52,6 +78,7 @@ public class Contract: MonoBehaviour {
   }
 
   void AssignRequirements(string incomingReq)
+  // Sets requirements
   {
     requirements = incomingReq;
     DecodeRequirements();
@@ -77,7 +104,7 @@ public class Contract: MonoBehaviour {
   bool Completed()
   // checks and returns whether the contract is completed (all requirements satisfied)
   {
-    return false;
+    return (requiredPopulation <= 0 && requiredResidential <= 0 && requiredCommercial <= 0 && requiredIndustrial <= 0 && requiredFoliage <= 0 && requiredLeisure <= 0);
   }
 
 

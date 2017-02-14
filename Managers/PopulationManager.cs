@@ -25,7 +25,7 @@ public class PopulationManager : MonoBehaviour {
     int industrialCap;
     int commercialCap;
 
-	void Awake () 
+	void Awake ()
 	// Set values pre-initialization
 	{
 		population = 0;
@@ -35,7 +35,7 @@ public class PopulationManager : MonoBehaviour {
         happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
 		demandManager = GameObject.Find("Managers").GetComponent<DemandManager>();
 	}
-	
+
 	void Update ()
 	// Updates values & calls increasePopulation if conditions are met
 	{
@@ -96,6 +96,7 @@ public class PopulationManager : MonoBehaviour {
                     numAdded = unallocatedPopulation;
                 }
                 population += numAdded;
+								Contract.IncrementPopulation(numAdded);
                 unallocatedPopulation -= numAdded;
                 numVacancies[i] -= numAdded;
                 vacantResidential[i].AddUsers(numAdded);
