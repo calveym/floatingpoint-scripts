@@ -83,7 +83,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 	void DrawRoad(Vector3 position)
 	// Handles road creation process
 	{
-		roads.Add(position, findCorrectRoad(position));
+		roads.Add(position, CreateRoadObject(position));
 		surroundingRoads.Add(position, CheckSurroundingRoads(position));
 	}
 
@@ -119,8 +119,8 @@ public class RoadGenerator : VRTK_InteractableObject {
 		}
 	}
 
-	GameObject findCorrectRoad(Vector3 newPosition)
-	// Computes surrounding roads and returns instantiated road object
+	GameObject CreateRoadObject(Vector3 newPosition)
+	// Creates road instance using surrounding road check
   {
 		string surroundingRoadString = CheckSurroundingRoads(newPosition);
 		return InstantiateRoad (surroundingRoadString, newPosition);
