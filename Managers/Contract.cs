@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Contract: MonoBehaviour {
+public class Contract : MonoBehaviour {
 
   // Population increase contracts: records current population, requires higher population. Used for all major contracts.
   // Building construction contracts: minor contract. Rewards money. Requires contsruction of a certain number of building type.

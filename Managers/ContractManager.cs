@@ -5,7 +5,7 @@ using UnityEngine;
 public class ContractManager : MonoBehaviour {
 
 	public List<Contract> allContracts;
-	// public List<Contract> majorContracts;
+	public List<Contract> majorContracts;
 	public List<Contract> acceptedContracts;
 	public List<Contract> declinedContracts;
 	public List<Contract> completedContracts;

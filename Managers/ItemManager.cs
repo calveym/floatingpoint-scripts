@@ -7,12 +7,13 @@ public class ItemManager : MonoBehaviour {
 	// Declare other managers
 	EconomyManager economyManager;
 	RoadGenerator roadGenerator;
+	ContractManager contractManager;
 
-    // Declare number of object types
+  // Declare number of object types
 	public List<GameObject> residential = new List<GameObject>();
 	public List<GameObject> commercial = new List<GameObject>();
 	List<GameObject> industrial = new List<GameObject>();
-    public List<ItemTracker> residentialTrackers = new List<ItemTracker>();
+  public List<ItemTracker> residentialTrackers = new List<ItemTracker>();
 	List<GameObject> leisure = new List<GameObject>();
 	List<GameObject> transport = new List<GameObject>();
 	List<GameObject> foliage = new List<GameObject>();
@@ -37,10 +38,11 @@ public class ItemManager : MonoBehaviour {
 	{
 		economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
 		roadGenerator = GameObject.Find("Island").GetComponent<RoadGenerator>();
+		contractmanager = GameObject.Find("Managers").GetComponent<ContractManager>();
 	}
 
 	void Update ()
-    // Updates state
+  // Updates state
 	{
 		CheckOK();
 	}
@@ -63,7 +65,7 @@ public class ItemManager : MonoBehaviour {
 		residentialCap += (capacity);
 		numResidential += 1;
 		residential.Add(newObject);
-		Contract.IncrementResidential();
+		contractManager.IncrementResidential();
 	}
 
 	public void addCommercial(int capacity, GameObject newObject)
@@ -72,7 +74,7 @@ public class ItemManager : MonoBehaviour {
 		commercialCap += (capacity);
 		numCommercial += 1;
 		commercial.Add(newObject);
-		Contract.IncrementCommercial();
+		contractManager.IncrementCommercial();
     }
 
     public void addIndustrial(int capacity, GameObject newObject)
@@ -81,7 +83,7 @@ public class ItemManager : MonoBehaviour {
 		industrialCap += (capacity);
 		numIndustrial += 1;
 		industrial.Add(newObject);
-		Contract.IncrementCommercial();
+		contractManager.IncrementCommercial();
 		}
 
     public void addLeisure(int capacity, GameObject newObject)
@@ -90,7 +92,7 @@ public class ItemManager : MonoBehaviour {
 		leisureCap += (capacity);
 		numLeisure += 1;
 		leisure.Add(newObject);
-		Contract.IncrementLeisure();
+		contractManager.IncrementLeisure();
 	}
 
 	public void addFoliage(int capacity, GameObject newObject)
@@ -99,50 +101,49 @@ public class ItemManager : MonoBehaviour {
 		foliageCap += (capacity);
 		numFoliage += 1;
 		foliage.Add(newObject);
-		Contract.IncrementLeisure();
+		contractManager.IncrementLeisure();
 	}
 
-    public void removeResidential(GameObject removeObject)
-    // Removes residential building
-    {
-        residentialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
-        removeObject.GetComponent<ItemTracker>().RemoveUsers();
-        numResidential--;
-        residential.Remove(removeObject);
-    }
+  public void removeResidential(GameObject removeObject)
+  // Removes residential building
+  {
+      residentialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
+      removeObject.GetComponent<ItemTracker>().RemoveUsers();
+      numResidential--;
+      residential.Remove(removeObject);
+  }
 
-    public void removeCommercial(GameObject removeObject)
-    // Removes commercial building
-    {
-        commercialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
-        removeObject.GetComponent<ItemTracker>().RemoveUsers();
-        numCommercial--;
-        commercial.Remove(removeObject);
-    }
+  public void removeCommercial(GameObject removeObject)
+  // Removes commercial building
+  {
+      commercialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
+      numCommercial--;
+      commercial.Remove(removeObject);
+  }
 
-    public void removeIndustrial(GameObject removeObject)
-    // Remove an industrial building
-    {
-        industrialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
-        numIndustrial--;
-        industrial.Remove(removeObject);
-    }
+  public void removeIndustrial(GameObject removeObject)
+  // Remove an industrial building
+  {
+      industrialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
+      numIndustrial--;
+      industrial.Remove(removeObject);
+  }
 
-    public void removeLeisure(GameObject removeObject)
-    // Remove a leisure building
-    {
-        leisureCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
-        numLeisure--;
-        leisure.Remove(removeObject);
-    }
+  public void removeLeisure(GameObject removeObject)
+  // Remove a leisure building
+  {
+      leisureCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
+      numLeisure--;
+      leisure.Remove(removeObject);
+  }
 
-    public void removeFoliage(GameObject removeObject)
-    // Remove foliage
-    {
-        foliageCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
-        numLeisure--;
-        leisure.Remove(removeObject);
-    }
+  public void removeFoliage(GameObject removeObject)
+  // Remove foliage
+  {
+      foliageCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
+      numLeisure--;
+      leisure.Remove(removeObject);
+  }
 
 	public int getMaxPop()
 	// Returns current maximum population
