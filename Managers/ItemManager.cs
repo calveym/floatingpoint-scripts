@@ -13,7 +13,7 @@ public class ItemManager : MonoBehaviour {
 	public List<GameObject> residential = new List<GameObject>();
 	public List<GameObject> commercial = new List<GameObject>();
 	List<GameObject> industrial = new List<GameObject>();
-  public List<ItemTracker> residentialTrackers = new List<ItemTracker>();
+    public List<ItemTracker> residentialTrackers = new List<ItemTracker>();
 	List<GameObject> leisure = new List<GameObject>();
 	List<GameObject> transport = new List<GameObject>();
 	List<GameObject> foliage = new List<GameObject>();
@@ -38,7 +38,7 @@ public class ItemManager : MonoBehaviour {
 	{
 		economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
 		roadGenerator = GameObject.Find("Island").GetComponent<RoadGenerator>();
-		contractmanager = GameObject.Find("Managers").GetComponent<ContractManager>();
+		// contractmanager = GameObject.Find("Managers").GetComponent<ContractManager>();
 	}
 
 	void Update ()
@@ -56,7 +56,7 @@ public class ItemManager : MonoBehaviour {
 	public int getNumRoads()
 	// Returns number of roads on the map
 	{
-		return roadGenerator.roadPositions.Count;
+		return roadGenerator.roads.Count;
 	}
 
 	public void addResidential(int capacity, GameObject newObject)
@@ -65,7 +65,7 @@ public class ItemManager : MonoBehaviour {
 		residentialCap += (capacity);
 		numResidential += 1;
 		residential.Add(newObject);
-		contractManager.IncrementResidential();
+		//contractManager.IncrementResidential();
 	}
 
 	public void addCommercial(int capacity, GameObject newObject)
@@ -74,7 +74,7 @@ public class ItemManager : MonoBehaviour {
 		commercialCap += (capacity);
 		numCommercial += 1;
 		commercial.Add(newObject);
-		contractManager.IncrementCommercial();
+		//contractManager.IncrementCommercial();
     }
 
     public void addIndustrial(int capacity, GameObject newObject)
@@ -83,7 +83,7 @@ public class ItemManager : MonoBehaviour {
 		industrialCap += (capacity);
 		numIndustrial += 1;
 		industrial.Add(newObject);
-		contractManager.IncrementCommercial();
+		//contractManager.IncrementCommercial();
 		}
 
     public void addLeisure(int capacity, GameObject newObject)
@@ -92,7 +92,7 @@ public class ItemManager : MonoBehaviour {
 		leisureCap += (capacity);
 		numLeisure += 1;
 		leisure.Add(newObject);
-		contractManager.IncrementLeisure();
+		//contractManager.incrementLeisure();
 	}
 
 	public void addFoliage(int capacity, GameObject newObject)
@@ -101,7 +101,7 @@ public class ItemManager : MonoBehaviour {
 		foliageCap += (capacity);
 		numFoliage += 1;
 		foliage.Add(newObject);
-		contractManager.IncrementLeisure();
+		//contractManager.incrementFoliage();
 	}
 
   public void removeResidential(GameObject removeObject)

@@ -11,6 +11,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 	public GameObject smallRoadTurn;
 	public GameObject smallRoadTJunction;
 	public GameObject smallRoadXJunction;
+    private RaycastHit hit;
 
 	Dictionary<string, GameObject> roadObject; // Contains surroundingRoadString - object mapping
 	Dictionary<string, Quaternion> roadRotation; // Contains surroundingRoadString - rotation mapping
@@ -66,13 +67,17 @@ public class RoadGenerator : VRTK_InteractableObject {
 		roadRotation.Add("1111", zero);
 	}
 
-	public void StartUsing (GameObject usingObject)
+	public override void StartUsing (GameObject usingObject)
 	// Runs when object is used by vrtk controller
 	{
 		base.StartUsing (usingObject);
-		if (Physics.Raycast (controller.transform.position, controller.transform.forward, out RaycastHit hit, 1000.0f)) {
+		if (Physics.Raycast (controller.transform.position, controller.transform.forward, out hit, 1000.0f))
+        {
 			Vector3 rounded = Round(hit.point);
-			if(!roads.TryGetValue(rounded))
+
+            GameObject roundedValue;
+            roads.TryGetValue(rounded, out roundedValue);
+            if (roundedValue == null)
 			{
 				DrawRoad(rounded);
 				RedrawLocalRoads(rounded);
@@ -87,22 +92,22 @@ public class RoadGenerator : VRTK_InteractableObject {
 		surroundingRoads.Add(position, CheckSurroundingRoads(position));
 	}
 
-	void RedrawLocalRoads(Vector3 position)
+	public void RedrawLocalRoads(Vector3 position)
 	// Redraw only the surrounding roads
 	{
-		if(CheckRoadRight(position))
+		if(CheckRoadRight(position) == "1")
 		{
 			ConfirmRoad(new Vector3(position.x + 1f, position.y, position.z));
 		}
-		if (CheckRoadLeft(position))
+		if (CheckRoadLeft(position) == "1")
 		{
 			ConfirmRoad(new Vector3(position.x - 1f, position.y, position.z));
 		}
-		if (CheckRoadUp(position))
+		if (CheckRoadUp(position) == "1")
 		{
 			ConfirmRoad(new Vector3(position.x, position.y, position.z + 1f));
 		}
-		if (CheckRoadDown(position))
+		if (CheckRoadDown(position) == "1")
 		{
 			ConfirmRoad(new Vector3(position.x, position.y, position.z - 1f));
 		}
@@ -111,7 +116,8 @@ public class RoadGenerator : VRTK_InteractableObject {
 	void ConfirmRoad(Vector3 position)
 	// Redraw road if surroundings change
 	{
-		string oldSurroundingString = surroundingRoads.TryGetValue(position);
+        string oldSurroundingString;
+        surroundingRoads.TryGetValue(position, out oldSurroundingString);
 		if(oldSurroundingString != CheckSurroundingRoads(position))
 		{
 			RemoveRoad(position);
@@ -129,36 +135,45 @@ public class RoadGenerator : VRTK_InteractableObject {
 	string CheckSurroundingRoads(Vector3 newPosition)
 	// Returns string in the format "1111" - "0000" reflecting surrounding roads
 	{
-		return CheckRoadUp(newPosition) + CheckRoadDown(newPosition) + CheckRoadLeft(newPosition) + CheckRoadRight(newPosition)
+        return CheckRoadUp(newPosition) + CheckRoadDown(newPosition) + CheckRoadLeft(newPosition) + CheckRoadRight(newPosition);
 	}
 
-	bool CheckRoadRight(Vector3 newPosition)
+	string CheckRoadRight(Vector3 newPosition)
 	// Returns 1 if road directly right exists
 	{
-		return (roads.TryGetValue(new Vector3(newPosition.x + 1f, newPosition.y, newPosition.z)) ? "1" : "0";
+        GameObject returnObject;
+        string returnValue = roads.TryGetValue(new Vector3(newPosition.x + 1f, newPosition.y, newPosition.z), out returnObject) ? "1" : "0";
+        return returnValue;
 	}
 
-	bool CheckRoadLeft(Vector3 newPosition)
+	string CheckRoadLeft(Vector3 newPosition)
 	// Returns 1 if road directly left exists
 	{
-		return (roads.TryGetValue(new Vector3(newPosition.x - 1f, newPosition.y, newPosition.z)) ? "1" : "0";
-	}
+        GameObject returnObject;
+        string returnValue = roads.TryGetValue(new Vector3(newPosition.x - 1f, newPosition.y, newPosition.z), out returnObject) ? "1" : "0";
+        return returnValue;
+    }
 
-	bool CheckRoadDown(Vector3 newPosition)
+	string CheckRoadDown(Vector3 newPosition)
 	// Returns 1 if road directly down exists
 	{
-		return (roads.TryGetValue(new Vector3(newPosition.x, newPosition.y, newPosition.z - 1f)) ? "1" : "0";
-	}
+        GameObject returnObject;
+        string returnValue = roads.TryGetValue(new Vector3(newPosition.x, newPosition.y, newPosition.z - 1f), out returnObject) ? "1" : "0";
+        return returnValue;
+    }
 
-	bool CheckRoadUp(Vector3 newPosition)
+	string CheckRoadUp(Vector3 newPosition)
 	// Returns 1 if road directly up exists
 	{
-		return (roads.TryGetValue(new Vector3(newPosition.x, newPosition.y, newPosition.z + 1f)) ? "1" : "0";
-	}
+        GameObject returnObject;
+        string returnValue = roads.TryGetValue(new Vector3(newPosition.x, newPosition.y, newPosition.z + 1f), out returnObject) ? "1" : "0";
+        return returnValue;
+    }
 
 	GameObject InstantiateRoad(string surroundingRoadString, Vector3 newPosition)
 	// Uses surrounding road information to instantiate a find a new road
-  {
+    {
+        GameObject correctRoad;
 		GameObject correctRoadObject;
 		Quaternion correctRoadRotation;
 		roadObject.TryGetValue(surroundingRoadString, out correctRoadObject);
@@ -170,25 +185,27 @@ public class RoadGenerator : VRTK_InteractableObject {
 
 	bool V3Equal(Vector3 a, Vector3 b)
 	// Returns true if two input vector3s are equal to within set tolerance
-  {
+    {
 		return Vector3.SqrMagnitude(a - b) < 3.162f;
 	}
 
 	public void RemoveRoad(Vector3 position)
 	// Handles removing road at position
-  {
-		Destroy(roads.TryGetValue(position));
+    {
+        GameObject destroyRoad;
+        roads.TryGetValue(position, out destroyRoad);
+        Debug.Log(position);
 		roads.Remove(position);
 		surroundingRoads.Remove(position);
-		RedrawLocalRoads(position);
+        Destroy(destroyRoad);
 	}
 
 	public Vector3 Round (Vector3 point)
 	// Rounds to nearest 0.1f
-  {
-		newPosition = new Vector3(Mathf.Round(point.x * 10) / 10,
+    {
+		Vector3 newPosition = new Vector3(Mathf.Round(point.x),
 			10.01f,
-			Mathf.Round(point.z * 10) / 10);
+			Mathf.Round(point.z));
 		return newPosition;
 	}
 }

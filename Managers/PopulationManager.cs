@@ -96,7 +96,7 @@ public class PopulationManager : MonoBehaviour {
                     numAdded = unallocatedPopulation;
                 }
                 population += numAdded;
-								Contract.IncrementPopulation(numAdded);
+				//GameObject.Find("Managers").GetComponent<ContractManager>().incrementPopulation(numAdded);
                 unallocatedPopulation -= numAdded;
                 numVacancies[i] -= numAdded;
                 vacantResidential[i].AddUsers(numAdded);

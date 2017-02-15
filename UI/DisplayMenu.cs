@@ -48,6 +48,7 @@ public class DisplayMenu : MonoBehaviour
     void ActivatePanel()
     // Activates panel and models
     {
+        Debug.Log("Runsss");
         ButtonPressed(1);
         StartCoroutine("UpdateTouchpadAxis");
         Model1.SetActive(true);

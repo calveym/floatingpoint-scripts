@@ -19,13 +19,13 @@ public class OfficeTeleport : MonoBehaviour
         if (other.gameObject.name == "[MayorsOffice]")
         {
             atOffice = true;
-            float difference = interiorTarget.transform.position - gameObject.transform.position;
+            Vector3 difference = interiorTarget.transform.position - gameObject.transform.position;
             GameObject.Find("[CameraRig]").transform.position += new Vector3(difference.x, -110f, difference.z);
         }
         else if (other.gameObject.name == "OfficeDoor")
         {
             atOffice = false;
-            float difference = exteriorTarget.transform.position - gameObject.transform.position;
+            Vector3 difference = exteriorTarget.transform.position - gameObject.transform.position;
             GameObject.Find("[CameraRig]").transform.position += new Vector3(difference.x, 110f, difference.z);
         }
     }
