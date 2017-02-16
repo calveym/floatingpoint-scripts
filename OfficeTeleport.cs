@@ -6,8 +6,8 @@ public class OfficeTeleport : MonoBehaviour
 {
 
     public bool atOffice;
-    private GameObject interiorTarget;
-    private GameObject exteriorTarget;
+    public GameObject interiorTarget;
+    public GameObject exteriorTarget;
 
     private void Start()
     {

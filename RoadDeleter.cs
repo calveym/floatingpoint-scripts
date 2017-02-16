@@ -5,19 +5,21 @@ using VRTK;
 
 public class RoadDeleter : VRTK_InteractableObject {
 
+    VRTK_ControllerEvents events;
 	private GameObject controller;
 	private RoadGenerator roadGenerator;
     private RaycastHit hit;
 
 	void Start ()
 	{
-		controller = GameObject.Find("Controller (left)");
+		controller = GameObject.Find("LeftController");
+        events = controller.GetComponent<VRTK_ControllerEvents>();
 		roadGenerator = GameObject.Find("Island").GetComponent<RoadGenerator>();
 	}
 
 	public override void StartUsing (GameObject usingObject)
 	{
-		base.StartUsing (usingObject);
+        base.StartUsing (usingObject);
 		Physics.Raycast (controller.transform.position, controller.transform.forward, out hit, 1000.0f);
 		if(hit.transform.gameObject.tag == "road") {
             Vector3 rounded = Round(hit.point);

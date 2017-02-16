@@ -5,7 +5,8 @@ using VRTK;
 
 public class RoadGenerator : VRTK_InteractableObject {
 
-	public GameObject controller;
+	GameObject controller;
+    VRTK_ControllerEvents events;
 
 	public GameObject smallRoadStraight;
 	public GameObject smallRoadTurn;
@@ -22,6 +23,8 @@ public class RoadGenerator : VRTK_InteractableObject {
 	void Start()
 	// Initiates all of the dictionaries for lookups and all other variables that need to be initialized
 	{
+        controller = GameObject.Find("RightController");
+        events = controller.GetComponent<VRTK_ControllerEvents>();
 		roads = new Dictionary<Vector3, GameObject>();
 		surroundingRoads = new Dictionary<Vector3, string>();
 
@@ -71,7 +74,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 	// Runs when object is used by vrtk controller
 	{
 		base.StartUsing (usingObject);
-		if (Physics.Raycast (controller.transform.position, controller.transform.forward, out hit, 1000.0f))
+		if (Physics.Raycast (controller.transform.position, controller.transform.forward, out hit, 1000.0f) && events.triggerClicked)
         {
 			Vector3 rounded = Round(hit.point);
 

@@ -48,7 +48,6 @@ public class DisplayMenu : MonoBehaviour
     void ActivatePanel()
     // Activates panel and models
     {
-        Debug.Log("Runsss");
         ButtonPressed(1);
         StartCoroutine("UpdateTouchpadAxis");
         Model1.SetActive(true);
@@ -57,7 +56,6 @@ public class DisplayMenu : MonoBehaviour
         Model4.SetActive(true);
         Model5.SetActive(true);
         Clipboard.SetActive(true);
-		// Debug.Log(Model1.transform.parent);
     }
 
     int GetPressedButton(float position)
@@ -70,7 +68,7 @@ public class DisplayMenu : MonoBehaviour
         {
             return 2;
         }
-        else if (position >= 0.66f)
+        else if (position >= 0.33f)
         {
             return 3;
         }
@@ -85,9 +83,10 @@ public class DisplayMenu : MonoBehaviour
     {
         while (events.touchpadTouched)
         {
-            Vector2 position = SteamVR_Controller.Input(2).GetAxis();
+            // Vector2 position = SteamVR_Controller.Input(2).GetAxis();
+            Vector2 position = events.GetTouchpadAxis();
 
-            if(GetPressedButton(position.x) != pressedButton)
+            if (GetPressedButton(position.x) != pressedButton)
             {
                 ButtonPressed(GetPressedButton(position.x));
                 SwapModels();
@@ -99,7 +98,6 @@ public class DisplayMenu : MonoBehaviour
     void DeactivateAll()
     // Deactivates all UI elements
     {
-		// Deactivates
         panel.SetActive(false);
         Model1.SetActive(false);
         Model2.SetActive(false);
