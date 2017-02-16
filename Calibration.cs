@@ -3,13 +3,32 @@ using UnityEngine;
 
 public class Calibration : MonoBehaviour {
 
+  GameObject rightController;
+  GameObject leftController;
+  float avgHeight;
+  GameObject cube;
+
   void Awake()
   {
-    GameObject.Find("Right Controller").GetComponent<VRTK_ControllerEvents>().TriggerClick += new ControllerInteractionEventHandler(DoTriggerClick);
+    cube = GameObject.Find("CalibrationCube");
+    rightController = GameObject.Find("RightController");
+    leftController = GameObject.Find("LeftController");
+    rightController.GetComponent<VRTK_ControllerEvents>().TriggerClick += new ControllerInteractionEventHandler(DoTriggerClick);
+  }
+
+  void Update()
+  {
+    avgHeight = (leftController.transform.position.y + rightController.transform.position.y) / 2;
+    cube.transform.position.y = avgHeight;
   }
 
   void DoTriggerClick()
   {
-    
+    SetHeight(avgHeight);
+  }
+
+  public void SetHeight(float avgHeight)
+  {
+    //TODO: send avgHeight to main scene, alter [CameraRig] by avgHeight.y
   }
 }
