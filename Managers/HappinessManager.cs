@@ -30,16 +30,16 @@ public class HappinessManager : MonoBehaviour {
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
     }
-	
+
 	void Update ()
     // Set values pre-initialization
     {
         UpdateValues();
 
-        SetJobHappiness();
-        SetFoliageHappiness();
-        SetLeisureHappiness();
-        SetTaxHappiness();
+        jobHappiness = SetJobHappiness();
+        foliageHappiness = SetFoliageHappiness();
+        leisureHappiness = SetLeisureHappiness();
+        taxHappiness = SetTaxHappiness();
 
         SetHappiness();
 	}
@@ -60,64 +60,55 @@ public class HappinessManager : MonoBehaviour {
         happiness = jobHappiness + foliageHappiness + leisureHappiness + taxHappiness;
     }
 
-    void SetJobs()
+    void AvailableJobs()
     // Job availability
     {
-        availableJobs = industrialCap + commercialCap - population;
+        return industrialCap + commercialCap - population;
     }
 
-    void SetJobHappiness()
+    float SetJobHappiness()
     // Job happiness algorithm
     {
-        SetJobs();
+        availableJobs = AvailableJobs();
         if(availableJobs != 0 && availableResidential != 0)
         {
             if (availableResidential / availableJobs <= 1)
             {
-                jobHappiness = 25;
+                return 25;
             }
             {
-                jobHappiness = (availableJobs / availableResidential * 25);
+                return (availableJobs / availableResidential * 25); //TODO: FIX THIS- goes above 25
             }
         }
         else
         {
-            jobHappiness = 0;
+            return 0;
         }
 
     }
 
-    void SetFoliageHappiness()
+    float SetFoliageHappiness()
     // Foliage happiness algorithm
     {
         if (population != 0)
         {
-            foliageHappiness = foliageCap / (population * 10);
+            return foliageCap / (population * 10);
         }
-        else foliageHappiness = 25;
+        else return 25;
     }
 
-    void SetLeisureHappiness()
+    float SetLeisureHappiness()
     // Leisure happiness algorithm
     {
         if(population != 0)
         {
-            leisureHappiness = leisureCap / population;
+            return leisureCap / population;
         }
     }
 
-    void SetTaxHappiness()
+    float SetTaxHappiness()
     // IDEA: Make this more of an overall metric of cost of living
     {
-        taxHappiness = 100 - ((economyManager.residentialTaxRate * 2) + economyManager.industrialTaxRate + economyManager.commercialTaxRate);
-        taxHappiness = taxHappiness / 4;
+        return 100 - ((economyManager.residentialTaxRate * 2) + economyManager.industrialTaxRate + economyManager.commercialTaxRate) / 4;
     }
 }
-
-
-
-
-
-
-
-

@@ -6,11 +6,14 @@ public class ContractManager : MonoBehaviour {
 
 	public List<Contract> allContracts;
 	public List<Contract> majorContracts;
-	public List<Contract> acceptedContracts;
+	public List<Contract> pendingContracts;
+	public List<Contract> activeContracts;
 	public List<Contract> declinedContracts;
 	public List<Contract> completedContracts;
 	public List<Contract> failedContracts;
 
+	GameObject ejector;
+	GameObject button;
 	GameObject contractPrefab; // Basic contract- contains the model, gameObject, blank text fields. GenerateContract adds the contract component.
 
 	EconomyManager economyManager;
@@ -25,10 +28,12 @@ public class ContractManager : MonoBehaviour {
 		happinessManager = GameObject.Find("HappinessManager");
 		itemManager = GameObject.Find("itemManager");
 		populationManager = GameObject.Find("populationManager");
+		ejector = GameObject.Find("Ejector");
 
 		allContracts = new List<Contract>;
-		// majorContracts = new List<Contract>;
-		acceptedContracts = new List<Contract>;
+		pendingContracts = new List<Contract>;
+		majorContracts = new List<Contract>;
+		activeContracts = new List<Contract>;
 		declinedContracts = new List<Contract>;
 		completedContracts = new List<Contract>;
 		failedContracts = new List<Contract>;
@@ -36,16 +41,17 @@ public class ContractManager : MonoBehaviour {
 
 	void Update()
 	{
-		CheckNumContracts();
 		CheckContractsCompleted();
 	}
 
-	void CheckNumContracts()
+	public void ContractButtonPress()
 	{
-		if (allContracts.Count <= 1)
-		{
-			GenerateContract();
-		}
+		GameObject newContract = Instantiate(ContractPrefab, ejector.transform.position);
+		Contract contract = newContract.GetComponent<Contract>();
+		contract.Create("Test contract", false, "Increase population by 5", "The regional government has created a scheme to encourage population growth. Increase your population by 5 to complete", "0", "0");
+		contract.AssignRequirements("500000");
+		pendingContracts.Add(contract);
+		allContracts.Add(contract);
 	}
 
 	void CheckContractsCompleted()
@@ -59,14 +65,5 @@ public class ContractManager : MonoBehaviour {
 				completedContracts.Add(contract);
 			}
 		}
-	}
-
-	void GenerateContract()
-	{
-		GameObject newContract = Instantiate(ContractPrefab);
-		Contract contract = newContract.GetComponent<Contract>();
-		contract.Create("Test contract", false, "Increase population by 5", "The regional government has created a scheme to encourage population growth. Increase your population by 5 to complete", "0", "0");
-		contract.AssignRequirements("500000");
-		allContracts.Add(contract);
 	}
 }

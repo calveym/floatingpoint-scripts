@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,14 +6,14 @@ using UnityEngine;
 public class EconomyManager : MonoBehaviour {
 
     // Declare other managers
-	ItemManager itemManager;
-	PopulationManager populationManager;
+    ItemManager itemManager;
+    PopulationManager populationManager;
 
     // Declare variables
-	float balance;
-	int numRoads;
-	float income; // Net income, after expenses
-	int population;
+    float balance;
+    int numRoads;
+    float income; // Net income, after expenses
+    int population;
     float happiness;
 
     // Tracked items
@@ -34,22 +34,22 @@ public class EconomyManager : MonoBehaviour {
         commercialTaxRate = 15;
         industrialTaxRate = 15;
         rawIncome = 25;
-		balance = 1000;
-		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-		populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
+        balance = 1000;
+        itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
+        populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         income = rawIncome;
     }
 
-	void Update ()
+    void Update ()
     // Updates state and recalculates balance and income
-	{
-		numRoads = itemManager.getNumRoads();
-		setPopulation();
+    {
+        numRoads = itemManager.getNumRoads();
+        setPopulation();
         setCapacity();
 
-		updateBalance();
-		updateIncome();
-	}
+        updateBalance();
+        updateIncome();
+    }
 
     void setCapacity()
     // Updates capacity from itemManager
@@ -59,23 +59,23 @@ public class EconomyManager : MonoBehaviour {
         industrialCap = itemManager.industrialCap;
     }
 
-	void updateBalance()
-	// Reduces balance by income and time
-	{
-		balance += income * Time.deltaTime;
-	}
+    void updateBalance()
+    // Reduces balance by income and time
+    {
+        balance += income * Time.deltaTime;
+    }
 
-	void updateIncome()
-	// Recalculates income
-	{
-		float roadExpenses = calculateRoadExpenses();
-		float residentialIncome = calculateResidentialIncome();
+    void updateIncome()
+    // Recalculates income
+    {
+        float roadExpenses = calculateRoadExpenses();
+        float residentialIncome = calculateResidentialIncome();
         float commercialIncome = calculateCommercialIncome();
         float industrialIncome = calculateIndustrialIncome();
 
         float expenses = roadExpenses + calculateCapacityExpenses();
-		income = rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses;
-	}
+        income = rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses;
+    }
 
     float calculateCapacityExpenses()
     // Returns all expenses from capacity
@@ -83,63 +83,63 @@ public class EconomyManager : MonoBehaviour {
         return residentialCap + commercialCap + industrialCap;
     }
 
-	float calculateResidentialIncome()
-	// Tax income from all residential properties
-	{
+    float calculateResidentialIncome()
+    // Tax income from all residential properties
+    {
         return population * (1 + 0.01f * residentialTaxRate);
-	}
+    }
 
-  float calculateCommercialIncome()
-  // Tax income for all commercial buildings
-  {
-      if (commercialCap == 0 || population == 0)
-      {
-          return 0;
-      }
-      else if(population >= commercialCap)
-      {
-          return commercialCap * (1 + 0.01f * commercialTaxRate);
-      }
-      else
-      {
-          return population * (1 + 0.01f * commercialTaxRate);
-      }
-  }
+    float calculateCommercialIncome()
+    // Tax income for all commercial buildings
+    {
+        if (commercialCap == 0 || population == 0)
+        {
+            return 0;
+        }
+        else if(population >= commercialCap)
+        {
+            return commercialCap * (1 + 0.01f * commercialTaxRate);
+        }
+        else
+        {
+            return population * (1 + 0.01f * commercialTaxRate);
+        }
+    }
 
-  float calculateIndustrialIncome()
-  // Tax income for industrial buildings
-  {
-      if (industrialCap == 0)
-      {
-          return 0;
-      }
-      else if (population >= industrialCap)
-      {
-          return industrialCap * (1 + 0.01f * industrialTaxRate);
-      }
-      else
-      {
-          return population * (1 + 0.01f * industrialTaxRate);
-      }
-  }
+    float calculateIndustrialIncome()
+    // Tax income for industrial buildings
+    {
+        if (industrialCap == 0)
+        {
+            return 0;
+        }
+        else if (population >= industrialCap)
+        {
+            return industrialCap * (1 + 0.01f * industrialTaxRate);
+        }
+        else
+        {
+            return population * (1 + 0.01f * industrialTaxRate);
+        }
+    }
 
-	float calculateRoadExpenses()
-	// Calculates how much is spent on road maintenance
-	{
-		return numRoads / 5;
-	}
+    float calculateRoadExpenses()
+    // Calculates how much is spent on road maintenance
+    {
+        return numRoads * 2;
+    }
 
-	void reduceBalance(float amount)
-	// Decreases balance by "amount"
-	{
-		balance -= amount;
-	}
+    void reduceBalance(float amount)
+    // Decreases balance by "amount"
+    {
+        balance -= amount;
+    }
 
-	void setPopulation()
-	// Retrieves population from the pop manager
-	{
-		population = populationManager.population;
-	}
+    void setPopulation()
+    // Retrieves population from the pop manager
+    {
+        population = populationManager.population;
+    }
 
     public float GetBalance()
     {

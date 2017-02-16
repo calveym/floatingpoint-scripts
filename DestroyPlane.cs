@@ -15,7 +15,7 @@ public class DestroyPlane : MonoBehaviour {
         string tag = other.gameObject.tag;
         if (tag == "mayorsoffice")
         {
-            other.gameObject.transform.position = new Vector3(0f, 10f, 0f);
+            other.gameObject.transform.position = new Vector3(0f, 11f, 0f); // Respawns office just above island
         }
         else if (tag == "residential")
         {
