@@ -42,7 +42,7 @@ public class SpawnerCube : MonoBehaviour
             transform.DetachChildren();
             currentObject = displayMenu.InitiateSpawn(gameObject);
         }
-        gameObject.transform.LookAt(mainCamera.transform);
+        gameObject.transform.LookAt(Vector3.up);
     }
 
     void DoRemoveObject(object sender, ControllerInteractionEventArgs e)
@@ -72,7 +72,6 @@ public class SpawnerCube : MonoBehaviour
 		if(other.gameObject == currentObject && (other.gameObject.tag == "residential" || other.gameObject.tag == "commercial" || other.gameObject.tag == "industrial" || other.gameObject.tag == "foliage" || other.gameObject.tag == "leisure"))
 		{
             leavingObject = other.gameObject;
-            EnablePhysics(leavingObject);
             currentObject = displayMenu.InitiateSpawn(gameObject);
 			leavingObject.layer = 0;
             waitRemove = true; // Initiates remove tracker, used when controller releases building in DoRemoveObject()

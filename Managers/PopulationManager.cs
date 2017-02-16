@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PopulationManager : MonoBehaviour {
 
-
-	DemandManager demandManager;
 	ItemManager itemManager;
     HappinessManager happinessManager;
     List<ItemTracker> residentialTrackers;
@@ -33,7 +31,6 @@ public class PopulationManager : MonoBehaviour {
 
 		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
         happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
-		demandManager = GameObject.Find("Managers").GetComponent<DemandManager>();
 	}
 
 	void Update ()
@@ -96,7 +93,7 @@ public class PopulationManager : MonoBehaviour {
                     numAdded = unallocatedPopulation;
                 }
                 population += numAdded;
-								Contract.IncrementPopulation(numAdded);
+				//GameObject.Find("Managers").GetComponent<ContractManager>().incrementPopulation(numAdded);
                 unallocatedPopulation -= numAdded;
                 numVacancies[i] -= numAdded;
                 vacantResidential[i].AddUsers(numAdded);

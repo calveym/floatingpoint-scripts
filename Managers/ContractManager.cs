@@ -21,7 +21,21 @@ public class ContractManager : MonoBehaviour {
 	ItemManager itemManager;
 	PopulationManager populationManager;
 
-	void Awake()
+    public delegate void IncrementPopulation(int numAdded);
+    public delegate void IncrementResidential();
+    public delegate void IncrementCommercial();
+    public delegate void IncrementIndustrial();
+    public delegate void IncrementFoliage();
+    public delegate void IncrementLeisure();
+
+    IncrementPopulation incrementPopulation;
+    IncrementResidential incrementResidential;
+    IncrementCommercial incrementCommercial;
+    IncrementIndustrial incrementIndustrial;
+    IncrementFoliage incrementFoliage;
+    IncrementLeisure incrementLeisure;
+
+    void Awake()
 	{
 		contractPrefab = GameObject.Find("ContractPrefab");
 		economyManager = GameObject.Find("EconomyManager");
@@ -56,7 +70,7 @@ public class ContractManager : MonoBehaviour {
 
 	void CheckContractsCompleted()
 	{
-		for(i = acceptedContracts.Count - 1; i > 0; i--)
+		for(int i = acceptedContracts.Count - 1; i > 0; i--)
 		{
 			if(acceptedContracts[i].Completed())
 			{

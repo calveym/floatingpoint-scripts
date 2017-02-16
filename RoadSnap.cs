@@ -108,13 +108,12 @@ public class RoadSnap : MonoBehaviour {
 	void InitiateSnapCheck()
 	// Checks if object can snap
 	{
-		if(roadGenerator.CheckSurroundingRoads(transform.position))
-		{
-			Debug.Log ("Running!");
-			Vector3 newPosition;
-			roadGenerator.Round(transform.position, out newPosition);
+		//if(roadGenerator.CheckSurroundingRoads(transform.position))
+		//{
+			//Debug.Log ("Running!");
+			//Vector3 newPosition = roadGenerator.Round(transform.position);
 			// transform.position = newPosition;
 			// transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-		}
+		//}
 	}
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using VRTK;
 
 public class Calibration : MonoBehaviour {
 
@@ -22,7 +23,7 @@ public class Calibration : MonoBehaviour {
     cube.transform.position.y = avgHeight;
   }
 
-  void DoTriggerClick()
+  void DoTriggerClick(object sender, ControllerInteractionEventArgs e)
   {
     SetHeight(avgHeight);
   }
