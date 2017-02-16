@@ -98,7 +98,6 @@ public class DisplayMenu : MonoBehaviour
     void DeactivateAll()
     // Deactivates all UI elements
     {
-		// Deactivates
         panel.SetActive(false);
         Model1.SetActive(false);
         Model2.SetActive(false);
@@ -128,6 +127,4 @@ public class DisplayMenu : MonoBehaviour
         Destroy(Model4.GetComponent<SpawnerCube>().currentObject);
         Destroy(Model5.GetComponent<SpawnerCube>().currentObject);
     }
-
-
 }

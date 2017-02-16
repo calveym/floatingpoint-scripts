@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
@@ -18,11 +18,16 @@ public class RoadGenerator : VRTK_InteractableObject {
 	public Dictionary<Vector3, GameObject> roads; // Dictionary of all road positions and objects
 	public Dictionary<Vector3, string> surroundingRoads; // Dictionary of all road positions and associated surroundingRoadString
 
+	Vector2 touchpadAxis;
+
 	void Start()
 	// Initiates all of the dictionaries for lookups and all other variables that need to be initialized
 	{
 		roads = new Dictionary<Vector3, GameObject>();
 		surroundingRoads = new Dictionary<Vector3, string>();
+		controller = GameObject.Find("RightController");
+		events = controller.GetComponent<VRTK_ControllerEvents>();
+		events.TouchpadClick += new ControllerInteractionEventHandler(DoTouchpadClick);
 
 		Quaternion zero = new Quaternion(0, 0, 0, 1);
 		Quaternion ninety = new Quaternion(0, 0.7071f, 0, 0.7071f);
@@ -66,10 +71,10 @@ public class RoadGenerator : VRTK_InteractableObject {
 		roadRotation.Add("1111", zero);
 	}
 
-	public void StartUsing (GameObject usingObject)
+	public override void DoTouchpadClick (object sender, ControllerInteractionEventArgs e)
 	// Runs when object is used by vrtk controller
 	{
-		base.StartUsing (usingObject);
+		StartCoroutine("drawRoad"):
 		if (Physics.Raycast (controller.transform.position, controller.transform.forward, out RaycastHit hit, 1000.0f)) {
 			Vector3 rounded = Round(hit.point);
 			if(!roads.TryGetValue(rounded))
@@ -121,7 +126,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 
 	GameObject CreateRoadObject(Vector3 newPosition)
 	// Creates road instance using surrounding road check
-  {
+	{
 		string surroundingRoadString = CheckSurroundingRoads(newPosition);
 		return InstantiateRoad (surroundingRoadString, newPosition);
 	}
@@ -158,7 +163,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 
 	GameObject InstantiateRoad(string surroundingRoadString, Vector3 newPosition)
 	// Uses surrounding road information to instantiate a find a new road
-  {
+	{
 		GameObject correctRoadObject;
 		Quaternion correctRoadRotation;
 		roadObject.TryGetValue(surroundingRoadString, out correctRoadObject);
@@ -170,13 +175,13 @@ public class RoadGenerator : VRTK_InteractableObject {
 
 	bool V3Equal(Vector3 a, Vector3 b)
 	// Returns true if two input vector3s are equal to within set tolerance
-  {
+	{
 		return Vector3.SqrMagnitude(a - b) < 3.162f;
 	}
 
 	public void RemoveRoad(Vector3 position)
 	// Handles removing road at position
-  {
+	{
 		Destroy(roads.TryGetValue(position));
 		roads.Remove(position);
 		surroundingRoads.Remove(position);
@@ -185,10 +190,9 @@ public class RoadGenerator : VRTK_InteractableObject {
 
 	public Vector3 Round (Vector3 point)
 	// Rounds to nearest 0.1f
-  {
-		newPosition = new Vector3(Mathf.Round(point.x * 10) / 10,
-			10.01f,
-			Mathf.Round(point.z * 10) / 10);
-		return newPosition;
+	{
+		return new Vector3(Mathf.Round(point.x * 10) / 10,
+		10.01f,
+		Mathf.Round(point.z * 10) / 10);
 	}
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DrawableSurface : MonoBehaviour {
 
+    public int maxInkCount;
+
     GameObject ink;
     List<GameObject> allInk;
     GameObject penTip;
@@ -12,22 +14,27 @@ public class DrawableSurface : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
+        if(maxInkCount == null)
+        {
+            maxInkCount = 40;
+        }
         drawable = true;
         allInk = new List<GameObject>();
         ink = GameObject.Find("Ink");
         penTip = GameObject.Find("PenTip");
 	}
-	
+
 	// Update is called once per frame
 	void Update ()
     {
-        if (allInk.Count >= 20 && gameObject.tag == "contract")
+        if (allInk.Count >= maxInkCount && gameObject.tag == "contract")
         {
             gameObject.GetComponent<Contract>().Sign();
+            allInk.Clear();
         }
 	}
 
-    private void OnTriggerStay(Collider other)
+    void OnTriggerStay(Collider other)
     {
         if(other.gameObject == penTip)
         {

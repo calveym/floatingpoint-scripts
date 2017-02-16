@@ -5,8 +5,8 @@ using VRTK;
 
 public class RoadDeleter : VRTK_InteractableObject {
 
-	private GameObject controller;
-	private RoadGenerator roadGenerator;
+	GameObject controller;
+	RoadGenerator roadGenerator;
 
 	void Start ()
 	{
@@ -18,17 +18,25 @@ public class RoadDeleter : VRTK_InteractableObject {
 	{
 		base.StartUsing (usingObject);
 		Physics.Raycast (controller.transform.position, controller.transform.forward, out RaycastHit hit, 1000.0f);
-		if(hit.transform.gameObject.tag == "road") {
-			Vector3 rounded = Round(hit.point)
-			roadGenerator.RemoveRoad(rounded);
+		if (hit.transform.gameObject.tag == "road")
+		{
+			roadGenerator.RemoveRoad(roadGenerator.Round(hit.point));
 		}
 	}
+	
+	IEnumerator UpdateTouchpadAxis()
+    // Coroutine for updating touchpad axis. Runs once per frame.
+    {
+        while (events.touchpadTouched)
+        {
+            Vector2 position = SteamVR_Controller.Input(2).GetAxis();
 
-	public Vector3 Round (Vector3 point)
-  {
-		newPosition = new Vector3(Mathf.Round(point.x * 100) / 100,
-			10.01f,
-			Mathf.Round(point.z * 100) / 100);
-		return newPosition;
-	}
+            if(GetPressedButton(position.x) != pressedButton)
+            {
+                ButtonPressed(GetPressedButton(position.x));
+                SwapModels();
+            }
+            yield return null;
+        }
+    }
 }

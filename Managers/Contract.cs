@@ -9,6 +9,8 @@ public class Contract : MonoBehaviour {
     // Building demolition contracts: minor contract. Rewards money. Requires destruction of certain type of building.
     // Greenspace improvement contracts: minor contract, money reward. Requires amount of foliage to be added
 
+    // Associated GameObjects
+    GameObject stamp;
 
     // Base information
     public string name;
@@ -34,6 +36,7 @@ public class Contract : MonoBehaviour {
     void Awake()
     {
         active = false;
+        //TODO: find children of contract, find stamp, set stamp
     }
 
     void Update()
@@ -104,7 +107,8 @@ public class Contract : MonoBehaviour {
     // activates contract
     {
         active = true;
-
+        stamp.setActive(true);
+        EnableRespawn();
     }
 
     bool Completed()
