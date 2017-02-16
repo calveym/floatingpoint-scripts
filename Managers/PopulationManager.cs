@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PopulationManager : MonoBehaviour {
 
-
-	DemandManager demandManager;
 	ItemManager itemManager;
     HappinessManager happinessManager;
     List<ItemTracker> residentialTrackers;
@@ -33,7 +31,6 @@ public class PopulationManager : MonoBehaviour {
 
 		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
         happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
-		demandManager = GameObject.Find("Managers").GetComponent<DemandManager>();
 	}
 
 	void Update ()

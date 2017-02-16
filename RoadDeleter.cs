@@ -29,7 +29,7 @@ public class RoadDeleter : VRTK_InteractableObject {
 	}
 
 	public Vector3 Round (Vector3 point)
-  {
+    {
 		Vector3 newPosition = new Vector3(Mathf.Round(point.x),
 			10.01f,
 			Mathf.Round(point.z));
