@@ -36,7 +36,7 @@ public class RoadSnap : MonoBehaviour {
 					//Debug.Log ("FOUND HIT: " + nearestBuilding);
 
 					if (Mathf.Abs ((nearestBuilding.transform.position.x - transform.position.x)) < Mathf.Abs ((nearestBuilding.transform.position.z - transform.position.z))) {
-						// Debug.Log ("Closer to z");
+						Debug.Log ("Closer to z");
 					}
 
 					if (Mathf.Abs ((nearestBuilding.transform.position.x - transform.position.x)) > Mathf.Abs ((nearestBuilding.transform.position.z - transform.position.z))) {
@@ -118,12 +118,25 @@ public class RoadSnap : MonoBehaviour {
 
 		// if it is closer to the x-axis of the object
 		if (Mathf.Abs((nearestBuilding.transform.position.x - transform.position.x)) > Mathf.Abs((nearestBuilding.transform.position.z - transform.position.z))) {
+			// if it is nearer to the left side snap left side, else snap to the right side
 			if (transform.position.x < nearestBuilding.transform.position.x) {
 				transform.position = new Vector3 (targetPosition.x - distanceToMoveX, targetPosition.y, targetPosition.z);
 			} else {
 				transform.position = new Vector3 (targetPosition.x + distanceToMoveX, targetPosition.y, targetPosition.z);
 			}
 		}
+
+		// if it is closer to the z-axis of the object
+		if (Mathf.Abs ((nearestBuilding.transform.position.x - transform.position.x)) < Mathf.Abs ((nearestBuilding.transform.position.z - transform.position.z))) {
+			Debug.Log ("snap to z");
+			// if it is nearer to the left side snap left side, else snap to the right side
+			if (transform.position.z < nearestBuilding.transform.position.z) {
+				transform.position = new Vector3 (targetPosition.x, targetPosition.y, targetPosition.z - distanceToMoveZ);
+			} else {
+				transform.position = new Vector3 (targetPosition.x, targetPosition.y, targetPosition.z + distanceToMoveZ);
+			}
+		}
+
 		Debug.Log ("IT RAN: " + transform.position);
 
 		//gameObject.GetComponent<Collider> ().enabled = true;
