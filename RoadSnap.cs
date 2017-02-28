@@ -8,7 +8,6 @@ public class RoadSnap : MonoBehaviour {
 	VRTK_InteractableObject interact;
 	bool objectUsed;
 	RoadGenerator roadGenerator;
-	public GameObject cube;
 	Renderer rend;
 	Collider[] hitColliders;
 
@@ -23,7 +22,7 @@ public class RoadSnap : MonoBehaviour {
 	float frontThisPoint;
 	float pointDifference;
 
-	int defaultLayer = 8;
+	int defaultLayer = 0;
 
 	int layerMask;
 
@@ -37,11 +36,11 @@ public class RoadSnap : MonoBehaviour {
 					//Debug.Log ("FOUND HIT: " + nearestBuilding);
 
 					if (Mathf.Abs ((nearestBuilding.transform.position.x - transform.position.x)) < Mathf.Abs ((nearestBuilding.transform.position.z - transform.position.z))) {
-						//Debug.Log ("Closer to z");
+						// Debug.Log ("Closer to z");
 					}
 
 					if (Mathf.Abs ((nearestBuilding.transform.position.x - transform.position.x)) > Mathf.Abs ((nearestBuilding.transform.position.z - transform.position.z))) {
-						//Debug.Log ("Closer to x");
+						Debug.Log ("Closer to x: " + nearestBuilding.transform.position.x);
 					}
 
 					//Debug.Log (nearestBuilding);
@@ -117,9 +116,13 @@ public class RoadSnap : MonoBehaviour {
 		frontThisPoint = transform.position.x -(thisRend.bounds.size.x / 2);
 		pointDifference = Mathf.Abs (frontThisPoint) - Mathf.Abs (frontTargetPoint);
 
-		// set x position
+		// if it is closer to the x-axis of the object
 		if (Mathf.Abs((nearestBuilding.transform.position.x - transform.position.x)) > Mathf.Abs((nearestBuilding.transform.position.z - transform.position.z))) {
-			transform.position = new Vector3(targetPosition.x - distanceToMoveX, targetPosition.y, targetPosition.z);
+			if (transform.position.x < nearestBuilding.transform.position.x) {
+				transform.position = new Vector3 (targetPosition.x - distanceToMoveX, targetPosition.y, targetPosition.z);
+			} else {
+				transform.position = new Vector3 (targetPosition.x + distanceToMoveX, targetPosition.y, targetPosition.z);
+			}
 		}
 		Debug.Log ("IT RAN: " + transform.position);
 
@@ -128,19 +131,5 @@ public class RoadSnap : MonoBehaviour {
 		// set z position, and align x axis
 		//transform.position = new Vector3(transform.position.x + pointDifference, targetPosition.y, targetPosition.z - distanceToMoveZ);
 
-
-	}
-
-	void InitiateSnapCheck()
-	// Checks if object can snap
-	{
-		if(roadGenerator.CheckSurroundingRoads(transform.position))
-		{
-			// Debug.Log ("Running!");
-			Vector3 newPosition;
-			roadGenerator.Round(transform.position, out newPosition);
-			// transform.position = newPosition;
-			// transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-		}
 	}
 }
