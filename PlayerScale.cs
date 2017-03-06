@@ -23,7 +23,7 @@ public class PlayerScale : MonoBehaviour {
 			cameraRig.transform.localScale = new Vector3(10f, 10f, 10f);
 			cameraRig.transform.position -= new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
 			isCameraSmall = !isCameraSmall;
-            GetComponent<TrackpadFlight>().walkSpeed = 0.11f;
+            GetComponent<TrackpadFlight>().sizeSpeed = 0.11f;
     	}
     	else 
     	{
@@ -31,7 +31,7 @@ public class PlayerScale : MonoBehaviour {
 			cameraRig.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 			cameraRig.transform.position += new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
 			isCameraSmall = !isCameraSmall;
-            GetComponent<TrackpadFlight>().walkSpeed = 0.02f;
+            GetComponent<TrackpadFlight>().sizeSpeed = 0.02f;
         }
     }
 

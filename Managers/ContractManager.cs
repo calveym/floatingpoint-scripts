@@ -58,7 +58,7 @@ public class ContractManager : MonoBehaviour {
 	{
 		if (allContracts.Count <= 1)
 		{
-			GenerateContract();
+			//GenerateContract();
 		}
 	}
 
@@ -75,8 +75,9 @@ public class ContractManager : MonoBehaviour {
 		}
 	}
 
-	void GenerateContract()
+	public void GenerateContract()
 	{
+        Debug.Log("Pressed");
 		GameObject newContract = Instantiate(contractPrefab);
 		Contract contract = newContract.GetComponent<Contract>();
 		contract.Create("Test contract", false, "Increase population by 5", "The regional government has created a scheme to encourage population growth. Increase your population by 5 to complete", "0", 0);

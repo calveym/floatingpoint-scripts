@@ -21,7 +21,6 @@ public class ItemTracker : MonoBehaviour {
     private void Awake()
     // Sets start variables
     {
-        Debug.Log(gameObject);
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();

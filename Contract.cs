@@ -88,6 +88,7 @@ public class Contract : MonoBehaviour {
         descLong = incomingDescLong;
         type = incomingType;
         level = incomingLevel;
+        transform.position = new Vector3(0f, 11f, 0f);
     }
 
     public void AssignRequirements(string incomingReq)

@@ -17,9 +17,9 @@ public class DrawableSurface : MonoBehaviour {
         ink = GameObject.Find("Ink");
         penTip = GameObject.Find("PenTip");
 	}
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
         if (allInk.Count >= 20 && gameObject.tag == "contract")
         {
@@ -34,6 +34,10 @@ public class DrawableSurface : MonoBehaviour {
             Debug.Log(other.gameObject);
             GameObject newInk = Instantiate(ink, penTip.transform.position, Quaternion.Euler(0, 0, 0));
             allInk.Add(newInk);
+            if(allInk.Count >= 40)
+            {
+                allInk.RemoveAt(0);
+            }
         }
     }
 }

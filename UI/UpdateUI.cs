@@ -21,7 +21,7 @@ public class UpdateUI : MonoBehaviour {
     HappinessManager happinessManager;
 
 	// Use this for initialization
-	void Awake () {
+	void Start () {
         timePassed = 0;
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         incomeText = GameObject.Find("IncomeText").GetComponent<Text>();
