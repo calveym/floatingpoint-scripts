@@ -21,23 +21,36 @@ public class ContractManager : MonoBehaviour {
 	ItemManager itemManager;
 	PopulationManager populationManager;
 
-	void Awake()
+    public delegate void IncrementPopulation(int numAdded);
+    public delegate void IncrementResidential();
+    public delegate void IncrementCommercial();
+    public delegate void IncrementIndustrial();
+    public delegate void IncrementFoliage();
+    public delegate void IncrementLeisure();
+
+    IncrementPopulation incrementPopulation;
+    IncrementResidential incrementResidential;
+    IncrementCommercial incrementCommercial;
+    IncrementIndustrial incrementIndustrial;
+    IncrementFoliage incrementFoliage;
+    IncrementLeisure incrementLeisure;
+
+    void Awake()
 	{
 		contractPrefab = GameObject.Find("ContractPrefab");
-		economyManager = GameObject.Find("EconomyManager");
-		happinessManager = GameObject.Find("HappinessManager");
-		itemManager = GameObject.Find("itemManager");
-		populationManager = GameObject.Find("populationManager");
-		ejector = GameObject.Find("Ejector");
+		economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
+		happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
+		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
+		populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
 
-		allContracts = new List<Contract>;
-		pendingContracts = new List<Contract>;
-		majorContracts = new List<Contract>;
-		activeContracts = new List<Contract>;
-		declinedContracts = new List<Contract>;
-		completedContracts = new List<Contract>;
-		failedContracts = new List<Contract>;
-	}
+		allContracts = new List<Contract>();
+		// majorContracts = new List<Contract>;
+		acceptedContracts = new List<Contract>();
+		declinedContracts = new List<Contract>();
+		completedContracts = new List<Contract>();
+		failedContracts = new List<Contract>();
+    }
+
 
 	void Update()
 	{
@@ -46,17 +59,15 @@ public class ContractManager : MonoBehaviour {
 
 	public void ContractButtonPress()
 	{
-		GameObject newContract = Instantiate(ContractPrefab, ejector.transform.position);
-		Contract contract = newContract.GetComponent<Contract>();
-		contract.Create("Test contract", false, "Increase population by 5", "The regional government has created a scheme to encourage population growth. Increase your population by 5 to complete", "0", "0");
-		contract.AssignRequirements("500000");
-		pendingContracts.Add(contract);
-		allContracts.Add(contract);
+		if (allContracts.Count <= 1)
+		{
+			//GenerateContract();
+		}
 	}
 
 	void CheckContractsCompleted()
 	{
-		for(i = acceptedContracts.Count - 1; i > 0; i--)
+		for(int i = acceptedContracts.Count - 1; i > 0; i--)
 		{
 			if(acceptedContracts[i].Completed())
 			{
@@ -65,5 +76,15 @@ public class ContractManager : MonoBehaviour {
 				completedContracts.Add(contract);
 			}
 		}
+	}
+
+	public void GenerateContract()
+	{
+        Debug.Log("Pressed");
+		GameObject newContract = Instantiate(contractPrefab);
+		Contract contract = newContract.GetComponent<Contract>();
+		contract.Create("Test contract", false, "Increase population by 5", "The regional government has created a scheme to encourage population growth. Increase your population by 5 to complete", "0", 0);
+		contract.AssignRequirements("500000");
+		allContracts.Add(contract);
 	}
 }

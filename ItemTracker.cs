@@ -24,9 +24,7 @@ public class ItemTracker : MonoBehaviour {
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
-        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
-
+        
         usable = false;
     }
 
@@ -61,11 +59,14 @@ public class ItemTracker : MonoBehaviour {
     void EnableObjectTooltip(object sender, ControllerInteractionEventArgs e)
     // Enables, resets position and resets text for object tooltips
     {
+        Debug.Log("This runs yeye");
         if(tooltip != null)
         {
             Destroy(tooltip);
         }
         tooltip = Instantiate(GameObject.Find("ObjectTooltip"), gameObject.transform);
+        Debug.Log(tooltip);
+
         tooltip.GetComponent<VRTK_ObjectTooltip>().UpdateText("Income: " + income.ToString());
         tooltip.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
         tooltip.transform.position = gameObject.transform.position + new Vector3(0f, 2.5f, 0f);
@@ -143,14 +144,20 @@ public class ItemTracker : MonoBehaviour {
         {
             itemManager.addResidential(capacity, gameObject);
             itemManager.residentialTrackers.Add(gameObject.GetComponent<ItemTracker>());
+            GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
+            GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
         }
         else if(type == "commercial")
         {
             itemManager.addCommercial(capacity, gameObject);
+            GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
+            GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
         }
         else if(type == "industrial")
         {
             itemManager.addIndustrial(capacity, gameObject);
+            GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
+            GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
         }
         else if(type == "foliage")
         {
