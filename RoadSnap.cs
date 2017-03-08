@@ -80,6 +80,7 @@ public class RoadSnap : MonoBehaviour {
 		if (nearestBuilding) {
 			gameObject.GetComponent<BoxCollider> ().enabled = false;
 			setPosition ();
+			setRotation ();
 			gameObject.GetComponent<BoxCollider> ().enabled = true;
 			setBuildingPos = false;
 		} else {
@@ -132,6 +133,10 @@ public class RoadSnap : MonoBehaviour {
 		}
 	}
 
+	void setRotation(){
+		transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+	}
+
 	void setPosition() {
 		targetRend = nearestBuilding.GetComponent<MeshRenderer>();
 		thisRend = gameObject.GetComponent<MeshRenderer> ();
@@ -158,8 +163,7 @@ public class RoadSnap : MonoBehaviour {
 
 		transform.parent = null;
 
-		Debug.Log ("IT RAN: " + transform.position);
-
+		// Debug.Log ("IT RAN: " + transform.position);
 		// set z position, and align x axis
 		//transform.position = new Vector3(transform.position.x + pointDifference, targetPosition.y, targetPosition.z - distanceToMoveZ);
 
