@@ -35,7 +35,7 @@ public class RoadSnap : MonoBehaviour {
 		}
 
 		if (setBuildingPos) {
-			checkForNearbyBuilding();
+			checkForNearbyBuilding ();
 		} 
 	}
 
@@ -89,6 +89,7 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	void getNearbyBuildings() {
+
 		hitColliders = Physics.OverlapSphere (transform.position, 1.5f, layerMask);
 		if (hitColliders.Length == 0) {
 			nearestBuilding = null;
@@ -96,7 +97,9 @@ public class RoadSnap : MonoBehaviour {
 		else {
 			foreach (Collider hitcol in hitColliders) {
 				if (hitcol.CompareTag ("residential") && hitcol != GetComponent<Collider> ()) {
-					nearestBuilding = hitcol.gameObject;
+
+					setToNearestBuilding (hitcol);
+
 					Debug.Log ("FOUND HIT: " + nearestBuilding);
 
 					if (Mathf.Abs ((nearestBuilding.transform.position.x - transform.position.x)) < Mathf.Abs ((nearestBuilding.transform.position.z - transform.position.z))) {
@@ -109,6 +112,23 @@ public class RoadSnap : MonoBehaviour {
 
 				} 
 			}
+		}
+	}
+
+	void setToNearestBuilding (Collider hitcol){
+		float currentTargetDistance;
+		float newTargetDistance;
+
+		if (nearestBuilding != null) {
+			currentTargetDistance = Vector3.Distance (transform.position, nearestBuilding.transform.position);
+			newTargetDistance = Vector3.Distance (transform.position, hitcol.gameObject.transform.position);
+
+			if (newTargetDistance < currentTargetDistance) {
+				nearestBuilding = hitcol.gameObject;
+			}
+		} 
+		else {
+			nearestBuilding = hitcol.gameObject;
 		}
 	}
 
