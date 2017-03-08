@@ -101,7 +101,7 @@ public class RoadSnap : MonoBehaviour {
 
 					setToNearestBuilding (hitcol);
 
-					Debug.Log ("FOUND HIT: " + nearestBuilding);
+					// Debug.Log ("FOUND HIT: " + nearestBuilding);
 
 					if (Mathf.Abs ((nearestBuilding.transform.position.x - transform.position.x)) < Mathf.Abs ((nearestBuilding.transform.position.z - transform.position.z))) {
 						// Debug.Log ("Closer to z");
@@ -134,7 +134,18 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	void setRotation(){
-		transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+		// transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+
+		transform.parent = nearestBuilding.transform;
+
+		float yAngle = Mathf.Round(transform.localEulerAngles.y / 90) * 90;
+
+		Debug.Log("Current angle: " + transform.eulerAngles.y + "Rounded: " + yAngle);
+
+		transform.localRotation = Quaternion.Euler(0, yAngle, 0);
+
+		transform.parent = null;
+
 	}
 
 	void setPosition() {
@@ -151,6 +162,7 @@ public class RoadSnap : MonoBehaviour {
 		frontThisPoint = transform.position.x -(thisRend.bounds.size.x / 2);
 		pointDifference = Mathf.Abs (frontThisPoint) - Mathf.Abs (frontTargetPoint);
 
+		transform.parent = nearestBuilding.transform;
 
 		if (Mathf.Abs((nearestBuilding.transform.position.x - transform.position.x)) > Mathf.Abs((nearestBuilding.transform.position.z - transform.position.z))) {
 			snapToX ();
@@ -172,15 +184,11 @@ public class RoadSnap : MonoBehaviour {
 	void snapToX() {
 		if (transform.position.x < nearestBuilding.transform.position.x) {
 			// Debug.Log ("Called snap position x: 1");
-
-			transform.parent = nearestBuilding.transform;
 			transform.localPosition = new Vector3 (0, 0, transform.localPosition.z);
 		} 
 
 		else {
 			// Debug.Log ("Called snap position x: 2");
-
-			transform.parent = nearestBuilding.transform;
 			transform.localPosition = new Vector3 (0, 0, transform.localPosition.z);
 		}
 	}
@@ -188,13 +196,9 @@ public class RoadSnap : MonoBehaviour {
 	void snapToZ() {
 		if (transform.position.z < nearestBuilding.transform.position.z) {
 			// Debug.Log ("Called snap position Z: 1");
-
-			transform.parent = nearestBuilding.transform;
 			transform.localPosition = new Vector3 (transform.localPosition.x, 0, 0);
 		} else {
 			// Debug.Log ("Called snap position Z: 2");
-
-			transform.parent = nearestBuilding.transform;
 			transform.localPosition = new Vector3 (transform.localPosition.x, 0, 0);
 		}
 	}
