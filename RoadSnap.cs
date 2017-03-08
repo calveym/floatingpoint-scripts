@@ -22,25 +22,29 @@ public class RoadSnap : MonoBehaviour {
 	float frontThisPoint;
 	float pointDifference;
 
-	int defaultLayer = 0;
+	int buildingLayer = 8;
 
 	int layerMask;
+	public bool manualUse;
+	public bool setBuildingPos;
 
 	void Update() {
 		// checks if object is used, and if there is a nearby object with the matching tag
-		if (objectUsed) {
+		if (objectUsed || manualUse) {
+			// set layer
+			gameObject.layer = 9;
 			hitColliders = Physics.OverlapSphere (transform.position, 1.5f, layerMask);
 			foreach (Collider hitcol in hitColliders) {
 				if (hitcol.CompareTag ("residential") && hitcol != GetComponent<Collider> ()) {
 					nearestBuilding = hitcol.gameObject;
-					//Debug.Log ("FOUND HIT: " + nearestBuilding);
+					Debug.Log ("FOUND HIT: " + nearestBuilding);
 
 					if (Mathf.Abs ((nearestBuilding.transform.position.x - transform.position.x)) < Mathf.Abs ((nearestBuilding.transform.position.z - transform.position.z))) {
 						Debug.Log ("Closer to z");
 					}
 
 					if (Mathf.Abs ((nearestBuilding.transform.position.x - transform.position.x)) > Mathf.Abs ((nearestBuilding.transform.position.z - transform.position.z))) {
-						Debug.Log ("Closer to x: " + nearestBuilding.transform.position.x);
+						Debug.Log ("Closer to x");
 					}
 
 					//Debug.Log (nearestBuilding);
@@ -50,12 +54,27 @@ public class RoadSnap : MonoBehaviour {
 					nearestBuilding = null;
 				}
 			}
+		} else {
+			gameObject.layer = 8;
 		}
+
+		if (setBuildingPos) {
+			if (nearestBuilding) {
+				gameObject.GetComponent<BoxCollider> ().enabled = false;
+				setPosition ();
+				gameObject.GetComponent<BoxCollider> ().enabled = true;
+				setBuildingPos = false;
+			} else {
+				Debug.Log (nearestBuilding);
+				GetComponent<BoxCollider> ().enabled = true;
+			}
+
+		} 
 	}
 
 	void Start ()
 	{
-		layerMask = 1 << defaultLayer;
+		layerMask = 1 << buildingLayer;
 		rend = GetComponent<Renderer>();
 		// Adds listeners for controller grab to both controllers
 		GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn+=
@@ -83,7 +102,6 @@ public class RoadSnap : MonoBehaviour {
 				setPosition ();
 				gameObject.GetComponent<BoxCollider> ().enabled = true;
 			} else {
-				Debug.Log (nearestBuilding);
 				GetComponent<BoxCollider> ().enabled = true;
 			}
 
@@ -102,7 +120,6 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	void setPosition() {
-
 		targetRend = nearestBuilding.GetComponent<MeshRenderer>();
 		thisRend = gameObject.GetComponent<MeshRenderer> ();
 
@@ -117,22 +134,37 @@ public class RoadSnap : MonoBehaviour {
 		pointDifference = Mathf.Abs (frontThisPoint) - Mathf.Abs (frontTargetPoint);
 
 		// if it is closer to the x-axis of the object
+
 		if (Mathf.Abs((nearestBuilding.transform.position.x - transform.position.x)) > Mathf.Abs((nearestBuilding.transform.position.z - transform.position.z))) {
+			Debug.Log ("Called snap position x");
 			// if it is nearer to the left side snap left side, else snap to the right side
+
 			if (transform.position.x < nearestBuilding.transform.position.x) {
 				transform.position = new Vector3 (targetPosition.x - distanceToMoveX, targetPosition.y, targetPosition.z);
-			} else {
-				transform.position = new Vector3 (targetPosition.x + distanceToMoveX, targetPosition.y, targetPosition.z);
+			} 
+
+			else {
+				transform.position = new Vector3 (targetPosition.x + distanceToMoveX, targetPosition.y, targetRend.bounds.center.z);
+				transform.parent = nearestBuilding.transform;
+
+				transform.localPosition = new Vector3 (transform.localPosition.x, transform.localPosition.y, 0);
+				gameObject.transform.parent = null;
+				//Debug.Log ("Rend : " + targetRend.bounds.center + "," + nearestBuilding.transform.position.z);
 			}
 		}
 
 		// if it is closer to the z-axis of the object
+
 		if (Mathf.Abs ((nearestBuilding.transform.position.x - transform.position.x)) < Mathf.Abs ((nearestBuilding.transform.position.z - transform.position.z))) {
-			Debug.Log ("snap to z");
+
 			// if it is nearer to the left side snap left side, else snap to the right side
+
 			if (transform.position.z < nearestBuilding.transform.position.z) {
+				Debug.Log ("Called snap position 1");
+
 				transform.position = new Vector3 (targetPosition.x, targetPosition.y, targetPosition.z - distanceToMoveZ);
 			} else {
+				Debug.Log ("Called snap position 2");
 				transform.position = new Vector3 (targetPosition.x, targetPosition.y, targetPosition.z + distanceToMoveZ);
 			}
 		}
