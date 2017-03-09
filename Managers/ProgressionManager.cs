@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ProgressionManager : MonoBehaviour {
 
-    DisplayMenu displayMenu;
-
     public int level;
     public bool airport;
     public bool train;
@@ -15,6 +13,7 @@ public class ProgressionManager : MonoBehaviour {
     Vector3 setPosition;
     bool inPosition;
 
+<<<<<<< HEAD
     public delegate void LevelOne();
 
     public delegate void LevelTwo();
@@ -27,12 +26,15 @@ public class ProgressionManager : MonoBehaviour {
 
     LevelThree levelThree;
 
+=======
+>>>>>>> parent of a1a45a7... Progression and saving
     public void Start()
     {
-        displayMenu = GameObject.Find("LeftController").GetComponent<DisplayMenu>();
+        AddIsland();
         firstIsland = GameObject.Find("Island");
         secondIsland = GameObject.Find("SecondIsland");
         setPosition = new Vector3(1.9f, 0f, -58.8f);
+<<<<<<< HEAD
         levelTwo += UnlockBuildingTier;
         levelTwo += AllowRemoveMountains;
         levelThree += UnlockBuildingTier;
@@ -42,16 +44,33 @@ public class ProgressionManager : MonoBehaviour {
     void UnlockBuildingTier()
     {
         displayMenu.SetTier(level + 1);
+=======
+    }
+
+    public void IncreaseLevel()
+    // TODO: call this function when the contract requirements are fulfilled
+    {
+        if(level == 0)
+        {
+
+        }
+        else if(level == 1)
+        {
+
+        }
+        else if(level == 2)
+        {
+
+        }
+>>>>>>> parent of a1a45a7... Progression and saving
     }
 
     public void AddAirport()
-    // TODO
     {
 
     }
 
     public void AddTrain()
-    // TODO
     {
 
     }
@@ -67,8 +86,8 @@ public class ProgressionManager : MonoBehaviour {
 
     public void AddIsland()
     {
-        Debug.Log("Adding island");
-        inPosition = false;
+        Debug.Log("Running");
+        inPosition = true;
         IEnumerator coroutine = MoveIsland(secondIsland, secondIsland.transform.position, setPosition);
         StartCoroutine(coroutine);
     }
@@ -77,12 +96,7 @@ public class ProgressionManager : MonoBehaviour {
     {
         while(!inPosition)
         {
-            Debug.Log("Not in position"); 
             movingIsland.transform.position = target * Time.deltaTime * 0.2f;
-        }
-        if(movingIsland.transform.position == target)
-        {
-            inPosition = true;
         }
         yield return null;
     }

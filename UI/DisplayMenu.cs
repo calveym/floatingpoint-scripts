@@ -60,6 +60,7 @@ public class DisplayMenu : MonoBehaviour
         Clipboard.SetActive(true);
     }
 
+<<<<<<< HEAD
     public void SetTier(int newTier)
     {
         tier = newTier;
@@ -99,6 +100,9 @@ public class DisplayMenu : MonoBehaviour
     }
 
     int TierThreePosition(float position)
+=======
+    int GetPressedButton(float position)
+>>>>>>> parent of a1a45a7... Progression and saving
     {
         if (position < -0.33f)
         {
