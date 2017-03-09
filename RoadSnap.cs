@@ -8,6 +8,8 @@ public class RoadSnap : MonoBehaviour {
 	public bool manualUse;
 	public bool setBuildingPos;
 	public GameObject targetBoxPrefab;
+	public bool targetIsBlocked;
+	public Material blockedMaterial;
 
 	VRTK_InteractableObject interact;
 	bool objectUsed;
@@ -18,6 +20,7 @@ public class RoadSnap : MonoBehaviour {
 	Vector3 targetBounds;
 	Vector3 thisBounds;
 	Vector3 targetPosition;
+	Vector3 targetBoxPosition;
 	float distanceToMoveX;
 	float distanceToMoveZ;
 	float spacing;
@@ -27,8 +30,17 @@ public class RoadSnap : MonoBehaviour {
 	int buildingLayer = 8;
 	int layerMask;
 
+	public void updateTargetIsBlocked(bool status) {
+		targetIsBlocked = status;
+	}
+
 	void Update() {
 		if (objectUsed || manualUse) {
+			Debug.Log ("status: " + targetIsBlocked);
+			if (targetIsBlocked) {
+				Debug.Log("block this! hahaha");
+				targetBox.GetComponent<Renderer> ().material = blockedMaterial;
+			}
 			gameObject.layer = 9;
 			getNearbyBuildings ();
 		} 
@@ -37,7 +49,9 @@ public class RoadSnap : MonoBehaviour {
 		}
 
 		if (setBuildingPos) {
-			checkForNearbyBuilding ();
+			if (!targetIsBlocked) {
+				checkForNearbyBuilding ();
+			}
 		}
 	}
 
@@ -65,7 +79,9 @@ public class RoadSnap : MonoBehaviour {
 	// Grab end event listener
 	{
 		if (objectUsed == true) {
-			checkForNearbyBuilding ();
+			if (!targetIsBlocked) {
+				checkForNearbyBuilding ();
+			}
 			objectUsed = false;
 		} 
 	}
@@ -85,6 +101,7 @@ public class RoadSnap : MonoBehaviour {
 			setRotation ();
 			gameObject.GetComponent<BoxCollider> ().enabled = true;
 			setBuildingPos = false;
+			Destroy (targetBox);
 		} else {
 			// Debug.Log (nearestBuilding);
 			GetComponent<BoxCollider> ().enabled = true;
@@ -125,6 +142,7 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	void drawTargetBox (){
+
 		// create box
 		if (targetBox != null) {
 			Destroy (targetBox);
@@ -133,15 +151,26 @@ public class RoadSnap : MonoBehaviour {
 			targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, nearestBuilding.transform.rotation);
 		}
 
+		if (targetIsBlocked) {
+			targetBox.GetComponent<Renderer> ().material = blockedMaterial;
+		}
+
+		targetBox.GetComponent<TargetCollisionCheck> ().parentBuilding = gameObject;
+
 		// set size
 		Vector3 sizeCalculated = GetComponent<BoxCollider>().size;
-		Debug.Log ("box size: " + sizeCalculated + "other size: " + GetComponent<Renderer>().bounds.size);
-		targetBox.transform.localScale = new Vector3 (sizeCalculated.x / 10, 0.1f, sizeCalculated.z / 10);
+		targetBox.transform.localScale = new Vector3 (sizeCalculated.x / 10, 0.05f, sizeCalculated.z / 10);
 
-		targetBox.transform.parent = nearestBuilding.transform;
+		// give target box nearest building for collision
+
+		targetBox.GetComponent<TargetCollisionCheck>().setNearestBuilding(nearestBuilding);
 
 		// place it next to building
 		setPosition(targetBox);
+
+		// adjust vertical axis
+		targetBox.transform.position = new Vector3(targetBox.transform.position.x, 10.025f, targetBox.transform.position.z);
+
 	}
 
 	void setToNearestBuilding (Collider hitcol){
@@ -218,21 +247,21 @@ public class RoadSnap : MonoBehaviour {
 
 	void snapToX(GameObject objectToPlace) {
 		if (Mathf.FloorToInt (nearestBuilding.transform.rotation.eulerAngles.y) == 0) {
-			Debug.Log("Snap to X: 0 angle, " + objectToPlace);
+			// Debug.Log("Snap to X: 0 angle, " + objectToPlace);
 
 			objectToPlace.transform.localPosition = new Vector3 (Mathf.Sign(objectToPlace.transform.localPosition.x) * distanceToMoveX, 0, 0);
 		} else {
-			Debug.Log("Snap to X: +0 angle," + objectToPlace);
+			// Debug.Log("Snap to X: +0 angle," + objectToPlace);
 			objectToPlace.transform.localPosition = new Vector3 (0, 0, Mathf.Sign(objectToPlace.transform.localPosition.z) * distanceToMoveZ);
 		}
 	}
 
 	void snapToZ(GameObject objectToPlace) {
 		if (Mathf.FloorToInt(nearestBuilding.transform.rotation.eulerAngles.y) == 0) {
-			Debug.Log("Snap to Z: 0 angle, " + objectToPlace);
+			// Debug.Log("Snap to Z: 0 angle, " + objectToPlace);
 			objectToPlace.transform.localPosition = new Vector3 (0, 0, Mathf.Sign(objectToPlace.transform.localPosition.z) * distanceToMoveZ);
 		} else {
-			Debug.Log("Snap to Z: +0 angle, " + objectToPlace);
+			// Debug.Log("Snap to Z: +0 angle, " + objectToPlace);
 			objectToPlace.transform.localPosition = new Vector3 (Mathf.Sign(objectToPlace.transform.localPosition.x) * distanceToMoveX, 0, 0);
 		}
 	}
