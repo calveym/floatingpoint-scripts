@@ -36,11 +36,6 @@ public class RoadSnap : MonoBehaviour {
 
 	void Update() {
 		if (objectUsed || manualUse) {
-			Debug.Log ("status: " + targetIsBlocked);
-			if (targetIsBlocked) {
-				Debug.Log("block this! hahaha");
-				targetBox.GetComponent<Renderer> ().material = blockedMaterial;
-			}
 			gameObject.layer = 9;
 			getNearbyBuildings ();
 		} 
