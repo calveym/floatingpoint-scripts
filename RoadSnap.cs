@@ -97,6 +97,7 @@ public class RoadSnap : MonoBehaviour {
 
 		if (hitColliders.Length == 0) {
 			nearestBuilding = null;
+			Destroy (targetBox);
 		} 
 		else {
 			foreach (Collider hitcol in hitColliders) {
@@ -104,7 +105,7 @@ public class RoadSnap : MonoBehaviour {
 
 					setToNearestBuilding (hitcol);
 
-					// drawTargetBox ();
+					drawTargetBox ();
 
 					// Debug.Log ("FOUND HIT: " + nearestBuilding);
 
@@ -178,8 +179,8 @@ public class RoadSnap : MonoBehaviour {
 		targetPosition = nearestBuilding.transform.position;
 		spacing = 0.1f;
 
-		distanceToMoveX = nearestBuilding.GetComponent<MeshFilter>().mesh.bounds.extents.x + gameObject.GetComponent<MeshFilter>().mesh.bounds.extents.x;
-		distanceToMoveZ = nearestBuilding.GetComponent<MeshFilter>().mesh.bounds.extents.z + gameObject.GetComponent<MeshFilter>().mesh.bounds.extents.z;
+		distanceToMoveX = nearestBuilding.GetComponent<MeshFilter>().mesh.bounds.extents.x + objectToPlace.GetComponent<MeshFilter>().mesh.bounds.extents.x;
+		distanceToMoveZ = nearestBuilding.GetComponent<MeshFilter>().mesh.bounds.extents.z + objectToPlace.GetComponent<MeshFilter>().mesh.bounds.extents.z;
 
 		// frontTargetPoint = nearestBuilding.transform.position.x + (targetRend.bounds.size.x / 2);
 		// frontThisPoint = transform.position.x -(thisRend.bounds.size.x / 2);
@@ -208,20 +209,20 @@ public class RoadSnap : MonoBehaviour {
 		if (Mathf.FloorToInt (nearestBuilding.transform.rotation.eulerAngles.y) == 0) {
 			Debug.Log("Snap to X: 0 angle, " + objectToPlace);
 
-			objectToPlace.transform.localPosition = new Vector3 (Mathf.Sign(transform.localPosition.x) * distanceToMoveX, 0, 0);
+			objectToPlace.transform.localPosition = new Vector3 (Mathf.Sign(objectToPlace.transform.localPosition.x) * distanceToMoveX, 0, 0);
 		} else {
 			Debug.Log("Snap to X: +0 angle," + objectToPlace);
-			objectToPlace.transform.localPosition = new Vector3 (0, 0, Mathf.Sign(transform.localPosition.z) * distanceToMoveZ);
+			objectToPlace.transform.localPosition = new Vector3 (0, 0, Mathf.Sign(objectToPlace.transform.localPosition.z) * distanceToMoveZ);
 		}
 	}
 
 	void snapToZ(GameObject objectToPlace) {
 		if (Mathf.FloorToInt(nearestBuilding.transform.rotation.eulerAngles.y) == 0) {
 			Debug.Log("Snap to Z: 0 angle, " + objectToPlace);
-			objectToPlace.transform.localPosition = new Vector3 (0, 0, Mathf.Sign(transform.localPosition.z) * distanceToMoveZ);
+			objectToPlace.transform.localPosition = new Vector3 (0, 0, Mathf.Sign(objectToPlace.transform.localPosition.z) * distanceToMoveZ);
 		} else {
 			Debug.Log("Snap to Z: +0 angle, " + objectToPlace);
-			objectToPlace.transform.localPosition = new Vector3 (Mathf.Sign(transform.localPosition.x) * distanceToMoveX, 0, 0);
+			objectToPlace.transform.localPosition = new Vector3 (Mathf.Sign(objectToPlace.transform.localPosition.x) * distanceToMoveX, 0, 0);
 		}
 	}
 }
