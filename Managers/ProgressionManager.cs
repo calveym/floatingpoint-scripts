@@ -21,11 +21,11 @@ public class ProgressionManager : MonoBehaviour {
 
     public delegate void LevelThree();
 
-    LevelOne levelUpOne;
+    LevelOne levelOne;
 
-    LevelTwo levelUpTwo;
+    LevelTwo levelTwo;
 
-    LevelThree levelUpThree;
+    LevelThree levelThree;
 
     public void Start()
     {
@@ -33,12 +33,15 @@ public class ProgressionManager : MonoBehaviour {
         firstIsland = GameObject.Find("Island");
         secondIsland = GameObject.Find("SecondIsland");
         setPosition = new Vector3(1.9f, 0f, -58.8f);
+        levelTwo += UnlockBuildingTier;
+        levelTwo += AllowRemoveMountains;
+        levelThree += UnlockBuildingTier;
         // AddIsland();
     }
 
-    void UnlockBuildingTier(int tier)
+    void UnlockBuildingTier()
     {
-        displayMenu.SetTier(tier);
+        displayMenu.SetTier(level + 1);
     }
 
     public void AddAirport()
@@ -51,6 +54,15 @@ public class ProgressionManager : MonoBehaviour {
     // TODO
     {
 
+    }
+
+    public void AllowRemoveMountains()
+    {
+        GameObject[] mountains = GameObject.FindGameObjectsWithTag("mountain");
+        for (int i = 0; i < mountains.Length; i++)
+        {
+            mountains[i].GetComponent<ProgressionTracker>().Enable();
+        }
     }
 
     public void AddIsland()

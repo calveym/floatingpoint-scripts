@@ -31,7 +31,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 		surroundingRoads = new Dictionary<Vector3, string>();
 		controller = GameObject.Find("RightController");
 		events = controller.GetComponent<VRTK_ControllerEvents>();
-		events.TouchpadClick += new ControllerInteractionEventHandler(DoTouchpadClick);
+		events.TouchpadPressed += new ControllerInteractionEventHandler(DoTouchpadPress);
 
 		Quaternion zero = new Quaternion(0, 0, 0, 1);
 		Quaternion ninety = new Quaternion(0, 0.7071f, 0, 0.7071f);
@@ -75,11 +75,11 @@ public class RoadGenerator : VRTK_InteractableObject {
 		roadRotation.Add("1111", zero);
 	}
 
-	public override void DoTouchpadClick (object sender, ControllerInteractionEventArgs e)
+	public void DoTouchpadPress (object sender, ControllerInteractionEventArgs e)
 	// Runs when object is used by vrtk controller
 	{
-		StartCoroutine("drawRoad"):
-		if (Physics.Raycast (controller.transform.position, controller.transform.forward, out RaycastHit hit, 1000.0f)) {
+        StartCoroutine("drawRoad");
+		if (Physics.Raycast (controller.transform.position, controller.transform.forward, out hit, 1000.0f)) {
 			Vector3 rounded = Round(hit.point);
 
             GameObject roundedValue;

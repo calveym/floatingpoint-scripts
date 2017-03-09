@@ -5,6 +5,7 @@ using System.Collections;
 
 public class DisplayMenu : MonoBehaviour
 {
+    int tier;
 
     // Add the three panels that make up the buttons
     public GameObject panel;
@@ -29,6 +30,7 @@ public class DisplayMenu : MonoBehaviour
     private void Start()
     // Sets listeners and deactivates all panels at start
     {
+        tier = 0;
         events = GetComponent<VRTK_ControllerEvents>();
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchStart += new ControllerInteractionEventHandler(DoTouchpadTouchStart);
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
@@ -63,6 +65,23 @@ public class DisplayMenu : MonoBehaviour
         Clipboard.SetActive(true);
     }
 
+    public void SetTier(int newTier)
+    {
+        tier = newTier;
+        if(newTier == 1)
+        {
+            getPressedButton = TierOnePosition;
+        }
+        else if(newTier == 2)
+        {
+            getPressedButton = TierTwoPosition;
+        }
+        else if(newTier == 3)
+        {
+            getPressedButton = TierThreePosition;
+        }
+    }
+
     int TierOnePosition(float position)
     {
         return 1;
@@ -70,12 +89,38 @@ public class DisplayMenu : MonoBehaviour
 
     int TierTwoPosition(float position)
     {
-
+        if(position < 0f)
+        {
+            return 1;
+        }
+        else if(position >= 0)
+        {
+            return 2;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     int TierThreePosition(float position)
     {
-
+        if (position < -0.33f)
+        {
+            return 1;
+        }
+        else if (-0.33f <= position && position < 0.33f)
+        {
+            return 2;
+        }
+        else if (position >= 0.33f)
+        {
+            return 3;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     IEnumerator UpdateTouchpadAxis()
