@@ -23,10 +23,6 @@ public class DisplayMenu : MonoBehaviour
     public GameObject wireframeModels;
     public GameObject controllerLeft;
 
-    public delegate int GetPressedButton(float position);
-
-    GetPressedButton getPressedButton;
-
     private void Start()
     // Sets listeners and deactivates all panels at start
     {
@@ -36,7 +32,6 @@ public class DisplayMenu : MonoBehaviour
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
         itemGenerator = GameObject.Find("LeftController").GetComponent<ItemGenerator>();
         DeactivateAll();
-        getPressedButton = TierOnePosition;
     }
 
     void DoTouchpadTouchStart(object sender, ControllerInteractionEventArgs e)
@@ -131,9 +126,9 @@ public class DisplayMenu : MonoBehaviour
             // Vector2 position = SteamVR_Controller.Input(2).GetAxis();
             Vector2 position = events.GetTouchpadAxis();
 
-            if (getPressedButton(position.x) != pressedButton)
+            if (GetPressedButton(position.x) != pressedButton)
             {
-                ButtonPressed(getPressedButton(position.x));
+                ButtonPressed(GetPressedButton(position.x));
                 SwapModels();
             }
             yield return null;
