@@ -111,7 +111,9 @@ public class RoadSnap : MonoBehaviour {
 						// Debug.Log ("Closer to x");
 					}
 
-				} 
+				} else {
+					Debug.Log ("Not building: " + hitcol);
+				}
 			}
 		}
 	}
@@ -140,7 +142,7 @@ public class RoadSnap : MonoBehaviour {
 
 		float yAngle = Mathf.Round(transform.localEulerAngles.y / 90) * 90;
 
-		Debug.Log("Current angle: " + transform.eulerAngles.y + "Rounded: " + yAngle);
+		// Debug.Log("Current angle: " + transform.eulerAngles.y + "Rounded: " + yAngle);
 
 		transform.localRotation = Quaternion.Euler(0, yAngle, 0);
 
@@ -182,25 +184,22 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	void snapToX() {
-		if (transform.position.x < nearestBuilding.transform.position.x) {
-			// Debug.Log ("Called snap position x: 1");
-			transform.localPosition = new Vector3 (0, 0, transform.localPosition.z);
-		} 
-
-		else {
-			// Debug.Log ("Called snap position x: 2");
+		if (Mathf.FloorToInt (nearestBuilding.transform.rotation.eulerAngles.y) == 0) {
+			Debug.Log("Snap to X: 0 angle");
+			transform.localPosition = new Vector3 (transform.localPosition.x, 0, 0);
+		} else {
+			Debug.Log("Snap to X: +0 angle");
 			transform.localPosition = new Vector3 (0, 0, transform.localPosition.z);
 		}
 	}
 
 	void snapToZ() {
-		if (transform.position.z < nearestBuilding.transform.position.z) {
-			// Debug.Log ("Called snap position Z: 1");
-			transform.localPosition = new Vector3 (transform.localPosition.x, 0, 0);
+		if (Mathf.FloorToInt(nearestBuilding.transform.rotation.eulerAngles.y) == 0) {
+			Debug.Log("Snap to Z: 0 angle");
+			transform.localPosition = new Vector3 (0, 0, transform.localPosition.z);
 		} else {
-			// Debug.Log ("Called snap position Z: 2");
+			Debug.Log("Snap to Z: +0 angle");
 			transform.localPosition = new Vector3 (transform.localPosition.x, 0, 0);
 		}
 	}
-
 }
