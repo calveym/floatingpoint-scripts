@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ProgressionManager : MonoBehaviour {
 
+    DisplayMenu displayMenu;
+
     public int level;
     public bool airport;
     public bool train;
@@ -13,45 +15,48 @@ public class ProgressionManager : MonoBehaviour {
     Vector3 setPosition;
     bool inPosition;
 
+    public delegate void LevelOne();
+
+    public delegate void LevelTwo();
+
+    public delegate void LevelThree();
+
+    LevelOne levelUpOne;
+
+    LevelTwo levelUpTwo;
+
+    LevelThree levelUpThree;
+
     public void Start()
     {
-        AddIsland();
+        displayMenu = GameObject.Find("LeftController").GetComponent<DisplayMenu>();
         firstIsland = GameObject.Find("Island");
         secondIsland = GameObject.Find("SecondIsland");
         setPosition = new Vector3(1.9f, 0f, -58.8f);
+        // AddIsland();
     }
 
-    public void IncreaseLevel()
-    // TODO: call this function when the contract requirements are fulfilled
+    void UnlockBuildingTier(int tier)
     {
-        if(level == 0)
-        {
-
-        }
-        else if(level == 1)
-        {
-
-        }
-        else if(level == 2)
-        {
-
-        }
+        displayMenu.SetTier(tier);
     }
 
     public void AddAirport()
+    // TODO
     {
 
     }
 
     public void AddTrain()
+    // TODO
     {
 
     }
 
     public void AddIsland()
     {
-        Debug.Log("Running");
-        inPosition = true;
+        Debug.Log("Adding island");
+        inPosition = false;
         IEnumerator coroutine = MoveIsland(secondIsland, secondIsland.transform.position, setPosition);
         StartCoroutine(coroutine);
     }
@@ -60,7 +65,12 @@ public class ProgressionManager : MonoBehaviour {
     {
         while(!inPosition)
         {
+            Debug.Log("Not in position"); 
             movingIsland.transform.position = target * Time.deltaTime * 0.2f;
+        }
+        if(movingIsland.transform.position == target)
+        {
+            inPosition = true;
         }
         yield return null;
     }

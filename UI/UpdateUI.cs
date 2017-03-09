@@ -25,7 +25,6 @@ public class UpdateUI : MonoBehaviour {
         timePassed = 0;
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         incomeText = GameObject.Find("IncomeText").GetComponent<Text>();
-        Debug.Log(GameObject.Find("IncomeText"));
         balanceText = GameObject.Find("BalanceText").GetComponent<Text>();
         populationText = GameObject.Find("PopulationText").GetComponent<Text>();
         happinessText = GameObject.Find("HappinessText").GetComponent<Text>();
@@ -37,8 +36,8 @@ public class UpdateUI : MonoBehaviour {
         timePassed += Time.deltaTime;
         if(timePassed >= 1)
         {
-            UpdateManagerVariables();
-            UpdateUIVariables();
+            //UpdateManagerVariables();
+            //UpdateUIVariables();
             timePassed = 0;
         }
 	}
