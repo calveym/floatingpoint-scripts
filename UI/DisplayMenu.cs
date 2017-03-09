@@ -23,6 +23,9 @@ public class DisplayMenu : MonoBehaviour
     public GameObject wireframeModels;
     public GameObject controllerLeft;
 
+    private delegate int GetPressedButton(float position);
+    GetPressedButton getPressedButton;
+
     private void Start()
     // Sets listeners and deactivates all panels at start
     {
@@ -59,8 +62,7 @@ public class DisplayMenu : MonoBehaviour
         Model5.SetActive(true);
         Clipboard.SetActive(true);
     }
-
-<<<<<<< HEAD
+    
     public void SetTier(int newTier)
     {
         tier = newTier;
@@ -100,9 +102,6 @@ public class DisplayMenu : MonoBehaviour
     }
 
     int TierThreePosition(float position)
-=======
-    int GetPressedButton(float position)
->>>>>>> parent of a1a45a7... Progression and saving
     {
         if (position < -0.33f)
         {
@@ -130,9 +129,9 @@ public class DisplayMenu : MonoBehaviour
             // Vector2 position = SteamVR_Controller.Input(2).GetAxis();
             Vector2 position = events.GetTouchpadAxis();
 
-            if (GetPressedButton(position.x) != pressedButton)
+            if (getPressedButton(position.x) != pressedButton)
             {
-                ButtonPressed(GetPressedButton(position.x));
+                ButtonPressed(getPressedButton(position.x));
                 SwapModels();
             }
             yield return null;

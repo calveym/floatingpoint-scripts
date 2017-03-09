@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ItemGenerator : MonoBehaviour {
 
+    Random rnd;
 	ItemManager itemManager;
 
     // Small model arrays
@@ -114,6 +115,8 @@ public class ItemGenerator : MonoBehaviour {
     public GameObject StartSpawn(int pressedButton, GameObject initiator)
     // Starts spawn cycle by selecting correct model
     {
+		// Debug.Log(pressedButton);
+		// Debug.Log(initiator);
         if(pressedButton == 1 && initiator.name == "Model1")
         {
             return Spawn(smlRes, initiator, pressedButton);

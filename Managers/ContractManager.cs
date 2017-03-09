@@ -6,15 +6,12 @@ public class ContractManager : MonoBehaviour {
 
 	public List<Contract> allContracts;
 	public List<Contract> majorContracts;
-	public List<Contract> pendingContracts;
-	public List<Contract> activeContracts;
+	public List<Contract> acceptedContracts;
 	public List<Contract> declinedContracts;
 	public List<Contract> completedContracts;
 	public List<Contract> failedContracts;
 
-	GameObject ejector;
-	GameObject button;
-	GameObject contractPrefab; // Basic contract- contains the model, gameObject, blank text fields. GenerateContract adds the contract component.
+    GameObject contractPrefab; // Basic contract- contains the model, gameObject, blank text fields. GenerateContract adds the contract component.
 
 	EconomyManager economyManager;
 	HappinessManager happinessManager;
@@ -51,13 +48,13 @@ public class ContractManager : MonoBehaviour {
 		failedContracts = new List<Contract>();
     }
 
-
 	void Update()
 	{
+		CheckNumContracts();
 		CheckContractsCompleted();
 	}
 
-	public void ContractButtonPress()
+	void CheckNumContracts()
 	{
 		if (allContracts.Count <= 1)
 		{
@@ -88,3 +85,5 @@ public class ContractManager : MonoBehaviour {
 		allContracts.Add(contract);
 	}
 }
+
+

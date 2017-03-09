@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ProgressionManager : MonoBehaviour {
 
+    DisplayMenu displayMenu;
+
     public int level;
     public bool airport;
     public bool train;
@@ -13,7 +15,6 @@ public class ProgressionManager : MonoBehaviour {
     Vector3 setPosition;
     bool inPosition;
 
-<<<<<<< HEAD
     public delegate void LevelOne();
 
     public delegate void LevelTwo();
@@ -26,15 +27,13 @@ public class ProgressionManager : MonoBehaviour {
 
     LevelThree levelThree;
 
-=======
->>>>>>> parent of a1a45a7... Progression and saving
+
     public void Start()
     {
-        AddIsland();
+        displayMenu = GameObject.Find("LeftController").GetComponent<DisplayMenu>();
         firstIsland = GameObject.Find("Island");
         secondIsland = GameObject.Find("SecondIsland");
         setPosition = new Vector3(1.9f, 0f, -58.8f);
-<<<<<<< HEAD
         levelTwo += UnlockBuildingTier;
         levelTwo += AllowRemoveMountains;
         levelThree += UnlockBuildingTier;
@@ -44,7 +43,6 @@ public class ProgressionManager : MonoBehaviour {
     void UnlockBuildingTier()
     {
         displayMenu.SetTier(level + 1);
-=======
     }
 
     public void IncreaseLevel()
@@ -62,7 +60,6 @@ public class ProgressionManager : MonoBehaviour {
         {
 
         }
->>>>>>> parent of a1a45a7... Progression and saving
     }
 
     public void AddAirport()

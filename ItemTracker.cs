@@ -9,13 +9,13 @@ public class ItemTracker : MonoBehaviour {
     PopulationManager populationManager;
     EconomyManager economyManager;
     ItemManager itemManager;
-    
+
     public bool grabbableObject;
     public string type;
     public int capacity;
     public float income;
     public int users;
-    public bool active;
+    public bool usable;
     public bool validPosition;
     GameObject tooltip;
 
@@ -26,7 +26,7 @@ public class ItemTracker : MonoBehaviour {
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
         
-        active = false;
+        usable = false;
     }
 
     private void Update()
@@ -140,7 +140,7 @@ public class ItemTracker : MonoBehaviour {
     public void SetUsable()
     // Separate parts called when objects are enabled. Add additional setup calls here
     {
-        active = true;
+        usable = true;
         if(type == "residential")
         {
             itemManager.addResidential(capacity, gameObject);
