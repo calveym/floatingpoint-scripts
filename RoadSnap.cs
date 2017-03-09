@@ -15,8 +15,8 @@ public class RoadSnap : MonoBehaviour {
 	Renderer rend;
 	Collider[] hitColliders;
 	GameObject nearestBuilding;
-	MeshRenderer targetRend;
-	MeshRenderer thisRend;
+	Vector3 targetBounds;
+	Vector3 thisBounds;
 	Vector3 targetPosition;
 	float distanceToMoveX;
 	float distanceToMoveZ;
@@ -128,10 +128,18 @@ public class RoadSnap : MonoBehaviour {
 		// create box
 		if (targetBox != null) {
 			Destroy (targetBox);
-			targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, transform.rotation);
+			targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, nearestBuilding.transform.rotation);
 		} else {
-			targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, transform.rotation);
+			targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, nearestBuilding.transform.rotation);
 		}
+
+		// set size
+		Vector3 sizeCalculated = GetComponent<BoxCollider>().size;
+		Debug.Log ("box size: " + sizeCalculated + "other size: " + GetComponent<Renderer>().bounds.size);
+		targetBox.transform.localScale = new Vector3 (sizeCalculated.x / 10, 0.1f, sizeCalculated.z / 10);
+
+		targetBox.transform.parent = nearestBuilding.transform;
+
 		// place it next to building
 		setPosition(targetBox);
 	}
@@ -173,14 +181,17 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	void setPosition(GameObject objectToPlace) {
-		targetRend = nearestBuilding.GetComponent<MeshRenderer>();
-		thisRend = gameObject.GetComponent<MeshRenderer> ();
-
+		targetBounds = nearestBuilding.GetComponent<MeshFilter> ().mesh.bounds.extents;
+		thisBounds = objectToPlace.GetComponent<MeshFilter> ().mesh.bounds.extents;
 		targetPosition = nearestBuilding.transform.position;
 		spacing = 0.1f;
 
-		distanceToMoveX = nearestBuilding.GetComponent<MeshFilter>().mesh.bounds.extents.x + objectToPlace.GetComponent<MeshFilter>().mesh.bounds.extents.x;
-		distanceToMoveZ = nearestBuilding.GetComponent<MeshFilter>().mesh.bounds.extents.z + objectToPlace.GetComponent<MeshFilter>().mesh.bounds.extents.z;
+		if (objectToPlace != gameObject) {
+			thisBounds = thisBounds * 10;
+		}
+
+		distanceToMoveX = targetBounds.x + thisBounds.x;
+		distanceToMoveZ = targetBounds.z + thisBounds.z;
 
 		// frontTargetPoint = nearestBuilding.transform.position.x + (targetRend.bounds.size.x / 2);
 		// frontThisPoint = transform.position.x -(thisRend.bounds.size.x / 2);
