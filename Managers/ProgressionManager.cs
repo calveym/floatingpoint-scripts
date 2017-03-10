@@ -21,11 +21,11 @@ public class ProgressionManager : MonoBehaviour {
 
     public delegate void LevelThree();
 
-    LevelOne levelOne;
+    static LevelOne levelOne;
 
-    LevelTwo levelTwo;
+    static LevelTwo levelTwo;
 
-    LevelThree levelThree;
+    static LevelThree levelThree;
 
 
     public void Start()
@@ -34,10 +34,15 @@ public class ProgressionManager : MonoBehaviour {
         firstIsland = GameObject.Find("Island");
         secondIsland = GameObject.Find("SecondIsland");
         setPosition = new Vector3(1.9f, 0f, -58.8f);
+        SetupLevels();
+        AddIsland();
+    }
+
+    void SetupLevels()
+    {
         levelTwo += UnlockBuildingTier;
         levelTwo += AllowRemoveMountains;
         levelThree += UnlockBuildingTier;
-        // AddIsland();
     }
 
     void UnlockBuildingTier()
@@ -50,15 +55,15 @@ public class ProgressionManager : MonoBehaviour {
     {
         if(level == 0)
         {
-
+            levelOne();
         }
         else if(level == 1)
         {
-
+            levelTwo();
         }
         else if(level == 2)
         {
-
+            levelThree();
         }
     }
 
@@ -72,7 +77,7 @@ public class ProgressionManager : MonoBehaviour {
 
     }
 
-    public void AllowRemoveMountains()
+    public static void AllowRemoveMountains()
     {
         GameObject[] mountains = GameObject.FindGameObjectsWithTag("mountain");
         for (int i = 0; i < mountains.Length; i++)
@@ -84,7 +89,7 @@ public class ProgressionManager : MonoBehaviour {
     public void AddIsland()
     {
         Debug.Log("Running");
-        inPosition = true;
+        inPosition = false;
         IEnumerator coroutine = MoveIsland(secondIsland, secondIsland.transform.position, setPosition);
         StartCoroutine(coroutine);
     }
@@ -94,6 +99,10 @@ public class ProgressionManager : MonoBehaviour {
         while(!inPosition)
         {
             movingIsland.transform.position = target * Time.deltaTime * 0.2f;
+        }
+        if(source == target)
+        {
+            inPosition = true;
         }
         yield return null;
     }
