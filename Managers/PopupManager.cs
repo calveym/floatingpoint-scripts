@@ -16,14 +16,19 @@ public class PopupManager : MonoBehaviour {
     }
 
 	void QueuePopup(string message)
-    // TODO
     {
         queuedPopups.Add(message);
         StartCoroutine(DoPopup);
     }
 
     IEnumerator DoPopup()
+    // Goes through array of queued popups, with a WAIT_TIME delay
     {
+        if(queuedPopups == 0)
+        {
+            tooltip.SetActive(false);
+            yield return null;
+        }
         while(queuedPopups > 0)
         {
             tooltipText.text = queuedPopups[0];
