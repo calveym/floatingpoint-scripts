@@ -6,9 +6,18 @@ public class PopulationManager : MonoBehaviour {
 
 	ItemManager itemManager;
     HappinessManager happinessManager;
+
     List<ItemTracker> residentialTrackers;
     List<ItemTracker> emptyResidential;
     List<int> numEmptyResidential;
+
+	List<ItemTracker> commercialTrackers;
+    List<ItemTracker> emptyCommercial;
+    List<int> numEmptyCommercial;
+
+	List<ItemTracker> industrialTrackers;
+	List<ItemTracker> emptyIndustrial;
+	List<int> numEmptyIndustrial;
 
 	float newPopulationSpawn;
 	float populationIncreaseRate;
@@ -18,6 +27,7 @@ public class PopulationManager : MonoBehaviour {
     public int population;
     public int unallocatedPopulation;
     public int totalPopulation;
+	public int unemployedPopulation;
 
     int residentialCap;
     int industrialCap;
@@ -44,14 +54,18 @@ public class PopulationManager : MonoBehaviour {
     // Retrieves necessary values from other managers
     {
         residentialCap = itemManager.residentialCap;
+		commercialCap = itemManager.commercialCap;
+		industrialCap = itemManager.industrialCap;
         residentialTrackers = itemManager.residentialTrackers;
         totalPopulation = population + unallocatedPopulation;
         happiness = happinessManager.happiness;
 
-        UpdateVacancies();
+        UpdateEmptyResidential();
+		UpdateEmptyCommercial();
+		UpdateEmptyIndustrial();
     }
 
-    void UpdateVacancies()
+    void UpdateEmptyResidential()
     // Updates list of properties with vacancies
     {
         emptyResidential = new List<ItemTracker>();
@@ -60,10 +74,46 @@ public class PopulationManager : MonoBehaviour {
         {
             for (int i = 0; i < residentialTrackers.Count; i++)
             {
-                if (residentialTrackers[i].NumVacancies() > 0 && residentialTrackers[i].usable == true)
+                if (residentialTrackers[i].NumEmptyResidential() > 0 && residentialTrackers[i].usable == true)
                 {
                     emptyResidential.Add(residentialTrackers[i]);
-                    numEmptyResidential.Add(residentialTrackers[i].NumVacancies());
+                    numEmptyResidential.Add(residentialTrackers[i].NumEmptyResidential());
+                }
+            }
+        }
+    }
+
+	void UpdateEmptyCommercial()
+    // Updates list of properties with vacancies
+    {
+        emptyCommercial = new List<ItemTracker>();
+        numEmptyCommercial = new List<int>();
+        if (commercialTrackers != null)
+        {
+            for (int i = 0; i < commercialTrackers.Count; i++)
+            {
+                if (commercialTrackers[i].NumEmptyCommercial() > 0 && commercialTrackers[i].usable == true)
+                {
+                    emptyCommercial.Add(commercialTrackers[i]);
+                    numEmptyCommercial.Add(commercialTrackers[i].NumEmptyCommercial());
+                }
+            }
+        }
+    }
+
+	void UpdateEmptyIndustrial()
+    // Updates list of properties with vacancies
+    {
+        emptyIndustrial = new List<ItemTracker>();
+        numEmptyIndustrial = new List<int>();
+        if (industrialTrackers != null)
+        {
+            for (int i = 0; i < industrialTrackers.Count; i++)
+            {
+                if (industrialTrackers[i].NumEmptyIndustrial() > 0 && industrialTrackers[i].usable == true)
+                {
+                    emptyIndustrial.Add(industrialTrackers[i]);
+                    numEmptyIndustrial.Add(industrialTrackers[i].NumEmptyIndustrial());
                 }
             }
         }
@@ -73,10 +123,11 @@ public class PopulationManager : MonoBehaviour {
     // Runs all checks
     {
         TryIncreasePopulation();
-        TryAllocateUsers();
+        TryAllocatePopulation();
+		TryFindJob();
     }
 
-    void TryAllocateUsers()
+    void TryAllocatePopulation()
     // Run the check to allocate users
     {
         if(unallocatedPopulation > 0 && AvailableResidential() > 0)
@@ -93,7 +144,6 @@ public class PopulationManager : MonoBehaviour {
                     numAdded = unallocatedPopulation;
                 }
                 population += numAdded;
-				//GameObject.Find("Managers").GetComponent<ContractManager>().incrementPopulation(numAdded);
                 unallocatedPopulation -= numAdded;
                 numEmptyResidential[i] -= numAdded;
                 emptyResidential[i].AddUsers(numAdded);
@@ -109,6 +159,37 @@ public class PopulationManager : MonoBehaviour {
             IncreasePopulation();
         }
     }
+
+	void TryFindJob()
+	// TODO: allocate to either industrial or commercial, select type first, then allocate
+	{
+		if(unemployedPopulation > 0 && AvailableJobs() > 0)
+		{
+			for (int i = 0; i < AbailableJobs(); i++)
+			{
+				if(unemployedPopulation > 0)
+				{
+					int numAdded = 0;
+					if(unemployedPopulation > numEmptyResidential[i])
+					{
+						numAdded = numEmptyResidential[i];
+					}
+					else if(unallocatedPopulation <= numEmptyResidential[i])
+					{
+						numAdded = unallocatedPopulation;
+					}
+					population += numAdded;
+					unallocatedPopulation -= numAdded;
+					numEmptyResidential[i] -= numAdded;
+					emptyResidential[i].AddUsers(numAdded);
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+	}
 
     void IncreasePopulation()
     // Tries to increase population
@@ -129,9 +210,14 @@ public class PopulationManager : MonoBehaviour {
         unallocatedPopulation += numUsers;
     }
 
-    public int AvailableResidential()
+    int AvailableResidential()
     // Returns amount of available housing
     {
-        return residentialCap - population;
+		return residentialCap - population;
     }
+
+	int AvailableJobs()
+	{
+		return commercialCap + industrialCap;
+	}
 }

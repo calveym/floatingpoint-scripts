@@ -5,7 +5,7 @@ using VRTK;
 
 public class Cloud : VRTK_InteractableObject {
 
-    bool grabbed;
+	bool grabbed;
 
 	// Use this for initialization
 	void Start () {

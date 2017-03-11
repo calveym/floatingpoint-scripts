@@ -25,7 +25,7 @@ public class ItemTracker : MonoBehaviour {
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-        
+
         usable = false;
     }
 
@@ -124,7 +124,7 @@ public class ItemTracker : MonoBehaviour {
         users = 0;
     }
 
-    public int NumVacancies()
+    public int NumEmptyResidential()
     // Returns number of available spaces
     {
         return capacity - users;
