@@ -43,7 +43,7 @@ public class ItemTracker : MonoBehaviour {
     void RunChecks()
     // Runs checks to make sure current state is legal
     {
-        // OverCapacity();
+        OverCapacity();
         EnablePhysics();
     }
 
@@ -60,7 +60,6 @@ public class ItemTracker : MonoBehaviour {
     void EnableObjectTooltip(object sender, ControllerInteractionEventArgs e)
     // Enables, resets position and resets text for object tooltips
     {
-        Debug.Log("This runs yeye");
         if(tooltip != null)
         {
             Destroy(tooltip);
@@ -93,7 +92,7 @@ public class ItemTracker : MonoBehaviour {
     {
         if (users > capacity)
         {
-            DeallocateUsers(capacity - users);
+            DeallocateUsers(capacity -= 1);
         }
     }
 

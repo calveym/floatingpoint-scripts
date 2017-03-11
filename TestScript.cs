@@ -6,6 +6,6 @@ public class TestScript : MonoBehaviour {
 
 	public void Run()
     {
-        Debug.Log("Runs");
+        //Debug.Log("Runs");
     }
 }

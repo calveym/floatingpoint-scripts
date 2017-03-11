@@ -12,10 +12,11 @@ public class UpdateUI : MonoBehaviour {
 
     float timePassed;
 
-    Text incomeText;
-    Text balanceText;
-    Text populationText;
-    Text happinessText;
+    public Text incomeText;
+    public Text balanceText;
+    public Text populationText;
+    public Text happinessText;
+    public GameObject manager;
 
     EconomyManager economyManager;
     HappinessManager happinessManager;
@@ -23,12 +24,8 @@ public class UpdateUI : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         timePassed = 0;
-        economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
-        incomeText = GameObject.Find("IncomeText").GetComponent<Text>();
-        balanceText = GameObject.Find("BalanceText").GetComponent<Text>();
-        populationText = GameObject.Find("PopulationText").GetComponent<Text>();
-        happinessText = GameObject.Find("HappinessText").GetComponent<Text>();
-        happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
+        economyManager = manager.GetComponent<EconomyManager>();
+        happinessManager = manager.GetComponent<HappinessManager>();
 	}
 	
 	// Update is called once per frame

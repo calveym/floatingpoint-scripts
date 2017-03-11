@@ -6,6 +6,11 @@ public class ProgressionManager : MonoBehaviour {
 
     DisplayMenu displayMenu;
 
+    public bool allowAddAirport;
+    public bool allowAddTrain;
+    public bool allowRemoveMountain;
+    public bool allowAddIsland;
+
     public int level;
     public bool airport;
     public bool train;
@@ -13,6 +18,7 @@ public class ProgressionManager : MonoBehaviour {
     GameObject firstIsland;
     GameObject secondIsland;
     Vector3 setPosition;
+    float islandLerp;
     bool inPosition;
 
     public delegate void LevelOne();
@@ -21,15 +27,16 @@ public class ProgressionManager : MonoBehaviour {
 
     public delegate void LevelThree();
 
-    static LevelOne levelOne;
+    public static LevelOne levelOne;
 
-    static LevelTwo levelTwo;
+    public static LevelTwo levelTwo;
 
-    static LevelThree levelThree;
+    public static LevelThree levelThree;
 
 
     public void Start()
     {
+        islandLerp = 0f;
         displayMenu = GameObject.Find("LeftController").GetComponent<DisplayMenu>();
         firstIsland = GameObject.Find("Island");
         secondIsland = GameObject.Find("SecondIsland");
@@ -67,9 +74,22 @@ public class ProgressionManager : MonoBehaviour {
         }
     }
 
-    public void AddAirport()
+    void AllowAddAirport()
     {
 
+    }
+
+    void AllowAddTrain()
+    {
+
+    }
+
+    public void AddAirport()
+    {
+        if (allowAddAirport)
+        {
+
+        }
     }
 
     public void AddTrain()
@@ -77,7 +97,7 @@ public class ProgressionManager : MonoBehaviour {
 
     }
 
-    public static void AllowRemoveMountains()
+    public void AllowRemoveMountains()
     {
         GameObject[] mountains = GameObject.FindGameObjectsWithTag("mountain");
         for (int i = 0; i < mountains.Length; i++)
@@ -88,22 +108,24 @@ public class ProgressionManager : MonoBehaviour {
 
     public void AddIsland()
     {
-        Debug.Log("Running");
         inPosition = false;
-        IEnumerator coroutine = MoveIsland(secondIsland, secondIsland.transform.position, setPosition);
-        StartCoroutine(coroutine);
+        StartCoroutine(MoveIsland(secondIsland, secondIsland.transform.position, setPosition));
     }
 
     IEnumerator MoveIsland(GameObject movingIsland, Vector3 source, Vector3 target)
     {
-        while(!inPosition)
+        while(inPosition == false)
         {
-            movingIsland.transform.position = target * Time.deltaTime * 0.2f;
+            source = Vector3.Lerp(source, target, islandLerp);
+            if(islandLerp <= 1)
+            {
+                islandLerp += 0.002f;
+            }
+            else
+            {
+                inPosition = true;
+            }
+            yield return null;
         }
-        if(source == target)
-        {
-            inPosition = true;
-        }
-        yield return null;
     }
 }
