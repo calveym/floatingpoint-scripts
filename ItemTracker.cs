@@ -19,33 +19,17 @@ public class ItemTracker : MonoBehaviour {
     public bool validPosition;
     GameObject tooltip;
 
+    public float landValue;
+
     private void Awake()
     // Sets start variables
     {
+        landValue = 10f; // TODO: Make better calculations based on accessibility to various ameneties.
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
 
         usable = false;
-    }
-
-    private void Update()
-    {
-        UpdateValues();
-        RunChecks();
-    }
-
-    void UpdateValues()
-    {
-        income = users * (1 + 0.01f * economyManager.residentialTaxRate
-        totalIncome += income;
-    }
-
-    void RunChecks()
-    // Runs checks to make sure current state is legal
-    {
-        OverCapacity();
-        EnablePhysics();
     }
 
     void EnablePhysics()
@@ -81,13 +65,6 @@ public class ItemTracker : MonoBehaviour {
         Destroy(tooltip.gameObject);
     }
 
-    void DeallocateUsers(int numUsers)
-    // Returns unallocated users to the populationManager
-    {
-        populationManager.DeallocateUsers(numUsers);
-        users -= numUsers;
-    }
-
     void OverCapacity()
     // Returns true if more users than capacity
     {
@@ -113,16 +90,37 @@ public class ItemTracker : MonoBehaviour {
         }
         else
         {
-            Debug.Log("ERROR: user mismatch");
+            Debug.Error("ERROR: user mismatch, aborting");
         }
     }
 
-    public void RemoveUsers()
+    void DeallocateUsers(int numUsers)
+    // Returns unallocated users to the populationManager
+    {
+        populationManager.DeallocateUsers(numUsers, type);
+        users -= numUsers;
+    }
+
+    void OverCapacity()
+    // Returns true if more users than capacity
+    {
+        if (users > capacity)
+        {
+            DeallocateUsers(capacity -= 1);
+        }
+    }
+
+    public void RemoveAllUsers()
     // Removes all local and related itemManager users
     {
-        populationManager.unallocatedPopulation += users;
-        populationManager.population -= users;
-        users = 0;
+        if(type == "res")
+        {
+            DeallocateUsers(users);
+        }
+        else if(type == "com" || type == "ind")
+        {
+            // TODO: Write employment deallocation function in popman
+        }
     }
 
     public int NumEmpty()

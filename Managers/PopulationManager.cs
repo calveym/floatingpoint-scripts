@@ -7,27 +7,25 @@ public class PopulationManager : MonoBehaviour {
 	ItemManager itemManager;
     HappinessManager happinessManager;
 
-    List<ItemTracker> residentialTrackers;
-    List<ItemTracker> emptyResidential;
-    List<int> numEmptyResidential;
+    List<ResidentialTracker> residentialTrackers;
+    List<ResidentialTracker> emptyResidential; // List of residential trackers with vacancies
+    List<int> numEmptyResidential; // Number of vacancies in each residential building
+	List<ResidentialTracker> residentialWithUnemployed;
+	list<int> numResidentialWithUnemployed;
 
-	List<ItemTracker> commercialTrackers;
-    List<ItemTracker> emptyCommercial;
-    List<int> numEmptyCommercial;
+	List<CommercialTracker> commercialTrackers;
 
-	List<ItemTracker> industrialTrackers;
-	List<ItemTracker> emptyIndustrial;
-	List<int> numEmptyIndustrial;
+	List<IndustrialTracker> industrialTrackers;
 
 	float newPopulationSpawn;
 	float populationIncreaseRate;
 	float residentialDemand;
     float happiness;
 
-    public int population;
-    public int unallocatedPopulation;
-    public int totalPopulation;
-	public int unemployedPopulation;
+    public int population; // Population that are housed
+    public int unallocatedPopulation; // Population that are not housed
+    public int totalPopulation; // Total population
+	public int unemployedPopulation; // Unemployed population- subset of "population"
 
     int residentialCap;
     int industrialCap;
@@ -57,6 +55,8 @@ public class PopulationManager : MonoBehaviour {
 		commercialCap = itemManager.commercialCap;
 		industrialCap = itemManager.industrialCap;
         residentialTrackers = itemManager.residentialTrackers;
+		commercialTrackers = itemManager.commercialTrackers;
+		industrialTrackers = itemManager.industrialTrackers;
         totalPopulation = population + unallocatedPopulation;
         happiness = happinessManager.happiness;
 
@@ -144,6 +144,7 @@ public class PopulationManager : MonoBehaviour {
                     numAdded = unallocatedPopulation;
                 }
                 population += numAdded;
+				unemployedPopulation += numAdded;
                 unallocatedPopulation -= numAdded;
                 numEmptyResidential[i] -= numAdded;
                 emptyResidential[i].AddUsers(numAdded);
@@ -171,58 +172,21 @@ public class PopulationManager : MonoBehaviour {
 
 	void FindJob()
 	{
-		if(unemployedPopulation > AvailableJobs())
+		if(unemployedPopulation >= AvailableJobs())
 		{
-			// itemTrackers allocate nearest jobs to their users
-		}
-	}
-
-	void FindCommercialJobs(int num)
-	{
-		for (int i = 0; i < AbailableJobs(); i++)
-		{
-			if(unemployedPopulation > 0)
+			for(int i; i < unemployedPopulation; i++)
 			{
-				int numAdded = 0;
-				if(unemployedPopulation > numEmptyResidential[i])
-				{
-					numAdded = numEmptyResidential[i];
-				}
-				else if(unallocatedPopulation <= numEmptyResidential[i])
-				{
-					numAdded = unallocatedPopulation;
-				}
-				population += numAdded;
-				unallocatedPopulation -= numAdded;
-				numEmptyResidential[i] -= numAdded;
-				emptyResidential[i].AddUsers(numAdded);
+				// TODO: a thing
 			}
-			else break;
 		}
-	}
-
-	void FindIndustrialJobs(int num)
-	{
-		for (int i = 0; i < num; i++)
+		else
 		{
-			if(unemployedPopulation > 0)
+			for(int i; i < AvailableJobs; i++)
 			{
-				int numAdded = 0;
-				if(unemployedPopulation > numEmptyResidential[i])
-				{
-					numAdded = numEmptyResidential[i];
-				}
-				else if(unallocatedPopulation <= numEmptyResidential[i])
-				{
-					numAdded = unallocatedPopulation;
-				}
-				population += numAdded;
-				unallocatedPopulation -= numAdded;
-				numEmptyResidential[i] -= numAdded;
-				emptyResidential[i].AddUsers(numAdded);
+				// TODO: a thing
 			}
-			else break;
 		}
+		// itemTrackers allocate nearest jobs to their users
 	}
 
     void IncreasePopulation()
@@ -237,11 +201,18 @@ public class PopulationManager : MonoBehaviour {
         }
     }
 
-    public void DeallocateUsers(int numUsers)
+    public void DeallocateUsers(int numUsers, string type)
     // Adds users back to unallocatedPopulation for future reallocation
     {
-        population -= numUsers;
-        unallocatedPopulation += numUsers;
+		if(type == "res")
+		{
+	        population -= numUsers;
+	        unallocatedPopulation += numUsers;
+		}
+		else if(type == "ind" || type == "com")
+		{
+
+		}
     }
 
     int AvailableResidential()
@@ -251,6 +222,7 @@ public class PopulationManager : MonoBehaviour {
     }
 
 	int AvailableJobs()
+	// Returns total number of available jobs
 	{
 		return commercialCap + industrialCap;
 	}

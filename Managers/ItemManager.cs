@@ -12,11 +12,13 @@ public class ItemManager : MonoBehaviour {
   // Declare number of object types
 	public List<GameObject> residential = new List<GameObject>();
 	public List<GameObject> commercial = new List<GameObject>();
-	List<GameObject> industrial = new List<GameObject>();
-    public List<ItemTracker> residentialTrackers = new List<ItemTracker>();
-	List<GameObject> leisure = new List<GameObject>();
-	List<GameObject> transport = new List<GameObject>();
-	List<GameObject> foliage = new List<GameObject>();
+	public List<GameObject> industrial = new List<GameObject>();
+	public List<GameObject> leisure = new List<GameObject>();
+	public List<GameObject> transport = new List<GameObject>();
+	public List<GameObject> foliage = new List<GameObject>();
+    public List<ResidentialTracker> residentialTrackers = new List<ResidentialTracker>();
+	public List<CommercialTracker> commercialTrackers = new List<CommercialTracker>();
+	public List<IndustrialTracker> industrialTrackers = new List<IndustrialTrackers>();
 
 	int numResidential;
 	int numCommercial;
@@ -41,18 +43,6 @@ public class ItemManager : MonoBehaviour {
 		// contractmanager = GameObject.Find("Managers").GetComponent<ContractManager>();
 	}
 
-	void Update ()
-  // Updates state
-	{
-		CheckOK();
-	}
-
-	void CheckOK()
-	// TODO: add check to confirm that all objects are being tracked, update object arrays if any errors found
-	{
-
-	}
-
 	public int getNumRoads()
 	// Returns number of roads on the map
 	{
@@ -65,7 +55,7 @@ public class ItemManager : MonoBehaviour {
 		residentialCap += (capacity);
 		numResidential += 1;
 		residential.Add(newObject);
-		//contractManager.IncrementResidential();
+		residentialTrackers.Add(newObject.GetComponent<ResidentialTracker>());
 	}
 
 	public void addCommercial(int capacity, GameObject newObject)
@@ -74,7 +64,7 @@ public class ItemManager : MonoBehaviour {
 		commercialCap += (capacity);
 		numCommercial += 1;
 		commercial.Add(newObject);
-		//contractManager.IncrementCommercial();
+		commercialTrackers.Add(newObject.GetComponent<CommercialTrackers>());
     }
 
     public void addIndustrial(int capacity, GameObject newObject)
@@ -83,7 +73,7 @@ public class ItemManager : MonoBehaviour {
 		industrialCap += (capacity);
 		numIndustrial += 1;
 		industrial.Add(newObject);
-		//contractManager.IncrementCommercial();
+		industrialTrackers.Add(newObject.GetComponent<IndustrialTracker>());
 		}
 
     public void addLeisure(int capacity, GameObject newObject)
@@ -92,7 +82,6 @@ public class ItemManager : MonoBehaviour {
 		leisureCap += (capacity);
 		numLeisure += 1;
 		leisure.Add(newObject);
-		//contractManager.incrementLeisure();
 	}
 
 	public void addFoliage(int capacity, GameObject newObject)
@@ -101,7 +90,6 @@ public class ItemManager : MonoBehaviour {
 		foliageCap += (capacity);
 		numFoliage += 1;
 		foliage.Add(newObject);
-		//contractManager.incrementFoliage();
 	}
 
   public void removeResidential(GameObject removeObject)
