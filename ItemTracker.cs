@@ -10,7 +10,7 @@ public class ItemTracker : MonoBehaviour {
     EconomyManager economyManager;
     ItemManager itemManager;
 
-    public bool grabbableObject;
+    public static float totalIncome;
     public string type;
     public int capacity;
     public float income;
@@ -37,7 +37,8 @@ public class ItemTracker : MonoBehaviour {
 
     void UpdateValues()
     {
-        income = users * (1 + 0.01f * economyManager.residentialTaxRate);
+        income = users * (1 + 0.01f * economyManager.residentialTaxRate
+        totalIncome += income;
     }
 
     void RunChecks()
@@ -124,7 +125,7 @@ public class ItemTracker : MonoBehaviour {
         users = 0;
     }
 
-    public int NumEmptyResidential()
+    public int NumEmpty()
     // Returns number of available spaces
     {
         return capacity - users;

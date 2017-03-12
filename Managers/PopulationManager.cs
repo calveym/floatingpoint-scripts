@@ -74,10 +74,10 @@ public class PopulationManager : MonoBehaviour {
         {
             for (int i = 0; i < residentialTrackers.Count; i++)
             {
-                if (residentialTrackers[i].NumEmptyResidential() > 0 && residentialTrackers[i].usable == true)
+                if (residentialTrackers[i].NumEmpty() > 0 && residentialTrackers[i].usable == true)
                 {
                     emptyResidential.Add(residentialTrackers[i]);
-                    numEmptyResidential.Add(residentialTrackers[i].NumEmptyResidential());
+                    numEmptyResidential.Add(residentialTrackers[i].NumEmpty());
                 }
             }
         }
@@ -165,29 +165,63 @@ public class PopulationManager : MonoBehaviour {
 	{
 		if(unemployedPopulation > 0 && AvailableJobs() > 0)
 		{
-			for (int i = 0; i < AbailableJobs(); i++)
+			FindJob();
+		}
+	}
+
+	void FindJob()
+	{
+		if(unemployedPopulation > AvailableJobs())
+		{
+			// itemTrackers allocate nearest jobs to their users
+		}
+	}
+
+	void FindCommercialJobs(int num)
+	{
+		for (int i = 0; i < AbailableJobs(); i++)
+		{
+			if(unemployedPopulation > 0)
 			{
-				if(unemployedPopulation > 0)
+				int numAdded = 0;
+				if(unemployedPopulation > numEmptyResidential[i])
 				{
-					int numAdded = 0;
-					if(unemployedPopulation > numEmptyResidential[i])
-					{
-						numAdded = numEmptyResidential[i];
-					}
-					else if(unallocatedPopulation <= numEmptyResidential[i])
-					{
-						numAdded = unallocatedPopulation;
-					}
-					population += numAdded;
-					unallocatedPopulation -= numAdded;
-					numEmptyResidential[i] -= numAdded;
-					emptyResidential[i].AddUsers(numAdded);
+					numAdded = numEmptyResidential[i];
 				}
-				else
+				else if(unallocatedPopulation <= numEmptyResidential[i])
 				{
-					break;
+					numAdded = unallocatedPopulation;
 				}
+				population += numAdded;
+				unallocatedPopulation -= numAdded;
+				numEmptyResidential[i] -= numAdded;
+				emptyResidential[i].AddUsers(numAdded);
 			}
+			else break;
+		}
+	}
+
+	void FindIndustrialJobs(int num)
+	{
+		for (int i = 0; i < num; i++)
+		{
+			if(unemployedPopulation > 0)
+			{
+				int numAdded = 0;
+				if(unemployedPopulation > numEmptyResidential[i])
+				{
+					numAdded = numEmptyResidential[i];
+				}
+				else if(unallocatedPopulation <= numEmptyResidential[i])
+				{
+					numAdded = unallocatedPopulation;
+				}
+				population += numAdded;
+				unallocatedPopulation -= numAdded;
+				numEmptyResidential[i] -= numAdded;
+				emptyResidential[i].AddUsers(numAdded);
+			}
+			else break;
 		}
 	}
 
