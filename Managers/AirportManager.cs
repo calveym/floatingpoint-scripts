@@ -12,7 +12,7 @@ public class AirportManager : MonoBehaviour {
         airport = GameObject.Find("Airport");
     }
 
-    void StartService()
+    public void StartService()
     // TODO
     {
         active = true;

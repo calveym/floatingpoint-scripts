@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,16 +11,20 @@ public class PopulationManager : MonoBehaviour {
     List<ResidentialTracker> emptyResidential; // List of residential trackers with vacancies
     List<int> numEmptyResidential; // Number of vacancies in each residential building
 	List<ResidentialTracker> residentialWithUnemployed;
-	list<int> numResidentialWithUnemployed;
+	List<int> numResidentialWithUnemployed;
 
 	List<CommercialTracker> commercialTrackers;
+    public List<CommercialTracker> emptyCommercial;
 
 	List<IndustrialTracker> industrialTrackers;
+    public List<IndustrialTracker> emptyIndustrial;
 
 	float newPopulationSpawn;
 	float populationIncreaseRate;
 	float residentialDemand;
     float happiness;
+    List<string> firstNames;
+    List<string> lastNames;
 
     public int population; // Population that are housed
     public int unallocatedPopulation; // Population that are not housed
@@ -36,6 +40,8 @@ public class PopulationManager : MonoBehaviour {
 	{
 		population = 0;
 		populationIncreaseRate = 0;
+        firstNames = NameGenerator.FirstNames();
+        lastNames = NameGenerator.LastNames();
 
 		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
         happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
@@ -61,14 +67,12 @@ public class PopulationManager : MonoBehaviour {
         happiness = happinessManager.happiness;
 
         UpdateEmptyResidential();
-		UpdateEmptyCommercial();
-		UpdateEmptyIndustrial();
     }
 
     void UpdateEmptyResidential()
     // Updates list of properties with vacancies
     {
-        emptyResidential = new List<ItemTracker>();
+        emptyResidential = new List<ResidentialTracker>();
         numEmptyResidential = new List<int>();
         if (residentialTrackers != null)
         {
@@ -78,42 +82,6 @@ public class PopulationManager : MonoBehaviour {
                 {
                     emptyResidential.Add(residentialTrackers[i]);
                     numEmptyResidential.Add(residentialTrackers[i].NumEmpty());
-                }
-            }
-        }
-    }
-
-	void UpdateEmptyCommercial()
-    // Updates list of properties with vacancies
-    {
-        emptyCommercial = new List<ItemTracker>();
-        numEmptyCommercial = new List<int>();
-        if (commercialTrackers != null)
-        {
-            for (int i = 0; i < commercialTrackers.Count; i++)
-            {
-                if (commercialTrackers[i].NumEmptyCommercial() > 0 && commercialTrackers[i].usable == true)
-                {
-                    emptyCommercial.Add(commercialTrackers[i]);
-                    numEmptyCommercial.Add(commercialTrackers[i].NumEmptyCommercial());
-                }
-            }
-        }
-    }
-
-	void UpdateEmptyIndustrial()
-    // Updates list of properties with vacancies
-    {
-        emptyIndustrial = new List<ItemTracker>();
-        numEmptyIndustrial = new List<int>();
-        if (industrialTrackers != null)
-        {
-            for (int i = 0; i < industrialTrackers.Count; i++)
-            {
-                if (industrialTrackers[i].NumEmptyIndustrial() > 0 && industrialTrackers[i].usable == true)
-                {
-                    emptyIndustrial.Add(industrialTrackers[i]);
-                    numEmptyIndustrial.Add(industrialTrackers[i].NumEmptyIndustrial());
                 }
             }
         }
@@ -147,9 +115,23 @@ public class PopulationManager : MonoBehaviour {
 				unemployedPopulation += numAdded;
                 unallocatedPopulation -= numAdded;
                 numEmptyResidential[i] -= numAdded;
-                emptyResidential[i].AddUsers(numAdded);
+                emptyResidential[i].AddUsers(numAdded, GenerateNames(numAdded), 20);
             }
         }
+    }
+
+    List<string> GenerateNames(int numAdded)
+    {
+        List<string> names = new List<string>();
+        for(int i = 0; i < numAdded; i++)
+        {
+            System.Random r = new System.Random();
+            int firstIndex = r.Next(names.Count);
+            int secondIndex = r.Next(names.Count);
+            string createdName = firstNames[firstIndex] + lastNames[secondIndex];
+            names.Add(createdName);
+        }
+        return names;
     }
 
     void TryIncreasePopulation()
@@ -172,20 +154,10 @@ public class PopulationManager : MonoBehaviour {
 
 	void FindJob()
 	{
-		if(unemployedPopulation >= AvailableJobs())
-		{
-			for(int i; i < unemployedPopulation; i++)
-			{
-				// TODO: a thing
-			}
-		}
-		else
-		{
-			for(int i; i < AvailableJobs; i++)
-			{
-				// TODO: a thing
-			}
-		}
+		for(int i = 0; i < residentialWithUnemployed.Count; i++)
+        {
+            residentialWithUnemployed[i].TryEmployWorker();
+        }
 		// itemTrackers allocate nearest jobs to their users
 	}
 
@@ -215,7 +187,7 @@ public class PopulationManager : MonoBehaviour {
 		}
     }
 
-    int AvailableResidential()
+    public int AvailableResidential()
     // Returns amount of available housing
     {
 		return residentialCap - population;

@@ -7,6 +7,7 @@ public class SaveManager : MonoBehaviour {
 
     public void Save()
     {
+        // TODO: multiple slots
         Debug.Log("Saving...");
         LevelSerializer.SaveGame("test");
     }

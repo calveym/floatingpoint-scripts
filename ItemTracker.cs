@@ -6,9 +6,9 @@ using UnityEngine;
 public class ItemTracker : MonoBehaviour {
 
     // Declare variables
-    PopulationManager populationManager;
-    EconomyManager economyManager;
-    ItemManager itemManager;
+    public PopulationManager populationManager;
+    public EconomyManager economyManager;
+    public ItemManager itemManager;
 
     public static float totalIncome;
     public string type;
@@ -16,6 +16,7 @@ public class ItemTracker : MonoBehaviour {
     public float income;
     public int users;
     public bool usable;
+    public bool grabbableObject;
     public bool validPosition;
     GameObject tooltip;
 
@@ -40,6 +41,11 @@ public class ItemTracker : MonoBehaviour {
             GetComponent<Rigidbody>().isKinematic = false;
             GetComponent<Rigidbody>().useGravity = true;
         }
+    }
+
+    public void AddUsers(int numAdded)
+    {
+        users += numAdded;
     }
 
     void EnableObjectTooltip(object sender, ControllerInteractionEventArgs e)
@@ -81,33 +87,11 @@ public class ItemTracker : MonoBehaviour {
 		capacity = (pressedButton * pressedButton + 1);
     }
 
-    public void AddUsers(int numUsers)
-    // Adds numUsers to users if capacity is not exceeded
-    {
-        if (numUsers + users <= capacity)
-        {
-            users += numUsers;
-        }
-        else
-        {
-            Debug.Error("ERROR: user mismatch, aborting");
-        }
-    }
-
     void DeallocateUsers(int numUsers)
     // Returns unallocated users to the populationManager
     {
         populationManager.DeallocateUsers(numUsers, type);
         users -= numUsers;
-    }
-
-    void OverCapacity()
-    // Returns true if more users than capacity
-    {
-        if (users > capacity)
-        {
-            DeallocateUsers(capacity -= 1);
-        }
     }
 
     public void RemoveAllUsers()
@@ -142,7 +126,7 @@ public class ItemTracker : MonoBehaviour {
         if(type == "residential")
         {
             itemManager.addResidential(capacity, gameObject);
-            itemManager.residentialTrackers.Add(gameObject.GetComponent<ItemTracker>());
+            itemManager.residentialTrackers.Add(gameObject.GetComponent<ResidentialTracker >());
             GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
             GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
         }

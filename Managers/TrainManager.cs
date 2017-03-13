@@ -12,7 +12,7 @@ public class TrainManager : MonoBehaviour {
         train = GameObject.Find("Train");
     }
 
-    void StartService()
+    public void StartService()
     // TODO
     {
         active = true;

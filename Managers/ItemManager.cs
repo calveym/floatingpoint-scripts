@@ -18,7 +18,7 @@ public class ItemManager : MonoBehaviour {
 	public List<GameObject> foliage = new List<GameObject>();
     public List<ResidentialTracker> residentialTrackers = new List<ResidentialTracker>();
 	public List<CommercialTracker> commercialTrackers = new List<CommercialTracker>();
-	public List<IndustrialTracker> industrialTrackers = new List<IndustrialTrackers>();
+	public List<IndustrialTracker> industrialTrackers = new List<IndustrialTracker>();
 
 	int numResidential;
 	int numCommercial;
@@ -64,7 +64,7 @@ public class ItemManager : MonoBehaviour {
 		commercialCap += (capacity);
 		numCommercial += 1;
 		commercial.Add(newObject);
-		commercialTrackers.Add(newObject.GetComponent<CommercialTrackers>());
+		commercialTrackers.Add(newObject.GetComponent<CommercialTracker>());
     }
 
     public void addIndustrial(int capacity, GameObject newObject)
@@ -96,7 +96,7 @@ public class ItemManager : MonoBehaviour {
   // Removes residential building
   {
       residentialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
-      removeObject.GetComponent<ItemTracker>().RemoveUsers();
+      removeObject.GetComponent<ItemTracker>().RemoveAllUsers();
       numResidential--;
       residential.Remove(removeObject);
   }

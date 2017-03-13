@@ -16,12 +16,12 @@ public class ProgressionManager : MonoBehaviour {
     public int level;
     int pop;
 
-    public bool airport;
-    public bool train;
+    public bool airportBought;
+    public bool trainBought;
     GameObject airport;
     GameObject train;
     TrainManager trainManager;
-    AirportManager AirportManager;
+    AirportManager airportManager;
 
     GameObject firstIsland;
     GameObject secondIsland;
@@ -35,22 +35,19 @@ public class ProgressionManager : MonoBehaviour {
     public static LevelOne levelOne;
     public static LevelTwo levelTwo;
     public static LevelThree levelThree;
-    public const int LEVEL_ONE_REQ;
-    public const int LEVEL_TWO_REQ;
-    public const int LEVEL_THREE_REQ;
+    public const int LEVEL_ONE_REQ = 20;
+    public const int LEVEL_TWO_REQ = 50;
+    public const int LEVEL_THREE_REQ = 100;
 
 
     public void Start()
     {
-        LEVEL_ONE_REQ = 20;
-        LEVEL_TWO_REQ = 50;
-        LEVEL_THREE_REQ = 200;
         islandLerp = 0f;
-        airport = false;
-        train = false;
+        airportBought = false;
+        trainBought = false;
         airport = GameObject.Find("Airport");
         train = GameObject.Find("Train");
-        popupManager = GameObject.Find("Popup");
+        popupManager = GameObject.Find("Managers").GetComponent<PopupManager>();
         airportManager = GameObject.Find("Managers").GetComponent<AirportManager>();
         trainManager = GameObject.Find("Managers").GetComponent<TrainManager>();
         displayMenu = GameObject.Find("LeftController").GetComponent<DisplayMenu>();
@@ -65,7 +62,6 @@ public class ProgressionManager : MonoBehaviour {
     void Update()
     {
         pop = populationManager.totalPopulation;
-        RunChecks();
     }
 
     void TryIncreaseLevel()
@@ -78,7 +74,7 @@ public class ProgressionManager : MonoBehaviour {
         {
             levelTwo();
         }
-        else if(level == 2 > && pop > LEVEL_THREE_REQ)
+        else if(level == 2 && pop > LEVEL_THREE_REQ)
         {
             levelThree();
         }
