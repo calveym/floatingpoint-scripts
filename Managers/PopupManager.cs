@@ -10,6 +10,7 @@ public class PopupManager : MonoBehaviour {
 
     List<string> queuedPopups;
     float WAIT_TIME;
+    bool running;
 
     void Start()
     {
@@ -25,6 +26,7 @@ public class PopupManager : MonoBehaviour {
     IEnumerator DoPopup()
     // Goes through array of queued popups, with a WAIT_TIME delay
     {
+        running = true;
         if(queuedPopups.Count == 0)
         {
             tooltip.SetActive(false);
@@ -37,5 +39,6 @@ public class PopupManager : MonoBehaviour {
             queuedPopups.RemoveAt(0);
             yield return WAIT_TIME;
         }
+        running = false;
     }
 }

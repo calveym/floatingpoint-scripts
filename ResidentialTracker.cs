@@ -7,9 +7,9 @@ public class ResidentialTracker : ItemTracker {
 // Manages specific residential functions.
 
     public int unemployedPopulation;
-    public Dictionary <string, int> educationLevel; // maps individual residents to their education levels
-    public Dictionary <string, int> age; // maps individual residents to their age
-    public Dictionary <string, bool> employed; // matches residents with employment status
+    public Dictionary <int, int> educationLevel; // maps individual residents to their education levels
+    public Dictionary <int, int> age; // maps individual residents to their age
+    public Dictionary <int, bool> employed; // matches residents with employment status
     public Dictionary<int, string> residents; // matches slots to residents
     Dictionary<string, int> residentsInverse;
 
@@ -32,8 +32,10 @@ public class ResidentialTracker : ItemTracker {
             users += numUsers;
             for(int i = 0; i < numUsers; i++)
             {
+                // TODO
                 educationLevel.Add(names[i], 0);
                 age.Add(names[i], newAge);
+                employed.Add();
                 residents.Add(users - 1, names[i]);
                 residentsInverse.Add(names[i], users - 1);
             }
