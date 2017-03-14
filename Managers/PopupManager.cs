@@ -20,7 +20,10 @@ public class PopupManager : MonoBehaviour {
 	void QueuePopup(string message)
     {
         queuedPopups.Add(message);
-        StartCoroutine("DoPopup");
+        if(!running)
+        {
+            StartCoroutine("DoPopup");
+        }
     }
 
     IEnumerator DoPopup()
@@ -30,6 +33,7 @@ public class PopupManager : MonoBehaviour {
         if(queuedPopups.Count == 0)
         {
             tooltip.SetActive(false);
+            running = false;
             yield return null;
         }
         while(queuedPopups.Count > 0)
@@ -39,6 +43,5 @@ public class PopupManager : MonoBehaviour {
             queuedPopups.RemoveAt(0);
             yield return WAIT_TIME;
         }
-        running = false;
     }
 }

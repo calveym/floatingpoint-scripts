@@ -11,6 +11,7 @@ public class ResidentialTracker : ItemTracker {
     public Dictionary <int, int> age; // maps individual residents to their age
     public Dictionary <int, bool> employed; // matches residents with employment status
     public Dictionary<int, string> residents; // matches slots to residents
+    List<int> takenIDs; // List of currently active IDs for finding new ones
     Dictionary<string, int> residentsInverse;
 
     void Update()
@@ -32,12 +33,12 @@ public class ResidentialTracker : ItemTracker {
             users += numUsers;
             for(int i = 0; i < numUsers; i++)
             {
-                // TODO
-                educationLevel.Add(names[i], 0);
-                age.Add(names[i], newAge);
-                employed.Add();
-                residents.Add(users - 1, names[i]);
-                residentsInverse.Add(names[i], users - 1);
+                int newID = FindAvailableID();
+                educationLevel.Add(newID, 0);
+                age.Add(newID, newAge);
+                employed.Add(newID, false);
+                residents.Add(newID, names[i]);
+                residentsInverse.Add(names[i], newID);
             }
         }
         else
@@ -46,17 +47,30 @@ public class ResidentialTracker : ItemTracker {
         }
     }
 
+    int FindAvailableID()
+    // Finds next lowest available resident ID
+    {
+        for(int i = 0; i < takenIDs.Count; i++)
+        {
+            if (!takenIDs.Contains(i))
+            {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     public void AcceptApplication(int acceptedApplicantID)
     {
-
+        employed[acceptedApplicantID] = true;
     }
 
     public void TryEmployWorker()
+    // Called by populationManager
     {
-        string workerName = employed.FirstOrDefault(x => x.Value == false).Key;
-        int workerID = residentsInverse[workerName];
+        int unemployedID = employed.FirstOrDefault(x => x.Value == false).Key;
         GameObject employmentLocation = FindPreferredEmployment();
-        ApplyForJob(employmentLocation, workerID);
+        ApplyForJob(employmentLocation, unemployedID);
     }
 
     void ApplyForJob(GameObject targetLocation, int residentID)
