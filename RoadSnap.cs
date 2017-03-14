@@ -349,5 +349,7 @@ public class RoadSnap : MonoBehaviour {
 			objectToPlace.transform.localPosition = new Vector3(0, 0, snapPositionZ);
 		}
 
+		objectToPlace.transform.parent = null;
+
 	}
 }
