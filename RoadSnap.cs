@@ -38,6 +38,8 @@ public class RoadSnap : MonoBehaviour {
 
 	Bounds thisBounds;
 
+	GameObject objectToPlace;
+
 
 	public class StringFloat {
 		//define all of the values for the class
@@ -51,10 +53,10 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	public void updateSnapPoints() {
-		right = new Vector3(transform.position.x - (thisBounds.size.x / 2), transform.position.y, transform.position.z);
-		left = new Vector3(transform.position.x + (thisBounds.size.x / 2), transform.position.y, transform.position.z);
-		top = new Vector3(transform.position.x, transform.position.y, transform.position.z - (thisBounds.size.z / 2));
-		bottom = new Vector3(transform.position.x, transform.position.y,transform.position.z + (thisBounds.size.z / 2));
+		right = new Vector3(objectToPlace.transform.position.x - (thisBounds.size.x / 2), objectToPlace.transform.position.y, objectToPlace.transform.position.z);
+		left = new Vector3(objectToPlace.transform.position.x + (thisBounds.size.x / 2), objectToPlace.transform.position.y, objectToPlace.transform.position.z);
+		top = new Vector3(objectToPlace.transform.position.x, objectToPlace.transform.position.y, objectToPlace.transform.position.z - (thisBounds.size.z / 2));
+		bottom = new Vector3(objectToPlace.transform.position.x, objectToPlace.transform.position.y,objectToPlace.transform.position.z + (thisBounds.size.z / 2));
 	}
 
 
@@ -74,7 +76,6 @@ public class RoadSnap : MonoBehaviour {
 		if (objectUsed || manualUse) {
 			gameObject.layer = 9;
 			getNearbyBuildings ();
-			Physics.IgnoreCollision (GetComponent<Collider> (), nearestBuilding.GetComponent<Collider> ());
 		} 
 		else {
 			gameObject.layer = buildingLayer;
@@ -82,6 +83,7 @@ public class RoadSnap : MonoBehaviour {
 
 		if (setBuildingPos) {
 			if (!targetIsBlocked) {
+				objectToPlace = gameObject;
 				checkForNearbyBuilding ();
 			}
 		}
@@ -89,7 +91,7 @@ public class RoadSnap : MonoBehaviour {
 
 	void Start ()
 	{
-
+		objectToPlace = gameObject;
 		thisBounds = GetComponent<Renderer> ().bounds;
 
 		thisSize = GetComponent<Renderer> ().bounds.size;
@@ -116,6 +118,7 @@ public class RoadSnap : MonoBehaviour {
 	{
 		if (objectUsed == true) {
 			if (!targetIsBlocked) {
+				objectToPlace = gameObject;
 				checkForNearbyBuilding ();
 			}
 			objectUsed = false;
@@ -158,17 +161,9 @@ public class RoadSnap : MonoBehaviour {
 
 					setToNearestBuilding (hitcol);
 
-					// drawTargetBox ();
+					drawTargetBox ();
 
 					// Debug.Log ("FOUND HIT: " + nearestBuilding);
-
-					if (Mathf.Abs ((nearestBuilding.transform.position.x - transform.position.x)) < Mathf.Abs ((nearestBuilding.transform.position.z - transform.position.z))) {
-						// Debug.Log ("Closer to z");
-					}
-
-					if (Mathf.Abs ((nearestBuilding.transform.position.x - transform.position.x)) > Mathf.Abs ((nearestBuilding.transform.position.z - transform.position.z))) {
-						// Debug.Log ("Closer to x");
-					}
 
 				} else {
 					Debug.Log ("Not building: " + hitcol);
@@ -184,9 +179,9 @@ public class RoadSnap : MonoBehaviour {
 		// create box
 		if (targetBox != null) {
 			Destroy (targetBox);
-			targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, nearestBuilding.transform.rotation);
+			targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, transform.rotation);
 		} else {
-			targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, nearestBuilding.transform.rotation);
+			targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, transform.rotation);
 		}
 
 		if (targetIsBlocked) {
@@ -200,15 +195,15 @@ public class RoadSnap : MonoBehaviour {
 		targetBox.transform.localScale = new Vector3 (sizeCalculated.x / 10, 0.05f, sizeCalculated.z / 10);
 
 		// give target box nearest building for collision
-
 		targetBox.GetComponent<TargetCollisionCheck>().setNearestBuilding(nearestBuilding);
 
 		// place it next to building
-		setPosition(targetBox);
+		objectToPlace = targetBox;
+		setRotation();
+		setPosition();
 
 		// adjust vertical axis
 		targetBox.transform.position = new Vector3(targetBox.transform.position.x, 10.025f, targetBox.transform.position.z);
-
 	}
 
 	void setToNearestBuilding (Collider hitcol){
@@ -229,17 +224,14 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	void setRotation(){
-		// transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
 
-		transform.parent = nearestBuilding.transform;
+		objectToPlace.transform.parent = nearestBuilding.transform;
 
-		float yAngle = Mathf.Round(transform.localEulerAngles.y / 90) * 90;
+		float yAngle = Mathf.Round(objectToPlace.transform.localEulerAngles.y / 90) * 90;
 
-		// Debug.Log("Current angle: " + transform.eulerAngles.y + "Rounded: " + yAngle);
+		objectToPlace.transform.localRotation = Quaternion.Euler(0, yAngle, 0);
 
-		transform.localRotation = Quaternion.Euler(0, yAngle, 0);
-
-		transform.parent = null;
+		objectToPlace.transform.parent = null;
 
 	}
 
@@ -252,16 +244,9 @@ public class RoadSnap : MonoBehaviour {
 		Vector3 targetLeft = RotatePointAroundPivot (nearestBuilding.GetComponent<RoadSnap> ().left, nearestBuilding.transform.position, nearestBuilding.transform.eulerAngles);
 		Vector3 targetRight = RotatePointAroundPivot (nearestBuilding.GetComponent<RoadSnap> ().right, nearestBuilding.transform.position, nearestBuilding.transform.eulerAngles);
 
-		// world
-
-		GameObject g1 = (GameObject)Instantiate(snapCube, targetTop, transform.rotation);
-		GameObject g2 = (GameObject)Instantiate(snapCube, targetBottom, transform.rotation);
-		GameObject g3 = (GameObject)Instantiate(snapCube, targetLeft, transform.rotation);
-		GameObject g4 = (GameObject)Instantiate(snapCube, targetRight, transform.rotation);
-
 		/* find the closest snap point to the targetClosestPoint */
 
-		Vector3 targetClosestPoint = nearestBuilding.GetComponent<Renderer> ().bounds.ClosestPoint (transform.position); // get closest point on target building to this object's position
+		Vector3 targetClosestPoint = nearestBuilding.GetComponent<Renderer> ().bounds.ClosestPoint (objectToPlace.transform.position); // get closest point on target building to this object's position
 
 		List<StringFloat> snapPoints = new List<StringFloat>();
 
@@ -293,11 +278,10 @@ public class RoadSnap : MonoBehaviour {
 
 		/* find this closest side/point */
 
-		Vector3 thisTop = RotatePointAroundPivot (top, transform.position, transform.eulerAngles);
-		Vector3 thisBottom = RotatePointAroundPivot (bottom, transform.position, transform.eulerAngles);
-		Vector3 thisLeft = RotatePointAroundPivot (left, transform.position, transform.eulerAngles);
-		Vector3 thisRight = RotatePointAroundPivot (right, transform.position, transform.eulerAngles);
-
+		Vector3 thisTop = RotatePointAroundPivot (top, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
+		Vector3 thisBottom = RotatePointAroundPivot (bottom, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
+		Vector3 thisLeft = RotatePointAroundPivot (left, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
+		Vector3 thisRight = RotatePointAroundPivot (right, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
 
 		/* find the closest snap point to the targetClosestPoint */
 
@@ -339,46 +323,30 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	void setPosition() {
-		setPosition(gameObject);
-	}
-
-	void setPosition(GameObject objectToPlace) {
 
 		StringFloat closestTargetSnapPoint = getClosestTargetSnapPoint ();
 		StringFloat closestSnapPointX = getClosestSnapPoint (true);
 		StringFloat closestSnapPointZ = getClosestSnapPoint (false);
 
-		transform.parent = nearestBuilding.transform;
+		objectToPlace.transform.parent = nearestBuilding.transform;
 
-		Debug.Log ("target: " + closestTargetSnapPoint.name + ", local position: " + nearestBuilding.transform.InverseTransformPoint(closestTargetSnapPoint.value));
-		Debug.Log ("my snap: " + closestSnapPointX.name + ", local position: " + nearestBuilding.transform.InverseTransformPoint(closestSnapPointX.value));
-
-		//GameObject generatedCube = (GameObject)Instantiate(snapCube, closestTargetSnapPoint.value, transform.rotation);
-		//GameObject generatedCube2 = (GameObject)Instantiate(snapCube, closestSnapPoint.value, transform.rotation);
-
-
-		float snapPositionX = nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value).x - (nearestBuilding.transform.InverseTransformPoint (closestSnapPointX.value).x - transform.localPosition.x);
-		float snapPositionZ = nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value).z - (nearestBuilding.transform.InverseTransformPoint (closestSnapPointZ.value).z - transform.localPosition.z);
-
-		Debug.Log ("snapPositionX: " + snapPositionX);
-
-
-		float scaleFactor = (transform.localScale.x / transform.parent.localScale.x);
+		float snapPositionX = nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value).x - (nearestBuilding.transform.InverseTransformPoint (closestSnapPointX.value).x - objectToPlace.transform.localPosition.x);
+		float snapPositionZ = nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value).z - (nearestBuilding.transform.InverseTransformPoint (closestSnapPointZ.value).z - objectToPlace.transform.localPosition.z);
 
 		if (closestTargetSnapPoint.name == "right") {
-			transform.localPosition = new Vector3(snapPositionX, 0, 0);
+			objectToPlace.transform.localPosition = new Vector3(snapPositionX, 0, 0);
 		}
 
 		if (closestTargetSnapPoint.name == "left") {
-			transform.localPosition = new Vector3(snapPositionX, 0, 0);
+			objectToPlace.transform.localPosition = new Vector3(snapPositionX, 0, 0);
 		}
 
 		if (closestTargetSnapPoint.name == "top") {
-			transform.localPosition = new Vector3(0, 0, snapPositionZ);
+			objectToPlace.transform.localPosition = new Vector3(0, 0, snapPositionZ);
 		}
 
 		if (closestTargetSnapPoint.name == "bottom") {
-			transform.localPosition = new Vector3(0, 0, snapPositionZ);
+			objectToPlace.transform.localPosition = new Vector3(0, 0, snapPositionZ);
 		}
 
 	}
