@@ -18,6 +18,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 	Dictionary<string, Quaternion> roadRotation; // Contains surroundingRoadString - rotation mapping
 
 	public Dictionary<Vector3, GameObject> roads; // Dictionary of all road positions and objects
+    public int numRoads;
 	public Dictionary<Vector3, string> surroundingRoads; // Dictionary of all road positions and associated surroundingRoadString
 
 	void Start()
@@ -132,6 +133,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 	// Creates road instance using surrounding road check
   {
 		string surroundingRoadString = CheckSurroundingRoads(newPosition);
+        numRoads++;
 		return InstantiateRoad (surroundingRoadString, newPosition);
 	}
 
@@ -201,6 +203,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 		roads.Remove(position);
 		surroundingRoads.Remove(position);
         Destroy(destroyRoad);
+        numRoads--;
 	}
 
 	public Vector3 Round (Vector3 point)

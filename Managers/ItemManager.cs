@@ -46,7 +46,7 @@ public class ItemManager : MonoBehaviour {
 	public int getNumRoads()
 	// Returns number of roads on the map
 	{
-		return roadGenerator.roads.Count;
+		return roadGenerator.numRoads;
 	}
 
 	public void addResidential(int capacity, GameObject newObject)
