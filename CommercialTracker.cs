@@ -31,6 +31,6 @@ public class CommercialTracker : ItemTracker {
 
     void RejectApplication(int residentID, ResidentialTracker appplicantTracker)
     {
-        // TODO: something?
+
     }
 }
