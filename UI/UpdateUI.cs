@@ -16,7 +16,7 @@ public class UpdateUI : MonoBehaviour {
     public Text balanceText;
     public Text populationText;
     public Text happinessText;
-    public GameObject manager;
+    GameObject manager;
 
     EconomyManager economyManager;
     HappinessManager happinessManager;
@@ -24,6 +24,7 @@ public class UpdateUI : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         timePassed = 0;
+        manager = GameObject.Find("Managers");
         economyManager = manager.GetComponent<EconomyManager>();
         happinessManager = manager.GetComponent<HappinessManager>();
 	}
