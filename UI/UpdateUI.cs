@@ -34,8 +34,8 @@ public class UpdateUI : MonoBehaviour {
         timePassed += Time.deltaTime;
         if(timePassed >= 1)
         {
-            //UpdateManagerVariables();
-            //UpdateUIVariables();
+            UpdateManagerVariables();
+            UpdateUIVariables();
             timePassed = 0;
         }
 	}
@@ -56,7 +56,7 @@ public class UpdateUI : MonoBehaviour {
         happinessText.text = SetHappinessString();
     }
 
-    string SetPopulationString()
+    public string SetPopulationString()
     {
         return "Population: " + population.ToString();
     }
@@ -68,7 +68,8 @@ public class UpdateUI : MonoBehaviour {
 
     string SetIncomeString()
     {
-        return "(" + IsPositive(income) + income.ToString() + ")";
+        string newString = "(" + IsPositive(income) + income.ToString() + ")";
+        return newString;   
     }
 
     string SetBalanceString()

@@ -22,6 +22,7 @@ public class DisplayMenu : MonoBehaviour
     int pressedButton;
     public GameObject wireframeModels;
     public GameObject controllerLeft;
+    GameObject head;
 
     private delegate int GetPressedButton(float position);
     GetPressedButton getPressedButton;
@@ -34,7 +35,7 @@ public class DisplayMenu : MonoBehaviour
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchStart += new ControllerInteractionEventHandler(DoTouchpadTouchStart);
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
         itemGenerator = GameObject.Find("LeftController").GetComponent<ItemGenerator>();
-        Debug.Log(getPressedButton(1.9f));
+        head = GameObject.Find("Camera(head)");
         DeactivateAll();
     }
 

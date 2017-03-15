@@ -42,7 +42,7 @@ public class SpawnerCube : MonoBehaviour
             transform.DetachChildren();
             currentObject = displayMenu.InitiateSpawn(gameObject);
         }
-        gameObject.transform.LookAt(Vector3.up);
+        currentObject.transform.LookAt(mainCamera.transform);
     }
 
     void DoRemoveObject(object sender, ControllerInteractionEventArgs e)
