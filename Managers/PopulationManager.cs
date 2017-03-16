@@ -6,6 +6,7 @@ public class PopulationManager : MonoBehaviour {
 
 	ItemManager itemManager;
     HappinessManager happinessManager;
+    NameGenerator names;
 
     List<ResidentialTracker> residentialTrackers;
     List<ResidentialTracker> emptyResidential; // List of residential trackers with vacancies
@@ -35,16 +36,20 @@ public class PopulationManager : MonoBehaviour {
     int industrialCap;
     int commercialCap;
 
-	void Awake ()
+    void Awake()
+    {
+        names = gameObject.GetComponent<NameGenerator>();
+        itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
+        happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
+        population = 0;
+        populationIncreaseRate = 0;
+    }
+
+    void Start ()
 	// Set values pre-initialization
 	{
-		population = 0;
-		populationIncreaseRate = 0;
-        firstNames = NameGenerator.FirstNames();
-        lastNames = NameGenerator.LastNames();
-
-		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-        happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
+        firstNames = names.FirstNames();
+        lastNames = names.LastNames();
 	}
 
 	void Update ()
@@ -67,6 +72,8 @@ public class PopulationManager : MonoBehaviour {
         happiness = happinessManager.happiness;
 
         UpdateEmptyResidential();
+        UpdateCommercialTrackers();
+        UpdateIndustrialTrackers();
     }
 
     void UpdateEmptyResidential()
@@ -74,6 +81,9 @@ public class PopulationManager : MonoBehaviour {
     {
         emptyResidential = new List<ResidentialTracker>();
         numEmptyResidential = new List<int>();
+        residentialWithUnemployed = new List<ResidentialTracker>();
+        numResidentialWithUnemployed = new List<int>();
+
         if (residentialTrackers != null)
         {
             for (int i = 0; i < residentialTrackers.Count; i++)
@@ -83,10 +93,43 @@ public class PopulationManager : MonoBehaviour {
                     emptyResidential.Add(residentialTrackers[i]);
                     numEmptyResidential.Add(residentialTrackers[i].NumEmpty());
                 }
+                if(residentialTrackers[i].unemployedPopulation > 0)
+                {
+                    residentialWithUnemployed.Add(residentialTrackers[i]);
+                    numResidentialWithUnemployed.Add(residentialTrackers[i].unemployedPopulation);
+                }
             }
         }
     }
 
+    void UpdateCommercialTrackers()
+    {
+        if(commercialTrackers != null)
+        {
+            for(int i = 0; i < commercialTrackers.Count; i++)
+            {
+                if(commercialTrackers[i].NumEmpty() > 0)
+                {
+                    emptyCommercial.Add(commercialTrackers[i]);
+                }
+            }
+        }
+    }
+
+    void UpdateIndustrialTrackers()
+    {
+        if(industrialTrackers != null)
+        {
+            for(int i = 0; i < industrialTrackers.Count; i++)
+            {
+                if(industrialTrackers[i].NumEmpty() > 0)
+                {
+                    emptyIndustrial.Add(industrialTrackers[i]);
+                }
+            }
+        }
+    }
+    
     void RunChecks()
     // Runs all checks
     {

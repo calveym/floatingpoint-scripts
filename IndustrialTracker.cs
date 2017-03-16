@@ -11,6 +11,12 @@ public class IndustrialTracker : ItemTracker {
     public int goodsProduced;
     public int goodsConsumed;
 
+    void Update()
+    {
+        income = goodsProduced * (1 + 0.01f * economyManager.industrialTaxRate);
+        totalIndustrialIncome += income;
+    }
+
     public void Apply(float applicantLandValue, int residentID, ResidentialTracker applicantTracker)
     {
         // TODO: the application is considered by the tracker, and the value of residential land has
@@ -22,7 +28,7 @@ public class IndustrialTracker : ItemTracker {
                      Mathf.Sin(2.0f * Mathf.PI * (float)u2); //random normal(0,1)
         double randNormal =
                      landValue - 5 + 5 * randStdNormal; //random normal(mean,stdDev^2)
-        if (applicantLandValue > randNormal)
+        if (applicantLandValue > randNormal && usable && users < capacity)
         {
             AcceptApplication(residentID, applicantTracker);
         }
@@ -37,6 +43,6 @@ public class IndustrialTracker : ItemTracker {
 
     void RejectApplication(int residentID, ResidentialTracker appplicantTracker)
     {
-
+        // TODO:
     }
 }

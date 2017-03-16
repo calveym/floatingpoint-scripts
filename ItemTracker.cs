@@ -10,7 +10,9 @@ public class ItemTracker : MonoBehaviour {
     public EconomyManager economyManager;
     public ItemManager itemManager;
 
-    public static float totalIncome;
+    public static float totalResidentialIncome;
+    public static float totalCommercialIncome;
+    public static float totalIndustrialIncome;
     public string type;
     public int capacity;
     public float income;
@@ -30,7 +32,7 @@ public class ItemTracker : MonoBehaviour {
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
 
-        usable = false;
+        //usable = false;
     }
 
     void EnablePhysics()
@@ -97,11 +99,11 @@ public class ItemTracker : MonoBehaviour {
     public void RemoveAllUsers()
     // Removes all local and related itemManager users
     {
-        if(type == "res")
+        if(type == "residential")
         {
             DeallocateUsers(users);
         }
-        else if(type == "com" || type == "ind")
+        else if(type == "commercial" || type == "industrial")
         {
             // TODO: Write employment deallocation function in popman
         }

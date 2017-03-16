@@ -4,33 +4,33 @@ using UnityEngine;
 
 public class NameGenerator : MonoBehaviour {
 
-    static List<string> firstNames;
-    static List<string> lastNames;
+    List<string> firstNames;
+    List<string> lastNames;
 
-    private void Awake()
+    void Awake()
     {
         firstNames = new List<string>();
         lastNames = new List<string>();
         SetupNames();
     }
 
-    static void SetupNames()
+    void SetupNames()
     {
-        AddToList(firstNames, "Morty", "James", "Monica", "Terry", "Geraldine", "Edwina", "William", "Richard");
+        AddToList(firstNames, "Morty", "James", "Monica", "Terry", "Geraldine", "Edwina", "William", "Richard", "Jessica");
         AddToList(lastNames, "Williams", "Morton", "McCloud", "Fliman", "Audley", "Richards");
     }
 
-	public static List<string> FirstNames()
+	public List<string> FirstNames()
     {
         return firstNames;
     }
 
-    public static List<string> LastNames()
+    public List<string> LastNames()
     {
         return lastNames;
     }
 
-    static void AddToList(List<string> someStringList, params string[] list)
+    void AddToList(List<string> someStringList, params string[] list)
     {
         for (int i = 0; i < list.Length; i++)
         {

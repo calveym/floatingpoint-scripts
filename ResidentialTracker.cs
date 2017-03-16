@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ResidentialTracker : ItemTracker {
-// Manages specific residential functions.
+    // Manages specific residential functions.
 
     public int unemployedPopulation;
     public Dictionary <int, int> educationLevel; // maps individual residents to their education levels
@@ -12,7 +12,15 @@ public class ResidentialTracker : ItemTracker {
     public Dictionary <int, bool> employed; // matches residents with employment status
     public Dictionary<int, string> residents; // matches slots to residents
     List<int> takenIDs; // List of currently active IDs for finding new ones
-    Dictionary<string, int> residentsInverse;
+
+    void Start()
+    {
+        educationLevel = new Dictionary<int, int>();
+        age = new Dictionary<int, int>();
+        employed = new Dictionary<int, bool>();
+        residents = new Dictionary<int, string>();
+        takenIDs = new List<int>();
+    }
 
     void Update()
     {
@@ -22,7 +30,7 @@ public class ResidentialTracker : ItemTracker {
     void UpdateValues()
     {
         income = users * (1 + 0.01f * economyManager.residentialTaxRate);
-        totalIncome += income;
+        totalResidentialIncome += income;
     }
 
     public void AddUsers(int numUsers, List<string> names, int newAge)
@@ -37,8 +45,9 @@ public class ResidentialTracker : ItemTracker {
                 educationLevel.Add(newID, 0);
                 age.Add(newID, newAge);
                 employed.Add(newID, false);
+                unemployedPopulation++;
                 residents.Add(newID, names[i]);
-                residentsInverse.Add(names[i], newID);
+                takenIDs.Add(newID);
             }
         }
         else
@@ -50,19 +59,23 @@ public class ResidentialTracker : ItemTracker {
     int FindAvailableID()
     // Finds next lowest available resident ID
     {
-        for(int i = 0; i < takenIDs.Count; i++)
+        int availableID = users + 1;
+        for(int i = 0; i <= takenIDs.Count; i++)
         {
             if (!takenIDs.Contains(i))
             {
-                return i;
+                availableID = i;
+                break;
             }
         }
-        return 0;
+        return availableID;
+
     }
 
     public void AcceptApplication(int acceptedApplicantID)
     {
         employed[acceptedApplicantID] = true;
+        unemployedPopulation--;
     }
 
     public void TryEmployWorker()
@@ -90,9 +103,13 @@ public class ResidentialTracker : ItemTracker {
         List<IndustrialTracker> firstFiveIndustrial = populationManager.emptyIndustrial.Take(5).ToList();
         List<CommercialTracker> firstFiveCommercial = populationManager.emptyCommercial.Take(5).ToList();
         List<GameObject> allPotentialLocations = new List<GameObject>();
+
         for(int i = 0; i < firstFiveCommercial.Count; i++)
         {
-            allPotentialLocations.Add(firstFiveCommercial[i].gameObject);
+            if (!allPotentialLocations.Contains(firstFiveCommercial[i].gameObject))
+            {
+                allPotentialLocations.Add(firstFiveCommercial[i].gameObject);
+            }
         }
         for(int i = 0; i < firstFiveIndustrial.Count; i++)
         {
@@ -112,7 +129,10 @@ public class ResidentialTracker : ItemTracker {
         Dictionary<GameObject, float> returnObject = new Dictionary<GameObject, float>();
         for(int i = 0; i < allObjects.Count; i++)
         {
-            returnObject.Add(allObjects[i], (1 / distances[allObjects[i]] + landValues[allObjects[i]]));
+            if (returnObject.ContainsKey(allObjects[i]) == false)
+            {
+                returnObject.Add(allObjects[i], (1 / distances[allObjects[i]] + landValues[allObjects[i]]));
+            }
         }
         return returnObject;
     }
@@ -124,11 +144,17 @@ public class ResidentialTracker : ItemTracker {
         {
             if(trialObjects[i].tag == "commercial")
             {
-                returnObject.Add(trialObjects[i], trialObjects[i].GetComponent<CommercialTracker>().landValue);
+                if (returnObject.ContainsKey(trialObjects[i]) == false)
+                {
+                    returnObject.Add(trialObjects[i], trialObjects[i].GetComponent<CommercialTracker>().landValue);
+                }
             }
             else if (trialObjects[i].tag == "industrial")
             {
-                returnObject.Add(trialObjects[i], trialObjects[i].GetComponent<IndustrialTracker>().landValue);
+                if (returnObject.ContainsKey(trialObjects[i]) == false)
+                {
+                    returnObject.Add(trialObjects[i], trialObjects[i].GetComponent<IndustrialTracker>().landValue);
+                }
             }
         }
         return returnObject;
@@ -139,7 +165,10 @@ public class ResidentialTracker : ItemTracker {
         Dictionary<GameObject, float> returnObject = new Dictionary<GameObject, float>();
         for(int i = 0; i < trialObjects.Count; i++)
         {
-            returnObject.Add(trialObjects[i], Vector3.Distance(transform.position, trialObjects[i].transform.position));
+            if(returnObject.ContainsKey(trialObjects[i]) == false)
+            {
+                returnObject.Add(trialObjects[i], Vector3.Distance(transform.position, trialObjects[i].transform.position));
+            }
         }
         return returnObject;
     }
