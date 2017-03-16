@@ -20,6 +20,11 @@ public class PopulationManager : MonoBehaviour {
 	List<IndustrialTracker> industrialTrackers;
     public List<IndustrialTracker> emptyIndustrial;
 
+
+    public int resUpdate;
+    public int comUpdate;
+    public int indUpdate;
+
 	float newPopulationSpawn;
 	float populationIncreaseRate;
 	float residentialDemand;
@@ -43,6 +48,9 @@ public class PopulationManager : MonoBehaviour {
         happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
         population = 0;
         populationIncreaseRate = 0;
+        resUpdate = 0;
+        indUpdate = 0;
+        comUpdate = 0;
     }
 
     void Start ()
@@ -71,14 +79,24 @@ public class PopulationManager : MonoBehaviour {
         totalPopulation = population + unallocatedPopulation;
         happiness = happinessManager.happiness;
 
-        UpdateEmptyResidential();
-        UpdateCommercialTrackers();
-        UpdateIndustrialTrackers();
+        if (resUpdate > 0)
+        {
+            UpdateEmptyResidential();
+        }
+        if (resUpdate > 0)
+        {
+            UpdateCommercialTrackers();
+        }
+        if (resUpdate > 0)
+        {
+            UpdateIndustrialTrackers();
+        }
     }
 
     void UpdateEmptyResidential()
     // Updates list of properties with vacancies
     {
+        resUpdate--;
         emptyResidential = new List<ResidentialTracker>();
         numEmptyResidential = new List<int>();
         residentialWithUnemployed = new List<ResidentialTracker>();
@@ -102,8 +120,17 @@ public class PopulationManager : MonoBehaviour {
         }
     }
 
+    public void QueueUpdates()
+    {
+        resUpdate++;
+        indUpdate++;
+        comUpdate++;
+    }
+
     void UpdateCommercialTrackers()
     {
+        comUpdate--;
+        emptyCommercial = new List<CommercialTracker>();
         if(commercialTrackers != null)
         {
             for(int i = 0; i < commercialTrackers.Count; i++)
@@ -118,6 +145,8 @@ public class PopulationManager : MonoBehaviour {
 
     void UpdateIndustrialTrackers()
     {
+        indUpdate--;
+        emptyIndustrial = new List<IndustrialTracker>();
         if(industrialTrackers != null)
         {
             for(int i = 0; i < industrialTrackers.Count; i++)
@@ -154,6 +183,7 @@ public class PopulationManager : MonoBehaviour {
                 {
                     numAdded = unallocatedPopulation;
                 }
+                resUpdate++;
                 population += numAdded;
 				unemployedPopulation += numAdded;
                 unallocatedPopulation -= numAdded;
@@ -200,6 +230,7 @@ public class PopulationManager : MonoBehaviour {
 		for(int i = 0; i < residentialWithUnemployed.Count; i++)
         {
             residentialWithUnemployed[i].TryEmployWorker();
+            QueueUpdates();
         }
 		// itemTrackers allocate nearest jobs to their users
 	}
@@ -213,6 +244,7 @@ public class PopulationManager : MonoBehaviour {
         {
             unallocatedPopulation++;
             residentialDemand--;
+            resUpdate++;
         }
     }
 
@@ -226,8 +258,10 @@ public class PopulationManager : MonoBehaviour {
 		}
 		else if(type == "ind" || type == "com")
 		{
-
-		}
+            population -= numUsers;
+            unallocatedPopulation += numUsers;
+            // TODO: need to inform resitrack of newly unemployed 
+        }
     }
 
     public int AvailableResidential()

@@ -53,6 +53,7 @@ public class ResidentialTracker : ItemTracker {
         else
         {
             Debug.Log("ERROR: user mismatch, aborting");
+            populationManager.QueueUpdates();
         }
     }
 
@@ -69,13 +70,13 @@ public class ResidentialTracker : ItemTracker {
             }
         }
         return availableID;
-
     }
 
     public void AcceptApplication(int acceptedApplicantID)
     {
         employed[acceptedApplicantID] = true;
         unemployedPopulation--;
+        populationManager.QueueUpdates();
     }
 
     public void TryEmployWorker()
@@ -106,10 +107,7 @@ public class ResidentialTracker : ItemTracker {
 
         for(int i = 0; i < firstFiveCommercial.Count; i++)
         {
-            if (!allPotentialLocations.Contains(firstFiveCommercial[i].gameObject))
-            {
-                allPotentialLocations.Add(firstFiveCommercial[i].gameObject);
-            }
+            allPotentialLocations.Add(firstFiveCommercial[i].gameObject);
         }
         for(int i = 0; i < firstFiveIndustrial.Count; i++)
         {

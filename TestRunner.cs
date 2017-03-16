@@ -8,6 +8,7 @@ public class TestRunner : MonoBehaviour
     GameObject manager;
     EconomyManager economyManager;
     PopulationManager populationManager;
+    ItemGenerator itemGenerator;
     ItemManager itemManager;
     HappinessManager happinessManager;
     ProgressionManager progressionManager;
@@ -15,6 +16,10 @@ public class TestRunner : MonoBehaviour
     ResidentialTracker[] residentialTrackers;
     CommercialTracker[] commercialTrackers;
     IndustrialTracker[] industrialTrackers;
+
+    public GameObject resSpawnerCube;
+    public GameObject indSpawnerCube;
+    public GameObject comSpawnerCube;
 
     // Use this for initialization
     void Start()
@@ -24,8 +29,8 @@ public class TestRunner : MonoBehaviour
         itemManager = manager.GetComponent<ItemManager>();
         happinessManager = manager.GetComponent<HappinessManager>();
         progressionManager = manager.GetComponent<ProgressionManager>();
+        itemGenerator = GetComponent<ItemGenerator>();
         
-
         FindAllChildren();
         EnableAllChildren();
     }
@@ -33,30 +38,36 @@ public class TestRunner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("1")) FirstTest();
-        if (Input.GetKeyDown("2")) SecondTest();
-        if (Input.GetKeyDown("3")) ThirdTest();
-        if (Input.GetKeyDown("4")) FourthTest();
-        if (Input.GetKeyDown("5")) FifthTest();
-        if (Input.GetKeyDown("6")) SixthTest();
-        if (Input.GetKeyDown("7")) SeventhTest();
-        if (Input.GetKeyDown("8")) EighthTest();
-        if (Input.GetKeyDown("9")) NinthTest();
+        if (Input.GetKeyDown("q")) FirstTest();
+        if (Input.GetKeyDown("w")) SecondTest();
+        if (Input.GetKeyDown("e")) ThirdTest();
+        if (Input.GetKeyDown("r")) FourthTest();
+        if (Input.GetKeyDown("t")) FifthTest();
+        if (Input.GetKeyDown("y")) SixthTest();
+        if (Input.GetKeyDown("u")) SeventhTest();
+        if (Input.GetKeyDown("i")) EighthTest();
+        if (Input.GetKeyDown("o")) NinthTest();
     }
 
     void FirstTest()
     {
-        Debug.Log("Test 1 Running");
+        Debug.Log("Add residential");
+        GameObject newObj = itemGenerator.StartSpawn(1, resSpawnerCube);
+        resSpawnerCube.GetComponent<FakeSpawnerCube>().RemoveObject(newObj);
     }
 
     void SecondTest()
     {
-        Debug.Log("Test 2 Running");
+        Debug.Log("Add commercial");
+        GameObject newObj = itemGenerator.StartSpawn(1, comSpawnerCube);
+        comSpawnerCube.GetComponent<FakeSpawnerCube>().RemoveObject(newObj);
     }
 
     void ThirdTest()
     {
-        Debug.Log("Test 3 Running");
+        Debug.Log("Add industrial");
+        GameObject newObj = itemGenerator.StartSpawn(1, indSpawnerCube);
+        indSpawnerCube.GetComponent<FakeSpawnerCube>().RemoveObject(newObj);
     }
 
     void FourthTest()
