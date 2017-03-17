@@ -9,15 +9,21 @@ public class ItemTracker : MonoBehaviour {
     public PopulationManager populationManager;
     public EconomyManager economyManager;
     public ItemManager itemManager;
+    public float availableTransportation;
 
     public static float totalResidentialIncome;
+    public static float historicResidentialIncome;
     public static float totalCommercialIncome;
+    public static float historicCommercialIncome;
     public static float totalIndustrialIncome;
+    public static float historicIndustrialIncome;
+
     public string type;
     public int capacity;
     public float income;
     public int users;
     public bool usable;
+    public bool updateStarted;
     public bool grabbableObject;
     public bool validPosition;
     GameObject tooltip;
@@ -27,6 +33,7 @@ public class ItemTracker : MonoBehaviour {
     private void Awake()
     // Sets start variables
     {
+        availableTransportation = 1;
         landValue = 10f; // TODO: Make better calculations based on accessibility to various ameneties.
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
@@ -43,6 +50,22 @@ public class ItemTracker : MonoBehaviour {
             GetComponent<Rigidbody>().isKinematic = false;
             GetComponent<Rigidbody>().useGravity = true;
         }
+    }
+
+    public void UpdateLandValue()
+    // TODO
+    {
+        
+    }
+
+    public void UpdateTransportationValue()
+    {
+        availableTransportation = RoadAccess() + ProgressionManager.Airport() + ProgressionManager.Train();
+    }
+
+    float RoadAccess()
+    {
+        return 1;
     }
 
     public void AddUsers(int numAdded)
@@ -86,7 +109,6 @@ public class ItemTracker : MonoBehaviour {
     // Type setter
     {
         type = typeInput;
-		capacity = (pressedButton * pressedButton + 1);
     }
 
     void DeallocateUsers(int numUsers)

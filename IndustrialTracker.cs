@@ -8,13 +8,19 @@ public class IndustrialTracker : ItemTracker {
     public int visitors;
     public int lifetimeVisitors;
 
-    public int goodsProduced;
-    public int goodsConsumed;
+    public float goodsProduced;
 
     void Update()
     {
-        income = goodsProduced * (1 + 0.01f * economyManager.industrialTaxRate);
-        totalIndustrialIncome += income;
+        if(!updateStarted)
+        {
+            StartCoroutine("UpdateSecond");
+        }
+    }
+
+    void ProduceGoods()
+    {
+        goodsProduced = users * (landValue / 5) * availableTransportation;
     }
 
     public void Apply(float applicantLandValue, int residentID, ResidentialTracker applicantTracker)
@@ -37,12 +43,35 @@ public class IndustrialTracker : ItemTracker {
 
     void AcceptApplication(int residentID, ResidentialTracker applicantTracker)
     {
-        AddUsers(1);
-        applicantTracker.AcceptApplication(residentID);
+        if (!applicantTracker.IsEmployed(residentID))
+        {
+            AddUsers(1);
+            applicantTracker.AcceptApplication(residentID);
+        }
+        else RejectApplication(residentID, applicantTracker);
     }
 
-    void RejectApplication(int residentID, ResidentialTracker appplicantTracker)
+    void RejectApplication(int residentID, ResidentialTracker applicantTracker)
     {
         // TODO:
+    }
+
+    IEnumerator UpdateSecond()
+    // Updates values once per second
+    {
+        updateStarted = true;
+        if (!usable || !validPosition)
+        {
+            yield return new WaitForSeconds(10);
+        }
+        while (usable && validPosition)
+        {
+            UpdateLandValue();
+            UpdateTransportationValue();
+            ProduceGoods();
+            income = goodsProduced;
+            totalIndustrialIncome += income;
+            yield return new WaitForSeconds(1);
+        }
     }
 }

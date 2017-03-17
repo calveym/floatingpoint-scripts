@@ -8,12 +8,15 @@ public class CommercialTracker : ItemTracker {
     public int visitors;
     public int lifetimeVisitors;
 
-    public int goodsSold;
+    public float goodsSold;
+    public float goodsAvailable;
 
     void Update()
     {
-        income = goodsSold * (1 + 0.01f * economyManager.commercialTaxRate);
-        totalCommercialIncome += income;
+        if (!updateStarted)
+        {
+            StartCoroutine("UpdateSecond");
+        }
     }
 
     public void Apply(float applicantLandValue, int residentID, ResidentialTracker applicantTracker)
@@ -36,12 +39,51 @@ public class CommercialTracker : ItemTracker {
 
     void AcceptApplication(int residentID, ResidentialTracker applicantTracker)
     {
-        AddUsers(1);
-        applicantTracker.AcceptApplication(residentID);
+        if (!applicantTracker.IsEmployed(residentID))
+        {
+            AddUsers(1);
+            applicantTracker.AcceptApplication(residentID);
+        }
+        else RejectApplication(residentID, applicantTracker);
     }
 
-    void RejectApplication(int residentID, ResidentialTracker appplicantTracker)
+    void RejectApplication(int residentID, ResidentialTracker applicantTracker)
     {
         // TODO
+    }
+
+    void SellGoods()
+    {
+        if (visitors > goodsAvailable)
+        {
+            goodsSold = goodsAvailable;
+        }
+        else goodsSold = visitors;
+    }
+
+    void UpdateVisitors()
+    {
+        visitors = populationManager.population - populationManager.unemployedPopulation;
+    }
+
+    IEnumerator UpdateSecond()
+    // Updates values once per second
+    {
+        updateStarted = true;
+        if (!usable || !validPosition)
+        {
+            yield return new WaitForSeconds(10);
+        }
+        while (usable && validPosition)
+        {
+            UpdateLandValue();
+            UpdateTransportationValue();
+            UpdateVisitors();
+            goodsAvailable = capacity;
+            SellGoods();
+            income = goodsSold;
+            totalIndustrialIncome += income;
+            yield return new WaitForSeconds(1);
+        }
     }
 }

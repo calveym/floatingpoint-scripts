@@ -25,7 +25,8 @@ public class EconomyManager : MonoBehaviour {
     public int residentialTaxRate;
     public int commercialTaxRate;
     public int industrialTaxRate;
-    public int rawIncome; // Gross income
+    public int rawIncome; // Gross 
+    bool keepUpdating;
 
     void Awake ()
     // Finds instances of all objects and sets up values
@@ -38,18 +39,33 @@ public class EconomyManager : MonoBehaviour {
 		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
 		populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         income = rawIncome;
+        keepUpdating = true;
+        StartCoroutine("SlowUpdate");
     }
 
-	void Update ()
-    // Updates state and recalculates balance and income
-	{
-		numRoads = itemManager.getNumRoads();
-		setPopulation();
-        setCapacity();
+    void LateUpdate()
+    // Resets total income for next frame
+    {
+        
+    }
 
-		updateBalance();
-		updateIncome();
-	}
+    IEnumerator SlowUpdate()
+    {
+        while (keepUpdating)
+        {
+            updateBalance();
+            updateIncome();
+
+            ResidentialTracker.historicResidentialIncome = ResidentialTracker.totalResidentialIncome;
+            CommercialTracker.historicCommercialIncome = CommercialTracker.totalCommercialIncome;
+            IndustrialTracker.historicIndustrialIncome = IndustrialTracker.totalIndustrialIncome;
+
+            ResidentialTracker.totalResidentialIncome = 0;
+            CommercialTracker.totalCommercialIncome = 0;
+            IndustrialTracker.totalIndustrialIncome = 0;
+            yield return new WaitForSeconds(1);
+        }
+    }
 
     void setCapacity()
     // Updates capacity from itemManager
@@ -86,7 +102,7 @@ public class EconomyManager : MonoBehaviour {
 	float calculateResidentialIncome()
 	// Tax income from all residential properties
 	{
-        return population * (1 + 0.01f * residentialTaxRate);
+        return ResidentialTracker.totalResidentialIncome * (1 + 0.05f * residentialTaxRate);
 	}
 
   float calculateCommercialIncome()
@@ -96,13 +112,9 @@ public class EconomyManager : MonoBehaviour {
       {
           return 0;
       }
-      else if(population >= commercialCap)
-      {
-          return commercialCap * (1 + 0.01f * commercialTaxRate);
-      }
       else
       {
-          return population * (1 + 0.01f * commercialTaxRate);
+          return CommercialTracker.totalCommercialIncome * (1 + 0.05f * commercialTaxRate);
       }
   }
 
@@ -113,13 +125,9 @@ public class EconomyManager : MonoBehaviour {
       {
           return 0;
       }
-      else if (population >= industrialCap)
-      {
-          return industrialCap * (1 + 0.01f * industrialTaxRate);
-      }
       else
       {
-          return population * (1 + 0.01f * industrialTaxRate);
+          return IndustrialTracker.totalIndustrialIncome * (1 + 0.05f * industrialTaxRate);
       }
   }
 

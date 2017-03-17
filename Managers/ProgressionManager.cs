@@ -16,8 +16,8 @@ public class ProgressionManager : MonoBehaviour {
     public int level;
     int pop;
 
-    public bool airportBought;
-    public bool trainBought;
+    public static bool airportBought;
+    public static bool trainBought;
     GameObject airport;
     GameObject train;
     TrainManager trainManager;
@@ -38,7 +38,6 @@ public class ProgressionManager : MonoBehaviour {
     public const int LEVEL_ONE_REQ = 20;
     public const int LEVEL_TWO_REQ = 50;
     public const int LEVEL_THREE_REQ = 100;
-
 
     public void Start()
     {
@@ -156,5 +155,23 @@ public class ProgressionManager : MonoBehaviour {
             }
             yield return null;
         }
+    }
+
+    public static float Airport()
+    {
+        if (airportBought)
+        {
+            return 1;
+        }
+        else return 0;
+    }
+
+    public static float Train()
+    {
+        if (trainBought)
+        {
+            return 1;
+        }
+        else return 0;
     }
 }

@@ -24,12 +24,15 @@ public class ResidentialTracker : ItemTracker {
 
     void Update()
     {
-        UpdateValues();
+        if (!updateStarted)
+        {
+            StartCoroutine("UpdateSecond");
+        }
     }
 
     void UpdateValues()
     {
-        income = users * (1 + 0.01f * economyManager.residentialTaxRate);
+        income = users * availableTransportation * landValue / 5;
         totalResidentialIncome += income;
     }
 
@@ -76,6 +79,7 @@ public class ResidentialTracker : ItemTracker {
     {
         employed[acceptedApplicantID] = true;
         unemployedPopulation--;
+        populationManager.unemployedPopulation--;
         populationManager.QueueUpdates();
     }
 
@@ -169,5 +173,28 @@ public class ResidentialTracker : ItemTracker {
             }
         }
         return returnObject;
+    }
+
+    public bool IsEmployed(int ID)
+    {
+        return employed[ID];
+    }
+
+    IEnumerator UpdateSecond()
+    // Updates values once per second
+    {
+        updateStarted = true;
+        if(!usable || !validPosition)
+        {
+            yield return new WaitForSeconds(10);
+        }
+        while (usable && validPosition)
+        {
+            UpdateLandValue();
+            UpdateTransportationValue();
+            UpdateValues();
+            totalIndustrialIncome += income;
+            yield return new WaitForSeconds(1);
+        }
     }
 }
