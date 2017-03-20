@@ -9,6 +9,7 @@ public class IndustrialTracker : ItemTracker {
     public int lifetimeVisitors;
 
     public float goodsProduced;
+    public static float allGoods; // Base goods tracking figure for each economic tick
 
     void Update()
     {
@@ -21,6 +22,7 @@ public class IndustrialTracker : ItemTracker {
     void ProduceGoods()
     {
         goodsProduced = users * (landValue / 5) * availableTransportation;
+        allGoods += goodsProduced;
     }
 
     public void Apply(float applicantLandValue, int residentID, ResidentialTracker applicantTracker)
@@ -56,6 +58,13 @@ public class IndustrialTracker : ItemTracker {
         // TODO:
     }
 
+    void CalculateIncome()
+    // Calculates income from goods sale
+    {
+        income = goodsProduced;
+        totalIndustrialIncome += goodsProduced;
+    }
+
     IEnumerator UpdateSecond()
     // Updates values once per second
     {
@@ -69,7 +78,7 @@ public class IndustrialTracker : ItemTracker {
             UpdateLandValue();
             UpdateTransportationValue();
             ProduceGoods();
-            income = goodsProduced;
+            CalculateIncome();
             totalIndustrialIncome += income;
             yield return new WaitForSeconds(1);
         }

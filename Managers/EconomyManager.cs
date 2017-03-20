@@ -15,6 +15,8 @@ public class EconomyManager : MonoBehaviour {
 	float income; // Net income, after expenses
 	int population;
     float happiness;
+	public float goods;
+	public float historicGoods;
 
     // Tracked items
     int residentialCap;
@@ -25,7 +27,7 @@ public class EconomyManager : MonoBehaviour {
     public int residentialTaxRate;
     public int commercialTaxRate;
     public int industrialTaxRate;
-    public int rawIncome; // Gross 
+    public int rawIncome; // Gross
     bool keepUpdating;
 
     void Awake ()
@@ -46,7 +48,7 @@ public class EconomyManager : MonoBehaviour {
     void LateUpdate()
     // Resets total income for next frame
     {
-        
+
     }
 
     IEnumerator SlowUpdate()
@@ -60,6 +62,9 @@ public class EconomyManager : MonoBehaviour {
             CommercialTracker.historicCommercialIncome = CommercialTracker.totalCommercialIncome;
             IndustrialTracker.historicIndustrialIncome = IndustrialTracker.totalIndustrialIncome;
 
+			goods = IndustrialTracker.allGoods;
+
+			IndustrialTracker.allGoods = 0;
             ResidentialTracker.totalResidentialIncome = 0;
             CommercialTracker.totalCommercialIncome = 0;
             IndustrialTracker.totalIndustrialIncome = 0;
