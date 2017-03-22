@@ -158,7 +158,7 @@ public class PopulationManager : MonoBehaviour {
             }
         }
     }
-    
+
     void RunChecks()
     // Runs all checks
     {
@@ -239,7 +239,7 @@ public class PopulationManager : MonoBehaviour {
     // Tries to increase population
     {
         happiness = happinessManager.happiness;
-        residentialDemand += happiness * Time.deltaTime * 0.05f;
+        residentialDemand += happiness * Time.deltaTime * 0.01f;
         if (residentialDemand >= 1 )
         {
             unallocatedPopulation++;
@@ -260,7 +260,7 @@ public class PopulationManager : MonoBehaviour {
 		{
             population -= numUsers;
             unallocatedPopulation += numUsers;
-            // TODO: need to inform resitrack of newly unemployed 
+            // TODO: need to inform resitrack of newly unemployed
         }
     }
 

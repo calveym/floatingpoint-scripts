@@ -23,6 +23,7 @@ public class ItemTracker : MonoBehaviour {
     public float income;
     public int users;
     public bool usable;
+    public bool numSnappedRoads;
     public bool updateStarted;
     public bool grabbableObject;
     public bool validPosition;
@@ -34,7 +35,7 @@ public class ItemTracker : MonoBehaviour {
     // Sets start variables
     {
         availableTransportation = 1;
-        landValue = 10f; // TODO: Make better calculations based on accessibility to various ameneties.
+        landValue = 10f;
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
@@ -53,9 +54,14 @@ public class ItemTracker : MonoBehaviour {
     }
 
     public void UpdateLandValue()
-    // TODO
     {
-        
+        landValue = capacity;
+        landValue += users;
+        landValue += numSnappedRoads;
+        if(capacity == users)
+        {
+            landValue += 7;
+        }
     }
 
     public void UpdateTransportationValue()

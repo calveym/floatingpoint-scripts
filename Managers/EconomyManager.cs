@@ -45,12 +45,6 @@ public class EconomyManager : MonoBehaviour {
         StartCoroutine("SlowUpdate");
     }
 
-    void LateUpdate()
-    // Resets total income for next frame
-    {
-
-    }
-
     IEnumerator SlowUpdate()
     {
         while (keepUpdating)
@@ -110,31 +104,31 @@ public class EconomyManager : MonoBehaviour {
         return ResidentialTracker.totalResidentialIncome * (1 + 0.05f * residentialTaxRate);
 	}
 
-  float calculateCommercialIncome()
-  // Tax income for all commercial buildings
-  {
-      if (commercialCap == 0 || population == 0)
-      {
-          return 0;
-      }
-      else
-      {
-          return CommercialTracker.totalCommercialIncome * (1 + 0.05f * commercialTaxRate);
-      }
-  }
+	  float calculateCommercialIncome()
+	  // Tax income for all commercial buildings
+	  {
+	      if (commercialCap == 0 || population == 0)
+	      {
+	          return 0;
+	      }
+	      else
+	      {
+	          return CommercialTracker.totalCommercialIncome * (1 + 0.05f * commercialTaxRate);
+	      }
+	  }
 
-  float calculateIndustrialIncome()
-  // Tax income for industrial buildings
-  {
-      if (industrialCap == 0)
-      {
-          return 0;
-      }
-      else
-      {
-          return IndustrialTracker.totalIndustrialIncome * (1 + 0.05f * industrialTaxRate);
-      }
-  }
+	  float calculateIndustrialIncome()
+	  // Tax income for industrial buildings
+	  {
+	      if (industrialCap == 0)
+	      {
+	          return 0;
+	      }
+	      else
+	      {
+	          return IndustrialTracker.totalIndustrialIncome * (1 + 0.05f * industrialTaxRate);
+	      }
+	  }
 
 	float calculateRoadExpenses()
 	// Calculates how much is spent on road maintenance
