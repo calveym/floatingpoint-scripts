@@ -36,10 +36,17 @@ public class RoadSnap : MonoBehaviour {
 	public Vector3 left;
 	public Vector3 right;
 
+	public Vector3 topRight;
+	public Vector3 bottomRight;
+	public Vector3 topLeft;
+	public Vector3 bottomLeft;
+
 	Bounds thisBounds;
 
 	GameObject objectToPlace;
 
+	bool useCornerSnapPoints;
+	GameObject objectWithLargerSide;
 
 	public class StringFloat {
 		//define all of the values for the class
@@ -53,10 +60,21 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	public void updateSnapPoints() {
+
+		/* middle of each side */
+
 		right = new Vector3(objectToPlace.transform.position.x - (thisBounds.size.x / 2), objectToPlace.transform.position.y, objectToPlace.transform.position.z);
 		left = new Vector3(objectToPlace.transform.position.x + (thisBounds.size.x / 2), objectToPlace.transform.position.y, objectToPlace.transform.position.z);
 		top = new Vector3(objectToPlace.transform.position.x, objectToPlace.transform.position.y, objectToPlace.transform.position.z - (thisBounds.size.z / 2));
 		bottom = new Vector3(objectToPlace.transform.position.x, objectToPlace.transform.position.y,objectToPlace.transform.position.z + (thisBounds.size.z / 2));
+
+		/* corners */
+
+		topRight = new Vector3 (right.x, objectToPlace.transform.position.y, top.z);
+		topLeft = new Vector3 (left.x, objectToPlace.transform.position.y, top.z); 
+		bottomRight = new Vector3 (right.x, objectToPlace.transform.position.y, bottom.z);
+		bottomLeft = new Vector3 (left.x, objectToPlace.transform.position.y, bottom.z);
+
 	}
 
 
@@ -74,6 +92,18 @@ public class RoadSnap : MonoBehaviour {
 	void Update() {
 
 		if (objectUsed || manualUse) {
+			/*
+			GameObject g1 = (GameObject)Instantiate(snapCube, topRight, transform.rotation);
+			GameObject g2 = (GameObject)Instantiate(snapCube, topLeft, transform.rotation);
+			GameObject g3 = (GameObject)Instantiate(snapCube, bottomRight, transform.rotation);
+			GameObject g4 = (GameObject)Instantiate(snapCube, bottomLeft, transform.rotation);
+
+			GameObject g5 = (GameObject)Instantiate(snapCube, right, transform.rotation);
+			GameObject g6 = (GameObject)Instantiate(snapCube, left, transform.rotation);
+			GameObject g7 = (GameObject)Instantiate(snapCube, bottom, transform.rotation);
+			GameObject g8 = (GameObject)Instantiate(snapCube, top, transform.rotation);
+			*/
+
 			gameObject.layer = 9;
 			getNearbyBuildings ();
 		} 
@@ -157,9 +187,13 @@ public class RoadSnap : MonoBehaviour {
 		} 
 		else {
 			foreach (Collider hitcol in hitColliders) {
-				if (hitcol.CompareTag ("residential") && hitcol != GetComponent<Collider> ()) {
+				if (hitcol.gameObject.layer == buildingLayer && hitcol != GetComponent<Collider> ()) {
 
 					setToNearestBuilding (hitcol);
+
+					//shouldUseCornerSnapPoints ();
+
+					//Debug.Log (useCornerSnapPoints);
 
 					drawTargetBox ();
 
@@ -197,13 +231,15 @@ public class RoadSnap : MonoBehaviour {
 		// give target box nearest building for collision
 		targetBox.GetComponent<TargetCollisionCheck>().setNearestBuilding(nearestBuilding);
 
-		// place it next to building
+		// place it next to building and rotate side to face it
 		objectToPlace = targetBox;
 		setRotation();
 		setPosition();
 
 		// adjust vertical axis
 		targetBox.transform.position = new Vector3(targetBox.transform.position.x, 10.025f, targetBox.transform.position.z);
+
+		objectToPlace = gameObject;
 	}
 
 	void setToNearestBuilding (Collider hitcol){
@@ -232,6 +268,36 @@ public class RoadSnap : MonoBehaviour {
 		objectToPlace.transform.localRotation = Quaternion.Euler(0, yAngle, 0);
 
 		objectToPlace.transform.parent = null;
+
+	}
+
+	string getNearestAxis() {
+
+		/* Determines if the nearest axis is x or z based on the closest target snap points */
+
+		StringFloat closestTargetSnapPoint = getClosestTargetSnapPoint ();
+
+		if (closestTargetSnapPoint.name == "left" || closestTargetSnapPoint.name == "right") {
+			return "x";
+		} else {
+			return "z";
+		}
+
+	}
+
+	float getClosestDistance(Vector3 target, Vector3 current) {
+
+		string nearestAxis = getNearestAxis ();
+
+		/* If nearestAxis is "x" then use that to calculate the distance of the two points, else use the z axis 
+		 
+		   transform.InverseTransformPoint(Vector3) gets the transform.position of the vector in local space, as if it were a child object to it */
+
+		if (nearestAxis == "x") {
+			return Mathf.Abs (target.x) - Mathf.Abs (nearestBuilding.transform.InverseTransformPoint (current).x);
+		} else {
+			return Mathf.Abs (target.z) - Mathf.Abs (nearestBuilding.transform.InverseTransformPoint (current).z);
+		}
 
 	}
 
@@ -270,7 +336,7 @@ public class RoadSnap : MonoBehaviour {
 		return closestTargetSnapPoint;
 	}
 
-	StringFloat getClosestSnapPoint(bool snapX) {
+	StringFloat getClosestSnapPoint() {
 
 		Vector3 closestTargetSnapPoint = nearestBuilding.transform.InverseTransformPoint(getClosestTargetSnapPoint ().value);
 
@@ -283,6 +349,11 @@ public class RoadSnap : MonoBehaviour {
 		Vector3 thisLeft = RotatePointAroundPivot (left, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
 		Vector3 thisRight = RotatePointAroundPivot (right, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
 
+		Vector3 thisTopLeft = RotatePointAroundPivot (topLeft, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
+		Vector3 thisBottomLeft = RotatePointAroundPivot (bottomLeft, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
+		Vector3 thisTopRight = RotatePointAroundPivot (topRight, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
+		Vector3 thisBottomRight = RotatePointAroundPivot (bottomRight, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
+
 		/* find the closest snap point to the targetClosestPoint */
 
 		Vector3 closestPoint = GetComponent<Renderer> ().bounds.ClosestPoint (nearestBuilding.transform.position); // get closest point on target building to this object's position
@@ -294,24 +365,19 @@ public class RoadSnap : MonoBehaviour {
 		snapPoints.Add (new StringFloat("left", thisLeft));
 		snapPoints.Add (new StringFloat("right", thisRight));
 
-		float closestDistance;
+		/* if (useCornerSnapPoints && objectWithLargerSide == gameObject) {
+			snapPoints.Add (new StringFloat("topLeft", thisTopLeft));
+			snapPoints.Add (new StringFloat("bottomLeft", thisBottomLeft));
+			snapPoints.Add (new StringFloat("topRight", thisTopRight));
+			snapPoints.Add (new StringFloat("bottomRight", thisBottomRight));
+		} */
 
-		if (snapX) {
-			closestDistance = Mathf.Abs (closestTargetSnapPoint.x) - Mathf.Abs (nearestBuilding.transform.InverseTransformPoint (snapPoints [0].value).x);
-		} else {
-			closestDistance = Mathf.Abs (closestTargetSnapPoint.z) - Mathf.Abs (nearestBuilding.transform.InverseTransformPoint (snapPoints [0].value).z);
-		}
+		float closestDistance = getClosestDistance (closestTargetSnapPoint, snapPoints [0].value);
 
 		StringFloat closestSnapPoint = new StringFloat(snapPoints[0].name, snapPoints[0].value);
 
 		for (int i = 1; i < snapPoints.Count; i++) {
-			float newDistance;
-
-			if (snapX) {
-				newDistance = Mathf.Abs (closestTargetSnapPoint.x) - Mathf.Abs (nearestBuilding.transform.InverseTransformPoint (snapPoints [i].value).x);
-			} else {
-				newDistance = Mathf.Abs (closestTargetSnapPoint.z) - Mathf.Abs (nearestBuilding.transform.InverseTransformPoint (snapPoints [i].value).z);
-			}
+			float newDistance = getClosestDistance (closestTargetSnapPoint, snapPoints [i].value);
 
 			if (newDistance > closestDistance) {
 				closestDistance = newDistance;
@@ -322,31 +388,86 @@ public class RoadSnap : MonoBehaviour {
 		return closestSnapPoint;
 	}
 
+	float getSideLength(StringFloat snapPoint, GameObject currentObject) {
+
+		RoadSnap objectScript = currentObject.GetComponent<RoadSnap>();
+
+		if (snapPoint.name == "left") {
+			return Vector3.Distance (objectScript.topLeft, objectScript.bottomLeft);
+		} else if (snapPoint.name == "right") {
+			return Vector3.Distance (objectScript.topRight, objectScript.bottomRight);
+		} else if (snapPoint.name == "top") {
+			return Vector3.Distance (objectScript.topLeft, objectScript.topRight);
+		} else if (snapPoint.name == "bottom") {
+			return Vector3.Distance (objectScript.bottomLeft, objectScript.bottomRight);
+		} else {
+			return 0;
+		}
+
+	}
+
+	void shouldUseCornerSnapPoints() {
+
+		StringFloat closestSnapPoint = getClosestSnapPoint ();
+		StringFloat closestTargetSnapPoint = getClosestTargetSnapPoint ();
+		float targetSideLength = getSideLength(closestTargetSnapPoint, nearestBuilding);
+		float closestSideLength = getSideLength(closestSnapPoint, gameObject);
+
+		if (Mathf.Round(targetSideLength) != Mathf.Round(closestSideLength)) {
+			useCornerSnapPoints = true;
+
+			if (targetSideLength > closestSideLength) {
+				objectWithLargerSide = nearestBuilding;
+			} else {
+				objectWithLargerSide = gameObject;
+			}
+
+		} else {
+			useCornerSnapPoints = false;
+		}
+
+	}
+
+	float getSnapPosition(Vector3 closestTarget, Vector3 closestThis) {
+
+		string nearestAxis = getNearestAxis ();
+
+		/* Calculate the position to move relative to the nearest building */
+
+		if (nearestAxis == "x") {
+			return nearestBuilding.transform.InverseTransformPoint (closestTarget).x - (nearestBuilding.transform.InverseTransformPoint (closestThis).x - objectToPlace.transform.localPosition.x);
+		} else {
+			return nearestBuilding.transform.InverseTransformPoint (closestTarget).z - (nearestBuilding.transform.InverseTransformPoint (closestThis).z - objectToPlace.transform.localPosition.z);
+		}
+
+	}
+
 	void setPosition() {
 
 		StringFloat closestTargetSnapPoint = getClosestTargetSnapPoint ();
-		StringFloat closestSnapPointX = getClosestSnapPoint (true);
-		StringFloat closestSnapPointZ = getClosestSnapPoint (false);
+		StringFloat closestSnapPoint = getClosestSnapPoint ();
 
 		objectToPlace.transform.parent = nearestBuilding.transform;
 
-		float snapPositionX = nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value).x - (nearestBuilding.transform.InverseTransformPoint (closestSnapPointX.value).x - objectToPlace.transform.localPosition.x);
-		float snapPositionZ = nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value).z - (nearestBuilding.transform.InverseTransformPoint (closestSnapPointZ.value).z - objectToPlace.transform.localPosition.z);
+		float snapPosition = getSnapPosition (closestTargetSnapPoint.value, closestSnapPoint.value);
+
+		Debug.Log ("closer to: " + getNearestAxis ());
+		Debug.Log ("nearest snap: " + closestTargetSnapPoint.name);
 
 		if (closestTargetSnapPoint.name == "right") {
-			objectToPlace.transform.localPosition = new Vector3(snapPositionX, 0, 0);
+			objectToPlace.transform.localPosition = new Vector3(snapPosition, 0, 0);
 		}
 
 		if (closestTargetSnapPoint.name == "left") {
-			objectToPlace.transform.localPosition = new Vector3(snapPositionX, 0, 0);
+			objectToPlace.transform.localPosition = new Vector3(snapPosition, 0, 0);
 		}
 
 		if (closestTargetSnapPoint.name == "top") {
-			objectToPlace.transform.localPosition = new Vector3(0, 0, snapPositionZ);
+			objectToPlace.transform.localPosition = new Vector3(0, 0, snapPosition);
 		}
 
 		if (closestTargetSnapPoint.name == "bottom") {
-			objectToPlace.transform.localPosition = new Vector3(0, 0, snapPositionZ);
+			objectToPlace.transform.localPosition = new Vector3(0, 0, snapPosition);
 		}
 
 		objectToPlace.transform.parent = null;
