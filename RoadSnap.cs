@@ -48,6 +48,18 @@ public class RoadSnap : MonoBehaviour {
 	bool useCornerSnapPoints;
 	GameObject objectWithLargerSide;
 
+	public class StringVector3 {
+		//define all of the values for the class
+		public string name;
+		public Vector3 value;
+
+		public StringVector3 (string Name, Vector3 Value){
+			name = Name;
+			value = Value;        
+		}
+
+	}
+
 	public class StringFloat {
 		//define all of the values for the class
 		public string name;
@@ -301,25 +313,45 @@ public class RoadSnap : MonoBehaviour {
 
 	}
 
-	StringFloat getClosestTargetSnapPoint() {
+	List<StringFloat> getSnapPoints(GameObject currentObject) {
 
-		nearestBuilding.GetComponent<RoadSnap> ().updateSnapPoints ();
-
-		Vector3 targetTop = RotatePointAroundPivot (nearestBuilding.GetComponent<RoadSnap> ().top, nearestBuilding.transform.position, nearestBuilding.transform.eulerAngles);
-		Vector3 targetBottom = RotatePointAroundPivot (nearestBuilding.GetComponent<RoadSnap> ().bottom, nearestBuilding.transform.position, nearestBuilding.transform.eulerAngles);
-		Vector3 targetLeft = RotatePointAroundPivot (nearestBuilding.GetComponent<RoadSnap> ().left, nearestBuilding.transform.position, nearestBuilding.transform.eulerAngles);
-		Vector3 targetRight = RotatePointAroundPivot (nearestBuilding.GetComponent<RoadSnap> ().right, nearestBuilding.transform.position, nearestBuilding.transform.eulerAngles);
-
-		/* find the closest snap point to the targetClosestPoint */
-
-		Vector3 targetClosestPoint = nearestBuilding.GetComponent<Renderer> ().bounds.ClosestPoint (objectToPlace.transform.position); // get closest point on target building to this object's position
+		currentObject.GetComponent<RoadSnap> ().updateSnapPoints (); // Update snap points to current position
 
 		List<StringFloat> snapPoints = new List<StringFloat>();
+
+		Vector3 targetTop = RotatePointAroundPivot (currentObject.GetComponent<RoadSnap> ().top, currentObject.transform.position, currentObject.transform.eulerAngles);
+		Vector3 targetBottom = RotatePointAroundPivot (currentObject.GetComponent<RoadSnap> ().bottom, currentObject.transform.position, currentObject.transform.eulerAngles);
+		Vector3 targetLeft = RotatePointAroundPivot (currentObject.GetComponent<RoadSnap> ().left, currentObject.transform.position, currentObject.transform.eulerAngles);
+		Vector3 targetRight = RotatePointAroundPivot (currentObject.GetComponent<RoadSnap> ().right, currentObject.transform.position, currentObject.transform.eulerAngles);
+
+		Vector3 thisTopLeft = RotatePointAroundPivot (topLeft, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
+		Vector3 thisBottomLeft = RotatePointAroundPivot (bottomLeft, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
+		Vector3 thisTopRight = RotatePointAroundPivot (topRight, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
+		Vector3 thisBottomRight = RotatePointAroundPivot (bottomRight, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
 
 		snapPoints.Add (new StringFloat("top", targetTop));
 		snapPoints.Add (new StringFloat("bottom", targetBottom));
 		snapPoints.Add (new StringFloat("left", targetLeft));
 		snapPoints.Add (new StringFloat("right", targetRight));
+
+		/* if (useCornerSnapPoints && objectWithLargerSide == gameObject) {
+			snapPoints.Add (new StringFloat("topLeft", thisTopLeft));
+			snapPoints.Add (new StringFloat("bottomLeft", thisBottomLeft));
+			snapPoints.Add (new StringFloat("topRight", thisTopRight));
+			snapPoints.Add (new StringFloat("bottomRight", thisBottomRight));
+		} */
+
+		return snapPoints;
+
+	}
+
+	StringFloat getClosestTargetSnapPoint() {
+
+		Vector3 targetClosestPoint = nearestBuilding.GetComponent<Renderer> ().bounds.ClosestPoint (objectToPlace.transform.position); // get closest point on target building to this object's position
+
+		List<StringFloat> snapPoints = getSnapPoints(nearestBuilding);
+
+		/* find the closest snap point to the targetClosestPoint */
 
 		float closestDistance = Vector3.Distance (targetClosestPoint, snapPoints[0].value);
 		StringFloat closestTargetSnapPoint = new StringFloat(snapPoints[0].name, snapPoints[0].value);
@@ -334,46 +366,19 @@ public class RoadSnap : MonoBehaviour {
 		}
 
 		return closestTargetSnapPoint;
+
 	}
 
 	StringFloat getClosestSnapPoint() {
 
 		Vector3 closestTargetSnapPoint = nearestBuilding.transform.InverseTransformPoint(getClosestTargetSnapPoint ().value);
+		Vector3 closestPoint = GetComponent<Renderer> ().bounds.ClosestPoint (nearestBuilding.transform.position); // get closest point on target building to this object's position
 
-		updateSnapPoints ();
-
-		/* find this closest side/point */
-
-		Vector3 thisTop = RotatePointAroundPivot (top, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
-		Vector3 thisBottom = RotatePointAroundPivot (bottom, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
-		Vector3 thisLeft = RotatePointAroundPivot (left, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
-		Vector3 thisRight = RotatePointAroundPivot (right, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
-
-		Vector3 thisTopLeft = RotatePointAroundPivot (topLeft, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
-		Vector3 thisBottomLeft = RotatePointAroundPivot (bottomLeft, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
-		Vector3 thisTopRight = RotatePointAroundPivot (topRight, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
-		Vector3 thisBottomRight = RotatePointAroundPivot (bottomRight, objectToPlace.transform.position, objectToPlace.transform.eulerAngles);
+		List<StringFloat> snapPoints = getSnapPoints(gameObject);
 
 		/* find the closest snap point to the targetClosestPoint */
 
-		Vector3 closestPoint = GetComponent<Renderer> ().bounds.ClosestPoint (nearestBuilding.transform.position); // get closest point on target building to this object's position
-
-		List<StringFloat> snapPoints = new List<StringFloat>();
-
-		snapPoints.Add (new StringFloat("top", thisTop));
-		snapPoints.Add (new StringFloat("bottom", thisBottom));
-		snapPoints.Add (new StringFloat("left", thisLeft));
-		snapPoints.Add (new StringFloat("right", thisRight));
-
-		/* if (useCornerSnapPoints && objectWithLargerSide == gameObject) {
-			snapPoints.Add (new StringFloat("topLeft", thisTopLeft));
-			snapPoints.Add (new StringFloat("bottomLeft", thisBottomLeft));
-			snapPoints.Add (new StringFloat("topRight", thisTopRight));
-			snapPoints.Add (new StringFloat("bottomRight", thisBottomRight));
-		} */
-
 		float closestDistance = getClosestDistance (closestTargetSnapPoint, snapPoints [0].value);
-
 		StringFloat closestSnapPoint = new StringFloat(snapPoints[0].name, snapPoints[0].value);
 
 		for (int i = 1; i < snapPoints.Count; i++) {
@@ -386,6 +391,7 @@ public class RoadSnap : MonoBehaviour {
 		}
 
 		return closestSnapPoint;
+
 	}
 
 	float getSideLength(StringFloat snapPoint, GameObject currentObject) {
