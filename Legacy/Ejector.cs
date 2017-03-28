@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectiveManager : MonoBehaviour {
+public class Ejector : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

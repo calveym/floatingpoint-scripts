@@ -449,9 +449,6 @@ public class RoadSnap : MonoBehaviour {
 
 		float snapPosition = getSnapPosition (closestTargetSnapPoint.value, closestSnapPoint.value);
 
-		Debug.Log ("closer to: " + getNearestAxis ());
-		Debug.Log ("nearest snap: " + closestTargetSnapPoint.name);
-
 		if (closestTargetSnapPoint.name == "right") {
 			objectToPlace.transform.localPosition = new Vector3(snapPosition, 0, 0);
 		}
@@ -469,6 +466,4 @@ public class RoadSnap : MonoBehaviour {
 		}
 
 		objectToPlace.transform.parent = null;
-
-	}
 }

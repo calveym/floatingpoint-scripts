@@ -190,8 +190,7 @@ public class ItemGenerator : MonoBehaviour {
         int r = (int)Mathf.Round(Random.Range(0f, modelArray.Length - 1));
         Vector3 spawnPosition = initiator.transform.position;
         GameObject newObject = Instantiate(modelArray[r], spawnPosition, Quaternion.identity);
-		ItemTracker itemTracker = newObject.GetComponent<ItemTracker>();
-		AddObjectInfo(newObject, itemTracker, pressedButton);
+		AddObjectInfo(newObject, pressedButton);
 		newObject.transform.parent = initiator.transform;
 		newObject.layer = 5;
 		newObject.GetComponent<Rigidbody>().isKinematic = true;
@@ -205,28 +204,28 @@ public class ItemGenerator : MonoBehaviour {
         }
     }
 
-	void AddObjectInfo(GameObject newObject, ItemTracker itemTracker, int pressedButton)
+	void AddObjectInfo(GameObject newObject, int pressedButton)
 	// Adds type info to itemTracker and itemManager
 	{
 		if(newObject.tag == "residential")
 		{
-			itemTracker.setValues("residential", pressedButton);
+			newObject.GetComponent<ResidentialTracker>().setValues("residential", pressedButton);
 		}
 		else if(newObject.tag == "commercial")
 		{
-			itemTracker.setValues("commercial", pressedButton);
+			newObject.GetComponent<CommercialTracker>().setValues("commercial", pressedButton);
 		}
 		else if(newObject.tag == "industrial")
 		{
-			itemTracker.setValues("industrial", pressedButton);
+			newObject.GetComponent<IndustrialTracker>().setValues("industrial", pressedButton);
 		}
 		else if(newObject.tag == "foliage")
 		{
-			itemTracker.setValues("foliage", pressedButton);
+			newObject.GetComponent<ItemTracker>().setValues("foliage", pressedButton);
 		}
 		else if(newObject.tag == "leisure")
 		{
-			itemTracker.setValues("leisure", pressedButton);
+            newObject.GetComponent<ItemTracker>().setValues("leisure", pressedButton);
 		}
 	}
 }

@@ -20,12 +20,13 @@ public class EconomyManager : MonoBehaviour {
     int residentialCap;
     int commercialCap;
     int industrialCap;
-	
-    // Declares public variables 
+
+    // Declares public variables
     public int residentialTaxRate;
     public int commercialTaxRate;
     public int industrialTaxRate;
-    public int rawIncome; // Gross income
+    public int rawIncome; // Gross 
+    bool keepUpdating;
 
     void Awake ()
     // Finds instances of all objects and sets up values
@@ -38,18 +39,33 @@ public class EconomyManager : MonoBehaviour {
 		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
 		populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         income = rawIncome;
+        keepUpdating = true;
+        StartCoroutine("SlowUpdate");
     }
 
-	void Update ()
-    // Updates state and recalculates balance and income
-	{
-		numRoads = itemManager.getNumRoads();
-		setPopulation();
-        setCapacity();
-   
-		updateBalance();
-		updateIncome();
-	}
+    void LateUpdate()
+    // Resets total income for next frame
+    {
+        
+    }
+
+    IEnumerator SlowUpdate()
+    {
+        while (keepUpdating)
+        {
+            updateBalance();
+            updateIncome();
+
+            ResidentialTracker.historicResidentialIncome = ResidentialTracker.totalResidentialIncome;
+            CommercialTracker.historicCommercialIncome = CommercialTracker.totalCommercialIncome;
+            IndustrialTracker.historicIndustrialIncome = IndustrialTracker.totalIndustrialIncome;
+
+            ResidentialTracker.totalResidentialIncome = 0;
+            CommercialTracker.totalCommercialIncome = 0;
+            IndustrialTracker.totalIndustrialIncome = 0;
+            yield return new WaitForSeconds(1);
+        }
+    }
 
     void setCapacity()
     // Updates capacity from itemManager
@@ -59,7 +75,7 @@ public class EconomyManager : MonoBehaviour {
         industrialCap = itemManager.industrialCap;
     }
 
-	void updateBalance() 
+	void updateBalance()
 	// Reduces balance by income and time
 	{
 		balance += income * Time.deltaTime;
@@ -86,44 +102,36 @@ public class EconomyManager : MonoBehaviour {
 	float calculateResidentialIncome()
 	// Tax income from all residential properties
 	{
-        return population * (1 + 0.01f * residentialTaxRate);
+        return ResidentialTracker.totalResidentialIncome * (1 + 0.05f * residentialTaxRate);
 	}
 
-    float calculateCommercialIncome()
-    // Tax income for all commercial buildings
-    {
-        if (commercialCap == 0 || population == 0)
-        {
-            return 0;
-        }
-        else if(population >= commercialCap)
-        {
-            return commercialCap * (1 + 0.01f * commercialTaxRate);
-        }
-        else
-        {
-            return population * (1 + 0.01f * commercialTaxRate);
-        }
-    }
+  float calculateCommercialIncome()
+  // Tax income for all commercial buildings
+  {
+      if (commercialCap == 0 || population == 0)
+      {
+          return 0;
+      }
+      else
+      {
+          return CommercialTracker.totalCommercialIncome * (1 + 0.05f * commercialTaxRate);
+      }
+  }
 
-    float calculateIndustrialIncome()
-    // Tax income for industrial buildings
-    {
-        if (industrialCap == 0)
-        {
-            return 0;
-        }
-        else if (population >= industrialCap)
-        {
-            return industrialCap * (1 + 0.01f * industrialTaxRate);
-        }
-        else
-        {
-            return population * (1 + 0.01f * industrialTaxRate);
-        }
-    }
+  float calculateIndustrialIncome()
+  // Tax income for industrial buildings
+  {
+      if (industrialCap == 0)
+      {
+          return 0;
+      }
+      else
+      {
+          return IndustrialTracker.totalIndustrialIncome * (1 + 0.05f * industrialTaxRate);
+      }
+  }
 
-	float calculateRoadExpenses() 
+	float calculateRoadExpenses()
 	// Calculates how much is spent on road maintenance
 	{
 		return numRoads / 5;

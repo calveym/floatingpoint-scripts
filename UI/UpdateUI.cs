@@ -12,10 +12,11 @@ public class UpdateUI : MonoBehaviour {
 
     float timePassed;
 
-    Text incomeText;
-    Text balanceText;
-    Text populationText;
-    Text happinessText;
+    public Text incomeText;
+    public Text balanceText;
+    public Text populationText;
+    public Text happinessText;
+    GameObject manager;
 
     EconomyManager economyManager;
     HappinessManager happinessManager;
@@ -23,12 +24,9 @@ public class UpdateUI : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         timePassed = 0;
-        economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
-        incomeText = GameObject.Find("IncomeText").GetComponent<Text>();
-        balanceText = GameObject.Find("BalanceText").GetComponent<Text>();
-        populationText = GameObject.Find("PopulationText").GetComponent<Text>();
-        happinessText = GameObject.Find("HappinessText").GetComponent<Text>();
-        happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
+        manager = GameObject.Find("Managers");
+        economyManager = manager.GetComponent<EconomyManager>();
+        happinessManager = manager.GetComponent<HappinessManager>();
 	}
 	
 	// Update is called once per frame
@@ -37,8 +35,6 @@ public class UpdateUI : MonoBehaviour {
         if(timePassed >= 1)
         {
             UpdateManagerVariables();
-            Debug.Log(happiness);
-            Debug.Log(population);
             UpdateUIVariables();
             timePassed = 0;
         }
@@ -60,7 +56,7 @@ public class UpdateUI : MonoBehaviour {
         happinessText.text = SetHappinessString();
     }
 
-    string SetPopulationString()
+    public string SetPopulationString()
     {
         return "Population: " + population.ToString();
     }
@@ -72,7 +68,8 @@ public class UpdateUI : MonoBehaviour {
 
     string SetIncomeString()
     {
-        return "(" + IsPositive(income) + income.ToString() + ")";
+        string newString = "(" + IsPositive(income) + income.ToString() + ")";
+        return newString;   
     }
 
     string SetBalanceString()

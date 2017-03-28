@@ -6,46 +6,40 @@ using UnityEngine;
 public class ItemTracker : MonoBehaviour {
 
     // Declare variables
-    PopulationManager populationManager;
-    EconomyManager economyManager;
-    ItemManager itemManager;
-    
+    public PopulationManager populationManager;
+    public EconomyManager economyManager;
+    public ItemManager itemManager;
+    public float availableTransportation;
+
+    public static float totalResidentialIncome;
+    public static float historicResidentialIncome;
+    public static float totalCommercialIncome;
+    public static float historicCommercialIncome;
+    public static float totalIndustrialIncome;
+    public static float historicIndustrialIncome;
+
     public string type;
     public int capacity;
     public float income;
     public int users;
     public bool usable;
+    public bool updateStarted;
+    public bool grabbableObject;
     public bool validPosition;
     GameObject tooltip;
+
+    public float landValue;
 
     private void Awake()
     // Sets start variables
     {
+        availableTransportation = 1;
+        landValue = 10f; // TODO: Make better calculations based on accessibility to various ameneties.
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
-        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
 
-        usable = false;
-    }
-
-    private void Update()
-    {
-        UpdateValues();
-        RunChecks();
-    }
-
-    void UpdateValues()
-    {
-        income = users * (1 + 0.01f * economyManager.residentialTaxRate);
-    }
-
-    void RunChecks()
-    // Runs checks to make sure current state is legal
-    {
-        // OverCapacity();
-        EnablePhysics();
+        //usable = false;
     }
 
     void EnablePhysics()
@@ -58,6 +52,27 @@ public class ItemTracker : MonoBehaviour {
         }
     }
 
+    public void UpdateLandValue()
+    // TODO
+    {
+        
+    }
+
+    public void UpdateTransportationValue()
+    {
+        availableTransportation = RoadAccess() + ProgressionManager.Airport() + ProgressionManager.Train();
+    }
+
+    float RoadAccess()
+    {
+        return 1;
+    }
+
+    public void AddUsers(int numAdded)
+    {
+        users += numAdded;
+    }
+
     void EnableObjectTooltip(object sender, ControllerInteractionEventArgs e)
     // Enables, resets position and resets text for object tooltips
     {
@@ -66,6 +81,8 @@ public class ItemTracker : MonoBehaviour {
             Destroy(tooltip);
         }
         tooltip = Instantiate(GameObject.Find("ObjectTooltip"), gameObject.transform);
+        Debug.Log(tooltip);
+
         tooltip.GetComponent<VRTK_ObjectTooltip>().UpdateText("Income: " + income.ToString());
         tooltip.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
         tooltip.transform.position = gameObject.transform.position + new Vector3(0f, 2.5f, 0f);
@@ -79,19 +96,12 @@ public class ItemTracker : MonoBehaviour {
         Destroy(tooltip.gameObject);
     }
 
-    void DeallocateUsers(int numUsers)
-    // Returns unallocated users to the populationManager
-    {
-        populationManager.DeallocateUsers(numUsers);
-        users -= numUsers;
-    }
-
     void OverCapacity()
     // Returns true if more users than capacity
     {
         if (users > capacity)
         {
-            DeallocateUsers(capacity - users);
+            DeallocateUsers(capacity -= 1);
         }
     }
 
@@ -99,31 +109,29 @@ public class ItemTracker : MonoBehaviour {
     // Type setter
     {
         type = typeInput;
-		capacity = (pressedButton * pressedButton + 1);
     }
 
-    public void AddUsers(int numUsers)
-    // Adds numUsers to users if capacity is not exceeded
+    void DeallocateUsers(int numUsers)
+    // Returns unallocated users to the populationManager
     {
-        if (numUsers + users <= capacity)
-        {
-            users += numUsers;
-        }
-        else
-        {
-            Debug.Log("ERROR: user mismatch");
-        }
+        populationManager.DeallocateUsers(numUsers, type);
+        users -= numUsers;
     }
 
-    public void RemoveUsers()
+    public void RemoveAllUsers()
     // Removes all local and related itemManager users
     {
-        populationManager.unallocatedPopulation += users;
-        populationManager.population -= users;
-        users = 0;
+        if(type == "residential")
+        {
+            DeallocateUsers(users);
+        }
+        else if(type == "commercial" || type == "industrial")
+        {
+            // TODO: Write employment deallocation function in popman
+        }
     }
 
-    public int NumVacancies()
+    public int NumEmpty()
     // Returns number of available spaces
     {
         return capacity - users;
@@ -142,15 +150,24 @@ public class ItemTracker : MonoBehaviour {
         if(type == "residential")
         {
             itemManager.addResidential(capacity, gameObject);
-            itemManager.residentialTrackers.Add(gameObject.GetComponent<ItemTracker>());
+            populationManager.QueueUpdates();
+            //GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
+            //GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
         }
         else if(type == "commercial")
         {
             itemManager.addCommercial(capacity, gameObject);
+
+            populationManager.QueueUpdates();
+            //GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
+            //GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
         }
         else if(type == "industrial")
         {
             itemManager.addIndustrial(capacity, gameObject);
+            populationManager.QueueUpdates();
+            //GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
+            //GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
         }
         else if(type == "foliage")
         {
