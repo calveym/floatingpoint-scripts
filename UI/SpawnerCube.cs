@@ -71,6 +71,7 @@ public class SpawnerCube : MonoBehaviour
 		--count;
 		if(other.gameObject == currentObject && (other.gameObject.tag == "residential" || other.gameObject.tag == "commercial" || other.gameObject.tag == "industrial" || other.gameObject.tag == "foliage" || other.gameObject.tag == "leisure"))
 		{
+            Debug.Log("Running prematurely");
             leavingObject = other.gameObject;
             currentObject = displayMenu.InitiateSpawn(gameObject);
 			leavingObject.layer = 0;

@@ -209,23 +209,23 @@ public class ItemGenerator : MonoBehaviour {
 	{
 		if(newObject.tag == "residential")
 		{
-			newObject.GetComponent<ResidentialTracker>().setValues("residential", pressedButton);
+			newObject.GetComponent<ResidentialTracker>().setValues();
 		}
 		else if(newObject.tag == "commercial")
 		{
-			newObject.GetComponent<CommercialTracker>().setValues("commercial", pressedButton);
+			newObject.GetComponent<CommercialTracker>().setValues();
 		}
 		else if(newObject.tag == "industrial")
 		{
-			newObject.GetComponent<IndustrialTracker>().setValues("industrial", pressedButton);
+			newObject.GetComponent<IndustrialTracker>().setValues();
 		}
 		else if(newObject.tag == "foliage")
 		{
-			newObject.GetComponent<ItemTracker>().setValues("foliage", pressedButton);
+			newObject.GetComponent<ItemTracker>().setValues();
 		}
 		else if(newObject.tag == "leisure")
 		{
-            newObject.GetComponent<ItemTracker>().setValues("leisure", pressedButton);
+            newObject.GetComponent<ItemTracker>().setValues();
 		}
 	}
 }

@@ -23,7 +23,7 @@ public class ItemTracker : MonoBehaviour {
     public float income;
     public int users;
     public bool usable;
-    public bool numSnappedRoads;
+    public float numSnappedRoads;
     public bool updateStarted;
     public bool grabbableObject;
     public bool validPosition;
@@ -111,10 +111,10 @@ public class ItemTracker : MonoBehaviour {
         }
     }
 
-    public void setValues(string typeInput, int pressedButton)
+    public void setValues()
     // Type setter
     {
-        type = typeInput;
+        type = gameObject.tag;
     }
 
     void DeallocateUsers(int numUsers)
