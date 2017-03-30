@@ -1,12 +1,13 @@
 ﻿using System.Collections;
+using VRTK;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PopupManager : MonoBehaviour {
 
-    GameObject tooltip;
-    public Text tooltipText;
+    public GameObject popup;
+    VRTK_ObjectTooltip tooltip;
 
     List<string> queuedPopups;
     float WAIT_TIME;
@@ -15,9 +16,12 @@ public class PopupManager : MonoBehaviour {
     void Start()
     {
         WAIT_TIME = 5;
+        queuedPopups = new List<string>();
+        tooltip = popup.GetComponent<VRTK_ObjectTooltip>();
+        QueuePopup("Welcome to Neverland. Enjoy your stay.");
     }
 
-	void QueuePopup(string message)
+	public void QueuePopup(string message)
     {
         queuedPopups.Add(message);
         if(!running)
@@ -29,19 +33,20 @@ public class PopupManager : MonoBehaviour {
     IEnumerator DoPopup()
     // Goes through array of queued popups, with a WAIT_TIME delay
     {
+        Debug.Log("Routine starting");
         running = true;
         if(queuedPopups.Count == 0)
         {
-            tooltip.SetActive(false);
+            popup.SetActive(false);
             running = false;
             yield return null;
         }
         while(queuedPopups.Count > 0)
         {
-            tooltipText.text = queuedPopups[0];
-            tooltip.SetActive(true);
+            
+            popup.SetActive(true);
             queuedPopups.RemoveAt(0);
-            yield return WAIT_TIME;
+            yield return new WaitForSeconds(WAIT_TIME);
         }
     }
 }

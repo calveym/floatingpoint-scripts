@@ -7,7 +7,9 @@ public class TrackpadFlight : MonoBehaviour {
 
     VRTK_ControllerEvents events;
     GameObject rig;
-    public float sizeSpeed;
+    GameObject head;
+    PlayerScale scale;
+    public float speedMultiplier;
 
     float speed;
     bool stop;
@@ -16,6 +18,8 @@ public class TrackpadFlight : MonoBehaviour {
     // Use this for initialization
     void Start() {
         rig = GameObject.Find("[CameraRig]");
+        scale = GameObject.Find("RightController").GetComponent<PlayerScale>();
+        head = GameObject.Find("Camera(head)");
         events = GetComponent<VRTK_ControllerEvents>();
         events.TouchpadTouchStart += new ControllerInteractionEventHandler(DoTouchpadTouchStart);
         events.TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
@@ -34,17 +38,27 @@ public class TrackpadFlight : MonoBehaviour {
 
     IEnumerator Fly()
     {
-        while(!stop)
+        while (!stop)
         {
-            if(events.touchpadPressed)
-            {
-                speed = 2;
-            } else
-            {
-                speed = 1;
-            }
             SetForward();
-            rig.transform.position += transform.forward * Time.deltaTime * forward * speed;
+            if (events.touchpadPressed)
+            {
+                speed = 2 * speedMultiplier;
+            }
+            else
+            {
+                speed = 1 * speedMultiplier;
+            }
+            if (!scale.isCameraSmall)
+            {
+                rig.transform.position += transform.forward * Time.deltaTime * forward * speed;
+            }
+            else
+            {
+                float tempHeight = rig.transform.position.y;
+                rig.transform.position += head.transform.forward * Time.deltaTime * forward * speed;
+                rig.transform.position.y = tempHeight;
+            }
             yield return null;
         }
     }
