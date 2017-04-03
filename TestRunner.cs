@@ -38,15 +38,15 @@ public class TestRunner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("q")) FirstTest();
-        if (Input.GetKeyDown("w")) SecondTest();
-        if (Input.GetKeyDown("e")) ThirdTest();
-        if (Input.GetKeyDown("r")) FourthTest();
-        if (Input.GetKeyDown("t")) FifthTest();
-        if (Input.GetKeyDown("y")) SixthTest();
-        if (Input.GetKeyDown("u")) SeventhTest();
-        if (Input.GetKeyDown("i")) EighthTest();
-        if (Input.GetKeyDown("o")) NinthTest();
+        //if (Input.GetKeyDown("q")) FirstTest();
+        //if (Input.GetKeyDown("w")) SecondTest();
+        //if (Input.GetKeyDown("e")) ThirdTest();
+        //if (Input.GetKeyDown("r")) FourthTest();
+        //if (Input.GetKeyDown("t")) FifthTest();
+        //if (Input.GetKeyDown("y")) SixthTest();
+        //if (Input.GetKeyDown("u")) SeventhTest();
+        //if (Input.GetKeyDown("i")) EighthTest();
+        //if (Input.GetKeyDown("o")) NinthTest();
     }
 
     void FirstTest()

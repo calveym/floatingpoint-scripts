@@ -8,6 +8,7 @@ public class PopupManager : MonoBehaviour {
 
     public GameObject popup;
     VRTK_ObjectTooltip tooltip;
+    public AudioClip notificationSound;
 
     List<string> queuedPopups;
     float WAIT_TIME;
@@ -43,7 +44,7 @@ public class PopupManager : MonoBehaviour {
         }
         while(queuedPopups.Count > 0)
         {
-            
+            AudioSource.PlayClipAtPoint(notificationSound, tooltip.gameObject.transform.position);
             popup.SetActive(true);
             queuedPopups.RemoveAt(0);
             yield return new WaitForSeconds(WAIT_TIME);

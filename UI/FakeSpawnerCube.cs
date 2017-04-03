@@ -38,7 +38,7 @@ public class FakeSpawnerCube : MonoBehaviour
         else if (TriggerCheck(0))
         {
             transform.DetachChildren();
-            currentObject = displayMenu.InitiateSpawn(gameObject);
+            //currentObject = displayMenu.InitiateSpawn(gameObject); // enable to 
         }
     }
 

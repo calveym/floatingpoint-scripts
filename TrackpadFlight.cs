@@ -57,7 +57,7 @@ public class TrackpadFlight : MonoBehaviour {
             {
                 float tempHeight = rig.transform.position.y;
                 rig.transform.position += head.transform.forward * Time.deltaTime * forward * speed;
-                rig.transform.position = new Vector3(rig.transform.position.x, tempHeight, rig.transform.position.z);
+                //rig.transform.position = new Vector3(rig.transform.position.x, tempHeight, rig.transform.position.z);
             }
             yield return null;
         }

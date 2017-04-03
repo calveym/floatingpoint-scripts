@@ -31,6 +31,7 @@ public class SpawnerCube : MonoBehaviour
         if (currentObject == null)
         {
             currentObject = displayMenu.InitiateSpawn(gameObject);
+            Debug.Log(currentObject);
         }
         else if (transform.childCount > 1)
         {
