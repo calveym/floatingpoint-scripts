@@ -143,7 +143,7 @@ public class RoadSnap : MonoBehaviour {
 		layerMask = 1 << buildingLayer;
 		rend = GetComponent<Renderer>();
 		// Adds listeners for controller grab to both controllers
-		GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn+=
+		GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn +=
 			new ControllerInteractionEventHandler(DoGrabStart);
 		GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn +=
 			new ControllerInteractionEventHandler(DoGrabStart);
