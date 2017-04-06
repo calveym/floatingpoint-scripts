@@ -210,14 +210,14 @@ public class RoadSnap : MonoBehaviour {
 					closestSnapPoint = getClosestSnapPoint ();
 
 					useCornerSnapPoints = shouldUseCornerSnapPoints ();
-					Debug.Log ("corner: " + useCornerSnapPoints);
+					// Debug.Log ("corner: " + useCornerSnapPoints);
 
 					drawTargetBox ();
 
 					// Debug.Log ("FOUND HIT: " + nearestBuilding);
 
 				} else {
-					Debug.Log ("Not building: " + hitcol);
+					// Debug.Log ("Not building: " + hitcol);
 				}
 			}
 		}
@@ -353,7 +353,7 @@ public class RoadSnap : MonoBehaviour {
 		StringFloat closestTargetSnapPoint = new StringFloat(snapPoints[0].name, snapPoints[0].value);
 
 		if (useCornerSnapPoints) {
-			Debug.Log ("use corner snaps");
+			//Debug.Log ("use corner snaps");
 			//snapPoints.Add (new StringFloat("topLeft", thisTopLeft));
 			//snapPoints.Add (new StringFloat("bottomLeft", thisBottomLeft));
 			//snapPoints.Add (new StringFloat("topRight", thisTopRight));

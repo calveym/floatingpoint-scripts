@@ -16,7 +16,8 @@ public class SaveManager : MonoBehaviour {
         // TEST
         foreach (LevelSerializer.SaveEntry sg in LevelSerializer.SavedGames[LevelSerializer.PlayerName])
         {
-            if (sg.Caption == slot)
+            Debug.Log(sg.Name);
+            if (sg.Name == slot)
             {
                 LevelSerializer.LoadSavedLevel(sg.Data);
             }
@@ -25,7 +26,8 @@ public class SaveManager : MonoBehaviour {
 
     public void SaveSlotOne()
     {
-        Debug.Log("Saving...");  
+        Debug.Log("Saving slot 1");
+        Save("slot1");
     }
 
     public void SaveSlotTwo()
@@ -50,6 +52,7 @@ public class SaveManager : MonoBehaviour {
 
     public void LoadSlotOne()
     {
-        Debug.Log(LevelSerializer.SavedGames["test"]);
+        Debug.Log("Loading slot 1");
+        Load("slot1");
     }
 }
