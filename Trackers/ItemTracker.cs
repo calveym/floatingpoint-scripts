@@ -18,6 +18,9 @@ public class ItemTracker : MonoBehaviour {
     public static float totalIndustrialIncome;
     public static float historicIndustrialIncome;
 
+    public float baseCost;
+    public float localHappiness;
+    public int level;
     public string type;
     public int capacity;
     public float income;
@@ -31,7 +34,7 @@ public class ItemTracker : MonoBehaviour {
 
     public float landValue;
 
-    private void Awake()
+    private void Start()
     // Sets start variables
     {
         availableTransportation = 1;
@@ -65,8 +68,15 @@ public class ItemTracker : MonoBehaviour {
     }
 
     public void UpdateTransportationValue()
+    // Updates available transportation depending on road presence and airport and train availability
     {
         availableTransportation = RoadAccess() + ProgressionManager.Airport() + ProgressionManager.Train();
+    }
+
+    public void UpdateHappiness()
+    //  Sets local happiness level based on surroundings
+    {
+        localHappiness = 1;  // TODO: hardcoded for now
     }
 
     float RoadAccess()

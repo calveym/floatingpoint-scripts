@@ -1,8 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using VRTK;
 using UnityEngine;
 
 public class ComponentSnap : RoadSnap {
+
+    IndustrialComponent component;
+    IndustrialTracker potentialTracker;
+    Material tempMaterial;
+
+    void Start()
+    {
+        component = GetComponent<IndustrialComponent>();
+    }
+
+    void DoGrabRelease(object sender, ControllerInteractionEventArgs e)
+    {
+        if (objectUsed == true)
+        {
+            if (!targetIsBlocked)
+            {
+                component.LinkComponent(potentialTracker);
+                objectToPlace = gameObject;
+                checkForNearbyBuilding();
+            }
+            objectUsed = false;
+        }
+    }
 
 	public void getNearbyBuildings()
     {
@@ -17,27 +41,45 @@ public class ComponentSnap : RoadSnap {
         {
             foreach (Collider hitcol in hitColliders)
             {
-                if (hitcol.gameObject.layer == buildingLayer && hitcol != GetComponent<Collider>())
+                potentialTracker = hitcol.gameObject.GetComponent<IndustrialTracker>();
+                if (potentialTracker != null && hitcol != GetComponent<Collider>() && potentialTracker.level == component.level)
                 {
-
-                    setToNearestBuilding(hitcol);
-
-                    closestTargetSnapPoint = getClosestTargetSnapPoint();
-                    closestSnapPoint = getClosestSnapPoint();
-
-                    useCornerSnapPoints = shouldUseCornerSnapPoints();
-                    // Debug.Log ("corner: " + useCornerSnapPoints);
-
-                    drawTargetBox();
-
-                    // Debug.Log ("FOUND HIT: " + nearestBuilding);
-
-                }
-                else
-                {
-                    // Debug.Log ("Not building: " + hitcol);
+                    BuildingFound(hitcol);
                 }
             }
         }
+    }
+
+    void BuildingFound(Collider hitcol)
+    {
+        if(component.economyManager.GetBalance() >= component.cost)
+        {
+            component.gameObject.GetComponent<Renderer>().material = tempMaterial; // messy
+            PurchaseComponent();
+            component.FoundIndustrial(hitcol.gameObject);
+            setToNearestBuilding(hitcol);
+
+            closestTargetSnapPoint = getClosestTargetSnapPoint();
+            closestSnapPoint = getClosestSnapPoint();
+
+            useCornerSnapPoints = shouldUseCornerSnapPoints();
+            drawTargetBox();
+        }
+        else
+        {
+            NotEnoughBalance();
+        }
+        
+    }
+
+    void NotEnoughBalance()
+    {
+        tempMaterial = component.gameObject.GetComponent<Renderer>().material;
+        component.gameObject.GetComponent<Renderer>().material = blockedMaterial;
+    }
+
+    void PurchaseComponent()
+    {
+        component.economyManager.ChangeBalance(component.cost);
     }
 }

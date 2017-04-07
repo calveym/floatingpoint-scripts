@@ -13,11 +13,11 @@ public class RoadSnap : MonoBehaviour {
 	public Material blockedMaterial;
 
 	VRTK_InteractableObject interact;
-	bool objectUsed;
-	GameObject targetBox = null;
+	public bool objectUsed;
+	public GameObject targetBox = null;
 	Renderer rend;
-	Collider[] hitColliders;
-	GameObject nearestBuilding;
+	public Collider[] hitColliders;
+	public GameObject nearestBuilding;
 	Vector3 targetBounds;
 	Vector3 targetPosition;
 	Vector3 targetBoxPosition;
@@ -27,8 +27,8 @@ public class RoadSnap : MonoBehaviour {
 	float frontTargetPoint;
 	float frontThisPoint;
 	float pointDifference;
-	int buildingLayer = 8;
-	int layerMask;
+	public int buildingLayer = 8;
+	public int layerMask;
 	Vector3 thisSize;
 
 	public Vector3 top;
@@ -43,13 +43,13 @@ public class RoadSnap : MonoBehaviour {
 
 	Bounds thisBounds;
 
-	GameObject objectToPlace;
+	public GameObject objectToPlace;
 
-	bool useCornerSnapPoints;
+	public bool useCornerSnapPoints;
 	GameObject objectWithLargerSide;
 
-	StringFloat closestTargetSnapPoint;
-	StringFloat closestSnapPoint;
+	public StringFloat closestTargetSnapPoint;
+	public StringFloat closestSnapPoint;
 
 	public class StringVector3 {
 		//define all of the values for the class
@@ -178,7 +178,7 @@ public class RoadSnap : MonoBehaviour {
 		}
 	}
 
-	void checkForNearbyBuilding() {
+	public void checkForNearbyBuilding() {
 		if (nearestBuilding) {
 			//gameObject.GetComponent<BoxCollider> ().enabled = false;
 			setRotation ();
@@ -225,7 +225,7 @@ public class RoadSnap : MonoBehaviour {
 
 
 
-	void drawTargetBox (){
+	public void drawTargetBox (){
 
 		// create box
 		if (targetBox != null) {
@@ -259,7 +259,7 @@ public class RoadSnap : MonoBehaviour {
 		objectToPlace = gameObject;
 	}
 
-	void setToNearestBuilding (Collider hitcol){
+	public void setToNearestBuilding (Collider hitcol){
 		float currentTargetDistance;
 		float newTargetDistance;
 
@@ -341,7 +341,7 @@ public class RoadSnap : MonoBehaviour {
 
 	}
 
-	StringFloat getClosestTargetSnapPoint() {
+	public StringFloat getClosestTargetSnapPoint() {
 
 		Vector3 targetClosestPoint = nearestBuilding.GetComponent<Renderer> ().bounds.ClosestPoint (objectToPlace.transform.position); // get closest point on target building to this object's position
 
@@ -373,7 +373,7 @@ public class RoadSnap : MonoBehaviour {
 
 	}
 
-	StringFloat getClosestSnapPoint() {
+	public StringFloat getClosestSnapPoint() {
 
 		Vector3 closestTargetPointRelative = nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value);
 		Vector3 closestPoint = GetComponent<Renderer> ().bounds.ClosestPoint (nearestBuilding.transform.position); // get closest point on target building to this object's position
@@ -416,7 +416,7 @@ public class RoadSnap : MonoBehaviour {
 
 	}
 
-	bool shouldUseCornerSnapPoints() {
+	public bool shouldUseCornerSnapPoints() {
 
 		float targetSideLength = getSideLength(closestTargetSnapPoint, nearestBuilding);
 		float closestSideLength = getSideLength(closestSnapPoint, gameObject);

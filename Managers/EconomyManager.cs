@@ -42,31 +42,44 @@ public class EconomyManager : MonoBehaviour {
 		populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         income = rawIncome;
         keepUpdating = true;
-        StartCoroutine("SlowUpdate");
+        StartCoroutine("EconomicTick");
     }
 
-    IEnumerator SlowUpdate()
+    public delegate void TickDelegate();
+
+    public static TickDelegate ecoTick;  // Multicast delegate run once per economic tick
+
+    IEnumerator EconomicTick()
     {
         while (keepUpdating)
         {
-            updateBalance();
-            updateIncome();
+            ecoTick();
 
             ResidentialTracker.historicResidentialIncome = ResidentialTracker.totalResidentialIncome;
             CommercialTracker.historicCommercialIncome = CommercialTracker.totalCommercialIncome;
             IndustrialTracker.historicIndustrialIncome = IndustrialTracker.totalIndustrialIncome;
 
-			goods = IndustrialTracker.allGoods;
+            TransferGoods();
+            UpdateIncome();
+            UpdateBalance();
 
-			IndustrialTracker.allGoods = 0;
+
             ResidentialTracker.totalResidentialIncome = 0;
             CommercialTracker.totalCommercialIncome = 0;
             IndustrialTracker.totalIndustrialIncome = 0;
+
             yield return new WaitForSeconds(1);
         }
     }
 
-    void setCapacity()
+    void TransferGoods()
+    {
+        goods = IndustrialTracker.allGoods;
+        IndustrialTracker.allGoods = 0;
+    }
+
+
+    void SetCapacity()
     // Updates capacity from itemManager
     {
         residentialCap = itemManager.residentialCap;
@@ -74,37 +87,37 @@ public class EconomyManager : MonoBehaviour {
         industrialCap = itemManager.industrialCap;
     }
 
-	void updateBalance()
+	void UpdateBalance()
 	// Reduces balance by income and time
 	{
 		balance += income * Time.deltaTime;
 	}
 
-	void updateIncome()
+	void UpdateIncome()
 	// Recalculates income
 	{
-		float roadExpenses = calculateRoadExpenses();
-		float residentialIncome = calculateResidentialIncome();
-        float commercialIncome = calculateCommercialIncome();
-        float industrialIncome = calculateIndustrialIncome();
+		float roadExpenses = CalculateRoadExpenses();
+		float residentialIncome = CalculateResidentialIncome();
+        float commercialIncome = CalculateCommercialIncome();
+        float industrialIncome = CalculateIndustrialIncome();
 
-        float expenses = roadExpenses + calculateCapacityExpenses();
+        float expenses = roadExpenses + CalculateCapacityExpenses();
 		income = rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses;
 	}
 
-    float calculateCapacityExpenses()
+    float CalculateCapacityExpenses()
     // Returns all expenses from capacity
     {
         return residentialCap + commercialCap + industrialCap;
     }
 
-	float calculateResidentialIncome()
+	float CalculateResidentialIncome()
 	// Tax income from all residential properties
 	{
         return ResidentialTracker.totalResidentialIncome * (1 + 0.05f * residentialTaxRate);
 	}
 
-	  float calculateCommercialIncome()
+	  float CalculateCommercialIncome()
 	  // Tax income for all commercial buildings
 	  {
 	      if (commercialCap == 0 || population == 0)
@@ -117,7 +130,7 @@ public class EconomyManager : MonoBehaviour {
 	      }
 	  }
 
-	  float calculateIndustrialIncome()
+	  float CalculateIndustrialIncome()
 	  // Tax income for industrial buildings
 	  {
 	      if (industrialCap == 0)
@@ -130,19 +143,19 @@ public class EconomyManager : MonoBehaviour {
 	      }
 	  }
 
-	float calculateRoadExpenses()
+	float CalculateRoadExpenses()
 	// Calculates how much is spent on road maintenance
 	{
 		return numRoads / 5;
 	}
 
-	void reduceBalance(float amount)
-	// Decreases balance by "amount"
+	public void ChangeBalance(float amount)
+	// Modifies balance by "amount"
 	{
-		balance -= amount;
+		balance += amount;
 	}
 
-	void setPopulation()
+	void SetPopulation()
 	// Retrieves population from the pop manager
 	{
 		population = populationManager.population;

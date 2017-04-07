@@ -13,6 +13,9 @@ public class ResidentialTracker : ItemTracker {
     public Dictionary<int, string> residents; // matches slots to residents
     List<int> takenIDs; // List of currently active IDs for finding new ones
 
+    float foliage;
+    float finalFoliage;
+
     void Start()
     {
         educationLevel = new Dictionary<int, int>();
@@ -20,6 +23,8 @@ public class ResidentialTracker : ItemTracker {
         employed = new Dictionary<int, bool>();
         residents = new Dictionary<int, string>();
         takenIDs = new List<int>();
+        EconomyManager.ecoTick += UpdateSecond;
+        foliage = 0;
     }
 
     void Update()
@@ -180,21 +185,28 @@ public class ResidentialTracker : ItemTracker {
         return employed[ID];
     }
 
-    IEnumerator UpdateSecond()
+    void UpdateFoliage()
+    {
+        finalFoliage = foliage; 
+    }
+
+    void UpdateSecond()
     // Updates values once per second
     {
         updateStarted = true;
         if(!usable || !validPosition)
         {
-            yield return new WaitForSeconds(10);
+            return;
         }
-        while (usable && validPosition)
-        {
-            UpdateLandValue();
-            UpdateTransportationValue();
-            UpdateValues();
-            totalIndustrialIncome += income;
-            yield return new WaitForSeconds(1);
-        }
+        UpdateFoliage();
+        UpdateLandValue();
+        UpdateTransportationValue();
+        UpdateValues();
+        totalIndustrialIncome += income;
+    }
+
+    public void AddFoliage(float addAmount)
+    {
+
     }
 }
