@@ -12,6 +12,12 @@ public class ComponentSnap : RoadSnap {
     void Start()
     {
         component = GetComponent<IndustrialComponent>();
+
+        // Add listeners for controller release to both controllers
+        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff +=
+            new ControllerInteractionEventHandler(DoGrabRelease);
+        GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff +=
+            new ControllerInteractionEventHandler(DoGrabRelease);
     }
 
     void DoGrabRelease(object sender, ControllerInteractionEventArgs e)

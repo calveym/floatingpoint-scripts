@@ -123,27 +123,21 @@ public class IndustrialTracker : ItemTracker {
     {
         for(int i = 0; i < components.Count; i++)
         {
-            if(components[i].type == "sellPrice")
+            if (components[i].type == "sellPrice" || components[i].type == "productionAmount" || components[i].type == "goodsCapacity" || components[i].type == "sellAmount" || components[i].type == "capacity")
             {
-                sellPrice += components[i].sellPrice;
-            }
-            else if(components[i].type == "productionAmount")
-            {
-                productionAmount += components[i].productionAmount;
-            }
-            else if(components[i].type == "goodsCapacity")
-            {
-                goodsCapacity += components[i].goodsCapacity;
-            }
-            else if(components[i].type == "sellAmount")
-            {
-                sellAmount += components[i].sellAmount;
-            }
-            else if(components[i].type == "capacity")
-            {
-                capacity += components[i].capacity;
+                AddBonus(components[i]);
             }
         }
+    }
+
+    void AddBonus(IndustrialComponent component)
+    {
+        sellPrice += component.sellPrice;
+        productionAmount += component.productionAmount;
+        goodsCapacity += component.goodsCapacity;
+        sellAmount += component.sellAmount;
+        capacity += component.capacity;
+
     }
 
     void UpdateSecond()

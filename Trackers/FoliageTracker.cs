@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using VRTK;
 using UnityEngine;
 
-public class FoliageTracker : MonoBehaviour {
+public class FoliageTracker : VRTK_InteractableObject {
 
     VRTK_InteractableObject interact;
     bool objectUsed;
@@ -47,6 +47,7 @@ public class FoliageTracker : MonoBehaviour {
         if (objectUsed == true)
         {
             // Logic here
+            ReleaseSphere();
             StartCoroutine("FiveSecondTick");
             objectUsed = false;
         }
@@ -55,13 +56,15 @@ public class FoliageTracker : MonoBehaviour {
     void AttachSphere()
     // Connects sphere prefab
     {
+        Debug.Log("Attaching");
         sphere.transform.parent = gameObject.transform;
-        sphere.transform.position = new Vector3(0f, 0f, 0f);
+        sphere.transform.position = transform.position;
     }
 
     void ReleaseSphere()
     {
         sphere.transform.parent = null;
+        sphere.transform.position = new Vector3(0f, 0f, 0f);
     }
 
     void UpgradeBuildings()

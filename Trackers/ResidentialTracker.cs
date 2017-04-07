@@ -14,7 +14,7 @@ public class ResidentialTracker : ItemTracker {
     List<int> takenIDs; // List of currently active IDs for finding new ones
 
     float foliage;
-    float finalFoliage;
+    float foliageIncome;
 
     void Start()
     {
@@ -31,14 +31,12 @@ public class ResidentialTracker : ItemTracker {
     {
         if (!updateStarted)
         {
-            StartCoroutine("UpdateSecond");
+            StartCoroutine("MinuteTick");
         }
     }
 
     void UpdateValues()
     {
-        income = users * availableTransportation * landValue / 5;
-        totalResidentialIncome += income;
     }
 
     public void AddUsers(int numUsers, List<string> names, int newAge)
@@ -187,7 +185,8 @@ public class ResidentialTracker : ItemTracker {
 
     void UpdateFoliage()
     {
-        finalFoliage = foliage; 
+        foliage = 0;
+        foliageIncome = foliage;
     }
 
     void UpdateSecond()
@@ -198,15 +197,30 @@ public class ResidentialTracker : ItemTracker {
         {
             return;
         }
-        UpdateFoliage();
         UpdateLandValue();
         UpdateTransportationValue();
         UpdateValues();
-        totalIndustrialIncome += income;
+        CalculateIncome();
+    }
+
+    void CalculateIncome()
+    {
+        income = users * availableTransportation * landValue / 5;
+        income += foliageIncome;
+        totalResidentialIncome += income;
     }
 
     public void AddFoliage(float addAmount)
     {
+        foliage += addAmount;
+    }
 
+    IEnumerator MinuteTick()
+    {
+        while(usable)
+        {
+            UpdateFoliage();
+            yield return new WaitForSeconds(60);
+        }
     }
 }
