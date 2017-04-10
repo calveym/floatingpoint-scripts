@@ -3,79 +3,138 @@ using System.Collections.Generic;
 using VRTK;
 using UnityEngine;
 
-public class ComponentSnap : RoadSnap {
+public class ComponentSnap : VRTK_InteractableObject {
+
+    public Material blockedMaterial;
+    public Material foliageMaterial;
+    public Material industrialMaterial;
+
+    GameObject spherePrefab;
+    GameObject sphere;
 
     IndustrialComponent component;
     IndustrialTracker potentialTracker;
     Material tempMaterial;
+    GameObject nearestBuilding;
+    public bool objectUsed;
+    VRTK_InteractableObject interact;
+    Collider[] hitColliders;
 
     void Start()
     {
         component = GetComponent<IndustrialComponent>();
+        // Adds listeners for controller grab to both controllers
+        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn +=
+            new ControllerInteractionEventHandler(ComponentGrabStart);
+        GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn +=
+            new ControllerInteractionEventHandler(ComponentGrabStart);
 
         // Add listeners for controller release to both controllers
         GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff +=
-            new ControllerInteractionEventHandler(DoGrabRelease);
+            new ControllerInteractionEventHandler(ComponentGrabRelease);
         GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff +=
-            new ControllerInteractionEventHandler(DoGrabRelease);
+            new ControllerInteractionEventHandler(ComponentGrabRelease);
+
+        spherePrefab = GameObject.Find("SpherePrefab");
+        objectUsed = false;
     }
 
-    void DoGrabRelease(object sender, ControllerInteractionEventArgs e)
+    public void ComponentGrabStart(object sender, ControllerInteractionEventArgs e)
+    {
+        if (IsGrabbed() == true)
+        {
+            objectUsed = true;
+            AttachSphere();
+        }
+    }
+    
+    public void ComponentGrabRelease(object sender, ControllerInteractionEventArgs e)
     {
         if (objectUsed == true)
         {
-            if (!targetIsBlocked)
-            {
-                component.LinkComponent(potentialTracker);
-                objectToPlace = gameObject;
-                checkForNearbyBuilding();
-            }
             objectUsed = false;
+            DetachSphere();
+            GetNearestBuilding();
+            if(nearestBuilding)
+            {
+                ClosestFound(nearestBuilding);
+            }
         }
     }
 
-	public void getNearbyBuildings()
+	public void GetNearestBuilding()
     {
-        hitColliders = Physics.OverlapSphere(transform.position, 1.5f, layerMask);
+        hitColliders = Physics.OverlapSphere(transform.position, 1.5f, 8);
 
         if (hitColliders.Length == 0)
         {
             nearestBuilding = null;
-            Destroy(targetBox);
         }
         else
         {
             foreach (Collider hitcol in hitColliders)
             {
-                potentialTracker = hitcol.gameObject.GetComponent<IndustrialTracker>();
-                if (potentialTracker != null && hitcol != GetComponent<Collider>() && potentialTracker.level == component.level)
+                if(gameObject.tag == "industrial")
                 {
-                    BuildingFound(hitcol);
+                    potentialTracker = hitcol.gameObject.GetComponent<IndustrialTracker>();
+                    if (potentialTracker != null && hitcol != GetComponent<Collider>() && potentialTracker.level == component.level)
+                    {
+                        nearestBuilding = hitcol.gameObject;
+                    }
+                }
+                else if (gameObject.tag == "foliage")
+                {
+                    nearestBuilding = hitcol.gameObject;
                 }
             }
         }
     }
 
-    void BuildingFound(Collider hitcol)
+    void AttachSphere()
     {
+        sphere = Instantiate(spherePrefab, new Vector3(transform.position.x, 10.1f, transform.position.z), Quaternion.identity);
+        if (gameObject.tag == "foliage")
+        {
+            sphere.GetComponent<Renderer>().material = foliageMaterial;
+        }
+        if (gameObject.tag == "industrial")
+        {
+            sphere.GetComponent<Renderer>().material = industrialMaterial;
+        }
+        sphere.GetComponent<Sphere>().LinkSphere(gameObject);
+    }
+
+    void DetachSphere()
+    {
+        Debug.Log("Probably doesn't run");
+        sphere.GetComponent<Sphere>().UnlinkSphere();
+    }
+
+    void ClosestFound(GameObject closest)
+    {
+        Debug.Log("RUUUNS ClosestFound");
         if(component.economyManager.GetBalance() >= component.cost)
         {
-            component.gameObject.GetComponent<Renderer>().material = tempMaterial; // messy
-            PurchaseComponent();
-            component.FoundIndustrial(hitcol.gameObject);
-            setToNearestBuilding(hitcol);
-
-            closestTargetSnapPoint = getClosestTargetSnapPoint();
-            closestSnapPoint = getClosestSnapPoint();
-
-            useCornerSnapPoints = shouldUseCornerSnapPoints();
-            drawTargetBox();
+            if(closest.tag == "industrial")
+            {
+                component.LinkComponent(potentialTracker);
+                PurchaseComponent();
+            }
+            else if(closest.tag == "foliage")
+            {
+                PurchaseComponent();
+                closest.gameObject.GetComponent<FoliageTracker>().StartFoliage();
+            }
         }
         else
         {
             NotEnoughBalance();
         }
-        
+    }
+
+    void Pay(float amount)
+    {
+        EconomyManager.ChangeBalance(0 - amount);
     }
 
     void NotEnoughBalance()
@@ -86,6 +145,15 @@ public class ComponentSnap : RoadSnap {
 
     void PurchaseComponent()
     {
-        component.economyManager.ChangeBalance(component.cost);
+        Pay(component.cost);
+    }
+
+    IEnumerator MarkIndustrial()
+    {
+        while (objectUsed)
+        {
+
+            yield return null;
+        }
     }
 }

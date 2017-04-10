@@ -12,10 +12,10 @@ public class RoadSnap : MonoBehaviour {
 	public bool targetIsBlocked;
 	public Material blockedMaterial;
 
-	VRTK_InteractableObject interact;
+	public VRTK_InteractableObject interact;
 	public bool objectUsed;
 	public GameObject targetBox = null;
-	Renderer rend;
+	public Renderer rend;
 	public Collider[] hitColliders;
 	public GameObject nearestBuilding;
 	Vector3 targetBounds;
@@ -29,7 +29,7 @@ public class RoadSnap : MonoBehaviour {
 	float pointDifference;
 	public int buildingLayer = 8;
 	public int layerMask;
-	Vector3 thisSize;
+	public Vector3 thisSize;
 
 	public Vector3 top;
 	public Vector3 bottom;
@@ -41,7 +41,7 @@ public class RoadSnap : MonoBehaviour {
 	public Vector3 topLeft;
 	public Vector3 bottomLeft;
 
-	Bounds thisBounds;
+	public Bounds thisBounds;
 
 	public GameObject objectToPlace;
 
@@ -170,7 +170,7 @@ public class RoadSnap : MonoBehaviour {
 		} 
 	}
 
-	void DoGrabStart(object sender, ControllerInteractionEventArgs e)
+	public void DoGrabStart(object sender, ControllerInteractionEventArgs e)
 	// Grab start event listener
 	{
 		if(interact.IsGrabbed() == true) {	

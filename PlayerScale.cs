@@ -15,6 +15,7 @@ public class PlayerScale : MonoBehaviour {
     {
         GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(DoButtonOnePressed);
         rb = cameraRig.GetComponent<Rigidbody>();
+        isCameraSmall = false;
     }
     
     void DoButtonOnePressed(object sender, ControllerInteractionEventArgs e)
@@ -22,8 +23,8 @@ public class PlayerScale : MonoBehaviour {
     	if (isCameraSmall)  // Going big
     	{
 			//previousCameraPosition = cameraEye.transform.position;
-            rb.isKinematic = true;
-            rb.useGravity = false;
+            //rb.isKinematic = true;
+            //rb.useGravity = false;
 			cameraRig.transform.localScale = new Vector3(10f, 10f, 10f);
 			//cameraRig.transform.position -= new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
 			isCameraSmall = !isCameraSmall;
@@ -31,8 +32,8 @@ public class PlayerScale : MonoBehaviour {
     	}
     	else  // Going small
     	{
-            rb.isKinematic = false;
-            rb.useGravity = true;
+            //rb.isKinematic = false;
+            //rb.useGravity = true;
 			cameraRig.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 			//cameraRig.transform.position += new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
 			isCameraSmall = !isCameraSmall;

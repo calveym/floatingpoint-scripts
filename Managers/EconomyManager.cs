@@ -149,10 +149,10 @@ public class EconomyManager : MonoBehaviour {
 		return numRoads / 5;
 	}
 
-	public void ChangeBalance(float amount)
+	public static void ChangeBalance(float amount)
 	// Modifies balance by "amount"
 	{
-		balance += amount;
+		GameObject.Find("Managers").GetComponent<EconomyManager>().balance += amount;
 	}
 
 	void SetPopulation()
