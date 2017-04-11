@@ -41,7 +41,7 @@ public class TestRunner : MonoBehaviour
         //if (Input.GetKeyDown("q")) FirstTest();
         //if (Input.GetKeyDown("w")) SecondTest();
         //if (Input.GetKeyDown("e")) ThirdTest();
-        //if (Input.GetKeyDown("r")) FourthTest();
+        if (Input.GetKeyDown("r")) FourthTest();
         //if (Input.GetKeyDown("t")) FifthTest();
         //if (Input.GetKeyDown("y")) SixthTest();
         //if (Input.GetKeyDown("u")) SeventhTest();
@@ -70,9 +70,10 @@ public class TestRunner : MonoBehaviour
         indSpawnerCube.GetComponent<FakeSpawnerCube>().RemoveObject(newObj);
     }
 
-    void FourthTest()
+    public void FourthTest()
     {
         Debug.Log("Test 4 Running");
+        PopupManager.Popup("TEST POPUP WORKS!!!");
     }
 
     void FifthTest()

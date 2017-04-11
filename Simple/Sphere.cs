@@ -17,13 +17,13 @@ public class Sphere : MonoBehaviour
 
     public void UnlinkSphere()
     {
+        Debug.Log("Trying to finish");
         parent = null;
         linked = false;
     }
 
     public IEnumerator AdjustPosition()
     {
-        Debug.Log("Trying to start");
         while(linked)
         {
             transform.position = new Vector3(parent.transform.position.x, 10.1f, parent.transform.position.z);

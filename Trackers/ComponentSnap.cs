@@ -106,13 +106,12 @@ public class ComponentSnap : VRTK_InteractableObject {
 
     void DetachSphere()
     {
-        Debug.Log("Probably doesn't run");
         sphere.GetComponent<Sphere>().UnlinkSphere();
+        Destroy(sphere.gameObject);
     }
 
     void ClosestFound(GameObject closest)
     {
-        Debug.Log("RUUUNS ClosestFound");
         if(component.economyManager.GetBalance() >= component.cost)
         {
             if(closest.tag == "industrial")
