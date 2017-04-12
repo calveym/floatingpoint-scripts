@@ -10,7 +10,7 @@ public class TrackpadFlight : MonoBehaviour {
     Rigidbody rb;
     GameObject head;
     PlayerScale scale;
-    public float speedMultiplier;
+    public float speedMultiplier; // DO NOT SET IN EDITOR
 
     float speed;
     bool stop;
@@ -18,6 +18,7 @@ public class TrackpadFlight : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        speedMultiplier = 2;
         rig = GameObject.Find("[CameraRig]");
         rb = rig.GetComponent<Rigidbody>();
         scale = GameObject.Find("RightController").GetComponent<PlayerScale>();
