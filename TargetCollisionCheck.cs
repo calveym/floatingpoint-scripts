@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TargetCollisionCheck : MonoBehaviour {
+
 	public GameObject parentBuilding;
+
 	GameObject nearestBuilding;
+	int buildingsLayer;
 
 	public void setNearestBuilding(GameObject building) {
 		nearestBuilding = building;
 	}
 
 	void Start() {
+		buildingsLayer = LayerMask.NameToLayer ("Buildings");
 		Physics.IgnoreCollision (nearestBuilding.GetComponent<Collider>(), GetComponent<Collider>());
 	}
 
@@ -19,7 +23,7 @@ public class TargetCollisionCheck : MonoBehaviour {
 	}
 
 	void OnTriggerStay(Collider other) {
-		if (other.GetComponent<Collider> ().CompareTag ("residential")) {
+		if (other.gameObject.layer == buildingsLayer) {
 			updateTargetIsBlocked (true);
 		}
 	}
