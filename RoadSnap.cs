@@ -556,34 +556,27 @@ public class RoadSnap : MonoBehaviour {
 
 	StringFloat getThisCornerToSnap() {
 
+		/* Returns the correct corner on this object to snap to by comparing the two corner snap points positions */
+
 		targetSide = getClosestTargetSide();
 		StringFloat[] closestCorners = getClosestCorners ();
-
-		//GameObject g1 = (GameObject)Instantiate (snapCube, closestCorners [0].value, transform.rotation);
-		//GameObject g2 = (GameObject)Instantiate (snapCube, closestCorners [1].value, transform.rotation);
 
 		if ((targetSide == "right" || targetSide == "left") && (closestTargetSnapPoint.name == "topLeft" || closestTargetSnapPoint.name == "topRight")) {
 			// compare this sides snaps using highest z
 
 			if (nearestBuilding.transform.InverseTransformPoint(closestCorners [0].value).z > nearestBuilding.transform.InverseTransformPoint(closestCorners [1].value).z) {
-				//GameObject g1 = (GameObject)Instantiate (snapCube, closestCorners [1], transform.rotation);
 				return closestCorners [1];
 			} else {
-				//GameObject g2 = (GameObject)Instantiate (snapCube, closestCorners [0], transform.rotation);
 				return closestCorners [0];
 			}
 		}
 
 		if ((targetSide == "right" || targetSide == "left") && (closestTargetSnapPoint.name == "bottomLeft" || closestTargetSnapPoint.name == "bottomRight")) {
-
-			Debug.Log ("1: " + nearestBuilding.transform.InverseTransformPoint (closestCorners [0].value).z + ", 2: " + nearestBuilding.transform.InverseTransformPoint (closestCorners [1].value).z);
-
 			// compare this sides snaps using lowest z
+
 			if (nearestBuilding.transform.InverseTransformPoint(closestCorners [0].value).z > nearestBuilding.transform.InverseTransformPoint(closestCorners [1].value).z) {
-				//GameObject g1 = (GameObject)Instantiate (snapCube, closestCorners [0], transform.rotation);
 				return closestCorners [0];
 			} else {
-				//GameObject g2 = (GameObject)Instantiate (snapCube, closestCorners [1], transform.rotation);
 				return closestCorners [1];
 			}
 		}
@@ -592,10 +585,8 @@ public class RoadSnap : MonoBehaviour {
 			// compare this sides snaps using highest x
 
 			if (nearestBuilding.transform.InverseTransformPoint(closestCorners [0].value).x > nearestBuilding.transform.InverseTransformPoint(closestCorners [1].value).x) {
-				//GameObject g1 = (GameObject)Instantiate (snapCube, closestCorners [1], transform.rotation);
 				return closestCorners [1];
 			} else {
-				//GameObject g2 = (GameObject)Instantiate (snapCube, closestCorners [0], transform.rotation);
 				return closestCorners [0];
 			}
 
@@ -605,10 +596,8 @@ public class RoadSnap : MonoBehaviour {
 			// compare this sides snaps using lowest x
 
 			if (nearestBuilding.transform.InverseTransformPoint(closestCorners [0].value).x > nearestBuilding.transform.InverseTransformPoint(closestCorners [1].value).x) {
-				//GameObject g1 = (GameObject)Instantiate (snapCube, closestCorners [0], transform.rotation);
 				return closestCorners [0];
 			} else {
-				//GameObject g2 = (GameObject)Instantiate (snapCube, closestCorners [1], transform.rotation);
 				return closestCorners [1];
 			}
 		} else {
@@ -618,111 +607,91 @@ public class RoadSnap : MonoBehaviour {
 
 	void setPosition() {
 
-		//Physics.IgnoreCollision (GetComponent<Collider> (), nearestBuilding.GetComponent<Collider> ());
+		/* This sets the position of the objectToPlace (the target box or the building itself) */
 
 		closestTargetSnapPoint = getClosestTargetSnapPoint (true); // get the closest target snap point
 		closestSnapPoint = getClosestSnapPoint (false); // get the closest snap point on this object
 
-		//objectToPlace.transform.parent = nearestBuilding.transform;
-
 		string[] cornerSnaps = { "topLeft", "topRight", "bottomLeft", "bottomRight" };
 
-		Debug.Log ("closest target: " + closestTargetSnapPoint.name + ", closestPoint: " + closestSnapPoint.name);
+		//Debug.Log ("closest target: " + closestTargetSnapPoint.name + ", closestPoint: " + closestSnapPoint.name);
 
-		//GameObject g2 = (GameObject)Instantiate (snapCube, closestSnapPoint.value, nearestBuilding.transform.rotation);
+		objectToPlace.transform.position = cornerSnaps.Contains (closestTargetSnapPoint.name) ? getCornerPosition () : getSidePosition ();
 
-		if (cornerSnaps.Contains (closestTargetSnapPoint.name)) {
+	}
 
-			StringFloat thisCornerToSnap = getThisCornerToSnap ();
+	Vector3 generateNewPosition(string type, string position, Vector3 buildingLength) {
 
-			//GameObject g1 = (GameObject)Instantiate (snapCube, thisCornerToSnap.value, transform.rotation);
+		/* This returns a Vector3 applying the correct spacing depending on the side, and subtracting the buildingLength */
 
-			Vector3 buildingLength = (originalSnapPoints [thisCornerToSnap.name] - originalSnapPoints ["center"]) * 10; // the distance between the closest point and the center, multiplied by 10 due local/world difference
+		Vector3 distance = Vector3.zero;
 
-			Vector3 distanceFromBuilding = Vector3.zero;
-
-			Debug.Log ("CORNER NAME: " + thisCornerToSnap.name);
-			Debug.Log ("BUILDING LENGTH: " + buildingLength);
-			Debug.Log ("BUILDING LENGTH: " + buildingLength);
-
-			if (targetSide == "right") {
-
-				float newZAxis = closestTargetSnapPoint.name == "topRight" ? -(Mathf.Abs (buildingLength.z)) : Mathf.Abs (buildingLength.z); // the z-axis will be positive or negative depending on the corner it is snapping to
-
-				Vector3 newVector = new Vector3 (Mathf.Abs (buildingLength.x), 0, newZAxis); // normalize distance using Mathf.Abs, then apply plus/minus operator needed for snapping to this side
-
-				distanceFromBuilding = nearestBuilding.transform.TransformPoint ((nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value) - new Vector3 (spacing, 0, 0) - newVector)); 
-			} 
-
-			else if (targetSide == "left") {
-
-				float newZAxis = closestTargetSnapPoint.name == "topLeft" ? -(Mathf.Abs (buildingLength.z)) : Mathf.Abs (buildingLength.z); // the z-axis will be positive or negative depending on the corner it is snapping to
-
-				Vector3 newVector = new Vector3 (-(Mathf.Abs (buildingLength.x)), 0, newZAxis); // normalize distance using Mathf.Abs, then apply plus/minus operator needed for snapping to this side
-
-				distanceFromBuilding = nearestBuilding.transform.TransformPoint ((nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value) - new Vector3 (-spacing, 0, 0) - newVector)); 
-
-			} 
-
-			else if (targetSide == "bottom") {
-
-				float newXAxis = closestTargetSnapPoint.name == "bottomRight" ? -(Mathf.Abs (buildingLength.x)) : Mathf.Abs (buildingLength.x); // the x-axis will be positive or negative depending on the corner it is snapping to
-
-				Vector3 newVector = new Vector3 (newXAxis, 0, -(Mathf.Abs (buildingLength.z))); // normalize distance using Mathf.Abs, then apply plus/minus operator needed for snapping to this side
-
-				distanceFromBuilding = nearestBuilding.transform.TransformPoint ((nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value) - new Vector3 (0, 0, -spacing) - newVector)); 
-
-			} 
-
-			else if (targetSide == "top") {
-
-				float newXAxis = closestTargetSnapPoint.name == "topRight" ? -(Mathf.Abs (buildingLength.x)) : Mathf.Abs (buildingLength.x); // the x-axis will be positive or negative depending on the corner it is snapping to
-
-				Vector3 newVector = new Vector3 (newXAxis, 0, Mathf.Abs (buildingLength.z)); // normalize distance using Mathf.Abs, then apply plus/minus operator needed for snapping to this side
-
-				distanceFromBuilding = nearestBuilding.transform.TransformPoint ((nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value) - new Vector3 (0, 0, spacing) - newVector)); 
-
-			}
-
-
-			// takes the corner point "makes it a child" to nearest building, subtracts distance from object, then gets it's position in world space
-
-			objectToPlace.transform.position = distanceFromBuilding;
-
-		} else {
-
-			float snapPosition = getSnapPosition ();
-
-			Vector3 newPosition = Vector3.zero;
-			Vector3 buildingLength = Vector3.zero;
-
-			if (closestTargetSnapPoint.name == "right" || closestTargetSnapPoint.name == "left") {
-				buildingLength = new Vector3 (Vector3.Distance(originalSnapPoints [closestSnapPoint.name], originalSnapPoints ["center"]) * 10, 0, 0); // the distance between the closest point and the center, multiplied by 10 due local/world difference
-			} 
-
-			else if (closestTargetSnapPoint.name == "top" || closestTargetSnapPoint.name == "bottom") {
-				buildingLength = new Vector3 (0, 0, Vector3.Distance(originalSnapPoints [closestSnapPoint.name], originalSnapPoints ["center"]) * 10); // the distance between the closest point and the center, multiplied by 10 due local/world difference
-			}
-
-			switch (closestTargetSnapPoint.name)
-			{
-			case "right":
-				newPosition = nearestBuilding.transform.TransformPoint ((nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value) - new Vector3 (spacing, 0, 0) - buildingLength)); // adjusts the closest point relative to the nearestBuilding (local space), which then gets converted into world space
-				break;
-			case "left":
-				newPosition = nearestBuilding.transform.TransformPoint ((nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value) - new Vector3 (-spacing, 0, 0) + buildingLength)); // adjusts the closest point relative to the nearestBuilding (local space), which then gets converted into world space
-				break;
-			case "top":
-				newPosition = nearestBuilding.transform.TransformPoint ((nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value) - new Vector3 (0, 0, spacing) - buildingLength)); // adjusts the closest point relative to the nearestBuilding (local space), which then gets converted into world space
-				break;
-			case "bottom":
-				newPosition = nearestBuilding.transform.TransformPoint ((nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value) - new Vector3 (0, 0, -spacing) + buildingLength)); // adjusts the closest point relative to the nearestBuilding (local space), which then gets converted into world space
-				break;
-			}
-
-			objectToPlace.transform.position = newPosition;
-
+		switch (position)
+		{
+		case "right":
+			distance = new Vector3 (spacing, 0, 0); 
+			break;
+		case "left":
+			distance = new Vector3 (-spacing, 0, 0);
+			break;
+		case "bottom":
+			distance = new Vector3 (0, 0, -spacing);
+			break;
+		case "top":
+			distance = new Vector3 (0, 0, spacing); 
+			break;
 		}
+
+		/* InverseTransformPoint() gets the position relative to the called object (as if it is a parent), TransformPoint() gets the Vector3 passed in as a world position 
+
+		  It starts with the closestTargetSnapPoint, subtracts the distance that is set globally, and then subtracts or adds the buildingLength. Snapping to the left or bottom sides are the only cases where the length is added */
+
+		if (type == "side" && (position == "left" || position == "bottom")) {
+			return nearestBuilding.transform.TransformPoint ((nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value) - distance + buildingLength));
+		} else {
+			return nearestBuilding.transform.TransformPoint ((nearestBuilding.transform.InverseTransformPoint (closestTargetSnapPoint.value) - distance - buildingLength));
+		}
+
+	}
+
+	Vector3 getCornerPosition() {
+
+		/* This returns a Vector3 which is the position for snapping to a corner */
+
+		StringFloat thisCornerToSnap = getThisCornerToSnap ();
+
+		Vector3 buildingLength = (originalSnapPoints [thisCornerToSnap.name] - originalSnapPoints ["center"]) * 10; // the distance between the closest point and the center, multiplied by 10 due local/world difference
+
+		float newZAxis = 0;
+		float newXAxis = 0;
+
+		if (targetSide == "right" || targetSide == "left") {
+			newZAxis = closestTargetSnapPoint.name == "topRight" || closestTargetSnapPoint.name == "topLeft" ? -(Mathf.Abs (buildingLength.z)) : Mathf.Abs (buildingLength.z); // the z-axis will be positive or negative depending on the corner it is snapping to
+			newXAxis = targetSide == "right" ? Mathf.Abs (buildingLength.x) : -(Mathf.Abs (buildingLength.x)); // the x-axis will be positive if "right" or negative if "left"
+		} else {
+			newXAxis = closestTargetSnapPoint.name == "bottomRight" || closestTargetSnapPoint.name == "topRight" ? -(Mathf.Abs (buildingLength.x)) : Mathf.Abs (buildingLength.x); // the x-axis will be positive or negative depending on the corner it is snapping to
+			newZAxis = targetSide == "bottom" ? -(Mathf.Abs (buildingLength.z)) : Mathf.Abs (buildingLength.z); // the z-axis will be negative if "bottom" or positive if "top"
+		}
+
+		buildingLength = new Vector3 (newXAxis, 0, newZAxis); // this it the distance between the snap point and the center point, which is the distance to subtract or add to get the final position
+
+		return generateNewPosition ("corner", targetSide, buildingLength);
+
+	}
+
+	Vector3 getSidePosition() {
+
+		/* This returns a Vector3 which is the position for snapping to a side */
+
+		Vector3 buildingLength = Vector3.zero;
+
+		if (closestTargetSnapPoint.name == "right" || closestTargetSnapPoint.name == "left") {
+			buildingLength = new Vector3 (Vector3.Distance(originalSnapPoints [closestSnapPoint.name], originalSnapPoints ["center"]) * 10, 0, 0); // the distance between the closest point and the center, multiplied by 10 due local/world difference
+		} else {
+			buildingLength = new Vector3 (0, 0, Vector3.Distance(originalSnapPoints [closestSnapPoint.name], originalSnapPoints ["center"]) * 10); // the distance between the closest point and the center, multiplied by 10 due local/world difference
+		}
+
+		return generateNewPosition ("side", closestTargetSnapPoint.name, buildingLength);
 
 	}
 }
