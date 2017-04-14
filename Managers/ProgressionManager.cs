@@ -14,6 +14,7 @@ public class ProgressionManager : MonoBehaviour {
     public bool allowAddIsland;
 
     public int level;
+    public bool allowLevelUp;
     int pop;
 
     public static bool airportBought;
@@ -29,15 +30,12 @@ public class ProgressionManager : MonoBehaviour {
     float islandLerp;
     bool inPosition;
 
-    public delegate void LevelOne();
-    public delegate void LevelTwo();
-    public delegate void LevelThree();
-    public static LevelOne levelOne;
-    public static LevelTwo levelTwo;
-    public static LevelThree levelThree;
-    public const int LEVEL_ONE_REQ = 20;
-    public const int LEVEL_TWO_REQ = 50;
-    public const int LEVEL_THREE_REQ = 100;
+    Dictionary<int, int> levelReq; // Requirement for population to level up
+    Dictionary<int, bool> levelInfo; // Stores which levels have been unlocked
+
+    public delegate void LevelUp();
+
+    LevelUp levelUp;
 
     public void Start()
     {
@@ -54,37 +52,54 @@ public class ProgressionManager : MonoBehaviour {
         secondIsland = GameObject.Find("SecondIsland");
         setPosition = new Vector3(1.9f, 0f, -58.8f);
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
-        SetupLevels();
         AddIsland();
+        levelReq = new Dictionary<int, int>();
+        levelReq.Add(1, 10);
+        levelReq.Add(2, 25);
+        levelReq.Add(3, 50);
+        levelReq.Add(4, 100);
+        levelReq.Add(5, 175);
+        levelReq.Add(6, 225);
+        levelReq.Add(7, 300);
+        levelReq.Add(8, 500);
+        levelReq.Add(9, 750);
+        levelReq.Add(10, 1000);
+        levelReq.Add(11, 1500);
+        levelReq.Add(12, 2000);
+        levelReq.Add(13, 3000);
+        levelReq.Add(14, 5000);
+        levelReq.Add(15, 7500);
+        levelReq.Add(16, 10000);
+        levelReq.Add(17, 12500);
+        levelReq.Add(18, 15000);
+        levelReq.Add(19, 17500);
+        levelReq.Add(20, 20000);
+        StartCoroutine("SlowUpdate");
     }
 
     void Update()
     {
         pop = populationManager.totalPopulation;
     }
-
-    void TryIncreaseLevel()
+    
+    public void CheckLevelUp()
     {
-        if(level == 0 && pop > LEVEL_ONE_REQ)
+        // Perform check to see whether next level that returns false from levelInfo can be completed.
+        int currentLevelReq;
+        levelReq.TryGetValue(level + 1, out currentLevelReq);
+        if(pop >= currentLevelReq)
         {
-            levelOne();
-        }
-        else if(level == 1 && pop > LEVEL_TWO_REQ)
-        {
-            levelTwo();
-        }
-        else if(level == 2 && pop > LEVEL_THREE_REQ)
-        {
-            levelThree();
+            PerformLevelUp(level + 1);
         }
     }
 
-    void SetupLevels()
+    void PerformLevelUp(int newLevel)
     {
-        levelTwo += UnlockBuildingTier;
-        levelTwo += AllowRemoveMountains;
-        levelThree += UnlockBuildingTier;
-        levelThree += AllowAddIsland;
+        if(level + 1 == newLevel)
+        {
+            level = newLevel;
+            levelInfo[level] = true;
+        }
     }
 
     void UnlockBuildingTier()
@@ -154,6 +169,15 @@ public class ProgressionManager : MonoBehaviour {
                 inPosition = true;
             }
             yield return null;
+        }
+    }
+
+    IEnumerator SlowUpdate()
+    {
+        while(allowLevelUp)
+        {
+            CheckLevelUp();
+            yield return new WaitForSeconds(5);
         }
     }
 

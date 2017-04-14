@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LeisureTracker : MonoBehaviour {
+public class LeisureTracker : ItemTracker {
 
 	// Use this for initialization
 	void Start () {

@@ -103,6 +103,7 @@ public class IndustrialTracker : ItemTracker {
             goodsOwned = 0;
         }
         income = goodsProduced * sellPrice;
+        income -= baseCost;
         totalIndustrialIncome += goodsProduced;
     }
 

@@ -44,7 +44,7 @@ public class PopupManager : MonoBehaviour {
         while (queuedPopups.Count > 0)
         {
             AudioSource.PlayClipAtPoint(notificationSound, tooltip.gameObject.transform.position);
-            tooltip.UpdateText(queuedPopups[0]);
+            //tooltip.UpdateText(queuedPopups[0]);
             popup.SetActive(true);
             queuedPopups.RemoveAt(0);
             yield return new WaitForSeconds(WAIT_TIME);

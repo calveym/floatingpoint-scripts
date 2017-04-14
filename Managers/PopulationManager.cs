@@ -58,6 +58,7 @@ public class PopulationManager : MonoBehaviour {
 	{
         firstNames = names.FirstNames();
         lastNames = names.LastNames();
+        QueueUpdates();
 	}
 
 	void Update ()
@@ -170,7 +171,7 @@ public class PopulationManager : MonoBehaviour {
     void TryAllocatePopulation()
     // Run the check to allocate users
     {
-        if(unallocatedPopulation > 0 && AvailableResidential() > 0)
+        if(unallocatedPopulation > 0 && AvailableResidential() > 0 && emptyResidential != null)
         {
             for (int i = 0; i < emptyResidential.Count; i++)
             {

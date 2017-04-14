@@ -68,7 +68,7 @@ public class EconomyManager : MonoBehaviour {
             CommercialTracker.totalCommercialIncome = 0;
             IndustrialTracker.totalIndustrialIncome = 0;
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(2);
         }
     }
 

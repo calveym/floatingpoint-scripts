@@ -180,13 +180,11 @@ public class RoadGenerator : VRTK_InteractableObject {
 	GameObject InstantiateRoad(string surroundingRoadString, Vector3 newPosition)
 	// Uses surrounding road information to instantiate a find a new road
     {
-        Debug.Log("Tis happening");
         GameObject correctRoad;
 		GameObject correctRoadObject;
 		Quaternion correctRoadRotation;
 		roadObject.TryGetValue(surroundingRoadString, out correctRoadObject);
 		roadRotation.TryGetValue(surroundingRoadString, out correctRoadRotation);
-        Debug.Log("surroundingRoadString" + surroundingRoadString);
 		correctRoad = Instantiate(correctRoadObject, newPosition, correctRoadRotation);
 		correctRoad.tag = "road";
 		return correctRoad;
@@ -203,7 +201,6 @@ public class RoadGenerator : VRTK_InteractableObject {
     {
         GameObject destroyRoad;
         roads.TryGetValue(position, out destroyRoad);
-        Debug.Log(position);
 		roads.Remove(position);
 		surroundingRoads.Remove(position);
         Destroy(destroyRoad);

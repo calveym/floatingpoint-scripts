@@ -22,23 +22,32 @@ public class PlayerScale : MonoBehaviour {
     {
     	if (isCameraSmall)  // Going big
     	{
-			//previousCameraPosition = cameraEye.transform.position;
-            //rb.isKinematic = true;
-            //rb.useGravity = false;
-			cameraRig.transform.localScale = new Vector3(10f, 10f, 10f);
-			//cameraRig.transform.position -= new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
-			isCameraSmall = !isCameraSmall;
-            GetComponent<TrackpadFlight>().speedMultiplier = 2f;
+            GoBig();
     	}
     	else  // Going small
     	{
-            //rb.isKinematic = false;
-            //rb.useGravity = true;
-			cameraRig.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-			//cameraRig.transform.position += new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
-			isCameraSmall = !isCameraSmall;
-            GetComponent<TrackpadFlight>().speedMultiplier = 0.2f;
+            GoSmall();
         }
     }
 
+    void GoSmall()
+    {
+        //rb.isKinematic = false;
+        //rb.useGravity = true;
+        cameraRig.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        //cameraRig.transform.position += new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
+        isCameraSmall = !isCameraSmall;
+        GetComponent<TrackpadFlight>().speedMultiplier = 0.2f;
+    }
+
+    void GoBig()
+    {
+        //previousCameraPosition = cameraEye.transform.position;
+        //rb.isKinematic = true;
+        //rb.useGravity = false;
+        cameraRig.transform.localScale = new Vector3(10f, 10f, 10f);
+        //cameraRig.transform.position -= new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
+        isCameraSmall = !isCameraSmall;
+        GetComponent<TrackpadFlight>().speedMultiplier = 2f;
+    }
 }

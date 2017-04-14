@@ -23,7 +23,6 @@ public class ResidentialTracker : ItemTracker {
         employed = new Dictionary<int, bool>();
         residents = new Dictionary<int, string>();
         takenIDs = new List<int>();
-        EconomyManager.ecoTick += UpdateSecond;
         foliage = 0;
     }
 
@@ -31,12 +30,10 @@ public class ResidentialTracker : ItemTracker {
     {
         if (!updateStarted)
         {
-            StartCoroutine("MinuteTick");
+            updateStarted = true;
+            EconomyManager.ecoTick += UpdateSecond;
+            GameObject.Find("Managers").GetComponent<ItemManager>().addResidential(capacity, gameObject);
         }
-    }
-
-    void UpdateValues()
-    {
     }
 
     public void AddUsers(int numUsers, List<string> names, int newAge)
@@ -183,12 +180,6 @@ public class ResidentialTracker : ItemTracker {
         return employed[ID];
     }
 
-    void UpdateFoliage()
-    {
-        foliage = 0;
-        foliageIncome = foliage;
-    }
-
     void UpdateSecond()
     // Updates values once per second
     {
@@ -199,7 +190,7 @@ public class ResidentialTracker : ItemTracker {
         }
         UpdateLandValue();
         UpdateTransportationValue();
-        UpdateValues();
+        UpdateHappiness();
         CalculateIncome();
     }
 
@@ -207,6 +198,7 @@ public class ResidentialTracker : ItemTracker {
     {
         income = users * availableTransportation * landValue / 5;
         income += foliageIncome;
+        income -= baseCost;
         totalResidentialIncome += income;
     }
 
@@ -215,12 +207,4 @@ public class ResidentialTracker : ItemTracker {
         foliage += addAmount;
     }
 
-    IEnumerator MinuteTick()
-    {
-        while(usable)
-        {
-            UpdateFoliage();
-            yield return new WaitForSeconds(60);
-        }
-    }
 }

@@ -35,12 +35,22 @@ public class ItemManager : MonoBehaviour {
 	public int leisureCap;
 	public int foliageCap;
 
+    public delegate void FiveSecondUpdate();
+    public static FiveSecondUpdate fiveUpdate;
+
+    public delegate void TenSecondUpdate();
+    public static TenSecondUpdate tenUpdate;
+
 	void Awake ()
 	// Get manager instances
 	{
+        fiveUpdate += Empty;
+        tenUpdate += Empty;
 		economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
 		roadGenerator = GameObject.Find("Island").GetComponent<RoadGenerator>();
-		// contractmanager = GameObject.Find("Managers").GetComponent<ContractManager>();
+        // contractmanager = GameObject.Find("Managers").GetComponent<ContractManager>();
+        StartCoroutine("FiveUpdate");
+        StartCoroutine("TenUpdate");
 	}
 
 	public int getNumRoads()
@@ -92,46 +102,46 @@ public class ItemManager : MonoBehaviour {
 		foliage.Add(newObject);
 	}
 
-  public void removeResidential(GameObject removeObject)
-  // Removes residential building
-  {
-      residentialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
-      removeObject.GetComponent<ItemTracker>().RemoveAllUsers();
-      numResidential--;
-      residential.Remove(removeObject);
-  }
+    public void removeResidential(GameObject removeObject)
+    // Removes residential building
+    {
+        residentialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
+        removeObject.GetComponent<ItemTracker>().RemoveAllUsers();
+        numResidential--;
+        residential.Remove(removeObject);
+    }
 
-  public void removeCommercial(GameObject removeObject)
-  // Removes commercial building
-  {
-      commercialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
-      numCommercial--;
-      commercial.Remove(removeObject);
-  }
+    public void removeCommercial(GameObject removeObject)
+    // Removes commercial building
+    {
+        commercialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
+        numCommercial--;
+        commercial.Remove(removeObject);
+    }
 
-  public void removeIndustrial(GameObject removeObject)
-  // Remove an industrial building
-  {
-      industrialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
-      numIndustrial--;
-      industrial.Remove(removeObject);
-  }
+    public void removeIndustrial(GameObject removeObject)
+    // Remove an industrial building
+    {
+        industrialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
+        numIndustrial--;
+        industrial.Remove(removeObject);
+    }
 
-  public void removeLeisure(GameObject removeObject)
-  // Remove a leisure building
-  {
-      leisureCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
-      numLeisure--;
-      leisure.Remove(removeObject);
-  }
+    public void removeLeisure(GameObject removeObject)
+    // Remove a leisure building
+    {
+        leisureCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
+        numLeisure--;
+        leisure.Remove(removeObject);
+    }
 
-  public void removeFoliage(GameObject removeObject)
-  // Remove foliage
-  {
-      foliageCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
-      numLeisure--;
-      leisure.Remove(removeObject);
-  }
+    public void removeFoliage(GameObject removeObject)
+    // Remove foliage
+    {
+        foliageCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
+        numLeisure--;
+        leisure.Remove(removeObject);
+    }
 
 	public int getMaxPop()
 	// Returns current maximum population
@@ -139,4 +149,25 @@ public class ItemManager : MonoBehaviour {
 		return residentialCap;
 	}
 
+    void Empty()
+    {
+    }
+
+    IEnumerator FiveUpdate()
+    {
+        while(true)
+        {
+            fiveUpdate();
+            yield return new WaitForSeconds(5);
+        }
+    }
+
+    IEnumerator TenUpdate()
+    {
+        while(true)
+        {
+            tenUpdate();
+            yield return new WaitForSeconds(10);
+        }
+    }
 }

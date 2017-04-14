@@ -31,6 +31,7 @@ public class ItemTracker : MonoBehaviour {
     public bool grabbableObject;
     public bool validPosition;
     GameObject tooltip;
+    public float addedHappiness;
 
     public float landValue;
 
@@ -76,7 +77,8 @@ public class ItemTracker : MonoBehaviour {
     public void UpdateHappiness()
     //  Sets local happiness level based on surroundings
     {
-        localHappiness = 1;  // TODO: hardcoded for now
+        localHappiness = addedHappiness;
+        addedHappiness = 0;
     }
 
     float RoadAccess()
@@ -192,6 +194,16 @@ public class ItemTracker : MonoBehaviour {
         else if(type == "leisure")
         {
             itemManager.addLeisure(capacity, gameObject);
+        }
+    }
+
+    public void ModifyHappiness(float amount, string trigger)
+    {
+        addedHappiness += amount;
+        if(trigger == "industrialReduce" && type != "industrial")
+        {
+            //PopupManager.Popup("Warning!");
+            //PopupManager.Popup("Factories reducing happiness");
         }
     }
 }
