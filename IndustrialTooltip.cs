@@ -13,11 +13,6 @@ public class IndustrialTooltip : MonoBehaviour {
 	void Start () {
         industrialTracker = GetComponent<IndustrialTracker>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     public void UpdateValues () {
 
