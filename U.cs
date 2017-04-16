@@ -7,8 +7,12 @@ public static class U : object {
     public static List <GameObject> FindNearestBuildings (Vector3 position, float radius )
     {
         List<GameObject> returnObjects = new List<GameObject>();
-        
-        Collider[] hitColliders = Physics.OverlapSphere(position, radius, 8);
+        int layerMask = 1 << 8;
+        layerMask = ~layerMask;
+
+        Collider[] hitColliders = Physics.OverlapSphere(position, radius, layerMask);
+
+        Debug.Log(hitColliders.Length);
 
         if (hitColliders.Length != 0)
         {

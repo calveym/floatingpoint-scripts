@@ -3,23 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
 
-public class IndustrialTooltip : MonoBehaviour {
+public class ResidentialTooltip : MonoBehaviour
+{
 
     GameObject tooltip;
-    IndustrialTracker industrialTracker;
+    ResidentialTracker residentialTracker;
     public bool buttonPressed;
 
-	// Use this for initialization
-	void Start () {
-        industrialTracker = GetComponent<IndustrialTracker>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    // Use this for initialization
+    void Start()
+    {
+        residentialTracker = GetComponent<ResidentialTracker>();
+    }
 
-    public void UpdateValues () {
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    public void UpdateValues()
+    {
 
     }
 
@@ -30,7 +34,7 @@ public class IndustrialTooltip : MonoBehaviour {
         {
             Destroy(tooltip);
         }
-        tooltip = Instantiate(GameObject.Find("IndustrialTooltip"), gameObject.transform);
+        tooltip = Instantiate(GameObject.Find("ResidentialTooltip"), gameObject.transform);
         Debug.Log(tooltip);
 
         tooltip.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
