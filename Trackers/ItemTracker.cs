@@ -91,29 +91,6 @@ public class ItemTracker : MonoBehaviour {
         users += numAdded;
     }
 
-    void EnableObjectTooltip(object sender, ControllerInteractionEventArgs e)
-    // Enables, resets position and resets text for object tooltips
-    {
-        if(tooltip != null)
-        {
-            Destroy(tooltip);
-        }
-        tooltip = Instantiate(GameObject.Find("ObjectTooltip"), gameObject.transform);
-        Debug.Log(tooltip);
-
-        tooltip.GetComponent<VRTK_ObjectTooltip>().UpdateText("Income: " + income.ToString());
-        tooltip.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
-        tooltip.transform.position = gameObject.transform.position + new Vector3(0f, 2.5f, 0f);
-        tooltip.transform.localScale = new Vector3(100f, 100f, 100f);
-        tooltip.transform.LookAt(GameObject.Find("Camera (eye)").transform);
-    }
-
-    void DisableObjectTooltip(object sender, ControllerInteractionEventArgs e)
-    // Removes object tooltips
-    {
-        Destroy(tooltip.gameObject);
-    }
-
     void OverCapacity()
     // Returns true if more users than capacity
     {

@@ -46,7 +46,7 @@ public class ResidentialTracker : ItemTracker {
             {
                 int newID = FindAvailableID();
                 educationLevel.Add(newID, 0);
-                age.Add(newID, newAge);
+                age.Add(newID, newAge); 
                 employed.Add(newID, false);
                 unemployedPopulation++;
                 residents.Add(newID, names[i]);
@@ -58,7 +58,7 @@ public class ResidentialTracker : ItemTracker {
             Debug.Log("ERROR: user mismatch, aborting");
             populationManager.QueueUpdates();
         }
-    }
+    }                     
 
     int FindAvailableID()
     // Finds next lowest available resident ID
