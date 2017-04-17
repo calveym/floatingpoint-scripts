@@ -9,6 +9,7 @@ public class ItemTracker : MonoBehaviour {
     public PopulationManager populationManager;
     public EconomyManager economyManager;
     public ItemManager itemManager;
+    public LandValue land;
     public float availableTransportation;
 
     public static float totalResidentialIncome;
@@ -59,10 +60,10 @@ public class ItemTracker : MonoBehaviour {
 
     public void UpdateLandValue()
     {
-        landValue = capacity;
+        landValue = land.RecalculateLandValue();
         landValue += users;
         landValue += numSnappedRoads;
-        if(capacity == users)
+        if (capacity == users)
         {
             landValue += 7;
         }

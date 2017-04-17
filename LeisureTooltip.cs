@@ -8,13 +8,14 @@ public class LeisureTooltip : MonoBehaviour
 
     GameObject tooltip;
     LeisureTracker leisureTracker;
+    TooltipManager tooltipManager;
     public bool buttonPressed;
 
     // Use this for initialization
     void Start()
     {
+        tooltipManager = GameObject.Find("Managers").GetComponent<TooltipManager>();
         leisureTracker = GetComponent<LeisureTracker>();
-
     }
 
     // Update is called once per frame
