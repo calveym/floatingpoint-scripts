@@ -41,6 +41,7 @@ public class ItemTracker : MonoBehaviour {
     {
         availableTransportation = 1;
         landValue = 10f;
+        land = GetComponent<LandValue>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
