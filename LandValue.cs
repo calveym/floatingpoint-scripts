@@ -30,6 +30,7 @@ public class LandValue : MonoBehaviour {
     void CalculateFinalValue()
     {
         landValue = aggResidential + aggCommercial + aggIndustrial + aggLeisure;
+        Debug.Log("Land value: " + landValue);
     }
 
     void CalculateAggregates()

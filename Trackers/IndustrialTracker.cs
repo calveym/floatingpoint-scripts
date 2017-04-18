@@ -150,7 +150,7 @@ public class IndustrialTracker : ItemTracker {
             return;
         }
         UpdateHappiness();
-        UpdateLandValue();
+        //UpdateLandValue();
         UpdateTransportationValue();
         ProduceGoods();
         SellGoods();

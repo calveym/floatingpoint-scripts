@@ -31,7 +31,7 @@ public class ItemTracker : MonoBehaviour {
     public bool updateStarted;
     public bool grabbableObject;
     public bool validPosition;
-    GameObject tooltip;
+    public GameObject tooltip;
     public float addedHappiness;
 
     public float landValue;
@@ -61,6 +61,7 @@ public class ItemTracker : MonoBehaviour {
 
     public void UpdateLandValue()
     {
+        Debug.Log(land);
         landValue = land.RecalculateLandValue();
         landValue += users;
         landValue += numSnappedRoads;

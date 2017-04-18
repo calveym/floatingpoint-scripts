@@ -188,6 +188,7 @@ public class ResidentialTracker : ItemTracker {
         {
             return;
         }
+        Debug.Log("Runs");
         UpdateLandValue();
         UpdateTransportationValue();
         UpdateHappiness();

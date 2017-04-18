@@ -12,8 +12,6 @@ public static class U : object {
 
         Collider[] hitColliders = Physics.OverlapSphere(position, radius, layerMask);
 
-        Debug.Log(hitColliders.Length);
-
         if (hitColliders.Length != 0)
         {
             foreach (Collider hitcol in hitColliders)

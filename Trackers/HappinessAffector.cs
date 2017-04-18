@@ -12,15 +12,17 @@ public class HappinessAffector : MonoBehaviour {
 	void Start () {
         EconomyManager.ecoTick += StartAffect;	
 	}
-	
+
     public void StartAffect()
     {
-        List<GameObject> surroundingBuildings = FindSurroundingBuildings();
+        List<GameObject> surroundingBuildings = U.FindNearestBuildings(transform.position, radius);
+        //Debug.Log("Happiness affector surrounding buildings: " + surroundingBuildings.Count);
+
         foreach (GameObject building in surroundingBuildings)
         {
             if (building.tag == "residential")
             {
-                if(affectType == "industrialReduce")
+                if (affectType == "industrialReduce")
                 {
                     building.GetComponent<ResidentialTracker>().ModifyHappiness(affectAmount, "industrialReduce");
                 }
@@ -29,36 +31,19 @@ public class HappinessAffector : MonoBehaviour {
                     building.GetComponent<ResidentialTracker>().ModifyHappiness(affectAmount, "");
                 }
             }
-            else if(building.tag == "industrial")
+            else if (building.tag == "industrial")
             {
+                //Debug.Log(building);
                 building.GetComponent<IndustrialTracker>().ModifyHappiness(affectAmount, "");
             }
-            else if(building.tag == "commercial")
+            else if (building.tag == "commercial")
             {
                 building.GetComponent<CommercialTracker>().ModifyHappiness(affectAmount, "");
             }
-            else if(building.tag == "leisure")
+            else if (building.tag == "leisure")
             {
                 building.GetComponent<LeisureTracker>().ModifyHappiness(affectAmount, "");
             }
         }
-    }
-
-	List<GameObject> FindSurroundingBuildings()
-    {
-        List<GameObject> returnList = new List<GameObject>();
-        int layerMask = 1 << 8;
-        layerMask = ~layerMask;
-
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius, layerMask);
-        if (hitColliders.Length > 0)
-        {
-            foreach (Collider hitcol in hitColliders)
-            {
-                returnList.Add(hitcol.gameObject);
-            }
-        }
-
-        return returnList;
     }
 }

@@ -24,6 +24,7 @@ public class EconomyManager : MonoBehaviour {
     int industrialCap;
 
     // Declares public variables
+    public float waitTime; // Wait time
     public int residentialTaxRate;
     public int commercialTaxRate;
     public int industrialTaxRate;
@@ -45,9 +46,9 @@ public class EconomyManager : MonoBehaviour {
         StartCoroutine("EconomicTick");
     }
 
-    public delegate void TickDelegate();
+    public delegate void EcoTick();
 
-    public static TickDelegate ecoTick;  // Multicast delegate run once per economic tick
+    public static EcoTick ecoTick;  // Multicast delegate run once per economic tick
 
     IEnumerator EconomicTick()
     {
@@ -68,7 +69,7 @@ public class EconomyManager : MonoBehaviour {
             CommercialTracker.totalCommercialIncome = 0;
             IndustrialTracker.totalIndustrialIncome = 0;
 
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(waitTime);
         }
     }
 
