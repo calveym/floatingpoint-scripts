@@ -13,6 +13,9 @@ public class ResidentialTracker : ItemTracker {
     public Dictionary<int, string> residents; // matches slots to residents
     List<int> takenIDs; // List of currently active IDs for finding new ones
 
+    float foliage;
+    float foliageIncome;
+
     void Start()
     {
         educationLevel = new Dictionary<int, int>();
@@ -20,20 +23,17 @@ public class ResidentialTracker : ItemTracker {
         employed = new Dictionary<int, bool>();
         residents = new Dictionary<int, string>();
         takenIDs = new List<int>();
+        foliage = 0;
     }
 
     void Update()
     {
         if (!updateStarted)
         {
-            StartCoroutine("UpdateSecond");
+            updateStarted = true;
+            EconomyManager.ecoTick += UpdateSecond;
+            GameObject.Find("Managers").GetComponent<ItemManager>().addResidential(capacity, gameObject);
         }
-    }
-
-    void UpdateValues()
-    {
-        income = users * availableTransportation * landValue / 5;
-        totalResidentialIncome += income;
     }
 
     public void AddUsers(int numUsers, List<string> names, int newAge)
@@ -46,7 +46,7 @@ public class ResidentialTracker : ItemTracker {
             {
                 int newID = FindAvailableID();
                 educationLevel.Add(newID, 0);
-                age.Add(newID, newAge);
+                age.Add(newID, newAge); 
                 employed.Add(newID, false);
                 unemployedPopulation++;
                 residents.Add(newID, names[i]);
@@ -58,7 +58,7 @@ public class ResidentialTracker : ItemTracker {
             Debug.Log("ERROR: user mismatch, aborting");
             populationManager.QueueUpdates();
         }
-    }
+    }                     
 
     int FindAvailableID()
     // Finds next lowest available resident ID
@@ -180,21 +180,31 @@ public class ResidentialTracker : ItemTracker {
         return employed[ID];
     }
 
-    IEnumerator UpdateSecond()
+    void UpdateSecond()
     // Updates values once per second
     {
         updateStarted = true;
         if(!usable || !validPosition)
         {
-            yield return new WaitForSeconds(10);
+            return;
         }
-        while (usable && validPosition)
-        {
-            UpdateLandValue();
-            UpdateTransportationValue();
-            UpdateValues();
-            totalIndustrialIncome += income;
-            yield return new WaitForSeconds(1);
-        }
+        UpdateLandValue();
+        UpdateTransportationValue();
+        UpdateHappiness();
+        CalculateIncome();
     }
+
+    void CalculateIncome()
+    {
+        income = users * availableTransportation * landValue / 5;
+        income += foliageIncome;
+        income -= baseCost;
+        totalResidentialIncome += income;
+    }
+
+    public void AddFoliage(float addAmount)
+    {
+        foliage += addAmount;
+    }
+
 }

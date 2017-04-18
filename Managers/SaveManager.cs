@@ -5,15 +5,54 @@ using UnityEngine;
 
 public class SaveManager : MonoBehaviour {
 
-    public void Save()
+    void Save (string slot)
     {
-        // TODO: multiple slots
-        Debug.Log("Saving...");
-        LevelSerializer.SaveGame("test");
+        // TEST
+        LevelSerializer.SaveGame(slot);
     }
 
-    public void Load ()
+    void Load(string slot)
     {
-        Debug.Log(LevelSerializer.SavedGames["test"]);
+        // TEST
+        foreach (LevelSerializer.SaveEntry sg in LevelSerializer.SavedGames[LevelSerializer.PlayerName])
+        {
+            Debug.Log(sg.Name);
+            if (sg.Name == slot)
+            {
+                LevelSerializer.LoadSavedLevel(sg.Data);
+            }
+        }
+    }
+
+    public void SaveSlotOne()
+    {
+        Debug.Log("Saving slot 1");
+        Save("slot1");
+    }
+
+    public void SaveSlotTwo()
+    {
+
+    }
+
+    public void SaveSlotThree()
+    {
+
+    }
+
+    public void LoadSlotThree()
+    {
+
+    }
+
+    public void LoadSlotTwo()
+    {
+
+    }
+
+    public void LoadSlotOne()
+    {
+        Debug.Log("Loading slot 1");
+        Load("slot1");
     }
 }

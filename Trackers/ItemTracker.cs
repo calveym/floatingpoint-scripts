@@ -9,6 +9,7 @@ public class ItemTracker : MonoBehaviour {
     public PopulationManager populationManager;
     public EconomyManager economyManager;
     public ItemManager itemManager;
+    public LandValue land;
     public float availableTransportation;
 
     public static float totalResidentialIncome;
@@ -18,6 +19,9 @@ public class ItemTracker : MonoBehaviour {
     public static float totalIndustrialIncome;
     public static float historicIndustrialIncome;
 
+    public float baseCost;
+    public float localHappiness;
+    public int level;
     public string type;
     public int capacity;
     public float income;
@@ -28,14 +32,16 @@ public class ItemTracker : MonoBehaviour {
     public bool grabbableObject;
     public bool validPosition;
     GameObject tooltip;
+    public float addedHappiness;
 
     public float landValue;
 
-    private void Awake()
+    private void Start()
     // Sets start variables
     {
         availableTransportation = 1;
         landValue = 10f;
+        land = GetComponent<LandValue>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
@@ -55,18 +61,26 @@ public class ItemTracker : MonoBehaviour {
 
     public void UpdateLandValue()
     {
-        landValue = capacity;
+        landValue = land.RecalculateLandValue();
         landValue += users;
         landValue += numSnappedRoads;
-        if(capacity == users)
+        if (capacity == users)
         {
             landValue += 7;
         }
     }
 
     public void UpdateTransportationValue()
+    // Updates available transportation depending on road presence and airport and train availability
     {
         availableTransportation = RoadAccess() + ProgressionManager.Airport() + ProgressionManager.Train();
+    }
+
+    public void UpdateHappiness()
+    //  Sets local happiness level based on surroundings
+    {
+        localHappiness = addedHappiness;
+        addedHappiness = 0;
     }
 
     float RoadAccess()
@@ -77,29 +91,6 @@ public class ItemTracker : MonoBehaviour {
     public void AddUsers(int numAdded)
     {
         users += numAdded;
-    }
-
-    void EnableObjectTooltip(object sender, ControllerInteractionEventArgs e)
-    // Enables, resets position and resets text for object tooltips
-    {
-        if(tooltip != null)
-        {
-            Destroy(tooltip);
-        }
-        tooltip = Instantiate(GameObject.Find("ObjectTooltip"), gameObject.transform);
-        Debug.Log(tooltip);
-
-        tooltip.GetComponent<VRTK_ObjectTooltip>().UpdateText("Income: " + income.ToString());
-        tooltip.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
-        tooltip.transform.position = gameObject.transform.position + new Vector3(0f, 2.5f, 0f);
-        tooltip.transform.localScale = new Vector3(100f, 100f, 100f);
-        tooltip.transform.LookAt(GameObject.Find("Camera (eye)").transform);
-    }
-
-    void DisableObjectTooltip(object sender, ControllerInteractionEventArgs e)
-    // Removes object tooltips
-    {
-        Destroy(tooltip.gameObject);
     }
 
     void OverCapacity()
@@ -182,6 +173,16 @@ public class ItemTracker : MonoBehaviour {
         else if(type == "leisure")
         {
             itemManager.addLeisure(capacity, gameObject);
+        }
+    }
+
+    public void ModifyHappiness(float amount, string trigger)
+    {
+        addedHappiness += amount;
+        if(trigger == "industrialReduce" && type != "industrial")
+        {
+            //PopupManager.Popup("Warning!");
+            //PopupManager.Popup("Factories reducing happiness");
         }
     }
 }

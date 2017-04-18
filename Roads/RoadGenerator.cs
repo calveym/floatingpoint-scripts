@@ -36,22 +36,22 @@ public class RoadGenerator : VRTK_InteractableObject {
 		Quaternion minusNinety = new Quaternion(0, -0.7071f, 0, 0.7071f);
 
 		roadObject = new Dictionary<string, GameObject>();
-		roadObject.Add("00000", smallRoadStraight);
-		roadObject.Add("10000", smallRoadStraight);
-		roadObject.Add("01000", smallRoadStraight);
-		roadObject.Add("00100", smallRoadStraight);
-		roadObject.Add("00010", smallRoadStraight);
-		roadObject.Add("11000", smallRoadStraight);
-		roadObject.Add("00110", smallRoadStraight);
-		roadObject.Add("10100", smallRoadTurn);
-		roadObject.Add("01010", smallRoadTurn);
-		roadObject.Add("10010", smallRoadTurn);
-		roadObject.Add("01100", smallRoadTurn);
-		roadObject.Add("01110", smallRoadTJunction);
-		roadObject.Add("11100", smallRoadTJunction);
-		roadObject.Add("10110", smallRoadTJunction);
-		roadObject.Add("11010", smallRoadTJunction);
-		roadObject.Add("11110", smallRoadXJunction);
+		roadObject.Add("0000", smallRoadStraight);
+		roadObject.Add("1000", smallRoadStraight);
+		roadObject.Add("0100", smallRoadStraight);
+		roadObject.Add("0010", smallRoadStraight);
+		roadObject.Add("0001", smallRoadStraight);
+		roadObject.Add("1100", smallRoadStraight);
+		roadObject.Add("0011", smallRoadStraight);
+		roadObject.Add("1010", smallRoadTurn);
+		roadObject.Add("0101", smallRoadTurn);
+		roadObject.Add("1001", smallRoadTurn);
+		roadObject.Add("0110", smallRoadTurn);
+		roadObject.Add("0111", smallRoadTJunction);
+		roadObject.Add("1110", smallRoadTJunction);
+		roadObject.Add("1011", smallRoadTJunction);
+		roadObject.Add("1101", smallRoadTJunction);
+		roadObject.Add("1111", smallRoadXJunction);
 
 		roadRotation = new Dictionary<string, Quaternion>();
 		roadRotation.Add("0000", zero);
@@ -201,7 +201,6 @@ public class RoadGenerator : VRTK_InteractableObject {
     {
         GameObject destroyRoad;
         roads.TryGetValue(position, out destroyRoad);
-        Debug.Log(position);
 		roads.Remove(position);
 		surroundingRoads.Remove(position);
         Destroy(destroyRoad);

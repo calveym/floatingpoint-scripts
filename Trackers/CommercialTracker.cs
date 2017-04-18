@@ -11,6 +11,11 @@ public class CommercialTracker : ItemTracker {
     public float goodsSold;
     public float goodsAvailable;
 
+    void Awake()
+    {
+        EconomyManager.ecoTick += UpdateSecond;
+    }
+
     void Update()
     {
         if (!updateStarted)
@@ -66,24 +71,20 @@ public class CommercialTracker : ItemTracker {
         visitors = populationManager.population - populationManager.unemployedPopulation;
     }
 
-    IEnumerator UpdateSecond()
+    void UpdateSecond()
     // Updates values once per second
     {
         updateStarted = true;
         if (!usable || !validPosition)
         {
-            yield return new WaitForSeconds(10);
+            return;
         }
-        while (usable && validPosition)
-        {
-            UpdateLandValue();
-            UpdateTransportationValue();
-            UpdateVisitors();
-            goodsAvailable = capacity;
-            SellGoods();
-            income = goodsSold;
-            totalIndustrialIncome += income;
-            yield return new WaitForSeconds(1);
-        }
+        UpdateLandValue();
+        UpdateTransportationValue();
+        UpdateVisitors();
+        goodsAvailable = capacity;
+        SellGoods();
+        income = goodsSold;
+        totalIndustrialIncome += income;
     }
 }
