@@ -130,7 +130,7 @@ public class IndustrialTracker : ItemTracker {
     {
         if(sales.Count >= 60)
         {
-            goodsSold += sales[-1];
+            goodsSold += sales[sales.Count - 1];
             goodsSold -= sales[0];
             sales.RemoveAt(0);
         }
