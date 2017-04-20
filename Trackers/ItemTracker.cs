@@ -36,16 +36,15 @@ public class ItemTracker : MonoBehaviour {
 
     public float landValue;
 
-    private void Start()
+    public void Start()
     // Sets start variables
     {
         availableTransportation = 1;
         landValue = 10f;
-        land = GetComponent<LandValue>();
+        land = gameObject.GetComponent<LandValue>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-
         //usable = false;
     }
 
@@ -61,7 +60,14 @@ public class ItemTracker : MonoBehaviour {
 
     public void UpdateLandValue()
     {
+        if(land == null)
+        {
+            Debug.Log("land is null on: " + gameObject);
+            land = gameObject.GetComponent<LandValue>();
+            Debug.Log("Check if corrected: " + land);
+        }
         landValue = land.RecalculateLandValue();
+        // DEBUG
         landValue += users;
         landValue += numSnappedRoads;
         if (capacity == users)
@@ -185,4 +191,6 @@ public class ItemTracker : MonoBehaviour {
             //PopupManager.Popup("Factories reducing happiness");
         }
     }
+
+
 }

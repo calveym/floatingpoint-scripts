@@ -8,22 +8,26 @@ public class TooltipManager : MonoBehaviour {
     public delegate void UpdateTooltips();
     public UpdateTooltips updateTooltips;
     List<GameObject> nearestBuildings;
-    GameObject rightController; 
+    GameObject rightController;
+    public GameObject indicator;
+    MeshRenderer rend;
 
     bool pressed;
 
 	// Use this for initialization
 	void Start () {
-        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
-        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
+        rend = indicator.GetComponent<MeshRenderer>();
         rightController = GameObject.Find("RightController");
+        rightController.GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
+        rightController.GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
     }
 
     void EnableObjectTooltip (object sender, ControllerInteractionEventArgs e)
     {
         pressed = true;
-        Debug.Log("enabledobjecttooooooltip");
-        nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 20f);
+        nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 7f);
+        rend.enabled = true;
+        Debug.Log(rend);
         foreach(GameObject building in nearestBuildings)
         {
             EnableTooltip(building);
@@ -55,6 +59,7 @@ public class TooltipManager : MonoBehaviour {
     void DisableObjectTooltip(object sender, ControllerInteractionEventArgs e)
     {
         pressed = false;
+        rend.enabled = false;
         foreach (GameObject building in nearestBuildings)
         {
             if (building.tag == "residential")

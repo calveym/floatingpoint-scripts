@@ -17,6 +17,11 @@ public class IndustrialComponent : ItemTracker {
 
     public float cost;  // Upfront purchase cost
 
+    new void Start()
+    {
+        base.Start();
+    }
+
     public void FoundIndustrial(GameObject found)
     // Runs every time new industrial building is found
     {

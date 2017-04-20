@@ -4,15 +4,13 @@ using UnityEngine;
 
 public static class U : object {
 
+
     public static List <GameObject> FindNearestBuildings (Vector3 position, float radius )
     {
         List<GameObject> returnObjects = new List<GameObject>();
         int layerMask = 1 << 8;
-        layerMask = ~layerMask;
 
         Collider[] hitColliders = Physics.OverlapSphere(position, radius, layerMask);
-
-        Debug.Log(hitColliders.Length);
 
         if (hitColliders.Length != 0)
         {
@@ -47,7 +45,7 @@ public static class U : object {
         List<IndustrialTracker> returnObject = new List<IndustrialTracker>();
         for (int i = 0; i < objectList.Count; i++)
         {
-            if (objectList[i].tag == "industrial")
+            if (objectList[i].gameObject.tag == "industrial" || objectList[i].gameObject.tag == "industrialComponent")
             {
                 returnObject.Add(objectList[i].GetComponent<IndustrialTracker>());
             }

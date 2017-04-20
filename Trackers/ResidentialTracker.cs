@@ -16,8 +16,9 @@ public class ResidentialTracker : ItemTracker {
     float foliage;
     float foliageIncome;
 
-    void Start()
+    new void Start()
     {
+        base.Start();
         educationLevel = new Dictionary<int, int>();
         age = new Dictionary<int, int>();
         employed = new Dictionary<int, bool>();
@@ -93,6 +94,7 @@ public class ResidentialTracker : ItemTracker {
 
     void ApplyForJob(GameObject targetLocation, int residentID)
     {
+        Debug.Log("Sending application... " + targetLocation);
         if(targetLocation.tag == "commercial")
         {
             targetLocation.GetComponent<CommercialTracker>().Apply(landValue, residentID, this);
@@ -121,7 +123,8 @@ public class ResidentialTracker : ItemTracker {
         Dictionary<GameObject, float> landValues = AnalyzeValues(allPotentialLocations);
         Dictionary<GameObject, float> aggregate = CreateAggregate(allPotentialLocations, distances, landValues);
         GameObject finalEmploymentLocation = aggregate.FirstOrDefault(x => x.Value == aggregate.Values.Max()).Key;
- 
+
+        Debug.Log("Final employment location: " + finalEmploymentLocation);
         return finalEmploymentLocation;
     }
 
@@ -133,7 +136,7 @@ public class ResidentialTracker : ItemTracker {
         {
             if (returnObject.ContainsKey(allObjects[i]) == false)
             {
-                returnObject.Add(allObjects[i], (1 / distances[allObjects[i]] + landValues[allObjects[i]]));
+                returnObject.Add(allObjects[i], (distances[allObjects[i]] + landValues[allObjects[i]]));
             }
         }
         return returnObject;
@@ -169,7 +172,7 @@ public class ResidentialTracker : ItemTracker {
         {
             if(returnObject.ContainsKey(trialObjects[i]) == false)
             {
-                returnObject.Add(trialObjects[i], Vector3.Distance(transform.position, trialObjects[i].transform.position));
+                returnObject.Add(trialObjects[i], 1 / Vector3.Distance(transform.position, trialObjects[i].transform.position));
             }
         }
         return returnObject;
@@ -180,7 +183,7 @@ public class ResidentialTracker : ItemTracker {
         return employed[ID];
     }
 
-    void UpdateSecond()
+    public void UpdateSecond()
     // Updates values once per second
     {
         updateStarted = true;
@@ -207,4 +210,37 @@ public class ResidentialTracker : ItemTracker {
         foliage += addAmount;
     }
 
+    public string ValidPosition()
+    {
+        if (validPosition)
+        {
+            return "Active";
+        }
+        else return "Inactive";
+    }
+
+    public string FancyIncome()
+    {
+        return "Income: $" + income + "/w";
+    }
+
+    public string FancyCapacity()
+    {
+        return "Users: " + users + "(" + capacity + ")";
+    }
+
+    public string FancyHappiness()
+    {
+        return "Happiness: " + localHappiness + "%";
+    }
+
+    public string FancyLandValue()
+    {
+        return "Land Value: $" + landValue;
+    }
+
+    public string FancyTitle()
+    {
+        return ValidPosition();
+    }
 }

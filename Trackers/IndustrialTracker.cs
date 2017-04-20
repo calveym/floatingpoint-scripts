@@ -8,6 +8,7 @@ public class IndustrialTracker : ItemTracker {
     GameObject markerPrefab;
     Marker marker;
     List<IndustrialComponent> components;
+    List<float> sales;
 
     public int visitors;
     public int lifetimeVisitors;
@@ -20,6 +21,7 @@ public class IndustrialTracker : ItemTracker {
     public float productionAmount;  // Production multiplier, used for components
     public float sellPrice;  // Sales price for goods
     public float sellAmount;  // Amount sold per economy tick
+    float goodsSold;  // Historical goods number, 
 
     int sellPriceComponents;
     int productionAmountComponents;
@@ -28,16 +30,24 @@ public class IndustrialTracker : ItemTracker {
 
     void Awake()
     {
-        markerPrefab = GameObject.Find("MarkerPrefab");
+        sales = new List<float>();
         components = new List<IndustrialComponent>();
-        EconomyManager.ecoTick += UpdateSecond;
+        goodsSold = 0;
+    }
+
+    new void Start()
+    {
+        base.Start();
+        markerPrefab = GameObject.Find("MarkerPrefab");
     }
 
     void Update()
     {
-        if(!updateStarted)
+        if (!updateStarted)
         {
-            StartCoroutine("UpdateSecond");  // Economic update tick
+            updateStarted = true;
+            EconomyManager.ecoTick += UpdateSecond;
+            GameObject.Find("Managers").GetComponent<ItemManager>().addIndustrial(capacity, gameObject);
         }
     }
 
@@ -67,7 +77,7 @@ public class IndustrialTracker : ItemTracker {
                      Mathf.Sin(2.0f * Mathf.PI * (float)u2); //random normal(0,1)
         double randNormal =
                      landValue - 5 + 5 * randStdNormal; //random normal(mean,stdDev^2)
-        if (applicantLandValue > randNormal && usable && users < capacity)
+        if (usable && users < capacity) // TODO: ADD LAND VALUE CHECKS BACK IN
         {
             AcceptApplication(residentID, applicantTracker);
         }
@@ -87,6 +97,7 @@ public class IndustrialTracker : ItemTracker {
     void RejectApplication(int residentID, ResidentialTracker applicantTracker)
     {
         // TODO:
+        Debug.Log("Applicant rejected!!!");
     }
 
     void SellGoods()
@@ -96,15 +107,33 @@ public class IndustrialTracker : ItemTracker {
         {
             goodsOwned -= sellAmount;
             allGoods += sellAmount;
+            AddSale(sellAmount);
         }
-        else
+        else if(goodsOwned < sellAmount)
         {
             allGoods += goodsOwned;
+            AddSale(goodsOwned);
             goodsOwned = 0;
         }
+        RemoveSale();
         income = goodsProduced * sellPrice;
         income -= baseCost;
         totalIndustrialIncome += goodsProduced;
+    }
+
+    void AddSale(float sellAmount)
+    {
+        sales.Add(sellAmount);
+    }
+
+    void RemoveSale()
+    {
+        if(sales.Count >= 60)
+        {
+            goodsSold += sales[-1];
+            goodsSold -= sales[0];
+            sales.RemoveAt(0);
+        }
     }
 
     public void AddMarker()
@@ -155,5 +184,40 @@ public class IndustrialTracker : ItemTracker {
         ProduceGoods();
         SellGoods();
         totalIndustrialIncome += income;
+    }
+
+    public string ValidPosition()
+    {
+        if (validPosition)
+        {
+            return "Active";
+        }
+        else return "Inactive";
+    }
+
+    public string FancyIncome()
+    {
+        return "Income: $" + income + "/w";
+    }
+
+    public string FancyCapacity()
+    {
+        return "Users: " + users + "(" + capacity + ")";
+    }
+
+    public string FancyHappiness()
+    {
+        return "Happiness: " + localHappiness + "%";
+    }
+    
+    public string FancyTitle()
+    {
+        // TODO: NICE TITLES
+        return ValidPosition();
+    }
+
+    public string FancyGoods()
+    {
+        return "Goods sold: " + goodsSold.ToString();
     }
 }

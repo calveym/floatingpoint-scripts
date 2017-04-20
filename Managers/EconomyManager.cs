@@ -53,7 +53,13 @@ public class EconomyManager : MonoBehaviour {
     {
         while (keepUpdating)
         {
-            ecoTick();
+            Debug.Log("Tick");
+
+            if (ecoTick != null)
+            {
+                ecoTick();
+            }
+
 
             ResidentialTracker.historicResidentialIncome = ResidentialTracker.totalResidentialIncome;
             CommercialTracker.historicCommercialIncome = CommercialTracker.totalCommercialIncome;

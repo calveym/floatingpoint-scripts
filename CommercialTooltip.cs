@@ -1,30 +1,77 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using VRTK;
 
 public class CommercialTooltip : MonoBehaviour
 {
 
     GameObject tooltip;
-    IndustrialTracker industrialTracker;
+    CommercialTracker commercialTracker;
     public bool buttonPressed;
+    LineRenderer line;
+    bool referencesUpdated;
+
+    // Text references
+    Text titleText;
+    Text incomeText;
+    Text capacityText;
+    Text happinessText;
+    Text goodsText;
+    Text visitorsText;
 
     // Use this for initialization
     void Start()
     {
-
+        commercialTracker = GetComponent<CommercialTracker>();
+        referencesUpdated = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (buttonPressed)
+        {
+            if (line == null)
+            {
+                line = transform.FindChild("Line").GetComponent<LineRenderer>();
+            }
+            line.SetPosition(0, tooltip.transform.position);
+            line.SetPosition(1, commercialTracker.transform.position);
+        }
     }
 
     public void UpdateValues()
     {
+        if (referencesUpdated == false)
+        {
+            UpdateReferences();
+        }
+        else
+        {
+            UpdateText();
+        }
 
+    }
+
+    void UpdateText()
+    {
+        titleText.text = commercialTracker.FancyTitle();
+        incomeText.text = commercialTracker.FancyIncome();
+        capacityText.text = commercialTracker.FancyCapacity();
+        happinessText.text = commercialTracker.FancyHappiness();
+        goodsText.text = commercialTracker.FancyGoods();
+        visitorsText.text = commercialTracker.FancyVisitors();
+    }
+
+    void UpdateReferences()
+    {
+        titleText = transform.FindChild("TitleText").GetComponent<Text>();
+        incomeText = transform.FindChild("IncomeText").GetComponent<Text>();
+        capacityText = transform.FindChild("CapacityText").GetComponent<Text>();
+        happinessText = transform.FindChild("HappinessText").GetComponent<Text>();
+        referencesUpdated = true;
     }
 
     public void EnableObjectTooltip()
@@ -34,7 +81,7 @@ public class CommercialTooltip : MonoBehaviour
         {
             Destroy(tooltip);
         }
-        tooltip = Instantiate(GameObject.Find("CommercialTooltip"), gameObject.transform);
+        tooltip = Instantiate(GameObject.Find("ResidentialTooltip"), gameObject.transform);
         Debug.Log(tooltip);
 
         tooltip.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
@@ -50,6 +97,7 @@ public class CommercialTooltip : MonoBehaviour
     {
         Destroy(tooltip.gameObject);
         GameObject.Find("Managers").GetComponent<TooltipManager>().updateTooltips -= UpdateValues;
+        referencesUpdated = false;
     }
 
 }

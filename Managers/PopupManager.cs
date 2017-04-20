@@ -44,13 +44,14 @@ public class PopupManager : MonoBehaviour {
         while (queuedPopups.Count > 0)
         {
             AudioSource.PlayClipAtPoint(notificationSound, tooltip.gameObject.transform.position);
-            //tooltip.UpdateText(queuedPopups[0]);
+            tooltip.UpdateText(queuedPopups[0]);
             popup.SetActive(true);
             queuedPopups.RemoveAt(0);
             yield return new WaitForSeconds(WAIT_TIME);
         }
         if (queuedPopups.Count == 0)
         {
+            Debug.Log("Popups all shown, deactivating");
             popup.SetActive(false);
             running = false;
             yield return null;
