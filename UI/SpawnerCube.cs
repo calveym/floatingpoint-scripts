@@ -42,6 +42,7 @@ public class SpawnerCube : MonoBehaviour
             transform.DetachChildren();
             currentObject = displayMenu.InitiateSpawn(gameObject);
         }
+        Debug.Log("Current Object: " + currentObject);
         currentObject.transform.LookAt(mainCamera.transform);
     }
 
@@ -69,12 +70,11 @@ public class SpawnerCube : MonoBehaviour
     // Runs when an object leaves cube trigger. Activates new building spawn
 	{
 		--count;
-		if(other.gameObject == currentObject && (other.gameObject.tag == "residential" || other.gameObject.tag == "commercial" || other.gameObject.tag == "industrial" || other.gameObject.tag == "foliage" || other.gameObject.tag == "leisure"))
+		if(other.gameObject == currentObject && (other.gameObject.tag == "residential" || other.gameObject.tag == "commercial" || other.gameObject.tag == "industrial" || other.gameObject.tag == "foliage" || other.gameObject.tag == "industrialComponent"))
 		{
-            Debug.Log("Running prematurely");
             leavingObject = other.gameObject;
             currentObject = displayMenu.InitiateSpawn(gameObject);
-			leavingObject.layer = 0;
+			leavingObject.layer = 8;
             waitRemove = true; // Initiates remove tracker, used when controller releases building in DoRemoveObject()
 		}
 	}

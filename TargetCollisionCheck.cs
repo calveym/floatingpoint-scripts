@@ -2,30 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TargetCollisionCheck : MonoBehaviour {
-	public GameObject parentBuilding;
-	GameObject nearestBuilding;
+public class TargetCollisionCheck : MonoBehaviour
+{
 
-	public void setNearestBuilding(GameObject building) {
-		nearestBuilding = building;
-	}
+    public GameObject parentBuilding;
 
-	void Start() {
-		Physics.IgnoreCollision (nearestBuilding.GetComponent<Collider>(), GetComponent<Collider>());
-	}
+    GameObject nearestBuilding;
+    int buildingsLayer;
 
-	void FixedUpdate() {
-		updateTargetIsBlocked (false);
-	}
+    public void setNearestBuilding(GameObject building)
+    {
+        nearestBuilding = building;
+    }
 
-	void OnTriggerStay(Collider other) {
-		if (other.GetComponent<Collider> ().CompareTag ("residential")) {
-			updateTargetIsBlocked (true);
-		}
-	}
+    void Start()
+    {
+        buildingsLayer = LayerMask.NameToLayer("Buildings");
+        Physics.IgnoreCollision(nearestBuilding.GetComponent<Collider>(), GetComponent<Collider>());
+    }
 
-	void updateTargetIsBlocked(bool status) {
-		parentBuilding.GetComponent<RoadSnap> ().updateTargetIsBlocked (status);
-	}
+    void FixedUpdate()
+    {
+        updateTargetIsBlocked(false);
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.layer == buildingsLayer)
+        {
+            updateTargetIsBlocked(true);
+        }
+    }
+
+    void updateTargetIsBlocked(bool status)
+    {
+        parentBuilding.GetComponent<RoadSnap>().updateTargetIsBlocked(status);
+    }
 
 }

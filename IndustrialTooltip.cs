@@ -10,6 +10,7 @@ public class IndustrialTooltip : MonoBehaviour {
     IndustrialTracker industrialTracker;
     public bool buttonPressed;
     bool referencesUpdated;
+    Transform stareat;
 
     // Text refs
     Text titleText;
@@ -25,14 +26,15 @@ public class IndustrialTooltip : MonoBehaviour {
 	void Start () {
         industrialTracker = GetComponent<IndustrialTracker>();
         referencesUpdated = false;
+        stareat = GameObject.Find("Camera (eye)").transform;
     }
 
     public void UpdateValues () {
-        if(referencesUpdated == false)
+        if (referencesUpdated == false && buttonPressed == true)
         {
             UpdateReferences();
         }
-        else
+        else if (referencesUpdated == true && buttonPressed == true)
         {
             UpdateText();
         }
@@ -69,11 +71,10 @@ public class IndustrialTooltip : MonoBehaviour {
             Destroy(tooltip);
         }
         tooltip = Instantiate(GameObject.Find("IndustrialTooltip"), gameObject.transform);
-
         tooltip.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
         tooltip.transform.position = gameObject.transform.position + new Vector3(0f, 2.5f, 0f);
         tooltip.transform.localScale = new Vector3(10f, 10f, 10f);
-        tooltip.transform.LookAt(GameObject.Find("Camera (eye)").transform);
+        tooltip.transform.LookAt(2 * transform.position - stareat.position);
         GameObject.Find("Managers").GetComponent<TooltipManager>().updateTooltips += UpdateValues;
         UpdateValues();
     }

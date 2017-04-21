@@ -94,7 +94,7 @@ public class EconomyManager : MonoBehaviour {
 	void UpdateBalance()
 	// Reduces balance by income and time
 	{
-		balance += income * Time.deltaTime;
+		balance += income * Time.deltaTime * 100;
 	}
 
 	void UpdateIncome()

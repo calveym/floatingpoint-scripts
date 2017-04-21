@@ -12,6 +12,8 @@ public class ResidentialTooltip : MonoBehaviour
     ResidentialTracker residentialTracker;
     public bool buttonPressed;
     bool referencesUpdated;
+    Transform stareat;
+
 
     // Text references
     Text titleText;
@@ -25,18 +27,17 @@ public class ResidentialTooltip : MonoBehaviour
     {
         residentialTracker = GetComponent<ResidentialTracker>();
         referencesUpdated = false;
+        stareat = GameObject.Find("Camera (eye)").transform;
     }
 
     public void UpdateValues()
     {
-        if(referencesUpdated == false)
+        if (referencesUpdated == false && buttonPressed == true)
         {
-            Debug.Log("Updating refs");
             UpdateReferences();
         }
-        else
+        else if (referencesUpdated == true && buttonPressed == true)
         {
-            Debug.Log("Updating text");
             UpdateText();
         }
     }
@@ -73,7 +74,7 @@ public class ResidentialTooltip : MonoBehaviour
         tooltip.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
         tooltip.transform.position = gameObject.transform.position + new Vector3(0f, 2.5f, 0f);
         tooltip.transform.localScale = new Vector3(10f, 10f, 10f);
-        tooltip.transform.LookAt(GameObject.Find("Camera (eye)").transform);
+        tooltip.transform.LookAt(2 * transform.position - stareat.position);
         GameObject.Find("Managers").GetComponent<TooltipManager>().updateTooltips += UpdateValues;
         UpdateReferences();
         UpdateText();

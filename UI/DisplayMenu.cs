@@ -67,6 +67,7 @@ public class DisplayMenu : MonoBehaviour
     
     public void SetTier(int newTier)
     {
+        Debug.Log("New tier: " + newTier);
         tier = newTier;
         if(newTier == 1)
         {
@@ -136,7 +137,7 @@ public class DisplayMenu : MonoBehaviour
                 ButtonPressed(getPressedButton(position.x));
                 SwapModels();
             }
-            yield return null;
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
