@@ -238,9 +238,9 @@ public class RoadSnap : MonoBehaviour {
 			// if it already exists, destroy it and create a new one
 
 			Destroy (targetBox);
-			targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, nearestBuilding.transform.rotation);
+			targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, transform.rotation);
 		} else {
-			targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, nearestBuilding.transform.rotation);
+			targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, transform.rotation);
 		}
 
 		if (targetIsBlocked) {
@@ -493,6 +493,7 @@ public class RoadSnap : MonoBehaviour {
 		Vector3 thisBottomLeft = RotatePointAroundPivot (bottomLeft, transform.position, transform.eulerAngles);
 		Vector3 thisTopRight = RotatePointAroundPivot (topRight, transform.position, transform.eulerAngles);
 		Vector3 thisBottomRight = RotatePointAroundPivot (bottomRight, transform.position, transform.eulerAngles);
+
 		/*
 		GameObject g1 = (GameObject)Instantiate (snapCube, thisTopLeft, transform.rotation);
 		GameObject g2 = (GameObject)Instantiate (snapCube, thisTopRight, transform.rotation);
@@ -661,6 +662,12 @@ public class RoadSnap : MonoBehaviour {
 		StringFloat thisCornerToSnap = getThisCornerToSnap ();
 
 		Vector3 buildingLength = (originalSnapPoints [thisCornerToSnap.name] - originalSnapPoints ["center"]) * 10; // the distance between the closest point and the center, multiplied by 10 due local/world difference
+
+		// Switch the buildingLength if the object rotates 90 or 180 degrees
+		if (Mathf.Round((transform.rotation.eulerAngles.y / 90)) % 2 != 0) {
+			Debug.Log ("running!");
+			buildingLength = new Vector3 (buildingLength.z, 0, buildingLength.x);
+		}
 
 		float newZAxis = 0;
 		float newXAxis = 0;
