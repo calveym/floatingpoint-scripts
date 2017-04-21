@@ -67,10 +67,12 @@ public class CommercialTooltip : MonoBehaviour
 
     void UpdateReferences()
     {
-        titleText = transform.FindChild("TitleText").GetComponent<Text>();
-        incomeText = transform.FindChild("IncomeText").GetComponent<Text>();
-        capacityText = transform.FindChild("CapacityText").GetComponent<Text>();
-        happinessText = transform.FindChild("HappinessText").GetComponent<Text>();
+        titleText = transform.Find("Canvas/TitleText").GetComponent<Text>();
+        incomeText = transform.Find("Canvas/IncomeText").GetComponent<Text>();
+        capacityText = transform.Find("Canvas/CapacityText").GetComponent<Text>();
+        happinessText = transform.Find("Canvas/HappinessText").GetComponent<Text>();
+        goodsText = transform.Find("Canvas/ComponentBText").GetComponent<Text>();
+        visitorsText = transform.Find("Canvas/ComponentCText").GetComponent<Text>();
         referencesUpdated = true;
     }
 

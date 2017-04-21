@@ -8,7 +8,7 @@ public class IndustrialTracker : ItemTracker {
     GameObject markerPrefab;
     Marker marker;
     List<IndustrialComponent> components;
-    List<float> sales;
+    List<float> sales; // List of recent sales counted in goodsSold
 
     public int visitors;
     public int lifetimeVisitors;
@@ -18,21 +18,29 @@ public class IndustrialTracker : ItemTracker {
     public float goodsOwned;  // All goods currently owned by this 
     public static float allGoods; // Base goods tracking figure for each economic tick
 
-    public float productionAmount;  // Production multiplier, used for components
-    public float sellPrice;  // Sales price for goods
-    public float sellAmount;  // Amount sold per economy tick
-    float goodsSold;  // Historical goods number, 
+    public float productionAmount;  // Base production value
+    public float sellPrice;  // Base sell price
+    public float sellAmount;  // Base maximum amount sold per economy tick
 
-    int sellPriceComponents;
-    int productionAmountComponents;
-    int goodsCapacityComponents;
-    int sellAmountComponents;
+    // Multipliers from components
+    public float productionMulti;
+    public float goodsCapacityMulti;
+    public float sellPriceMulti;
+    public float sellAmountMulti;
+    public float capacityMulti;
+
+    float goodsSold;  // Number of goods sold last week
 
     void Awake()
     {
         sales = new List<float>();
         components = new List<IndustrialComponent>();
         goodsSold = 0;
+        productionMulti = 1;
+        goodsCapacityMulti = 1;
+        sellPriceMulti = 1;
+        sellAmountMulti = 1;
+        capacityMulti = 1;
     }
 
     new void Start()
@@ -55,7 +63,7 @@ public class IndustrialTracker : ItemTracker {
     {
         if(goodsOwned < goodsCapacity)
         {
-            goodsProduced = users * localHappiness * productionAmount;
+            goodsProduced = users * localHappiness * productionAmount * productionMulti;
             if(goodsProduced + goodsOwned <= goodsCapacity)
             {
                 goodsOwned += goodsProduced;
@@ -162,11 +170,11 @@ public class IndustrialTracker : ItemTracker {
 
     void AddBonus(IndustrialComponent component)
     {
-        sellPrice += component.sellPrice;
-        productionAmount += component.productionAmount;
-        goodsCapacity += component.goodsCapacity;
-        sellAmount += component.sellAmount;
-        capacity += component.capacity;
+        sellPriceMulti += component.sellPriceMulti;
+        productionMulti += component.productionMulti;
+        goodsCapacityMulti += component.goodsCapacityMulti;
+        sellAmountMulti += component.sellAmountMulti;
+        capacityMulti += component.capacityMulti;
 
     }
 

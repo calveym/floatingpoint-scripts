@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class IndustrialComponent : ItemTracker {
 
-    public float goodsCapacity;
-    public float sellAmount;
-    public float sellPrice;
-    public float productionAmount;
+    public float goodsCapacityMulti;
+    public float sellAmountMulti;
+    public float sellPriceMulti;
+    public float productionMulti;
+    public float capacityMulti;
     //  See IndustrialTracker for definitions
 
     GameObject linkedBuilding;

@@ -152,6 +152,7 @@ public class ItemTracker : MonoBehaviour {
         usable = true;
         if(type == "residential")
         {
+            Debug.Log(itemManager);
             itemManager.addResidential(capacity, gameObject);
             populationManager.QueueUpdates();
             //GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);

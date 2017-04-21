@@ -8,6 +8,7 @@ public class ResidentialTooltip : MonoBehaviour
 {
 
     GameObject tooltip;
+    GameObject canvas;
     ResidentialTracker residentialTracker;
     public bool buttonPressed;
     bool referencesUpdated;
@@ -24,25 +25,24 @@ public class ResidentialTooltip : MonoBehaviour
     {
         residentialTracker = GetComponent<ResidentialTracker>();
         referencesUpdated = false;
-        EnableObjectTooltip();
     }
 
     public void UpdateValues()
     {
         if(referencesUpdated == false)
         {
+            Debug.Log("Updating refs");
             UpdateReferences();
         }
         else
         {
+            Debug.Log("Updating text");
             UpdateText();
         }
-
     }
 
     void UpdateText()
     {
-        Debug.Log("Text attempting to update");
         titleText.text = residentialTracker.FancyTitle();
         incomeText.text = residentialTracker.FancyIncome();
         capacityText.text = residentialTracker.FancyCapacity();
@@ -52,30 +52,31 @@ public class ResidentialTooltip : MonoBehaviour
 
     void UpdateReferences()
     {
-        titleText = transform.FindChild("TitleText").GetComponent<Text>();
-        incomeText = transform.FindChild("IncomeText").GetComponent<Text>();
-        capacityText = transform.FindChild("CapacityText").GetComponent<Text>();
-        happinessText = transform.FindChild("HappinessText").GetComponent<Text>();
-        landValueText = transform.FindChild("LandValueText").GetComponent<Text>();
+        titleText = tooltip.transform.Find("Canvas/TitleText").GetComponent<Text>();
+        incomeText = tooltip.transform.Find("Canvas/IncomeText").GetComponent<Text>();
+        capacityText = tooltip.transform.Find("Canvas/CapacityText").GetComponent<Text>();
+        happinessText = tooltip.transform.Find("Canvas/HappinessText").GetComponent<Text>();
+        landValueText = tooltip.transform.Find("Canvas/LandValueText").GetComponent<Text>();
         referencesUpdated = true;
     }
 
     public void EnableObjectTooltip()
     // Enables, resets position and resets text for object tooltips
     {
+        Debug.Log("Residential tooltip attempting to enable");
         if (tooltip != null)
         {
             Destroy(tooltip);
         }
         tooltip = Instantiate(GameObject.Find("ResidentialTooltip"), gameObject.transform);
-        Debug.Log(tooltip);
 
         tooltip.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
         tooltip.transform.position = gameObject.transform.position + new Vector3(0f, 2.5f, 0f);
-        tooltip.transform.localScale = new Vector3(100f, 100f, 100f);
+        tooltip.transform.localScale = new Vector3(10f, 10f, 10f);
         tooltip.transform.LookAt(GameObject.Find("Camera (eye)").transform);
         GameObject.Find("Managers").GetComponent<TooltipManager>().updateTooltips += UpdateValues;
-        UpdateValues();
+        UpdateReferences();
+        UpdateText();
     }
 
     public void DisableObjectTooltip()

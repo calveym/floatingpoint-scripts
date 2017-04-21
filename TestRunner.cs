@@ -73,7 +73,10 @@ public class TestRunner : MonoBehaviour
     public void FourthTest()
     {
         Debug.Log("Test 4 Running");
-        PopupManager.Popup("TEST POPUP WORKS!!!");
+        TooltipManager tooltip = manager.GetComponent<TooltipManager>();
+        tooltip.pressed = true;
+        tooltip.StartCoroutine("SecondTick");
+        manager.GetComponent<TooltipManager>().EnableTooltip(gameObject);
     }
 
     void FifthTest()
@@ -103,24 +106,24 @@ public class TestRunner : MonoBehaviour
 
     void FindAllChildren()
     {
-        residentialTrackers = transform.GetAllComponentsInChildren<ResidentialTracker>();
-        commercialTrackers = transform.GetAllComponentsInChildren<CommercialTracker>();
-        industrialTrackers = transform.GetAllComponentsInChildren<IndustrialTracker>();
+        // residentialTrackers = transform.GetAllComponentsInChildren<ResidentialTracker>();
+        // commercialTrackers = transform.GetAllComponentsInChildren<CommercialTracker>();
+        // industrialTrackers = transform.GetAllComponentsInChildren<IndustrialTracker>();
     }
 
     void EnableAllChildren()
     {
-        for(int i = 0; i < residentialTrackers.Length; i++)
+        // for(int i = 0; i < residentialTrackers.Length; i++)
         {
-            residentialTrackers[i].SetUsable();
+            // residentialTrackers[i].SetUsable();
         }
-        for(int i = 0; i < commercialTrackers.Length; i++)
+        // for(int i = 0; i < commercialTrackers.Length; i++)
         {
-            commercialTrackers[i].SetUsable();
+            // commercialTrackers[i].SetUsable();
         }
-        for(int i = 0; i < industrialTrackers.Length; i++)
+        // for(int i = 0; i < industrialTrackers.Length; i++)
         {
-            industrialTrackers[i].SetUsable();
+            // industrialTrackers[i].SetUsable();
         }
     }
 }

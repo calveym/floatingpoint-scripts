@@ -7,12 +7,13 @@ public class TooltipManager : MonoBehaviour {
 
     public delegate void UpdateTooltips();
     public UpdateTooltips updateTooltips;
+
     List<GameObject> nearestBuildings;
     GameObject rightController;
     public GameObject indicator;
     MeshRenderer rend;
 
-    bool pressed;
+    public bool pressed;
 
 	// Use this for initialization
 	void Start () {
@@ -25,16 +26,16 @@ public class TooltipManager : MonoBehaviour {
     void EnableObjectTooltip (object sender, ControllerInteractionEventArgs e)
     {
         pressed = true;
-        nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 7f);
+        nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 10f);
         rend.enabled = true;
-        Debug.Log(rend);
         foreach(GameObject building in nearestBuildings)
         {
             EnableTooltip(building);
         }
+        StartCoroutine("SecondTick");
     }
 
-    void EnableTooltip(GameObject building)
+    public void EnableTooltip(GameObject building)
     {   
         if(building.tag == "residential")
         {
@@ -42,13 +43,12 @@ public class TooltipManager : MonoBehaviour {
         }
         if(building.tag == "commercial")
         {
+            Debug.Log(building);
             building.GetComponent<CommercialTooltip>().EnableObjectTooltip();
-
         }
         if (building.tag == "industrial")
         {
             building.GetComponent<IndustrialTooltip>().EnableObjectTooltip();
-
         }
         if (building.tag == "leisure")
         {
@@ -69,12 +69,10 @@ public class TooltipManager : MonoBehaviour {
             if (building.tag == "commercial")
             {
                 building.GetComponent<CommercialTooltip>().DisableObjectTooltip();
-
             }
             if (building.tag == "industrial")
             {
                 building.GetComponent<IndustrialTooltip>().DisableObjectTooltip();
-
             }
             if (building.tag == "leisure") 
             {
@@ -87,7 +85,10 @@ public class TooltipManager : MonoBehaviour {
     {
         while(pressed)
         {
-            updateTooltips();
+            if(updateTooltips != null)
+            {
+                updateTooltips();
+            }
             yield return new WaitForSeconds(1);
         }
     }

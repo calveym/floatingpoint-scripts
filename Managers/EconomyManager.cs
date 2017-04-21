@@ -53,8 +53,6 @@ public class EconomyManager : MonoBehaviour {
     {
         while (keepUpdating)
         {
-            Debug.Log("Tick");
-
             if (ecoTick != null)
             {
                 ecoTick();

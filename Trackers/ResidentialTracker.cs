@@ -94,7 +94,6 @@ public class ResidentialTracker : ItemTracker {
 
     void ApplyForJob(GameObject targetLocation, int residentID)
     {
-        Debug.Log("Sending application... " + targetLocation);
         if(targetLocation.tag == "commercial")
         {
             targetLocation.GetComponent<CommercialTracker>().Apply(landValue, residentID, this);
@@ -124,7 +123,6 @@ public class ResidentialTracker : ItemTracker {
         Dictionary<GameObject, float> aggregate = CreateAggregate(allPotentialLocations, distances, landValues);
         GameObject finalEmploymentLocation = aggregate.FirstOrDefault(x => x.Value == aggregate.Values.Max()).Key;
 
-        Debug.Log("Final employment location: " + finalEmploymentLocation);
         return finalEmploymentLocation;
     }
 
