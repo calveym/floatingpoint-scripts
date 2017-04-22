@@ -121,7 +121,7 @@ public class ComponentSnap : VRTK_InteractableObject {
             }
             else if(closest.tag == "foliage")
             {
-
+                closest.GetComponent<FoliageTracker>().StartFoliage();
             }
         }
         else
