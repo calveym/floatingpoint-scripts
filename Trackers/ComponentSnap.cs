@@ -45,6 +45,7 @@ public class ComponentSnap : VRTK_InteractableObject {
         {
             objectUsed = true;
             AttachSphere();
+            StartCoroutine("MarkIndustrial");
         }
     }
     
@@ -112,17 +113,15 @@ public class ComponentSnap : VRTK_InteractableObject {
 
     void ClosestFound(GameObject closest)
     {
-        if(component.economyManager.GetBalance() >= component.cost)
+        if(component.economyManager.GetBalance() >= component.buyCost)
         {
             if(closest.tag == "industrial")
             {
-                component.LinkComponent(potentialTracker);
                 PurchaseComponent();
             }
             else if(closest.tag == "foliage")
             {
-                PurchaseComponent();
-                closest.gameObject.GetComponent<FoliageTracker>().StartFoliage();
+
             }
         }
         else
@@ -144,7 +143,8 @@ public class ComponentSnap : VRTK_InteractableObject {
 
     void PurchaseComponent()
     {
-        Pay(component.cost);
+        component.LinkComponent(potentialTracker);
+        Pay(component.buyCost);
     }
 
     IEnumerator MarkIndustrial()

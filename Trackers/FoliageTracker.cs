@@ -10,6 +10,7 @@ public class FoliageTracker : MonoBehaviour {
 
     public void StartFoliage()
     {
+        Debug.Log("Foliage successfully added");
         StartCoroutine("FoliageTick");
     }
     

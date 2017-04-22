@@ -14,7 +14,6 @@ public class ResidentialTracker : ItemTracker {
     List<int> takenIDs; // List of currently active IDs for finding new ones
 
     float foliage;
-    float foliageIncome;
 
     new void Start()
     {

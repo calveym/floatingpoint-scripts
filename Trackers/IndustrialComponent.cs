@@ -8,15 +8,12 @@ public class IndustrialComponent : ItemTracker {
     public float sellAmountMulti;
     public float sellPriceMulti;
     public float productionMulti;
-    public float capacityMulti;
     //  See IndustrialTracker for definitions
 
     GameObject linkedBuilding;
     IndustrialTracker linkedTracker;
     GameObject tempLinkedBuilding;
     IndustrialTracker tempLinkedTracker;
-
-    public float cost;  // Upfront purchase cost
 
     new void Start()
     {
@@ -28,7 +25,6 @@ public class IndustrialComponent : ItemTracker {
     {
         tempLinkedBuilding = found;
         tempLinkedTracker = found.GetComponent<IndustrialTracker>();
-
         tempLinkedTracker.AddMarker();
     }
 

@@ -13,12 +13,11 @@ public class IndustrialTracker : ItemTracker {
     public int visitors;
     public int lifetimeVisitors;
 
-    public float goodsCapacity;  // obvious
+    public float goodsCapacity;  // max amount of goods storeable
     public float goodsProduced;  // Goods produced in last economic tick
     public float goodsOwned;  // All goods currently owned by this 
     public static float allGoods; // Base goods tracking figure for each economic tick
 
-    public float productionAmount;  // Base production value
     public float sellPrice;  // Base sell price
     public float sellAmount;  // Base maximum amount sold per economy tick
 
@@ -27,7 +26,6 @@ public class IndustrialTracker : ItemTracker {
     public float goodsCapacityMulti;
     public float sellPriceMulti;
     public float sellAmountMulti;
-    public float capacityMulti;
 
     float goodsSold;  // Number of goods sold last week
 
@@ -40,7 +38,6 @@ public class IndustrialTracker : ItemTracker {
         goodsCapacityMulti = 1;
         sellPriceMulti = 1;
         sellAmountMulti = 1;
-        capacityMulti = 1;
     }
 
     new void Start()
@@ -63,7 +60,7 @@ public class IndustrialTracker : ItemTracker {
     {
         if(goodsOwned < goodsCapacity)
         {
-            goodsProduced = users * localHappiness * productionAmount * productionMulti;
+            goodsProduced = users * localHappiness * productionMulti;
             if(goodsProduced + goodsOwned <= goodsCapacity)
             {
                 goodsOwned += goodsProduced;
@@ -124,7 +121,7 @@ public class IndustrialTracker : ItemTracker {
             goodsOwned = 0;
         }
         RemoveSale();
-        income = goodsProduced * sellPrice;
+        income = sellAmount * sellPrice;
         income -= baseCost;
         totalIndustrialIncome += goodsProduced;
     }
@@ -161,7 +158,7 @@ public class IndustrialTracker : ItemTracker {
     {
         for(int i = 0; i < components.Count; i++)
         {
-            if (components[i].type == "sellPrice" || components[i].type == "productionAmount" || components[i].type == "goodsCapacity" || components[i].type == "sellAmount" || components[i].type == "capacity")
+            if (components[i].type == "sellPrice" || components[i].type == "productionAmount" || components[i].type == "goodsCapacity" || components[i].type == "sellAmount")
             {
                 AddBonus(components[i]);
             }
@@ -174,8 +171,6 @@ public class IndustrialTracker : ItemTracker {
         productionMulti += component.productionMulti;
         goodsCapacityMulti += component.goodsCapacityMulti;
         sellAmountMulti += component.sellAmountMulti;
-        capacityMulti += component.capacityMulti;
-
     }
 
     void UpdateSecond()

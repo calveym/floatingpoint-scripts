@@ -19,6 +19,7 @@ public class ItemTracker : MonoBehaviour {
     public static float totalIndustrialIncome;
     public static float historicIndustrialIncome;
 
+    public float buyCost;
     public float baseCost;
     public float localHappiness;
     public int level;
@@ -31,9 +32,9 @@ public class ItemTracker : MonoBehaviour {
     public bool updateStarted;
     public bool grabbableObject;
     public bool validPosition;
-    GameObject tooltip;
     public float addedHappiness;
 
+    public float foliageIncome;
     public float landValue;
 
     public void Start()

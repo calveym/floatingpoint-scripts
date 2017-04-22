@@ -46,9 +46,9 @@ public class IndustrialTooltip : MonoBehaviour {
         incomeText.text = industrialTracker.FancyIncome();
         capacityText.text = industrialTracker.FancyCapacity();
         happinessText.text = industrialTracker.FancyHappiness();
-        componentBText.text = industrialTracker.capacityMulti.ToString();
+        componentBText.text = industrialTracker.goodsCapacityMulti.ToString();
         componentCText.text = industrialTracker.productionMulti.ToString();
-        componentCText.text = industrialTracker.sellAmountMulti.ToString();
+        componentDText.text = industrialTracker.sellAmountMulti.ToString();
     }
 
     void UpdateReferences()

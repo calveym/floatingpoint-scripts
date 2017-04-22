@@ -42,7 +42,6 @@ public class SpawnerCube : MonoBehaviour
             transform.DetachChildren();
             currentObject = displayMenu.InitiateSpawn(gameObject);
         }
-        Debug.Log("Current Object: " + currentObject);
         currentObject.transform.LookAt(mainCamera.transform);
     }
 
