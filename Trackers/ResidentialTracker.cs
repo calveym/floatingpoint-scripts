@@ -6,6 +6,7 @@ using UnityEngine;
 public class ResidentialTracker : ItemTracker {
     // Manages specific residential functions.
 
+    public int employmentHappiness;
     public int unemployedPopulation;
     public Dictionary <int, int> educationLevel; // maps individual residents to their education levels
     public Dictionary <int, int> age; // maps individual residents to their age
@@ -188,10 +189,24 @@ public class ResidentialTracker : ItemTracker {
         {
             return;
         }
+        UpdateLocalHappiness();
+        UpdateEmploymentHappiness();
+        UpdateHappiness();
         UpdateLandValue();
         UpdateTransportationValue();
-        UpdateHappiness();
         CalculateIncome();
+    }
+
+    void UpdateEmploymentHappiness()
+    {
+        employmentHappiness = (users - unemployedPopulation) / unemployedPopulation * 40;
+    }
+
+    void UpdateHappiness()
+    {
+        currentHappiness = localHappiness + employmentHappiness + fillRateHappiness;
+        CalculateLongtermHappiness();
+        CalculateHappinessState();
     }
 
     void CalculateIncome()
@@ -223,7 +238,7 @@ public class ResidentialTracker : ItemTracker {
 
     public string FancyCapacity()
     {
-        return "Users: " + users + "(" + capacity + ")";
+        return "Residents: " + users + " / " + capacity;
     }
 
     public string FancyHappiness()

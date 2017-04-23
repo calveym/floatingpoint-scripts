@@ -74,9 +74,9 @@ public class TestRunner : MonoBehaviour
     {
         Debug.Log("Test 4 Running");
         TooltipManager tooltip = manager.GetComponent<TooltipManager>();
-        tooltip.pressed = true;
+        TooltipManager.pressed = true;
         tooltip.StartCoroutine("SecondTick");
-        manager.GetComponent<TooltipManager>().EnableTooltip(gameObject);
+        tooltip.EnableTooltip(gameObject);
     }
 
     void FifthTest()

@@ -8,9 +8,7 @@ public class ResidentialTooltip : MonoBehaviour
 {
 
     GameObject tooltip;
-    GameObject canvas;
     ResidentialTracker residentialTracker;
-    public bool buttonPressed;
     bool referencesUpdated;
     Transform stareat;
 
@@ -32,11 +30,11 @@ public class ResidentialTooltip : MonoBehaviour
 
     public void UpdateValues()
     {
-        if (referencesUpdated == false && buttonPressed == true)
+        if (referencesUpdated == false && TooltipManager.pressed == true)
         {
             UpdateReferences();
         }
-        else if (referencesUpdated == true && buttonPressed == true)
+        else if (referencesUpdated == true && TooltipManager.pressed == true)
         {
             UpdateText();
         }

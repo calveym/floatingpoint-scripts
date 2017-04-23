@@ -9,8 +9,6 @@ public class CommercialTooltip : MonoBehaviour
 
     GameObject tooltip;
     CommercialTracker commercialTracker;
-    public bool buttonPressed;
-    LineRenderer line;
     bool referencesUpdated;
     Transform stareat;
 
@@ -28,30 +26,16 @@ public class CommercialTooltip : MonoBehaviour
         commercialTracker = GetComponent<CommercialTracker>();
         referencesUpdated = false;
         stareat = GameObject.Find("Camera (eye)").transform;
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (buttonPressed)
-        {
-            if (line == null)
-            {
-                line = transform.FindChild("Line").GetComponent<LineRenderer>();
-            }
-            line.SetPosition(0, tooltip.transform.position);
-            line.SetPosition(1, commercialTracker.transform.position);
-        }
     }
 
     public void UpdateValues()
     {
-        if (referencesUpdated == false && buttonPressed == true)
+        Debug.Log("referencesUpdated: " + referencesUpdated);
+        if (referencesUpdated == false && TooltipManager.pressed == true)
         {
             UpdateReferences();
         }
-        else if (referencesUpdated == true && buttonPressed == true)
+        else if (referencesUpdated == true && TooltipManager.pressed == true)
         {
             UpdateText();
         }
@@ -70,12 +54,12 @@ public class CommercialTooltip : MonoBehaviour
 
     void UpdateReferences()
     {
-        titleText = transform.Find("Canvas/TitleText").GetComponent<Text>();
-        incomeText = transform.Find("Canvas/IncomeText").GetComponent<Text>();
-        capacityText = transform.Find("Canvas/CapacityText").GetComponent<Text>();
-        happinessText = transform.Find("Canvas/HappinessText").GetComponent<Text>();
-        goodsText = transform.Find("Canvas/ComponentBText").GetComponent<Text>();
-        visitorsText = transform.Find("Canvas/ComponentCText").GetComponent<Text>();
+        titleText = tooltip.transform.Find("Canvas/TitleText").GetComponent<Text>();
+        incomeText = tooltip.transform.Find("Canvas/IncomeText").GetComponent<Text>();
+        capacityText = tooltip.transform.Find("Canvas/CapacityText").GetComponent<Text>();
+        happinessText = tooltip.transform.Find("Canvas/HappinessText").GetComponent<Text>();
+        goodsText = tooltip.transform.Find("Canvas/ComponentBText").GetComponent<Text>();
+        visitorsText = tooltip.transform.Find("Canvas/ComponentCText").GetComponent<Text>();
         referencesUpdated = true;
     }
 
@@ -99,8 +83,8 @@ public class CommercialTooltip : MonoBehaviour
     public void DisableObjectTooltip()
     // Removes object tooltips
     {
-        Destroy(tooltip.gameObject);
         GameObject.Find("Managers").GetComponent<TooltipManager>().updateTooltips -= UpdateValues;
+        Destroy(tooltip.gameObject);
         referencesUpdated = false;
     }
 

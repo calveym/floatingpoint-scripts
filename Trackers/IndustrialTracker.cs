@@ -5,10 +5,14 @@ using UnityEngine;
 public class IndustrialTracker : ItemTracker {
     // Manages individual stats of each industrial building.
 
+    int requiredProduction = 5;
+
     GameObject markerPrefab;
     Marker marker;
     List<IndustrialComponent> components;
     List<float> sales; // List of recent sales counted in goodsSold
+
+    public float salesHappiness; // Happiness from reaching sales targets
 
     public int visitors;
     public int lifetimeVisitors;
@@ -60,7 +64,7 @@ public class IndustrialTracker : ItemTracker {
     {
         if(goodsOwned < goodsCapacity)
         {
-            goodsProduced = users * localHappiness * productionMulti;
+            goodsProduced = users * happinessState * productionMulti;
             if(goodsProduced + goodsOwned <= goodsCapacity)
             {
                 goodsOwned += goodsProduced;
@@ -173,6 +177,18 @@ public class IndustrialTracker : ItemTracker {
         sellAmountMulti += component.sellAmountMulti;
     }
 
+    void UpdateSalesHappiness()
+    {
+        if (capacity != 0 && requiredProduction != 0)
+        {
+            salesHappiness = (goodsProduced / capacity * requiredProduction) * 40;
+            if (salesHappiness > 40)
+            {
+                salesHappiness = 40; // Capped at 40
+            }
+        }
+    }
+
     void UpdateSecond()
     // Updates values once per second, economic tick
     {
@@ -181,12 +197,22 @@ public class IndustrialTracker : ItemTracker {
         {
             return;
         }
+        UpdateLocalHappiness();
+        UpdateSalesHappiness();
         UpdateHappiness();
         UpdateLandValue();
         UpdateTransportationValue();
         ProduceGoods();
         SellGoods();
         totalIndustrialIncome += income;
+    }
+
+    void UpdateHappiness()
+    // Performs all necessary final happiness calculations, including longterm
+    {
+        currentHappiness = localHappiness + salesHappiness + fillRateHappiness;
+        CalculateLongtermHappiness();
+        CalculateHappinessState();
     }
 
     public string ValidPosition()
@@ -200,17 +226,17 @@ public class IndustrialTracker : ItemTracker {
 
     public string FancyIncome()
     {
-        return "Income: $" + income + "/w";
+        return "Income      : $" + income + "/w";
     }
 
     public string FancyCapacity()
     {
-        return "Users: " + users + "(" + capacity + ")";
+        return "Workers         : " + users + " / " + capacity;
     }
 
-    public string FancyHappiness()
+    public int FancyHappiness()
     {
-        return "Happiness: " + localHappiness + "%";
+        return happinessState;
     }
     
     public string FancyTitle()

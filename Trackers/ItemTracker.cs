@@ -21,21 +21,26 @@ public class ItemTracker : MonoBehaviour {
 
     public float buyCost;
     public float baseCost;
-    public float localHappiness;
     public int level;
     public string type;
+    public bool usable;
+    public bool grabbableObject;
+
     public int capacity;
     public float income;
     public int users;
-    public bool usable;
     public float numSnappedRoads;
     public bool updateStarted;
-    public bool grabbableObject;
     public bool validPosition;
-    public float addedHappiness;
-
     public float foliageIncome;
     public float landValue;
+
+    public float localHappiness; // Happiness based on number of nice surroundings
+    public float fillRateHappiness; // Happiness based on fill rate (users / cap * 40)
+    public float addedHappiness; // Temporary tracking figure
+    public float currentHappiness;  // Used to affect longterm happiness- longerm happiness tends towards this number
+    public float longtermHappiness; // Most important happiness figure, should be used in most significant income, landvalue etc calculations
+    public int happinessState;
 
     public void Start()
     // Sets start variables
@@ -63,13 +68,10 @@ public class ItemTracker : MonoBehaviour {
     {
         if(land == null)
         {
-            Debug.Log("land is null on: " + gameObject);
             land = gameObject.GetComponent<LandValue>();
-            Debug.Log("Check if corrected: " + land);
         }
         landValue = land.RecalculateLandValue();
-        // DEBUG
-        landValue += users;
+        landValue += users * 1.2f;
         landValue += numSnappedRoads;
         if (capacity == users)
         {
@@ -83,11 +85,20 @@ public class ItemTracker : MonoBehaviour {
         availableTransportation = RoadAccess() + ProgressionManager.Airport() + ProgressionManager.Train();
     }
 
-    public void UpdateHappiness()
+    public void UpdateLocalHappiness()
     //  Sets local happiness level based on surroundings
     {
-        localHappiness = addedHappiness;
+        if(addedHappiness < 40)
+        {
+            localHappiness = addedHappiness;
+        }
+        else
+        {
+            localHappiness = 40;
+        }
         addedHappiness = 0;
+
+        fillRateHappiness = (users / capacity) * 20;
     }
 
     float RoadAccess()
@@ -193,5 +204,39 @@ public class ItemTracker : MonoBehaviour {
         }
     }
 
+    public void CalculateLongtermHappiness()
+    {
+        if (currentHappiness > longtermHappiness)
+        {
+            longtermHappiness += (currentHappiness - longtermHappiness * Time.deltaTime / 60);
+        }
+        else if (currentHappiness < longtermHappiness)
+        {
+            longtermHappiness -= (longtermHappiness - currentHappiness * Time.deltaTime / 60);
+        }
+        else if (currentHappiness == longtermHappiness)
+        {
+            // niiiiice
+        }
+    }
 
+    public void CalculateHappinessState()
+    {
+        if (longtermHappiness < 20)
+        {
+            happinessState = 1;
+        }
+        else if (longtermHappiness < 60 && longtermHappiness >= 20)
+        {
+            happinessState = 2;
+        }
+        else if (longtermHappiness < 80 && longtermHappiness >= 60)
+        {
+            happinessState = 3;
+        }
+        else if (longtermHappiness >= 80)
+        {
+            happinessState = 4;
+        }
+    }
 }

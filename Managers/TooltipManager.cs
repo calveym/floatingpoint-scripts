@@ -13,7 +13,7 @@ public class TooltipManager : MonoBehaviour {
     public GameObject indicator;
     MeshRenderer rend;
 
-    public bool pressed;
+    public static bool pressed;
 
 	// Use this for initialization
 	void Start () {
@@ -43,7 +43,6 @@ public class TooltipManager : MonoBehaviour {
         }
         if(building.tag == "commercial")
         {
-            Debug.Log(building);
             building.GetComponent<CommercialTooltip>().EnableObjectTooltip();
         }
         if (building.tag == "industrial")

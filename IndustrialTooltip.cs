@@ -6,11 +6,12 @@ using UnityEngine.UI;
 public class IndustrialTooltip : MonoBehaviour {
 
     GameObject tooltip;
-    GameObject canvas;
     IndustrialTracker industrialTracker;
     public bool buttonPressed;
     bool referencesUpdated;
     Transform stareat;
+
+    int happiness;
 
     // Text refs
     Text titleText;
@@ -22,6 +23,12 @@ public class IndustrialTooltip : MonoBehaviour {
     Text componentCText;
     Text componentDText;
 
+    SpriteRenderer dead;
+    SpriteRenderer happy;
+    SpriteRenderer veryHappy;
+    SpriteRenderer passive;
+    SpriteRenderer angry;
+
 	// Use this for initialization
 	void Start () {
         industrialTracker = GetComponent<IndustrialTracker>();
@@ -30,13 +37,14 @@ public class IndustrialTooltip : MonoBehaviour {
     }
 
     public void UpdateValues () {
-        if (referencesUpdated == false && buttonPressed == true)
+        if (referencesUpdated == false && TooltipManager.pressed == true)
         {
             UpdateReferences();
         }
-        else if (referencesUpdated == true && buttonPressed == true)
+        else if (referencesUpdated == true && TooltipManager.pressed == true)
         {
             UpdateText();
+            UpdateHappiness();
         }
     }
 
@@ -45,10 +53,57 @@ public class IndustrialTooltip : MonoBehaviour {
         titleText.text = industrialTracker.FancyTitle();
         incomeText.text = industrialTracker.FancyIncome();
         capacityText.text = industrialTracker.FancyCapacity();
-        happinessText.text = industrialTracker.FancyHappiness();
         componentBText.text = industrialTracker.goodsCapacityMulti.ToString();
         componentCText.text = industrialTracker.productionMulti.ToString();
         componentDText.text = industrialTracker.sellAmountMulti.ToString();
+    }
+
+    void UpdateHappiness()
+    {
+        int newHappiness = industrialTracker.FancyHappiness();
+        if(newHappiness != happiness)
+        {
+            SetHappiness(newHappiness);
+        }
+    }
+
+    void SetHappiness(int newHappiness)
+    {
+        happiness = newHappiness;
+        if(happiness == 0)
+        {
+            DisableSprites();
+            dead.enabled = true;
+        }
+        else if(happiness == 1)
+        {
+            DisableSprites();
+            angry.enabled = true;
+        }
+        else if(happiness == 2)
+        {
+            DisableSprites();
+            passive.enabled = true;
+        }
+        else if (happiness == 3)
+        {
+            DisableSprites();
+            happy.enabled = true;
+        }
+        else if (happiness == 4)
+        {
+            DisableSprites();
+            veryHappy.enabled = true;
+        }
+    }
+
+    void DisableSprites()
+    {
+        dead.enabled = false;
+        happy.enabled = false;
+        veryHappy.enabled = false;
+        passive.enabled = false;
+        angry.enabled = false;
     }
 
     void UpdateReferences()
@@ -56,10 +111,9 @@ public class IndustrialTooltip : MonoBehaviour {
         titleText = tooltip.transform.Find("Canvas/TitleText").GetComponent<Text>();
         incomeText = tooltip.transform.Find("Canvas/IncomeText").GetComponent<Text>();
         capacityText = tooltip.transform.Find("Canvas/CapacityText").GetComponent<Text>();
-        happinessText = tooltip.transform.Find("Canvas/HappinessText").GetComponent<Text>();
-        componentBText = tooltip.transform.Find("Canvas/ComponentBText").GetComponent<Text>();
-        componentCText = tooltip.transform.Find("Canvas/ComponentCText").GetComponent<Text>();
-        componentDText = tooltip.transform.Find("Canvas/ComponentDText").GetComponent<Text>();
+        componentBText = tooltip.transform.Find("Canvas/StorageText").GetComponent<Text>();
+        componentCText = tooltip.transform.Find("Canvas/PdoructionText").GetComponent<Text>();
+        componentDText = tooltip.transform.Find("Canvas/SalesText").GetComponent<Text>();
         referencesUpdated = true;
     }
 

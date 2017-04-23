@@ -5,6 +5,9 @@ using UnityEngine;
 public class CommercialTracker : ItemTracker {
     // Manages individual stats of each commercial building.
 
+    int requiredSales = 4;
+    float salesHappiness;
+
     public int visitors;
     public int lifetimeVisitors;
 
@@ -63,16 +66,24 @@ public class CommercialTracker : ItemTracker {
 
     void SellGoods()
     {
-        if (visitors > goodsAvailable)
+        goodsSold = users * happinessState + (1f + visitors * 0.01f);
+        if(goodsSold > goodsAvailable)
         {
             goodsSold = goodsAvailable;
         }
-        else goodsSold = visitors;
     }
 
     void UpdateVisitors()
     {
         visitors = populationManager.population - populationManager.unemployedPopulation; // TODOA: MAKE THIS ONLY LOCAL
+    }
+
+    void UpdateSalesHappiness()
+    {
+        if(capacity != 0 && requiredSales != 0)
+        {
+            salesHappiness = (goodsSold / capacity * requiredSales) * 40;
+        }
     }
 
     void UpdateSecond()
@@ -83,6 +94,9 @@ public class CommercialTracker : ItemTracker {
         {
             return;
         }
+        UpdateLocalHappiness();
+        UpdateSalesHappiness();
+        UpdateHappiness();
         UpdateLandValue();
         UpdateTransportationValue();
         UpdateVisitors();
@@ -90,6 +104,13 @@ public class CommercialTracker : ItemTracker {
         SellGoods();
         income = goodsSold;
         totalIndustrialIncome += income;
+    }
+
+    void UpdateHappiness()
+    {
+        currentHappiness = localHappiness + salesHappiness + fillRateHappiness;
+        CalculateLongtermHappiness();
+        CalculateHappinessState();
     }
 
     public string ValidPosition()
