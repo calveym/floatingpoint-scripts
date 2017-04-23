@@ -7,6 +7,7 @@ public class ItemTracker : MonoBehaviour {
 
     // Declare variables
     public PopulationManager populationManager;
+    public HappinessManager happinessManager;
     public EconomyManager economyManager;
     public ItemManager itemManager;
     public LandValue land;
@@ -45,9 +46,11 @@ public class ItemTracker : MonoBehaviour {
     public void Start()
     // Sets start variables
     {
+        longtermHappiness = 0;
         availableTransportation = 1;
         landValue = 10f;
         land = gameObject.GetComponent<LandValue>();
+        happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
@@ -99,6 +102,7 @@ public class ItemTracker : MonoBehaviour {
         addedHappiness = 0;
 
         fillRateHappiness = (users / capacity) * 20;
+        happinessManager.SendHappiness(happinessState);
     }
 
     float RoadAccess()

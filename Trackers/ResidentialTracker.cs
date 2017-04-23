@@ -199,7 +199,7 @@ public class ResidentialTracker : ItemTracker {
 
     void UpdateEmploymentHappiness()
     {
-        employmentHappiness = (users - unemployedPopulation) / unemployedPopulation * 40;
+        employmentHappiness = (users - unemployedPopulation) / capacity * 40;
     }
 
     void UpdateHappiness()
