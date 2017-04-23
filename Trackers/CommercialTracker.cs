@@ -129,12 +129,12 @@ public class CommercialTracker : ItemTracker {
 
     public string FancyCapacity()
     {
-        return "Users: " + users + "(" + capacity + ")";
+        return "Workers: " + users + "(" + capacity + ")";
     }
 
-    public string FancyHappiness()
+    public int FancyHappiness()
     {
-        return "Happiness: " + localHappiness + "%";
+        return happinessState;
     }
 
     public string FancyTitle()
@@ -150,5 +150,10 @@ public class CommercialTracker : ItemTracker {
     public string FancyVisitors()
     {
         return "Visitors: " + visitors;
+    }
+
+    public string FancyLandValue()
+    {
+        return "Land Value: $" + landValue;
     }
 }

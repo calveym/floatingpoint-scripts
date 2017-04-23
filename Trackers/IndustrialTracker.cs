@@ -226,12 +226,12 @@ public class IndustrialTracker : ItemTracker {
 
     public string FancyIncome()
     {
-        return "Income      : $" + income + "/w";
+        return "Income: $" + income + "/w";
     }
 
     public string FancyCapacity()
     {
-        return "Workers         : " + users + " / " + capacity;
+        return "Workers: " + users + " / " + capacity;
     }
 
     public int FancyHappiness()
@@ -248,5 +248,10 @@ public class IndustrialTracker : ItemTracker {
     public string FancyGoods()
     {
         return "Goods sold: " + goodsSold.ToString();
+    }
+
+    public string FancyLandValue()
+    {
+        return "Land Value: $" + landValue;
     }
 }

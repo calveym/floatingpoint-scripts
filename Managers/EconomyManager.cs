@@ -58,7 +58,6 @@ public class EconomyManager : MonoBehaviour {
                 ecoTick();
             }
 
-
             ResidentialTracker.historicResidentialIncome = ResidentialTracker.totalResidentialIncome;
             CommercialTracker.historicCommercialIncome = CommercialTracker.totalCommercialIncome;
             IndustrialTracker.historicIndustrialIncome = IndustrialTracker.totalIndustrialIncome;

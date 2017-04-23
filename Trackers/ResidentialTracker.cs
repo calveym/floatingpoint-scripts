@@ -241,9 +241,9 @@ public class ResidentialTracker : ItemTracker {
         return "Residents: " + users + " / " + capacity;
     }
 
-    public string FancyHappiness()
+    public int FancyHappiness()
     {
-        return "Happiness: " + localHappiness + "%";
+        return happinessState;
     }
 
     public string FancyLandValue()

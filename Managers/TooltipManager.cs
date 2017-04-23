@@ -9,15 +9,15 @@ public class TooltipManager : MonoBehaviour {
     public UpdateTooltips updateTooltips;
 
     List<GameObject> nearestBuildings;
+    GameObject headset;
     GameObject rightController;
-    public GameObject indicator;
     MeshRenderer rend;
 
     public static bool pressed;
 
 	// Use this for initialization
 	void Start () {
-        rend = indicator.GetComponent<MeshRenderer>();
+        headset = GameObject.Find("Headset");
         rightController = GameObject.Find("RightController");
         rightController.GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
         rightController.GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
@@ -27,7 +27,6 @@ public class TooltipManager : MonoBehaviour {
     {
         pressed = true;
         nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 10f);
-        rend.enabled = true;
         foreach(GameObject building in nearestBuildings)
         {
             EnableTooltip(building);
@@ -58,7 +57,6 @@ public class TooltipManager : MonoBehaviour {
     void DisableObjectTooltip(object sender, ControllerInteractionEventArgs e)
     {
         pressed = false;
-        rend.enabled = false;
         foreach (GameObject building in nearestBuildings)
         {
             if (building.tag == "residential")

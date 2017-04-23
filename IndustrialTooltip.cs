@@ -7,22 +7,22 @@ public class IndustrialTooltip : MonoBehaviour {
 
     GameObject tooltip;
     IndustrialTracker industrialTracker;
-    public bool buttonPressed;
     bool referencesUpdated;
     Transform stareat;
 
-    int happiness;
+    int happiness; // temporary value used to check if update required
 
     // Text refs
     Text titleText;
     Text incomeText;
-    Text happinessText;
+    Text landValueText;
     Text capacityText;
     // Text componentAText; Used as subtitle
     Text componentBText;
     Text componentCText;
     Text componentDText;
 
+    // Happiness sprites
     SpriteRenderer dead;
     SpriteRenderer happy;
     SpriteRenderer veryHappy;
@@ -37,11 +37,12 @@ public class IndustrialTooltip : MonoBehaviour {
     }
 
     public void UpdateValues () {
+        Debug.Log("referencesUpdated: " + referencesUpdated);
         if (referencesUpdated == false && TooltipManager.pressed == true)
         {
             UpdateReferences();
         }
-        else if (referencesUpdated == true && TooltipManager.pressed == true)
+        if (referencesUpdated == true && TooltipManager.pressed == true)
         {
             UpdateText();
             UpdateHappiness();
@@ -53,6 +54,9 @@ public class IndustrialTooltip : MonoBehaviour {
         titleText.text = industrialTracker.FancyTitle();
         incomeText.text = industrialTracker.FancyIncome();
         capacityText.text = industrialTracker.FancyCapacity();
+        Debug.Log("Land value text: " + landValueText);
+        Debug.Log("Land value tracker: " + industrialTracker.FancyLandValue());
+        landValueText.text = industrialTracker.FancyLandValue();
         componentBText.text = industrialTracker.goodsCapacityMulti.ToString();
         componentCText.text = industrialTracker.productionMulti.ToString();
         componentDText.text = industrialTracker.sellAmountMulti.ToString();
@@ -111,9 +115,16 @@ public class IndustrialTooltip : MonoBehaviour {
         titleText = tooltip.transform.Find("Canvas/TitleText").GetComponent<Text>();
         incomeText = tooltip.transform.Find("Canvas/IncomeText").GetComponent<Text>();
         capacityText = tooltip.transform.Find("Canvas/CapacityText").GetComponent<Text>();
+        landValueText = tooltip.transform.Find("Canvas/LandValueText").GetComponent<Text>();
         componentBText = tooltip.transform.Find("Canvas/StorageText").GetComponent<Text>();
-        componentCText = tooltip.transform.Find("Canvas/PdoructionText").GetComponent<Text>();
+        componentCText = tooltip.transform.Find("Canvas/ProductionText").GetComponent<Text>();
         componentDText = tooltip.transform.Find("Canvas/SalesText").GetComponent<Text>();
+
+        dead = tooltip.transform.Find("Canvas/Icons/Dead").GetComponent<SpriteRenderer>();
+        happy = tooltip.transform.Find("Canvas/Icons/Happy").GetComponent<SpriteRenderer>();
+        angry = tooltip.transform.Find("Canvas/Icons/Angry").GetComponent<SpriteRenderer>();
+        passive = tooltip.transform.Find("Canvas/Icons/Passive").GetComponent<SpriteRenderer>();
+        veryHappy = tooltip.transform.Find("Canvas/Icons/VeryHappy").GetComponent<SpriteRenderer>();
         referencesUpdated = true;
     }
 
@@ -140,5 +151,4 @@ public class IndustrialTooltip : MonoBehaviour {
         Destroy(tooltip.gameObject);
         referencesUpdated = false;
     }
-
 }

@@ -28,13 +28,12 @@ public class LandValue : MonoBehaviour {
     {
         UpdateValues();
         CalculateAggregates();
-        CalculateFinalValue();
-        return landValue;
+        return CalculateFinalValue();
     }
 
-    void CalculateFinalValue()
+    float CalculateFinalValue()
     {
-        landValue = aggResidential + aggCommercial + aggIndustrial + aggLeisure;
+        return aggResidential + aggCommercial + aggIndustrial + aggLeisure;
     }
 
     void CalculateAggregates()

@@ -12,6 +12,7 @@ public class ResidentialTooltip : MonoBehaviour
     bool referencesUpdated;
     Transform stareat;
 
+    int happiness; // temporary value used to check if update required
 
     // Text references
     Text titleText;
@@ -19,6 +20,13 @@ public class ResidentialTooltip : MonoBehaviour
     Text capacityText;
     Text happinessText;
     Text landValueText;
+
+    // Happiness sprites
+    SpriteRenderer dead;
+    SpriteRenderer happy;
+    SpriteRenderer veryHappy;
+    SpriteRenderer passive;
+    SpriteRenderer angry;
 
     // Use this for initialization
     void Start()
@@ -37,6 +45,7 @@ public class ResidentialTooltip : MonoBehaviour
         else if (referencesUpdated == true && TooltipManager.pressed == true)
         {
             UpdateText();
+            UpdateHappiness();
         }
     }
 
@@ -45,8 +54,55 @@ public class ResidentialTooltip : MonoBehaviour
         titleText.text = residentialTracker.FancyTitle();
         incomeText.text = residentialTracker.FancyIncome();
         capacityText.text = residentialTracker.FancyCapacity();
-        happinessText.text = residentialTracker.FancyHappiness();
         landValueText.text = residentialTracker.FancyLandValue();
+    }
+
+    void UpdateHappiness()
+    {
+        int newHappiness = residentialTracker.FancyHappiness();
+        if (newHappiness != happiness)
+        {
+            SetHappiness(newHappiness);
+        }
+    }
+
+    void SetHappiness(int newHappiness)
+    {
+        happiness = newHappiness;
+        if (happiness == 0)
+        {
+            DisableSprites();
+            dead.enabled = true;
+        }
+        else if (happiness == 1)
+        {
+            DisableSprites();
+            angry.enabled = true;
+        }
+        else if (happiness == 2)
+        {
+            DisableSprites();
+            passive.enabled = true;
+        }
+        else if (happiness == 3)
+        {
+            DisableSprites();
+            happy.enabled = true;
+        }
+        else if (happiness == 4)
+        {
+            DisableSprites();
+            veryHappy.enabled = true;
+        }
+    }
+
+    void DisableSprites()
+    {
+        dead.enabled = false;
+        happy.enabled = false;
+        veryHappy.enabled = false;
+        passive.enabled = false;
+        angry.enabled = false;
     }
 
     void UpdateReferences()
@@ -54,8 +110,14 @@ public class ResidentialTooltip : MonoBehaviour
         titleText = tooltip.transform.Find("Canvas/TitleText").GetComponent<Text>();
         incomeText = tooltip.transform.Find("Canvas/IncomeText").GetComponent<Text>();
         capacityText = tooltip.transform.Find("Canvas/CapacityText").GetComponent<Text>();
-        happinessText = tooltip.transform.Find("Canvas/HappinessText").GetComponent<Text>();
         landValueText = tooltip.transform.Find("Canvas/LandValueText").GetComponent<Text>();
+
+        dead = tooltip.transform.Find("Canvas/Icons/Dead").GetComponent<SpriteRenderer>();
+        happy = tooltip.transform.Find("Canvas/Icons/Happy").GetComponent<SpriteRenderer>();
+        angry = tooltip.transform.Find("Canvas/Icons/Angry").GetComponent<SpriteRenderer>();
+        passive = tooltip.transform.Find("Canvas/Icons/Passive").GetComponent<SpriteRenderer>();
+        veryHappy = tooltip.transform.Find("Canvas/Icons/VeryHappy").GetComponent<SpriteRenderer>();
+
         referencesUpdated = true;
     }
 

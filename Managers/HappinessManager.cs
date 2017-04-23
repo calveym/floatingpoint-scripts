@@ -8,15 +8,19 @@ public class HappinessManager : MonoBehaviour {
     public float addedHappiness;
     public float happiness;
 
-    bool keepUpdating = true;
+    bool keepUpdating;
 
     public void SendHappiness(int newHappiness)
     {
+        Debug.Log("Happiness being added: " + newHappiness);
         addedHappiness += newHappiness;
+        numSent++;
     }
 
     void Start()
     {
+        happiness = 0;
+        keepUpdating = true;
         StartCoroutine("UpdateHappiness");
     }
 
@@ -24,10 +28,15 @@ public class HappinessManager : MonoBehaviour {
     {
         while(keepUpdating)
         {
-            happiness = addedHappiness / numSent;
+            if (numSent != 0)
+            {
+                happiness = addedHappiness / numSent;
+            }
+            else happiness = 1;
+
             numSent = 0;
             addedHappiness = 0;
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(1);
         }
     }
 }
