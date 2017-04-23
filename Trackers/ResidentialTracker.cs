@@ -33,7 +33,7 @@ public class ResidentialTracker : ItemTracker {
         {
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
-            GameObject.Find("Managers").GetComponent<ItemManager>().addResidential(capacity, gameObject);
+            itemManager.addResidential(capacity, gameObject);
         }
     }
 
@@ -233,7 +233,7 @@ public class ResidentialTracker : ItemTracker {
 
     public string FancyIncome()
     {
-        return "Income: $" + income + "/w";
+        return "Income: $" + Mathf.Round(income * 100) / 100 + "/w";
     }
 
     public string FancyCapacity()

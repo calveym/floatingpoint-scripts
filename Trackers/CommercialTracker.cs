@@ -124,12 +124,12 @@ public class CommercialTracker : ItemTracker {
 
     public string FancyIncome()
     {
-        return "Income: $" + income + "/w";
+        return "Income: $" + Mathf.Round(income * 100) / 100 + "/w";
     }
 
     public string FancyCapacity()
     {
-        return "Workers: " + users + "(" + capacity + ")";
+        return "Workers: " + users + " / " + capacity;
     }
 
     public int FancyHappiness()

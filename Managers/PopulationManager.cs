@@ -232,8 +232,7 @@ public class PopulationManager : MonoBehaviour {
     // Tries to increase population
     {
         happiness = happinessManager.happiness;
-        Debug.Log("Happiness:" + happiness);
-        residentialDemand += happiness * Time.deltaTime * 1000;
+        residentialDemand += 0.1f + happiness * Time.deltaTime * 1000;
         if (residentialDemand >= 1 )
         {
             unallocatedPopulation++;

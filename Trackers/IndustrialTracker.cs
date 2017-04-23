@@ -12,14 +12,13 @@ public class IndustrialTracker : ItemTracker {
     List<IndustrialComponent> components;
     List<float> sales; // List of recent sales counted in goodsSold
 
-    public float salesHappiness; // Happiness from reaching sales targets
+    public float productionHappiness; // Happiness from reaching sales targets
 
     public int visitors;
     public int lifetimeVisitors;
 
     public float goodsCapacity;  // max amount of goods storeable
     public float goodsProduced;  // Goods produced in last economic tick
-    public float goodsOwned;  // All goods currently owned by this 
     public static float allGoods; // Base goods tracking figure for each economic tick
 
     public float sellPrice;  // Base sell price
@@ -62,19 +61,11 @@ public class IndustrialTracker : ItemTracker {
 
     void ProduceGoods()
     {
-        if(goodsOwned < goodsCapacity)
-        {
-            goodsProduced = users * happinessState * productionMulti;
-            if(goodsProduced + goodsOwned <= goodsCapacity)
-            {
-                goodsOwned += goodsProduced;
-            }
-            else
-            {
-                goodsProduced = goodsCapacity - goodsOwned;
-                goodsOwned += goodsProduced;
-            }
-        }
+        goodsProduced = users * happinessState * productionMulti;
+
+        income = goodsProduced * sellPrice * sellPriceMulti;
+        income -= baseCost;
+        allGoods += goodsProduced;
     }
 
     public void Apply(float applicantLandValue, int residentID, ResidentialTracker applicantTracker)
@@ -109,42 +100,6 @@ public class IndustrialTracker : ItemTracker {
         Debug.Log("Applicant rejected!!!");
     }
 
-    void SellGoods()
-    // Calculates income from goods sale
-    {
-        if(goodsOwned > sellAmount)
-        {
-            goodsOwned -= sellAmount;
-            allGoods += sellAmount;
-            AddSale(sellAmount);
-        }
-        else if(goodsOwned < sellAmount)
-        {
-            allGoods += goodsOwned;
-            AddSale(goodsOwned);
-            goodsOwned = 0;
-        }
-        RemoveSale();
-        income = sellAmount * sellPrice;
-        income -= baseCost;
-        totalIndustrialIncome += goodsProduced;
-    }
-
-    void AddSale(float sellAmount)
-    {
-        sales.Add(sellAmount);
-    }
-
-    void RemoveSale()
-    {
-        if(sales.Count >= 60)
-        {
-            goodsSold += sales[sales.Count - 1];
-            goodsSold -= sales[0];
-            sales.RemoveAt(0);
-        }
-    }
-
     public void AddMarker()
     {
         marker = Instantiate(markerPrefab, transform.position + new Vector3(0f, 2f, 0f), transform.rotation, transform).GetComponent<Marker>();
@@ -177,14 +132,14 @@ public class IndustrialTracker : ItemTracker {
         sellAmountMulti += component.sellAmountMulti;
     }
 
-    void UpdateSalesHappiness()
+    void UpdateProductionHappiness()
     {
         if (capacity != 0 && requiredProduction != 0)
         {
-            salesHappiness = (goodsProduced / capacity * requiredProduction) * 40;
-            if (salesHappiness > 40)
+            productionHappiness = (goodsProduced / capacity * requiredProduction) * 40;
+            if (productionHappiness > 40)
             {
-                salesHappiness = 40; // Capped at 40
+                productionHappiness = 40; // Capped at 40
             }
         }
     }
@@ -198,19 +153,18 @@ public class IndustrialTracker : ItemTracker {
             return;
         }
         UpdateLocalHappiness();
-        UpdateSalesHappiness();
+        UpdateProductionHappiness();
         UpdateHappiness();
         UpdateLandValue();
         UpdateTransportationValue();
         ProduceGoods();
-        SellGoods();
         totalIndustrialIncome += income;
     }
 
     void UpdateHappiness()
     // Performs all necessary final happiness calculations, including longterm
     {
-        currentHappiness = localHappiness + salesHappiness + fillRateHappiness;
+        currentHappiness = localHappiness + productionHappiness + fillRateHappiness;
         CalculateLongtermHappiness();
         CalculateHappinessState();
     }
@@ -226,7 +180,7 @@ public class IndustrialTracker : ItemTracker {
 
     public string FancyIncome()
     {
-        return "Income: $" + income + "/w";
+        return "Income: $" + Mathf.Round(income * 100) / 100 + "/w";
     }
 
     public string FancyCapacity()

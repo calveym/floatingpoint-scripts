@@ -53,13 +53,13 @@ public class ComponentSnap : VRTK_InteractableObject {
     {
         if (objectUsed == true)
         {
-            objectUsed = false;
             DetachSphere();
             GetNearestBuilding();
             if(nearestBuilding)
             {
                 ClosestFound(nearestBuilding);
             }
+            objectUsed = false;
         }
     }
 

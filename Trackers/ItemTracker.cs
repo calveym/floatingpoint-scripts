@@ -209,19 +209,9 @@ public class ItemTracker : MonoBehaviour {
     }
 
     public void CalculateLongtermHappiness()
+    // makes the longterm happiness tend towards the current happiness
     {
-        if (currentHappiness > longtermHappiness)
-        {
-            longtermHappiness += (currentHappiness - longtermHappiness * Time.deltaTime / 60);
-        }
-        else if (currentHappiness < longtermHappiness)
-        {
-            longtermHappiness -= (longtermHappiness - currentHappiness * Time.deltaTime / 60);
-        }
-        else if (currentHappiness == longtermHappiness)
-        {
-            // niiiiice
-        }
+        longtermHappiness += (currentHappiness - longtermHappiness) * 0.1f;
     }
 
     public void CalculateHappinessState()

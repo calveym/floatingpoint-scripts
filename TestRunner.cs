@@ -41,9 +41,9 @@ public class TestRunner : MonoBehaviour
         //if (Input.GetKeyDown("q")) FirstTest();
         //if (Input.GetKeyDown("w")) SecondTest();
         //if (Input.GetKeyDown("e")) ThirdTest();
-        if (Input.GetKeyDown("r")) FourthTest();
-        //if (Input.GetKeyDown("t")) FifthTest();
-        //if (Input.GetKeyDown("y")) SixthTest();
+        //if (Input.GetKeyDown("r")) FourthTest();
+        if (Input.GetKeyDown("t")) FifthTest();
+        if (Input.GetKeyDown("y")) SixthTest();
         //if (Input.GetKeyDown("u")) SeventhTest();
         //if (Input.GetKeyDown("i")) EighthTest();
         //if (Input.GetKeyDown("o")) NinthTest();
@@ -82,11 +82,13 @@ public class TestRunner : MonoBehaviour
     void FifthTest()
     {
         Debug.Log("Test 5 Running");
+        manager.GetComponent<TooltipManager>().TestTooltip();
     }
 
     void SixthTest()
     {
         Debug.Log("Test 6 Running");
+        manager.GetComponent<TooltipManager>().TestDisableTooltip();
     }
 
     void SeventhTest()

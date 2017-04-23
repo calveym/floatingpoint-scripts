@@ -60,44 +60,41 @@ public class ResidentialTooltip : MonoBehaviour
     void UpdateHappiness()
     {
         int newHappiness = residentialTracker.FancyHappiness();
-        if (newHappiness != happiness)
-        {
-            SetHappiness(newHappiness);
-        }
+        SetHappiness(newHappiness);
     }
 
     void SetHappiness(int newHappiness)
     {
         happiness = newHappiness;
+        DisableSprites();
         if (happiness == 0)
         {
-            DisableSprites();
             dead.enabled = true;
         }
         else if (happiness == 1)
         {
-            DisableSprites();
             angry.enabled = true;
         }
         else if (happiness == 2)
         {
-            DisableSprites();
             passive.enabled = true;
         }
         else if (happiness == 3)
         {
-            DisableSprites();
             happy.enabled = true;
         }
         else if (happiness == 4)
         {
-            DisableSprites();
             veryHappy.enabled = true;
         }
     }
 
     void DisableSprites()
     {
+        if (dead == null)
+        {
+            UpdateReferences();
+        }
         dead.enabled = false;
         happy.enabled = false;
         veryHappy.enabled = false;
@@ -124,7 +121,6 @@ public class ResidentialTooltip : MonoBehaviour
     public void EnableObjectTooltip()
     // Enables, resets position and resets text for object tooltips
     {
-        Debug.Log("Residential tooltip attempting to enable");
         if (tooltip != null)
         {
             Destroy(tooltip);

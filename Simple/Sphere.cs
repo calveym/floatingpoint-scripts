@@ -6,7 +6,13 @@ using VRTK;
 public class Sphere : MonoBehaviour
 {
     GameObject parent;
+    MeshRenderer rend;
     bool linked;
+
+    private void Start()
+    {
+        rend = gameObject.GetComponent<MeshRenderer>();
+    }
 
     public void LinkSphere(GameObject connectObject)
     {
@@ -17,7 +23,7 @@ public class Sphere : MonoBehaviour
 
     public void UnlinkSphere()
     {
-        Debug.Log("Trying to finish");
+        rend.enabled = false;
         parent = null;
         linked = false;
     }
@@ -26,6 +32,11 @@ public class Sphere : MonoBehaviour
     {
         while(linked)
         {
+            if(rend == null)
+            {
+                rend = gameObject.GetComponent<MeshRenderer>();
+            }
+            rend.enabled = true;
             transform.position = new Vector3(parent.transform.position.x, 10.1f, parent.transform.position.z);
             transform.rotation = Quaternion.identity;
             yield return null;

@@ -43,11 +43,11 @@ public class CommercialTooltip : MonoBehaviour
         {
             UpdateReferences();
         }
-        else if (referencesUpdated == true && TooltipManager.pressed == true)
+        if (referencesUpdated == true && TooltipManager.pressed == true)
         {
             UpdateText();
-            UpdateHappiness();
         }
+        UpdateHappiness();
     }
 
     void UpdateText()
@@ -63,38 +63,35 @@ public class CommercialTooltip : MonoBehaviour
     void UpdateHappiness()
     {
         int newHappiness = commercialTracker.FancyHappiness();
-        if (newHappiness != happiness)
-        {
-            SetHappiness(newHappiness);
-        }
+        SetHappiness(newHappiness);
     }
 
     void SetHappiness(int newHappiness)
     {
+        if(dead == null)
+        {
+            UpdateReferences();
+        }
         happiness = newHappiness;
+        DisableSprites();
         if (happiness == 0)
         {
-            DisableSprites();
             dead.enabled = true;
         }
         else if (happiness == 1)
         {
-            DisableSprites();
             angry.enabled = true;
         }
         else if (happiness == 2)
         {
-            DisableSprites();
             passive.enabled = true;
         }
         else if (happiness == 3)
         {
-            DisableSprites();
             happy.enabled = true;
         }
         else if (happiness == 4)
         {
-            DisableSprites();
             veryHappy.enabled = true;
         }
     }

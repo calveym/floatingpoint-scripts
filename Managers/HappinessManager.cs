@@ -12,7 +12,6 @@ public class HappinessManager : MonoBehaviour {
 
     public void SendHappiness(int newHappiness)
     {
-        Debug.Log("Happiness being added: " + newHappiness);
         addedHappiness += newHappiness;
         numSent++;
     }
@@ -36,7 +35,7 @@ public class HappinessManager : MonoBehaviour {
 
             numSent = 0;
             addedHappiness = 0;
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(2);
         }
     }
 }

@@ -37,7 +37,6 @@ public class IndustrialTooltip : MonoBehaviour {
     }
 
     public void UpdateValues () {
-        Debug.Log("referencesUpdated: " + referencesUpdated);
         if (referencesUpdated == false && TooltipManager.pressed == true)
         {
             UpdateReferences();
@@ -54,8 +53,6 @@ public class IndustrialTooltip : MonoBehaviour {
         titleText.text = industrialTracker.FancyTitle();
         incomeText.text = industrialTracker.FancyIncome();
         capacityText.text = industrialTracker.FancyCapacity();
-        Debug.Log("Land value text: " + landValueText);
-        Debug.Log("Land value tracker: " + industrialTracker.FancyLandValue());
         landValueText.text = industrialTracker.FancyLandValue();
         componentBText.text = industrialTracker.goodsCapacityMulti.ToString();
         componentCText.text = industrialTracker.productionMulti.ToString();
@@ -65,38 +62,35 @@ public class IndustrialTooltip : MonoBehaviour {
     void UpdateHappiness()
     {
         int newHappiness = industrialTracker.FancyHappiness();
-        if(newHappiness != happiness)
-        {
-            SetHappiness(newHappiness);
-        }
+        SetHappiness(newHappiness);
     }
 
     void SetHappiness(int newHappiness)
     {
-        happiness = newHappiness;
-        if(happiness == 0)
+        if (dead == null)
         {
-            DisableSprites();
+            UpdateReferences();
+        }
+        happiness = newHappiness;
+        DisableSprites();
+        if (happiness == 0)
+        {
             dead.enabled = true;
         }
         else if(happiness == 1)
         {
-            DisableSprites();
             angry.enabled = true;
         }
         else if(happiness == 2)
         {
-            DisableSprites();
             passive.enabled = true;
         }
         else if (happiness == 3)
         {
-            DisableSprites();
             happy.enabled = true;
         }
         else if (happiness == 4)
         {
-            DisableSprites();
             veryHappy.enabled = true;
         }
     }
