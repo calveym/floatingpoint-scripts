@@ -42,14 +42,14 @@ public class DisplayMenu : MonoBehaviour
     void DoTouchpadTouchStart(object sender, ControllerInteractionEventArgs e)
     // TouchpadTouched event
     {
-        ActivatePanel();
+        //ActivatePanel();
     }
 
 
     void DoTouchpadTouchEnd(object sender, ControllerInteractionEventArgs e)
     // TouchpadReleased event
     {
-        DeactivateAll();
+        //DeactivateAll();
     }
 
     void ActivatePanel()
@@ -144,7 +144,7 @@ public class DisplayMenu : MonoBehaviour
     void DeactivateAll()
     // Deactivates all UI elements
     {
-        panel.SetActive(false);
+ 
         Model1.SetActive(false);
         Model2.SetActive(false);
         Model3.SetActive(false);

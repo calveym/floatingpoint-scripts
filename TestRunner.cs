@@ -44,7 +44,7 @@ public class TestRunner : MonoBehaviour
         //if (Input.GetKeyDown("r")) FourthTest();
         if (Input.GetKeyDown("t")) FifthTest();
         if (Input.GetKeyDown("y")) SixthTest();
-        //if (Input.GetKeyDown("u")) SeventhTest();
+        if (Input.GetKeyDown("u")) SeventhTest();
         //if (Input.GetKeyDown("i")) EighthTest();
         //if (Input.GetKeyDown("o")) NinthTest();
     }
@@ -94,6 +94,7 @@ public class TestRunner : MonoBehaviour
     void SeventhTest()
     {
         Debug.Log("Test 7 Running");
+        // SpawnManager.Spawn(transform.position, "res_a1_green");
     }
 
     void EighthTest()
