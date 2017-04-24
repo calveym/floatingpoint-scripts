@@ -45,7 +45,7 @@ public class WheelController : MonoBehaviour {
     {
         PerformSnap();
         updating = false;
-        displayUI.HideUI();
+        StartCoroutine("DelayedHide");
     }
 
     void DoTouchpadTouchStart(object sender, ControllerInteractionEventArgs e)
@@ -56,15 +56,26 @@ public class WheelController : MonoBehaviour {
 
     void PerformSnap()
     {
-        Debug.Log("Snap should happen here, but is currently disabled");
-        //wheelBase.transform.rotation = Quaternion.Euler(0f, snapAngle, 0f);
+        wheelBase.transform.rotation = Quaternion.Euler(0f, Mathf.Round(wheelBase.transform.localEulerAngles.y / 45) * 45, 0f);
     }
 	
-    public void SendNewAngle(float newAngle, float newSnapAngle)
+    public void SendNewAngle(float newAngle)
     {
         angleChange = (newAngle - angle) / 4;
         angle = newAngle;
-        snapAngle = newSnapAngle;
         requireUpdate = true;
+    }
+
+    IEnumerator DelayedHide()
+    {
+        for(int i = 0; i <= 1; i++)
+        {
+            if(i == 1)
+            {
+                Debug.Log("Hiding...");
+                displayUI.HideUI();
+            }
+            yield return new WaitForSeconds(5);
+        }
     }
 }

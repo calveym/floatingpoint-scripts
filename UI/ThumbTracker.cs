@@ -10,7 +10,6 @@ public class ThumbTracker : MonoBehaviour {
     WheelController wheelController;
 
     public float angle;
-    public float snapAngle; 
 
     float rawAngle;
     float oldAngle;
@@ -30,7 +29,6 @@ public class ThumbTracker : MonoBehaviour {
     void StartTracking(object sender, ControllerInteractionEventArgs e)
     // Starts tracking coroutine
     {
-        Debug.Log("Attempting to start coroutine");
         tracking = true;
         oldAngle = events.GetTouchpadAxisAngle() + 0.1f;
         StartCoroutine("TrackThumb");
@@ -45,13 +43,12 @@ public class ThumbTracker : MonoBehaviour {
     void SendAngle()
     // Sends position to Wheel Controller
     {
-        wheelController.SendNewAngle(angle, snapAngle);
+        wheelController.SendNewAngle(angle);
     }
 
     void RecalculateAngle()
     {
         angle = rawAngle;
-        snapAngle = Mathf.Round(angle / 45) * 45;
         oldAngle = rawAngle;
     }
 
