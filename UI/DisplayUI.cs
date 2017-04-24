@@ -4,13 +4,35 @@ using UnityEngine;
 
 public class DisplayUI : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    GameObject staticSpheres;
+    GameObject wheelBase;
+    GameObject canvas;
+    DisplayUI ui;
+
+    private void Awake()
+    {
+        ui = GameObject.Find("UI").GetComponent<DisplayUI>();
+        staticSpheres = transform.Find("StaticSpheres").gameObject;
+        wheelBase = transform.Find("WheelBase").gameObject;
+        canvas = transform.Find("Canvas").gameObject;
+    }
+
+    private void Start()
+    {
+        HideUI();
+    }
+    
+	public void ShowUI()
+    {
+        canvas.SetActive(true);
+        wheelBase.SetActive(true);
+        staticSpheres.SetActive(true);
+    }
+
+    public void HideUI()
+    {
+        canvas.SetActive(false);
+        wheelBase.SetActive(false);
+        staticSpheres.SetActive(false);
+    }
 }

@@ -32,6 +32,7 @@ public class ThumbTracker : MonoBehaviour {
     {
         Debug.Log("Attempting to start coroutine");
         tracking = true;
+        oldAngle = events.GetTouchpadAxisAngle() + 0.1f;
         StartCoroutine("TrackThumb");
     }
 
