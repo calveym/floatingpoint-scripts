@@ -59,7 +59,6 @@ public class WheelController : MonoBehaviour {
     {
         updating = true;
         stopHide = true;
-        displayUI.ShowUI();
     } 
 
     void PerformSnap()
