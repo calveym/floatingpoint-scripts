@@ -7,11 +7,9 @@ public class DisplayUI : MonoBehaviour {
     GameObject staticSpheres;
     GameObject wheelBase;
     GameObject canvas;
-    DisplayUI ui;
 
     private void Awake()
     {
-        ui = GameObject.Find("UI").GetComponent<DisplayUI>();
         staticSpheres = transform.Find("StaticSpheres").gameObject;
         wheelBase = transform.Find("WheelBase").gameObject;
         canvas = transform.Find("Canvas").gameObject;

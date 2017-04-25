@@ -4,38 +4,63 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour {
 
+    private void Awake()
+    {
+        LoadAllBuildings();
+    }
+
     // Small size residential buildings
-    public GameObject res_a1_green;
-    public GameObject res_a1_red;
-    public GameObject res_a2_blue;
-    public GameObject res_a2_red;
-    public GameObject res_a3_red;
-    public GameObject res_a3_tan;
-    public GameObject res_a4_a;
-    public GameObject res_a4_b;
-    public GameObject res_a5;
-    public GameObject res_a6_beige;
-    public GameObject res_a6_blue;
-    public GameObject res_a7_a;
-    public GameObject res_a7_b;
+    Object[] res;
+    Object[] com;
+    Object[] ind;
+    Object[] off;
+    Object[] leis;
+    Object[] util;
+    Object[] indc;
+    Object[] fol;
 
-    // Mid size residential buildings
-    public GameObject res_b1_red;
-    public GameObject res_b1_tan;
-    public GameObject res_b2_orange;
-    public GameObject res_b2_red;
-    public GameObject res_b3_blue;
-    public GameObject res_b3_brown;
-
-    public static void Spawn(Vector3 targetPosition, int type, int unit)
+    public void Spawn(Vector3 targetPosition, int type, int unit)
     // Starts spawn process, enables static spawn calls
     {
-        //GameObject.Find("Managers").GetComponent<SpawnManager>().StartSpawn(targetPosition, objectName);
+        GameObject newBuilding = Instantiate(FindBuilding(type, unit), targetPosition, Quaternion.identity) as GameObject;
+    }
+
+    Object FindBuilding(int type, int unit)
+    {
+        type = 0;
+        switch (type)
+        {
+            case 0:
+                return res[unit];
+            case 1:
+                return com[unit];
+            case 2:
+                return ind[unit];
+            case 3:
+                return off[unit];
+            case 4:
+                return leis[unit];
+            case 5:
+                return util[unit];
+            case 6:
+                return indc[unit];
+            case 7:
+                return fol[unit];
+        }
+        return new GameObject();
     }
 
     void LoadAllBuildings()
-    // Uses the name passed to the method to return the gameobject to instantiate
+    // Loads buildings from resources folder
     {
-
+        res = Resources.LoadAll("res");
+        com = Resources.LoadAll("com");
+        ind = Resources.LoadAll("ind");
+        off = Resources.LoadAll("off");
+        leis = Resources.LoadAll("leis");
+        util = Resources.LoadAll("util");
+        indc = Resources.LoadAll("indc");
+        fol = Resources.LoadAll("fol");
     }
+
 }

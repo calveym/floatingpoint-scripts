@@ -10,12 +10,17 @@ public class WheelController : MonoBehaviour {
     GameObject controller;
     GameObject wheelBase;
 
+    Vector3 startAngle;
+    Vector3 endAngle;
+    float translationTime;
+    float timer;
+
     float snapAngle;
     float angleChange; // Used to figure out how much to rotate by
-    float angle;
 
     bool requireUpdate;  // set to true when new angle received
     bool updating;
+    bool stopHide;
 
     void Awake()
     {
@@ -23,6 +28,8 @@ public class WheelController : MonoBehaviour {
     }
 
     void Start () {
+        translationTime = 0.5f;
+
         controller = transform.parent.gameObject;
         events = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
         displayUI = GetComponent<DisplayUI>();
@@ -43,39 +50,56 @@ public class WheelController : MonoBehaviour {
     void DoTouchpadTouchEnd(object sender, ControllerInteractionEventArgs e)
     // TouchpadReleased event
     {
+        stopHide = false;
         PerformSnap();
-        updating = false;
         StartCoroutine("DelayedHide");
     }
 
     void DoTouchpadTouchStart(object sender, ControllerInteractionEventArgs e)
     {
         updating = true;
+        stopHide = true;
         displayUI.ShowUI();
     } 
 
     void PerformSnap()
     {
-        wheelBase.transform.rotation = Quaternion.Euler(0f, Mathf.Round(wheelBase.transform.localEulerAngles.y / 45) * 45, 0f);
+        StartCoroutine("Snap");
+        //wheelBase.transform.localRotation = Quaternion.Euler(0f, Mathf.Round(wheelBase.transform.localEulerAngles.y / 45) * 45, 0f);
+    }
+
+    float SnapAngle()
+    {
+        return Mathf.Round(wheelBase.transform.localEulerAngles.y / 45) * 45;
     }
 	
-    public void SendNewAngle(float newAngle)
+    public void SendNewAngle(float newAngleChange)
     {
-        angleChange = (newAngle - angle) / 4;
-        angle = newAngle;
+        angleChange = newAngleChange;
         requireUpdate = true;
+    }
+
+    IEnumerator Snap()
+    {
+        startAngle = wheelBase.transform.localEulerAngles;
+        endAngle = new Vector3(startAngle.x, SnapAngle(), startAngle.z);
+        timer = 0;
+        while (timer <= 1)
+        {
+            Vector3 tempAngle = Vector3.Slerp(startAngle, endAngle, timer);
+            wheelBase.transform.localEulerAngles = tempAngle;
+            timer += Time.deltaTime;
+            yield return null;
+        }
     }
 
     IEnumerator DelayedHide()
     {
-        for(int i = 0; i <= 1; i++)
+        yield return new WaitForSeconds(5);
+        if (!stopHide)
         {
-            if(i == 1)
-            {
-                Debug.Log("Hiding...");
-                displayUI.HideUI();
-            }
-            yield return new WaitForSeconds(5);
+            displayUI.HideUI();
+            updating = false;
         }
     }
 }
