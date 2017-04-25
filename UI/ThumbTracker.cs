@@ -13,13 +13,12 @@ public class ThumbTracker : MonoBehaviour {
     float angle;  // old angle, stored for comparison
     float angleChange;  // Amount change from last set angle
     float rawAngle;  // raw angle returned from thumb position
+    string direction; // right or left
 
-    float rawPosition;  // Tracked position, raw state here
+    float endPosition;  // position at end
     float position;  // Stored position
     public float swipeReq;  // swipe requirement ( out of a total of 2.0)
-    float swipe;
-
-    string direction; // right or left
+    float swipe;  // Stores distance info on last swipe. Includes whether it is positive or negative
 
     bool trackingAngle;  // controls angle tracker coroutine
     bool trackingPosition;  // controls position tracker coroutine
@@ -27,6 +26,7 @@ public class ThumbTracker : MonoBehaviour {
     private void Start()
     // Sets up references
     {
+        swipeReq = 0.2f;
         controller = GameObject.Find("LeftController");
         events = controller.GetComponent<VRTK_ControllerEvents>();
         wheelController = GetComponent<WheelController>();
@@ -55,8 +55,6 @@ public class ThumbTracker : MonoBehaviour {
         {
             trackingPosition = true;
             position = events.GetTouchpadAxis().x;
-
-            StartCoroutine("TrackThumbPosition");
         }
     }
 
@@ -75,6 +73,9 @@ public class ThumbTracker : MonoBehaviour {
     public void ForceStopTrackingPosition()
     {
         trackingPosition = false;
+        endPosition = events.GetTouchpadAxis().x;
+        RecalculatePosition();
+        SendPosition();
     }
 
     void SendAngle()
@@ -104,15 +105,17 @@ public class ThumbTracker : MonoBehaviour {
 
     void RecalculatePosition()
     {
-        swipe += (rawPosition - position);
-        position = rawPosition;
+        swipe = (endPosition - position);
     }
 
     void SendPosition()
     // Sends new swipe info to displayUI
     {
-        displayUI.SendSwipe(swipe);
-        swipe = 0;
+        if(swipe > swipeReq)
+        {
+            displayUI.SendSwipe(swipe);
+            swipe = 0;
+        }
     }
 
     IEnumerator TrackThumbAngle()
@@ -124,31 +127,6 @@ public class ThumbTracker : MonoBehaviour {
             {
                 RecalculateAngle();
                 SendAngle();
-            }
-            yield return null;
-        }
-    }
-
-    IEnumerator TrackThumbPosition()
-    {
-        while(trackingPosition)
-        {
-            rawPosition = events.GetTouchpadAxis().x;
-            if (rawPosition != position)
-            {
-                RecalculatePosition();
-                if(swipe >= 0.5)
-                {
-                    Debug.Log("Swipe right");
-                    SendPosition();
-                    yield return new WaitForSeconds(0.2f);
-                }
-                else if(swipe <= -0.5)
-                {
-                    Debug.Log("Swipe left");
-                    SendPosition();
-                    yield return new WaitForSeconds(0.2f);
-                }
             }
             yield return null;
         }

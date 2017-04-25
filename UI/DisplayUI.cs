@@ -114,6 +114,7 @@ public class DisplayUI : MonoBehaviour {
 
     public void SendSwipe(float swipe)
     {
+        Debug.Log("Swipe: " + swipe);
         if(menuSelection < 5 && swipe > 0)
         {
             // swipe to the right
@@ -130,6 +131,7 @@ public class DisplayUI : MonoBehaviour {
 
     void ResetMenuColors()
     {
+        Debug.Log("Menu selection: " + menuSelection);
         switch(menuSelection)
         {
             case 0:
@@ -199,6 +201,7 @@ public class DisplayUI : MonoBehaviour {
             else
             {
                 ShowMenu();
+                ResetMenuColors();
             }
             yield return null;
         }
