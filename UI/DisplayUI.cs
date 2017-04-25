@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using VRTK;
 
 public class DisplayUI : MonoBehaviour {
 
+    VRTK_ControllerEvents events;
     GameObject staticSpheres;
     GameObject wheelBase;
     GameObject canvas;
@@ -27,12 +29,14 @@ public class DisplayUI : MonoBehaviour {
 
     int menuSelection;  // which of the 6 menu panels is selected, used in logic
 
+    bool displaying;
     public bool showBuildings;
     public int showingBuildings;
 
     private void Awake()
     {
         showBuildings = false;
+        menuSelection = 0;
         staticSpheres = transform.Find("StaticSpheres").gameObject;
         wheelBase = transform.Find("WheelBase").gameObject;
         canvas = transform.Find("Canvas").gameObject;
@@ -48,7 +52,20 @@ public class DisplayUI : MonoBehaviour {
     private void Start()
     {
         thumbTracker = GetComponent<ThumbTracker>();
+        events = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
+        events.TouchpadTouchStart += DoTouchpadTouch;
         HideUI();
+    }
+
+    void DoTouchpadTouch(object sender, ControllerInteractionEventArgs e)
+    {
+        displaying = true;
+        StartCoroutine("Display");
+    }
+
+    void DoTouchpadRelease(object sender, ControllerInteractionEventArgs e)
+    {
+
     }
 
     void DoButtonClick()
@@ -57,18 +74,11 @@ public class DisplayUI : MonoBehaviour {
         thumbTracker.ForceStopTrackingAngle();
         thumbTracker.ForceStopTrackingPosition();
         thumbTracker.StartTracking();
-        if(showBuildings)
-        {
-            ShowBuildings();
-        }
-        else
-        {
-            ShowMenu();
-        }
     }
 
     void ShowMenu()
     {
+        ShowUI();
         HideBuildings();
         res.enabled = true;
         com.enabled = true;
@@ -90,6 +100,7 @@ public class DisplayUI : MonoBehaviour {
 
     void ShowBuildings()
     {
+        ShowUI();
         HideMenu();
         wheelBase.SetActive(true);
         staticSpheres.SetActive(true);
@@ -175,5 +186,21 @@ public class DisplayUI : MonoBehaviour {
         canvas.SetActive(false);
         wheelBase.SetActive(false);
         staticSpheres.SetActive(false);
+    }
+
+    IEnumerator Display()
+    {
+        while(displaying)
+        {
+            if (showBuildings)
+            {
+                ShowBuildings();
+            }
+            else
+            {
+                ShowMenu();
+            }
+            yield return null;
+        }
     }
 }
