@@ -83,9 +83,9 @@ public class WheelController : MonoBehaviour {
         startAngle = wheelBase.transform.localEulerAngles;
         endAngle = new Vector3(startAngle.x, SnapAngle(), startAngle.z);
         timer = 0;
-        while (timer <= 1)
+        while (timer <= 0.25f)
         {
-            Vector3 tempAngle = Vector3.Slerp(startAngle, endAngle, timer);
+            Vector3 tempAngle = Vector3.Slerp(startAngle, endAngle, timer * 4);
             wheelBase.transform.localEulerAngles = tempAngle;
             timer += Time.deltaTime;
             yield return null;

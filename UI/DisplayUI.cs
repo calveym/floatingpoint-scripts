@@ -12,6 +12,8 @@ public class DisplayUI : MonoBehaviour {
     GameObject canvas;
     ThumbTracker thumbTracker;
 
+    GameObject menu;
+
     public Color baseColor;
     public Color residentialColor;
     public Color commercialColor;
@@ -29,9 +31,10 @@ public class DisplayUI : MonoBehaviour {
 
     int menuSelection;  // which of the 6 menu panels is selected, used in logic
 
-    bool displaying;
-    public bool showBuildings;
-    public int showingBuildings;
+    bool updateRequired;  // Used to trigger a change between buildings and menu
+    bool displaying;  // controlls main Display coroutine
+    public bool showBuildings;  // true if menu hidden and buildings shown
+    public int showingBuildings;  // int referring to buildings category
 
     private void Awake()
     {
@@ -41,12 +44,13 @@ public class DisplayUI : MonoBehaviour {
         wheelBase = transform.Find("WheelBase").gameObject;
         canvas = transform.Find("Canvas").gameObject;
 
+        menu = transform.Find("Canvas/Menu").gameObject;
         res = transform.Find("Canvas/Menu/Residential").gameObject.GetComponent<Image>();
         com = transform.Find("Canvas/Menu/Commercial").gameObject.GetComponent<Image>();
         ind = transform.Find("Canvas/Menu/Industrial").gameObject.GetComponent<Image>();
         off = transform.Find("Canvas/Menu/Office").gameObject.GetComponent<Image>();
-        indc = transform.Find("Canvas/Menu/Office").gameObject.GetComponent<Image>();
-        fol = transform.Find("Canvas/Menu/Office").gameObject.GetComponent<Image>();
+        indc = transform.Find("Canvas/Menu/Component").gameObject.GetComponent<Image>();
+        fol = transform.Find("Canvas/Menu/Foliage").gameObject.GetComponent<Image>();
     }
 
     private void Start()
@@ -54,48 +58,38 @@ public class DisplayUI : MonoBehaviour {
         thumbTracker = GetComponent<ThumbTracker>();
         events = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
         events.TouchpadTouchStart += DoTouchpadTouch;
+        events.TouchpadPressed += DoTouchpadPress;
         HideUI();
     }
 
     void DoTouchpadTouch(object sender, ControllerInteractionEventArgs e)
     {
         displaying = true;
+        updateRequired = true;
         StartCoroutine("Display");
     }
 
-    void DoTouchpadRelease(object sender, ControllerInteractionEventArgs e)
-    {
-
-    }
-
-    void DoButtonClick()
+    void DoTouchpadPress(object sender, ControllerInteractionEventArgs e)
     {
         showBuildings = !showBuildings;
+        Debug.Log("Show buildings: " + showBuildings);
         thumbTracker.ForceStopTrackingAngle();
         thumbTracker.ForceStopTrackingPosition();
         thumbTracker.StartTracking();
+
+        updateRequired = true;
     }
 
     void ShowMenu()
     {
         ShowUI();
         HideBuildings();
-        res.enabled = true;
-        com.enabled = true;
-        ind.enabled = true;
-        off.enabled = true;
-        indc.enabled = true;
-        fol.enabled = true;
+        menu.SetActive(true);
     }
 
     void HideMenu()
     {
-        res.enabled = false;
-        com.enabled = false;
-        ind.enabled = false;
-        off.enabled = false;
-        indc.enabled = false;
-        fol.enabled = false;
+        menu.SetActive(false);
     }
 
     void ShowBuildings()
@@ -114,24 +108,28 @@ public class DisplayUI : MonoBehaviour {
 
     public void SendSwipe(float swipe)
     {
-        Debug.Log("Swipe: " + swipe);
-        if(menuSelection < 5 && swipe > 0)
+        if(menuSelection <= 4 && swipe > 0)
         {
             // swipe to the right
             menuSelection++;
             ResetMenuColors();
+            updateRequired = true;
         }
-        else if(menuSelection > 0 && swipe < 0)
+        else if(menuSelection >= 1 && swipe < 0)
         {
             // swipe left
             menuSelection--;
             ResetMenuColors();
+            updateRequired = true;
+        }
+        else
+        {
+            // if no valid swipe possible
         }
     }
 
     void ResetMenuColors()
     {
-        Debug.Log("Menu selection: " + menuSelection);
         switch(menuSelection)
         {
             case 0:
@@ -151,17 +149,17 @@ public class DisplayUI : MonoBehaviour {
 
             case 3:
                 SetToBaseColor();
-                off.color = officeColor;
+                off.color = industrialColor;
                 break;
 
             case 4:
                 SetToBaseColor();
-                indc.color = officeColor;
+                indc.color = industrialColor;
                 break;
 
             case 5:
                 SetToBaseColor();
-                fol.color = foliageColor;
+                fol.color = industrialColor;
                 break;
         }
     }
@@ -192,16 +190,18 @@ public class DisplayUI : MonoBehaviour {
 
     IEnumerator Display()
     {
+        ResetMenuColors();
         while(displaying)
         {
-            if (showBuildings)
+            if (showBuildings && updateRequired)
             {
                 ShowBuildings();
+                updateRequired = false;
             }
-            else
+            else if(!showBuildings && updateRequired)
             {
                 ShowMenu();
-                ResetMenuColors();
+                updateRequired = false;
             }
             yield return null;
         }

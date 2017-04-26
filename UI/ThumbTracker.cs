@@ -113,7 +113,12 @@ public class ThumbTracker : MonoBehaviour {
     {
         if(swipe > swipeReq)
         {
-            displayUI.SendSwipe(swipe);
+            displayUI.SendSwipe(1);
+            swipe = 0;
+        }
+        else if(swipe < -swipeReq)
+        {
+            displayUI.SendSwipe(-1);
             swipe = 0;
         }
     }
