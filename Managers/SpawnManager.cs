@@ -16,6 +16,7 @@ public class SpawnManager : MonoBehaviour {
 
     List<Object[]> buildingList;
 
+    public AudioClip notificationSound;
     public GameObject sphere0;
     public GameObject sphere1;
     public GameObject sphere2;
@@ -47,6 +48,7 @@ public class SpawnManager : MonoBehaviour {
     public void SpawnUIBuildings(int type, int addNumber)
     {
         Debug.Log("Running at all");
+        GameObject newBuilding;
         if(!sphere0 || !sphere1 || !sphere2 || !sphere3 || !sphere4)
         {
             FindSpheres();
@@ -54,34 +56,36 @@ public class SpawnManager : MonoBehaviour {
         if(spawnController0.Empty())
         {
             Debug.Log("Tryna spawn at 0");
-            GameObject newBuilding = Spawn(sphere0.transform.position, type, 0 + addNumber);
+            newBuilding = Spawn(sphere0.transform.position, type, 0 + addNumber);
             spawnController0.DisableBuilding(this, newBuilding);
 
         }
         if (spawnController1.Empty())
         {
             Debug.Log("Tryna spawn at 1");
-            GameObject newBuilding = Spawn(sphere1.transform.position, type, 1 + addNumber);
+            newBuilding = Spawn(sphere1.transform.position, type, 1 + addNumber);
             spawnController1.DisableBuilding(this, newBuilding);
         }
         if(spawnController2.Empty())
         {
             Debug.Log("Tryna spawn at 2");
-            GameObject newBuilding = Spawn(sphere2.transform.position, type, 2 + addNumber);
+            newBuilding = Spawn(sphere2.transform.position, type, 2 + addNumber);
             spawnController2.DisableBuilding(this, newBuilding);
         }
         if(spawnController3.Empty())
         {
             Debug.Log("Tryna spawn at 3");
-            GameObject newBuilding = Spawn(sphere3.transform.position, type, 3 + addNumber);
+            newBuilding = Spawn(sphere3.transform.position, type, 3 + addNumber);
             spawnController3.DisableBuilding(this, newBuilding);
         }
-        if(spawnController4.Empty())
+        if (spawnController4.Empty())
         {
             Debug.Log("Tryna spawn at 4");
-            GameObject newBuilding = Spawn(sphere4.transform.position, type, 4 + addNumber);
+            newBuilding = Spawn(sphere4.transform.position, type, 4 + addNumber);
             spawnController4.DisableBuilding(this, newBuilding);
         }
+        else newBuilding = new GameObject();
+        AudioSource.PlayClipAtPoint(notificationSound, newBuilding.gameObject.transform.position);
     }
 
     public int GetNumBuildings(int id)

@@ -29,6 +29,7 @@ public class SpawnController : MonoBehaviour {
     private void Start()
     {
         displayUI = GameObject.Find("UI").GetComponent<DisplayUI>();
+        thumb = transform.parent.transform.parent.GetComponent<ThumbTracker>();
     }
 
     public GameObject ReturnContainedBuilding()
@@ -73,6 +74,12 @@ public class SpawnController : MonoBehaviour {
         // Spawns new from here!!!!!
         showingBuilding = false;
         spawnManager.SpawnUIBuildings(displayUI.GetSelection(), unit + thumb.angleIncrement);
+    }
+
+    public void DeleteBuilding()
+    {
+        Destroy(containedBuilding);
+        showingBuilding = false;
     }
 
     void SelectBuilding()

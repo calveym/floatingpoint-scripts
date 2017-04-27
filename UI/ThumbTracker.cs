@@ -54,6 +54,7 @@ public class ThumbTracker : MonoBehaviour {
         {
             trackingAngle = true;
             angle = events.GetTouchpadAxisAngle();
+            spawnManager.SpawnUIBuildings(displayUI.GetSelection(), angleIncrement);
 
             StartCoroutine("TrackThumbAngle");
         }
