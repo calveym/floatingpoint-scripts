@@ -57,8 +57,12 @@ public class WheelController : MonoBehaviour {
 
     void DoTouchpadTouchStart(object sender, ControllerInteractionEventArgs e)
     {
+        if(stopHide == false)
+        {
+            stopHide = true;
+            StopCoroutine("Snap");
+        }
         updating = true;
-        stopHide = true;
     } 
 
     void PerformSnap()

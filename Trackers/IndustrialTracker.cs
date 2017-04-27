@@ -51,11 +51,16 @@ public class IndustrialTracker : ItemTracker {
 
     void Update()
     {
-        if (!updateStarted)
+        if (!updateStarted && usable)
         {
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
             GameObject.Find("Managers").GetComponent<ItemManager>().addIndustrial(capacity, gameObject);
+        }
+        else if (updateStarted && !usable)
+        {
+            updateStarted = false;
+            EconomyManager.ecoTick -= UpdateSecond;
         }
     }
 

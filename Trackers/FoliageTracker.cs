@@ -7,6 +7,7 @@ public class FoliageTracker : MonoBehaviour {
 
     VRTK_InteractableObject interact;
     public bool working;
+    public bool usable;
 
     public void StartFoliage()
     {
@@ -37,7 +38,7 @@ public class FoliageTracker : MonoBehaviour {
 
     public IEnumerator FoliageTick()
     {
-        while(working)
+        while(working && usable)
         {
             UpgradeBuildings();
             yield return new WaitForSeconds(10);

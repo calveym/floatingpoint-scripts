@@ -34,7 +34,6 @@ public class DisplayUI : MonoBehaviour {
     bool updateRequired;  // Used to trigger a change between buildings and menu
     bool displaying;  // controlls main Display coroutine
     public bool showBuildings;  // true if menu hidden and buildings shown
-    public int showingBuildings;  // int referring to buildings category
 
     private void Awake()
     {
@@ -62,6 +61,11 @@ public class DisplayUI : MonoBehaviour {
         HideUI();
     }
 
+    public int GetSelection()
+    {
+        return menuSelection;
+    }
+
     void DoTouchpadTouch(object sender, ControllerInteractionEventArgs e)
     {
         displaying = true;
@@ -72,7 +76,6 @@ public class DisplayUI : MonoBehaviour {
     void DoTouchpadPress(object sender, ControllerInteractionEventArgs e)
     {
         showBuildings = !showBuildings;
-        Debug.Log("Show buildings: " + showBuildings);
         thumbTracker.ForceStopTrackingAngle();
         thumbTracker.ForceStopTrackingPosition();
         thumbTracker.StartTracking();

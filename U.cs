@@ -4,7 +4,6 @@ using UnityEngine;
 
 public static class U : object {
 
-
     public static List <GameObject> FindNearestBuildings (Vector3 position, float radius )
     {
         List<GameObject> returnObjects = new List<GameObject>();
@@ -18,10 +17,6 @@ public static class U : object {
             {
                 returnObjects.Add(hitcol.gameObject);
             }
-        }
-        else
-        {
-            returnObjects = null;
         }
         return returnObjects;
     }
@@ -80,5 +75,20 @@ public static class U : object {
         }
 
         return returnObject;
+    }
+
+    public static string IntToTag(int value)
+    {
+        Dictionary<int, string> type = new Dictionary<int, string>();
+
+        type.Add(0, "residential");
+        type.Add(1, "commercial");
+        type.Add(2, "industrial");
+        type.Add(3, "commercial");
+        type.Add(4, "industrialComponent");
+        type.Add(5, "foliage");
+
+        Debug.Log("typecount : " + type.Count);
+        return type[value];
     }
 }

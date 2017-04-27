@@ -9,10 +9,14 @@ public class ThumbTracker : MonoBehaviour {
     GameObject controller;  // left controller
     WheelController wheelController;
     DisplayUI displayUI;
+    SpawnManager spawnManager;
+
+    public int angleIncrement;  // Used for spawning buildings, number of ticks from origin point
 
     float angle;  // old angle, stored for comparison
     float angleChange;  // Amount change from last set angle
     float rawAngle;  // raw angle returned from thumb position
+    float totalAngle;  // aggregate angle chamnge
     string direction; // right or left
 
     float endPosition;  // position at end
@@ -26,12 +30,14 @@ public class ThumbTracker : MonoBehaviour {
     private void Start()
     // Sets up references
     {
+        angleIncrement = 0;
         swipeReq = 0.2f;
         controller = GameObject.Find("LeftController");
         events = controller.GetComponent<VRTK_ControllerEvents>();
         wheelController = GetComponent<WheelController>();
-
         displayUI = GetComponent<DisplayUI>();
+        spawnManager = GameObject.Find("Managers").GetComponent<SpawnManager>();
+
         events.TouchpadTouchStart += DoStartTracking;
         events.TouchpadTouchEnd += StopTracking;
     }
@@ -62,7 +68,18 @@ public class ThumbTracker : MonoBehaviour {
     // Stops tracking coroutine
     {
         ForceStopTrackingAngle();
-        ForceStopTrackingPosition();
+        UpdatePosition();
+    }
+
+    void UpdatePosition()
+    {
+        if (trackingPosition)
+        {
+            endPosition = events.GetTouchpadAxis().x;
+            RecalculatePosition();
+            SendPosition();
+            ForceStopTrackingPosition();
+        }
     }
 
     public void ForceStopTrackingAngle()
@@ -73,21 +90,33 @@ public class ThumbTracker : MonoBehaviour {
     public void ForceStopTrackingPosition()
     {
         trackingPosition = false;
-        endPosition = events.GetTouchpadAxis().x;
-        RecalculatePosition();
-        SendPosition();
     }
 
     void SendAngle()
     // Sends position to Wheel Controller
     {
-        wheelController.SendNewAngle(angleChange);
+        //wheelController.SendNewAngle(angleChange);
+        int selection = displayUI.GetSelection();
+        if(totalAngle > 45 || totalAngle < -45)
+        {
+            if (totalAngle < 45 && angleIncrement >= 1)
+            {
+                angleIncrement--;
+                // TODO: play noise
+            }
+            else if (totalAngle > 45 && angleIncrement + 2 <= spawnManager.GetNumBuildings(selection))
+            {
+                angleIncrement++;
+            }
+            spawnManager.SpawnUIBuildings(selection, angleIncrement);
+        }
     } 
 
     void RecalculateAngle()
     {
         // CAUSE: This is why the wheel does not spin a full circle.
         angleChange = (rawAngle - angle);
+        totalAngle = totalAngle + angleChange;
         angle = rawAngle;
     }
 
@@ -113,11 +142,14 @@ public class ThumbTracker : MonoBehaviour {
     {
         if(swipe > swipeReq)
         {
+            Debug.Log("Sending positive swipe");
             displayUI.SendSwipe(1);
+            
             swipe = 0;
         }
         else if(swipe < -swipeReq)
         {
+            Debug.Log("Sending negative swipe");
             displayUI.SendSwipe(-1);
             swipe = 0;
         }

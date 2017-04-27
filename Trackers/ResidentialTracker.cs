@@ -29,11 +29,16 @@ public class ResidentialTracker : ItemTracker {
 
     void Update()
     {
-        if (!updateStarted)
+        if (!updateStarted && usable)
         {
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
             itemManager.addResidential(capacity, gameObject);
+        }
+        else if(updateStarted && !usable)
+        {
+            updateStarted = false;
+            EconomyManager.ecoTick -= UpdateSecond;
         }
     }
 
