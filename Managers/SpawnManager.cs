@@ -100,26 +100,7 @@ public class SpawnManager : MonoBehaviour {
 
     Object FindBuilding(int type, int unit)
     {
-        switch (type)
-        {
-            case 0:
-                return res[unit];
-            case 1:
-                return com[unit];
-            case 2:
-                return ind[unit];
-            case 3:
-                return off[unit];
-            case 4:
-                return indc[unit];
-            case 5:
-                return fol[unit];
-            //case 6:
-                //return indc[unit];
-            //case 7:
-                //return fol[unit];
-        }
-        return new GameObject();
+        return buildingList[type][unit];
     }
 
     void LoadAllBuildings()

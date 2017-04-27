@@ -95,9 +95,11 @@ public class SpawnController : MonoBehaviour {
             spawnManager = sm;
         }
         UpdateContainedBuilding(newBuilding);
-        SetTracker();
-        SizeForMenu();
+
         DisablePhysics();
+        SizeForMenu();
+
+        SetTracker();
         if(unit == 2)
         {
             SelectBuilding();
