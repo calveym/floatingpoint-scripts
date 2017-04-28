@@ -331,7 +331,8 @@ public class DisplayUI : MonoBehaviour {
         {
             firstTouch = false;
             ShowUI();
-            ShowMenu();
+            HideMenu();
+            HideBuildings();
             ShowGlobalStats();
         }
         while(displaying)

@@ -8,6 +8,7 @@ public class SpawnController : MonoBehaviour {
     SpawnManager spawnManager;  // Reference saved to help spawn in new building on enable of old
     ThumbTracker thumb;
 
+    int level;
     public int unit;  // Refers to which sphere this is on
     public bool showingBuilding;
     bool selected;  // Used to stop coroutine
@@ -19,6 +20,9 @@ public class SpawnController : MonoBehaviour {
     int containedType;  // contained building type
     int menuSelection;  // What the type should be
     DisplayUI displayUI;
+
+    bool disablePurchase;
+    public Material disablePurchaseMaterial;
 
     // Trackers for enabling/ disabling
     ResidentialTracker res;
@@ -51,37 +55,40 @@ public class SpawnController : MonoBehaviour {
     public void EnableBuilding()
     // Call this to spawn the building 
     {
-        SizeForPlay();
-        DeselectBuilding();
-        EnablePhysics();
-        if (containedType == 0)
+        if(!disablePurchase)
         {
-            EnableResidential();
-        }
-        else if (containedType == 1)
-        {
-            EnableCommercial();
-        }
-        else if (containedType == 2)
-        {
-            EnableIndustrial();
-        }
-        else if (containedType == 3)
-        {
-            EnableCommercial();
-        }
-        else if (containedType == 4)
-        {
-            EnableComponent();
-        }
-        else if (containedType == 5)
-        {
-            EnableFoliage();
-        }
+            SizeForPlay();
+            DeselectBuilding();
+            EnablePhysics();
+            if (containedType == 0)
+            {
+                EnableResidential();
+            }
+            else if (containedType == 1)
+            {
+                EnableCommercial();
+            }
+            else if (containedType == 2)
+            {
+                EnableIndustrial();
+            }
+            else if (containedType == 3)
+            {
+                EnableCommercial();
+            }
+            else if (containedType == 4)
+            {
+                EnableComponent();
+            }
+            else if (containedType == 5)
+            {
+                EnableFoliage();
+            }
 
-        // Spawns new from here!!!!!
-        showingBuilding = false;
-        spawnManager.SpawnUIBuildings(displayUI.GetSelection(), unit + thumb.angleIncrement);
+            // Spawns new from here!!!!!
+            showingBuilding = false;
+            spawnManager.SpawnUIBuildings(displayUI.GetSelection(), unit + thumb.angleIncrement);
+        }
     }
 
     public void DeleteBuilding()
@@ -117,6 +124,7 @@ public class SpawnController : MonoBehaviour {
         sendList.Add(FancyWeekCost());
         sendList.Add(FancyBuyCost());
         displayUI.SendSelectedText(sendList);
+        containedBuilding.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);
         containedBuilding.transform.Rotate(new Vector3(0, 3f, 0));
     }
 
@@ -127,26 +135,66 @@ public class SpawnController : MonoBehaviour {
     }
 
     public void DisableBuilding(SpawnManager sm, GameObject newBuilding)
+    // Called on every new building
     {
         if (!spawnManager)
         {
             spawnManager = sm;
         }
+        disablePurchase = false;
         UpdateContainedBuilding(newBuilding);
+        SetTracker();
 
+        CheckLevel();
         DisablePhysics();
         SizeForMenu();
 
-        SetTracker();
         if (unit == 2)
         {
             SelectBuilding();
         }
     }
 
+    void CheckLevel()
+    {
+        RetrieveLevel();
+        Debug.Log("Level: " + level);
+        if (level > ProgressionManager.level)
+        {
+            disablePurchase = true;
+            containedBuilding.GetComponent<Renderer>().material = disablePurchaseMaterial;
+        }
+    }
+
+    void RetrieveLevel()
+    {
+        switch (containedType)
+        {
+            case 0:
+                Debug.Log("Res: " + res);
+                level = res.level;
+                break;
+            case 1:
+                level = com.level;
+                break;
+            case 2:
+                level = ind.level;
+                break;
+            case 3:
+                level = off.level;
+                break;
+            case 4:
+                level = indc.level;
+                break;
+            case 5:
+                level = 2;
+                break;
+        }
+    }
+
     public Vector3 GetInstantiatePosition()
     {
-        return transform.position - (new Vector3(0f, -0.5f, 0));
+        return transform.position - (new Vector3(0f, 0.5f, 0));
     }
 
     public bool Empty()
@@ -276,6 +324,10 @@ public class SpawnController : MonoBehaviour {
 
     void SizeForPlay()
     {
+        if(unit == 2)
+        {
+            containedBuilding.transform.localScale *= 0.5f;
+        }
         containedBuilding.transform.localScale *= scaleFactor * 1f / 0.75f;
     }
 
@@ -344,15 +396,15 @@ public class SpawnController : MonoBehaviour {
         switch (containedType)
         {
             case 0:
-                return "Weekly cost: " + res.baseCost;
+                return "Weekly cost: $" + res.baseCost;
             case 1:
-                return "Weekly cost: " + com.baseCost;
+                return "Weekly cost: $" + com.baseCost;
             case 2:
-                return "Weekly cost: " + ind.baseCost;
+                return "Weekly cost: $" + ind.baseCost;
             case 3:
-                return "Weekly cost: " + off.baseCost;
+                return "Weekly cost: $" + off.baseCost;
             case 4:
-                return "Weekly cost: " + indc.baseCost;
+                return "Weekly cost: $" + indc.baseCost;
             case 5:
                 return "";
         }

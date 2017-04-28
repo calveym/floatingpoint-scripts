@@ -73,31 +73,31 @@ public class SpawnManager : MonoBehaviour {
         if(spawnController0.Empty())
         {
             Debug.Log("Tryna spawn at 0");
-            newBuilding = Spawn(sphere0.transform.position, type, 0 + addNumber);
+            newBuilding = Spawn(spawnController0.GetInstantiatePosition(), type, 0 + addNumber);
             spawnController0.DisableBuilding(this, newBuilding);
         }
         if(spawnController1.Empty())
         {
             Debug.Log("Tryna spawn at 1");
-            newBuilding = Spawn(sphere1.transform.position, type, 1 + addNumber);
+            newBuilding = Spawn(spawnController1.GetInstantiatePosition(), type, 1 + addNumber);
             spawnController1.DisableBuilding(this, newBuilding);
         }
         if(spawnController2.Empty())
         {
             Debug.Log("Tryna spawn at 2");
-            newBuilding = Spawn(sphere2.transform.position, type, 2 + addNumber);
+            newBuilding = Spawn(spawnController2.GetInstantiatePosition(), type, 2 + addNumber);
             spawnController2.DisableBuilding(this, newBuilding);
         }
         if(spawnController3.Empty())
         {
             Debug.Log("Tryna spawn at 3");
-            newBuilding = Spawn(sphere3.transform.position, type, 3 + addNumber);
+            newBuilding = Spawn(spawnController3.GetInstantiatePosition(), type, 3 + addNumber);
             spawnController3.DisableBuilding(this, newBuilding);
         }
         if(spawnController4.Empty())
         {
             Debug.Log("Tryna spawn at 4");
-            newBuilding = Spawn(sphere4.transform.position, type, 4 + addNumber);
+            newBuilding = Spawn(spawnController4.GetInstantiatePosition(), type, 4 + addNumber);
             spawnController4.DisableBuilding(this, newBuilding);
         }
         else newBuilding = new GameObject();

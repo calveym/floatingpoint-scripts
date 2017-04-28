@@ -86,6 +86,7 @@ public class ThumbTracker : MonoBehaviour {
     public void ForceStopTrackingAngle()
     {
         trackingAngle = false;
+        angleIncrement = 0;
     }
 
     public void ForceStopTrackingPosition()
@@ -113,8 +114,8 @@ public class ThumbTracker : MonoBehaviour {
             }
             spawnManager.SpawnUIBuildings(selection, angleIncrement);
         }
-    } 
-
+    }
+   
     void RecalculateAngle()
     {
         // CAUSE: This is why the wheel does not spin a full circle.

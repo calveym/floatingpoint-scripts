@@ -13,7 +13,7 @@ public class ProgressionManager : MonoBehaviour {
     public bool allowRemoveMountain;
     public bool allowAddIsland;
 
-    public int level;
+    public static int level;
     public bool allowLevelUp;
     int pop;
 
