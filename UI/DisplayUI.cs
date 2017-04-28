@@ -143,6 +143,7 @@ public class DisplayUI : MonoBehaviour {
 
     public void SendSelectedText(List<string> newText)
     {
+        Debug.Log("Selected text received");
         text = newText;
         UpdateBuildingText();
     }
