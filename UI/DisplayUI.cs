@@ -65,7 +65,7 @@ public class DisplayUI : MonoBehaviour {
 
     private void Awake()
     {
-        showBuildings = false;
+        showBuildings = true;
         menuSelection = 0;
         staticSpheres = transform.Find("StaticSpheres").gameObject;
         wheelBase = transform.Find("WheelBase").gameObject;
@@ -106,6 +106,7 @@ public class DisplayUI : MonoBehaviour {
 
     void DoTouchpadPress(object sender, ControllerInteractionEventArgs e)
     {
+        firstTouch = false;
         showBuildings = !showBuildings;
         thumbTracker.ForceStopTrackingAngle();
         thumbTracker.ForceStopTrackingPosition();
@@ -170,7 +171,7 @@ public class DisplayUI : MonoBehaviour {
 
             case 3:
                 SetToBaseColor();
-                off.color = officeColor;
+                off.color = residentialColor;
                 break;
 
             case 4:
@@ -327,15 +328,15 @@ public class DisplayUI : MonoBehaviour {
     IEnumerator Display()
     {
         ResetMenuColors();
-        if(firstTouch)
+        while(firstTouch && displaying)
         {
-            firstTouch = false;
             ShowUI();
             HideMenu();
             HideBuildings();
             ShowGlobalStats();
+            yield return null;
         }
-        while(displaying)
+        while(displaying && !firstTouch)
         {
             if (showBuildings && updateRequired)
             {

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class PopupManager : MonoBehaviour {
 
     public GameObject popup;
-    VRTK_ObjectTooltip tooltip;
+    Text tooltip;
     public AudioClip notificationSound;
 
     List<string> queuedPopups;
@@ -18,7 +18,7 @@ public class PopupManager : MonoBehaviour {
     {
         WAIT_TIME = 5;
         queuedPopups = new List<string>();
-        tooltip = popup.GetComponent<VRTK_ObjectTooltip>();
+        tooltip = popup.transform.Find("TooltipCanvas/UITextFront").GetComponent<Text>();
         QueuePopup("Welcome to CloudCity!");
         QueuePopup("Touch the left trackpad to open the building menu");
     }
@@ -44,7 +44,7 @@ public class PopupManager : MonoBehaviour {
         while (queuedPopups.Count > 0)
         {
             AudioSource.PlayClipAtPoint(notificationSound, tooltip.gameObject.transform.position);
-            tooltip.UpdateText(queuedPopups[0]);
+            tooltip.text = queuedPopups[0];
             popup.SetActive(true);
             queuedPopups.RemoveAt(0);
             yield return new WaitForSeconds(WAIT_TIME);
