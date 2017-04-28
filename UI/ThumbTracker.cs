@@ -103,11 +103,13 @@ public class ThumbTracker : MonoBehaviour {
             if (totalAngle < 45 && angleIncrement >= 1)
             {
                 angleIncrement--;
+                totalAngle = 0;
                 // TODO: play noise
             }
-            else if (totalAngle > 45 && angleIncrement + 2 <= spawnManager.GetNumBuildings(selection))
+            else if (totalAngle > 45 && angleIncrement + 2 < spawnManager.GetNumBuildings(selection))
             {
                 angleIncrement++;
+                totalAngle = 0;
             }
             spawnManager.SpawnUIBuildings(selection, angleIncrement);
         }

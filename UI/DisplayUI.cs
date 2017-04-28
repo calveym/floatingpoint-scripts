@@ -133,6 +133,7 @@ public class DisplayUI : MonoBehaviour {
 
     void ResetMenuColors()
     {
+        SetToBaseColor();
         switch(menuSelection)
         {
             case 0:
@@ -152,17 +153,17 @@ public class DisplayUI : MonoBehaviour {
 
             case 3:
                 SetToBaseColor();
-                off.color = industrialColor;
+                off.color = officeColor;
                 break;
 
             case 4:
                 SetToBaseColor();
-                indc.color = industrialColor;
+                indc.color = componentColor;
                 break;
 
             case 5:
                 SetToBaseColor();
-                fol.color = industrialColor;
+                fol.color = foliageColor;
                 break;
         }
     }
@@ -198,11 +199,13 @@ public class DisplayUI : MonoBehaviour {
         {
             if (showBuildings && updateRequired)
             {
+                Debug.Log("Showing buildings");
                 ShowBuildings();
                 updateRequired = false;
             }
             else if(!showBuildings && updateRequired)
             {
+                Debug.Log("Showing menu");
                 ShowMenu();
                 updateRequired = false;
             }

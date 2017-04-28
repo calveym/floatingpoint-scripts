@@ -45,10 +45,27 @@ public class SpawnManager : MonoBehaviour {
         return Instantiate(FindBuilding(type, unit), targetPosition, Quaternion.identity) as GameObject;
     }
 
+    public void ResetUIBuildings()
+    {
+        spawnController0.gameObject.SetActive(true);
+        spawnController1.gameObject.SetActive(true);
+        spawnController2.gameObject.SetActive(true);
+        spawnController3.gameObject.SetActive(true);
+        spawnController4.gameObject.SetActive(true);
+
+
+        spawnController0.DeleteBuilding();
+        spawnController1.DeleteBuilding();
+        spawnController2.DeleteBuilding();
+        spawnController3.DeleteBuilding();
+        spawnController4.DeleteBuilding();
+    }
+
     public void SpawnUIBuildings(int type, int addNumber)
     {
         Debug.Log("Running at all");
         GameObject newBuilding;
+        ResetUIBuildings();
         if(!sphere0 || !sphere1 || !sphere2 || !sphere3 || !sphere4)
         {
             FindSpheres();
@@ -58,7 +75,6 @@ public class SpawnManager : MonoBehaviour {
             Debug.Log("Tryna spawn at 0");
             newBuilding = Spawn(sphere0.transform.position, type, 0 + addNumber);
             spawnController0.DisableBuilding(this, newBuilding);
-
         }
         if (spawnController1.Empty())
         {

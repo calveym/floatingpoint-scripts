@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK;
 
 public class SpawnController : MonoBehaviour {
 
@@ -9,6 +10,8 @@ public class SpawnController : MonoBehaviour {
 
     public int unit;  // Refers to which sphere this is on
     public bool showingBuilding;
+    bool selected;  // Used to stop coroutine
+    bool selectedStarted;  // Used to tell if coroutine already running- for starting
 
     GameObject containedBuilding;  // Building currently spawned in sphere. This reference will be used to delete it later on.
     Renderer containedRenderer;  // Used to find size for scale up/ down
@@ -32,6 +35,14 @@ public class SpawnController : MonoBehaviour {
         thumb = transform.parent.transform.parent.GetComponent<ThumbTracker>();
     }
 
+    private void Update()
+    {
+        if(selected)
+        {
+            containedBuilding.transform.Rotate(new Vector3(0, 3f, 0));
+        }
+    }
+
     public GameObject ReturnContainedBuilding()
     {
         return containedBuilding;
@@ -41,11 +52,8 @@ public class SpawnController : MonoBehaviour {
     // Call this to spawn the building 
     {
         SizeForPlay();
+        DeselectBuilding();
         EnablePhysics();
-        if (unit == 2)
-        {
-            DeselectBuilding();
-        }
         if (containedType == 0)
         {
             EnableResidential();
@@ -78,13 +86,28 @@ public class SpawnController : MonoBehaviour {
 
     public void DeleteBuilding()
     {
-        Destroy(containedBuilding);
-        showingBuilding = false;
+        selected = false;
+        selectedStarted = false;
+        if(showingBuilding)
+        {
+            Destroy(containedBuilding);
+            showingBuilding = false;
+        }
     }
 
     void SelectBuilding()
     // TODO: Display building stats in displayMenu here
-    // TODO: Start slow building rotation here
+    // Start slow building rotation here
+    {
+        if(!gameObject.activeInHierarchy)
+        {
+            gameObject.SetActive(true);
+        }
+        ShowStats();
+        selected = true;
+    }
+
+    void ShowStats()
     {
 
     }
@@ -92,7 +115,7 @@ public class SpawnController : MonoBehaviour {
     void DeselectBuilding()
 
     {
-
+        selected = false;
     }
 
     public void DisableBuilding(SpawnManager sm, GameObject newBuilding)
@@ -111,6 +134,11 @@ public class SpawnController : MonoBehaviour {
         {
             SelectBuilding();
         }
+    }
+
+    public Vector3 GetInstantiatePosition()
+    {
+        return transform.position - (new Vector3(0f, -0.5f, 0));
     }
 
     public bool Empty()
@@ -147,6 +175,7 @@ public class SpawnController : MonoBehaviour {
     {
         containedBuilding.transform.parent = this.transform;
         Rigidbody rb = containedBuilding.GetComponent<Rigidbody>();
+        containedBuilding.GetComponent<VRTK_InteractableObject>().isGrabbable = false;
         rb.useGravity = false;
         rb.isKinematic = true;
     }
@@ -155,6 +184,7 @@ public class SpawnController : MonoBehaviour {
     {
         containedBuilding.transform.parent = null;
         Rigidbody rb = containedBuilding.GetComponent<Rigidbody>();
+        containedBuilding.GetComponent<VRTK_InteractableObject>().isGrabbable = true ;
         rb.useGravity = true;
         rb.isKinematic = false;
     }
@@ -166,6 +196,7 @@ public class SpawnController : MonoBehaviour {
 
         containedRenderer = containedBuilding.GetComponent<Renderer>();
         containedType = menuSelection;
+        showingBuilding = true;
     }
 
     void SetTracker()
