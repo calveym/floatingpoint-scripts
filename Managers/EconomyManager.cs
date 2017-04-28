@@ -6,8 +6,8 @@ using UnityEngine;
 public class EconomyManager : MonoBehaviour {
 
     // Declare other managers
-	ItemManager itemManager;
-	PopulationManager populationManager;
+	public ItemManager itemManager;
+	public PopulationManager populationManager;
 
     // Declare variables
 	float balance;
@@ -77,7 +77,7 @@ public class EconomyManager : MonoBehaviour {
 
     void TransferGoods()
     {
-        goods = IndustrialTracker.allGoods;
+        goods += IndustrialTracker.allGoods;
         IndustrialTracker.allGoods = 0;
     }
 
@@ -182,5 +182,25 @@ public class EconomyManager : MonoBehaviour {
     public float GetHappiness()
     {
         return happiness;
+    }
+
+    public string FancyIncome()
+    {
+        return "+ " + income.ToString();
+    }
+
+    public string FancyBalance()
+    {
+        return "Balance: $" + balance.ToString();
+    }
+    
+    public string FancyGoodsProduced()
+    {
+        return "Goods produced: " + goods;
+    }
+
+    public string FancyGoodsConsumed()
+    {
+        return "Goods consumed: ";
     }
 }

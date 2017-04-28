@@ -18,7 +18,7 @@ public class SpawnController : MonoBehaviour {
     float scaleFactor;
     int containedType;  // contained building type
     int menuSelection;  // What the type should be
-    DisplayUI displayUI; 
+    DisplayUI displayUI;
 
     // Trackers for enabling/ disabling
     ResidentialTracker res;
@@ -39,6 +39,8 @@ public class SpawnController : MonoBehaviour {
     {
         if(selected)
         {
+            List<string> sendList = new List<string>();
+            displayUI.SendSelectedText(sendList);
             containedBuilding.transform.Rotate(new Vector3(0, 3f, 0));
         }
     }
@@ -103,13 +105,8 @@ public class SpawnController : MonoBehaviour {
         {
             gameObject.SetActive(true);
         }
-        ShowStats();
         selected = true;
-    }
-
-    void ShowStats()
-    {
-
+        
     }
 
     void DeselectBuilding()

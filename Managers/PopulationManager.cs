@@ -268,4 +268,28 @@ public class PopulationManager : MonoBehaviour {
 	{
 		return commercialCap + industrialCap;
 	}
+
+    public float GetHappiness()
+    {
+        return happinessManager.happiness;
+    }
+
+    public string FancyTotalPopulation()
+    {
+        return "Total Population: " + totalPopulation.ToString();
+    }
+
+    public string FancyEmployedPopulation()
+    {
+        return "Employed: " + (totalPopulation - unemployedPopulation).ToString();
+    }
+
+    public string FancyUnemployedPopulation()
+    {
+        if (totalPopulation != 0)
+        {
+            return "Unemployed: %" + (unemployedPopulation / totalPopulation * 100).ToString();
+        }
+        else return "0 Unemployed";
+    }
 }

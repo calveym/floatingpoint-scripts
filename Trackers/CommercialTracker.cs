@@ -76,6 +76,17 @@ public class CommercialTracker : ItemTracker {
         {
             goodsSold = goodsAvailable;
         }
+
+        if (IndustrialTracker.allGoods >= capacity)
+        {
+            IndustrialTracker.allGoods -= capacity;
+            goodsAvailable = capacity;
+        }
+        else if(IndustrialTracker.allGoods < capacity && IndustrialTracker.allGoods > 0)
+        {
+            goodsAvailable = IndustrialTracker.allGoods;
+            IndustrialTracker.allGoods = 0;
+        }
     }
 
     void UpdateVisitors()
@@ -105,7 +116,6 @@ public class CommercialTracker : ItemTracker {
         UpdateLandValue();
         UpdateTransportationValue();
         UpdateVisitors();
-        goodsAvailable = capacity;
         SellGoods();
         income = goodsSold;
         totalIndustrialIncome += income;

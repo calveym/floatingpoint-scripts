@@ -76,7 +76,7 @@ public class SpawnManager : MonoBehaviour {
             newBuilding = Spawn(sphere0.transform.position, type, 0 + addNumber);
             spawnController0.DisableBuilding(this, newBuilding);
         }
-        if (spawnController1.Empty())
+        if(spawnController1.Empty())
         {
             Debug.Log("Tryna spawn at 1");
             newBuilding = Spawn(sphere1.transform.position, type, 1 + addNumber);
@@ -94,7 +94,7 @@ public class SpawnManager : MonoBehaviour {
             newBuilding = Spawn(sphere3.transform.position, type, 3 + addNumber);
             spawnController3.DisableBuilding(this, newBuilding);
         }
-        if (spawnController4.Empty())
+        if(spawnController4.Empty())
         {
             Debug.Log("Tryna spawn at 4");
             newBuilding = Spawn(sphere4.transform.position, type, 4 + addNumber);
