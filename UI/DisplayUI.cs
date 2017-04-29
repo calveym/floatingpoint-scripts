@@ -62,6 +62,7 @@ public class DisplayUI : MonoBehaviour {
     bool displaying;  // controlls main Display coroutine
     public bool showBuildings;  // true if menu hidden and buildings shown
     bool firstTouch;
+    bool ignoreFirstTouch;
 
     private void Awake()
     {
@@ -99,25 +100,34 @@ public class DisplayUI : MonoBehaviour {
     void DoTouchpadTouch(object sender, ControllerInteractionEventArgs e)
     {
         updateRequired = true;
-        displaying = true;
         firstTouch = true;
-        StartCoroutine("Display");
+        if (!displaying)
+        {
+            displaying = true;
+            StartCoroutine("Display");
+        }
     }
 
     void DoTouchpadPress(object sender, ControllerInteractionEventArgs e)
     {
         firstTouch = false;
+        ignoreFirstTouch = true;
+        updateRequired = true;
         showBuildings = !showBuildings;
         thumbTracker.ForceStopTrackingAngle();
         thumbTracker.ForceStopTrackingPosition();
         thumbTracker.StartTracking();
 
-        updateRequired = true;
         if(!displaying)
         {
             displaying = true;
             StartCoroutine("Display");
         }
+    }
+
+    void DoTouchpadRelease(object sender, ControllerInteractionEventArgs e)
+    {
+        StartCoroutine("ReleaseDelay");
     }
 
     public void SendSwipe(float swipe)
@@ -328,7 +338,7 @@ public class DisplayUI : MonoBehaviour {
     IEnumerator Display()
     {
         ResetMenuColors();
-        while(firstTouch && displaying)
+        while(firstTouch && displaying && !ignoreFirstTouch)
         {
             ShowUI();
             HideMenu();
@@ -336,7 +346,7 @@ public class DisplayUI : MonoBehaviour {
             ShowGlobalStats();
             yield return null;
         }
-        while(displaying && !firstTouch)
+        while(displaying && ignoreFirstTouch)
         {
             if (showBuildings && updateRequired)
             {
@@ -366,5 +376,18 @@ public class DisplayUI : MonoBehaviour {
             }
             yield return null;
         }
+    }
+
+    IEnumerator ReleaseDelay()
+    {
+        float touchTime = 0f;
+        while(touchTime < 3)
+        {
+            ignoreFirstTouch = true;
+            touchTime += Time.deltaTime;
+            yield return new WaitForSeconds(0.20f);
+        }
+        ignoreFirstTouch = false;
+        displaying = false;
     }
 }

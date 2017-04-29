@@ -108,12 +108,14 @@ public class IndustrialTracker : ItemTracker {
     public void AddMarker()
     {
         marker = Instantiate(markerPrefab, transform.position + new Vector3(0f, 2f, 0f), transform.rotation, transform).GetComponent<Marker>();
+        marker.transform.localScale *= 10;
         marker.StartRotation();
     }
 
     public void LinkComponent(IndustrialComponent component)
     // Sent from component, completes link
     {
+        Debug.Log("Gettin linked eh@ " + gameObject.name);
         components.Add(component);
         RecalculateComponents();
     }
@@ -212,5 +214,9 @@ public class IndustrialTracker : ItemTracker {
     public string FancyLandValue()
     {
         return "Land Value: $" + landValue;
+    }
+    public void MarkWithComponent()
+    {
+        StartCoroutine("MarkWithComponent");
     }
 }

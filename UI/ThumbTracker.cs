@@ -7,7 +7,6 @@ public class ThumbTracker : MonoBehaviour {
 
     VRTK_ControllerEvents events;  // VRTK grab event handler
     GameObject controller;  // left controller
-    WheelController wheelController;
     DisplayUI displayUI;
     SpawnManager spawnManager;
 
@@ -34,7 +33,6 @@ public class ThumbTracker : MonoBehaviour {
         swipeReq = 0.2f;
         controller = GameObject.Find("LeftController");
         events = controller.GetComponent<VRTK_ControllerEvents>();
-        wheelController = GetComponent<WheelController>();
         displayUI = GetComponent<DisplayUI>();
         spawnManager = GameObject.Find("Managers").GetComponent<SpawnManager>();
 
@@ -97,7 +95,6 @@ public class ThumbTracker : MonoBehaviour {
     void SendAngle()
     // Sends position to Wheel Controller
     {
-        //wheelController.SendNewAngle(angleChange);
         int selection = displayUI.GetSelection();
         if(totalAngle > 45 || totalAngle < -45)
         {

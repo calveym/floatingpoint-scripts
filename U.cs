@@ -40,7 +40,7 @@ public static class U : object {
         List<IndustrialTracker> returnObject = new List<IndustrialTracker>();
         for (int i = 0; i < objectList.Count; i++)
         {
-            if (objectList[i].gameObject.tag == "industrial" || objectList[i].gameObject.tag == "industrialComponent")
+            if (objectList[i].gameObject.tag == "industrial")
             {
                 returnObject.Add(objectList[i].GetComponent<IndustrialTracker>());
             }

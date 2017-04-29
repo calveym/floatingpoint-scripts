@@ -54,40 +54,12 @@ public class ComponentSnap : VRTK_InteractableObject {
         if (objectUsed == true)
         {
             DetachSphere();
-            GetNearestBuilding();
+            nearestBuilding = U.ReturnIndustrialTrackers(U.FindNearestBuildings(transform.position, 5f))[0].gameObject;
             if(nearestBuilding)
             {
                 ClosestFound(nearestBuilding);
             }
             objectUsed = false;
-        }
-    }
-
-	public void GetNearestBuilding()
-    {
-        hitColliders = Physics.OverlapSphere(transform.position, 1.5f, 8);
-
-        if (hitColliders.Length == 0)
-        {
-            nearestBuilding = null;
-        }
-        else
-        {
-            foreach (Collider hitcol in hitColliders)
-            {
-                if(gameObject.tag == "industrial")
-                {
-                    potentialTracker = hitcol.gameObject.GetComponent<IndustrialTracker>();
-                    if (potentialTracker != null && hitcol != GetComponent<Collider>() && potentialTracker.level == component.level)
-                    {
-                        nearestBuilding = hitcol.gameObject;
-                    }
-                }
-                else if (gameObject.tag == "foliage")
-                {
-                    nearestBuilding = hitcol.gameObject;
-                }
-            }
         }
     }
 
@@ -98,7 +70,7 @@ public class ComponentSnap : VRTK_InteractableObject {
         {
             sphere.GetComponent<Renderer>().material = foliageMaterial;
         }
-        if (gameObject.tag == "industrial")
+        if (gameObject.tag == "industrialComponent")
         {
             sphere.GetComponent<Renderer>().material = industrialMaterial;
         }
@@ -143,7 +115,7 @@ public class ComponentSnap : VRTK_InteractableObject {
 
     void PurchaseComponent()
     {
-        component.LinkComponent(potentialTracker);
+        component.LinkComponent(nearestBuilding.GetComponent<IndustrialTracker>());
         Pay(component.buyCost);
     }
 
@@ -151,8 +123,15 @@ public class ComponentSnap : VRTK_InteractableObject {
     {
         while (objectUsed)
         {
-
-            yield return null;
+            List<GameObject> surroundingBuildings = U.FindNearestBuildings(transform.position, 1f);
+            List<IndustrialTracker> surroundingIndustrial = U.ReturnIndustrialTrackers(surroundingBuildings);
+            if(surroundingIndustrial.Count >= 1)
+            {
+                Debug.Log("Component: " + component);
+                Debug.Log("Surrounding industrial: " + surroundingIndustrial.Count);
+                component.FoundIndustrial(surroundingIndustrial[0].gameObject);
+            }
+            yield return new WaitForSeconds(0.5f);
         }
     }
 }

@@ -158,7 +158,7 @@ public class SpawnController : MonoBehaviour {
     void CheckLevel()
     {
         RetrieveLevel();
-        Debug.Log("Level: " + level);
+        //Debug.Log("Level: " + level);
         if (level > ProgressionManager.level)
         {
             disablePurchase = true;
@@ -171,7 +171,6 @@ public class SpawnController : MonoBehaviour {
         switch (containedType)
         {
             case 0:
-                Debug.Log("Res: " + res);
                 level = res.level;
                 break;
             case 1:
@@ -261,7 +260,6 @@ public class SpawnController : MonoBehaviour {
         if (containedType == 0)
         {
             res = containedBuilding.GetComponent<ResidentialTracker>();
-            Debug.Log("Res: " + res);
             res.usable = false;
         }
         else if (containedType == 1)

@@ -72,31 +72,31 @@ public class SpawnManager : MonoBehaviour {
         }
         if(spawnController0.Empty())
         {
-            Debug.Log("Tryna spawn at 0");
+            //Debug.Log("Tryna spawn at 0");
             newBuilding = Spawn(spawnController0.GetInstantiatePosition(), type, 0 + addNumber);
             spawnController0.DisableBuilding(this, newBuilding);
         }
         if(spawnController1.Empty())
         {
-            Debug.Log("Tryna spawn at 1");
+            //Debug.Log("Tryna spawn at 1");
             newBuilding = Spawn(spawnController1.GetInstantiatePosition(), type, 1 + addNumber);
             spawnController1.DisableBuilding(this, newBuilding);
         }
         if(spawnController2.Empty())
         {
-            Debug.Log("Tryna spawn at 2");
+            //Debug.Log("Tryna spawn at 2");
             newBuilding = Spawn(spawnController2.GetInstantiatePosition(), type, 2 + addNumber);
             spawnController2.DisableBuilding(this, newBuilding);
         }
         if(spawnController3.Empty())
         {
-            Debug.Log("Tryna spawn at 3");
+            //Debug.Log("Tryna spawn at 3");
             newBuilding = Spawn(spawnController3.GetInstantiatePosition(), type, 3 + addNumber);
             spawnController3.DisableBuilding(this, newBuilding);
         }
         if(spawnController4.Empty())
         {
-            Debug.Log("Tryna spawn at 4");
+            //Debug.Log("Tryna spawn at 4");
             newBuilding = Spawn(spawnController4.GetInstantiatePosition(), type, 4 + addNumber);
             spawnController4.DisableBuilding(this, newBuilding);
         }
