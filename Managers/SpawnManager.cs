@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour {
@@ -142,5 +143,4 @@ public class SpawnManager : MonoBehaviour {
         buildingList.Add(indc);
         buildingList.Add(fol);
     }
-
 }

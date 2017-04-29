@@ -36,17 +36,7 @@ public class ThumbTracker : MonoBehaviour {
         displayUI = GetComponent<DisplayUI>();
         spawnManager = GameObject.Find("Managers").GetComponent<SpawnManager>();
 
-        events.TouchpadTouchStart += DoStartTracking;
         events.TouchpadTouchEnd += StopTracking;
-    }
-
-    void DoStartTracking(object sender, ControllerInteractionEventArgs e)
-    // Starts tracking coroutine
-    {
-        if(displayUI.ignoreFirstTouch)
-        {
-            StartTracking();
-        }
     }
 
     public void StartTracking()
@@ -69,7 +59,6 @@ public class ThumbTracker : MonoBehaviour {
     void StopTracking(object sender, ControllerInteractionEventArgs e)
     // Stops tracking coroutine
     {
-        displayUI.StartCoroutine("ReleaseDelay");
         ForceStopTrackingAngle();
         UpdatePosition();
     }

@@ -8,6 +8,7 @@ public class TooltipManager : MonoBehaviour {
     public delegate void UpdateTooltips();
     public UpdateTooltips updateTooltips;
 
+    public DisplayUI displayUI;
     List<GameObject> nearestBuildings;
     GameObject headset;
     GameObject rightController;
@@ -41,14 +42,17 @@ public class TooltipManager : MonoBehaviour {
 
     void EnableObjectTooltip (object sender, ControllerInteractionEventArgs e)
     {
-        tick = 0;
-        pressed = true;
-        nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 10f);
-        foreach(GameObject building in nearestBuildings)
+        if(!displayUI.displaying)
         {
-            EnableTooltip(building);
+            tick = 0;
+            pressed = true;
+            nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 10f);
+            foreach (GameObject building in nearestBuildings)
+            {
+                EnableTooltip(building);
+            }
+            StartCoroutine("SecondTick");
         }
-        StartCoroutine("SecondTick");
     }
 
     public void EnableTooltip(GameObject building)
