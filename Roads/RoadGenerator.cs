@@ -71,6 +71,10 @@ public class RoadGenerator : VRTK_InteractableObject {
 		roadRotation.Add("1101", ninety);
 		roadRotation.Add("1111", zero);
 	}
+    public void AddRoad(Vector3 position)
+    {
+        DrawRoad(position);
+    }
 
 	public override void StartUsing (GameObject usingObject)
 	// Runs when object is used by vrtk controller

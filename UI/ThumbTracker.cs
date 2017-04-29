@@ -43,7 +43,10 @@ public class ThumbTracker : MonoBehaviour {
     void DoStartTracking(object sender, ControllerInteractionEventArgs e)
     // Starts tracking coroutine
     {
-        StartTracking();
+        if(displayUI.ignoreFirstTouch)
+        {
+            StartTracking();
+        }
     }
 
     public void StartTracking()
@@ -66,6 +69,7 @@ public class ThumbTracker : MonoBehaviour {
     void StopTracking(object sender, ControllerInteractionEventArgs e)
     // Stops tracking coroutine
     {
+        displayUI.StartCoroutine("ReleaseDelay");
         ForceStopTrackingAngle();
         UpdatePosition();
     }

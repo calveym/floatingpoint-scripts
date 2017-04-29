@@ -63,7 +63,6 @@ public class SpawnManager : MonoBehaviour {
 
     public void SpawnUIBuildings(int type, int addNumber)
     {
-        Debug.Log("Running at all");
         GameObject newBuilding;
         ResetUIBuildings();
         if(!sphere0 || !sphere1 || !sphere2 || !sphere3 || !sphere4)

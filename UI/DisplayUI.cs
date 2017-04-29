@@ -62,7 +62,7 @@ public class DisplayUI : MonoBehaviour {
     bool displaying;  // controlls main Display coroutine
     public bool showBuildings;  // true if menu hidden and buildings shown
     bool firstTouch;
-    bool ignoreFirstTouch;
+    public bool ignoreFirstTouch;
 
     private void Awake()
     {
@@ -125,11 +125,6 @@ public class DisplayUI : MonoBehaviour {
         }
     }
 
-    void DoTouchpadRelease(object sender, ControllerInteractionEventArgs e)
-    {
-        StartCoroutine("ReleaseDelay");
-    }
-
     public void SendSwipe(float swipe)
     {
         if(menuSelection <= 4 && swipe > 0)
@@ -154,7 +149,6 @@ public class DisplayUI : MonoBehaviour {
 
     public void SendSelectedText(List<string> newText)
     {
-        Debug.Log("Selected text received");
         text = newText;
         UpdateBuildingText();
     }
@@ -346,7 +340,7 @@ public class DisplayUI : MonoBehaviour {
             ShowGlobalStats();
             yield return null;
         }
-        while(displaying && ignoreFirstTouch)
+        while(displaying && ignoreFirstTouch && !firstTouch)
         {
             if (showBuildings && updateRequired)
             {
@@ -376,18 +370,31 @@ public class DisplayUI : MonoBehaviour {
             }
             yield return null;
         }
+        if(!displaying)
+        {
+            Debug.Log("Hiding");
+            HideUI();
+            HideMenu();
+            HideGlobalStats();
+            HideBuildings();
+            yield return null;
+        }
     }
 
-    IEnumerator ReleaseDelay()
+    public IEnumerator ReleaseDelay()
     {
         float touchTime = 0f;
         while(touchTime < 3)
         {
             ignoreFirstTouch = true;
             touchTime += Time.deltaTime;
-            yield return new WaitForSeconds(0.20f);
+            yield return null;
         }
         ignoreFirstTouch = false;
         displaying = false;
+        HideUI();
+        HideMenu();
+        HideGlobalStats();
+        HideBuildings();
     }
 }
