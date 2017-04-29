@@ -191,7 +191,7 @@ public class EconomyManager : MonoBehaviour {
 
     public string FancyBalance()
     {
-        return "Balance: $" + balance.ToString();
+        return "Balance: $" + Mathf.Round(balance).ToString();
     }
     
     public string FancyGoodsProduced()

@@ -72,6 +72,7 @@ public class ItemTracker : MonoBehaviour {
         if(land == null)
         {
             land = gameObject.GetComponent<LandValue>();
+            Debug.Log("Getting land value" + gameObject.name);
         }
         landValue = land.RecalculateLandValue();
         landValue += users * 1.2f;

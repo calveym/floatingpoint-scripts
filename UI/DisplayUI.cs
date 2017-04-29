@@ -96,7 +96,7 @@ public class DisplayUI : MonoBehaviour {
         events = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
         events.TouchpadTouchStart += DoTouchpadTouch;
         events.TouchpadPressed += DoTouchpadPress;
-        events.TouchpadReleased += DoTouchpadRelease;
+        events.TouchpadTouchEnd += DoTouchpadRelease;
         HideUI();
     }
 
@@ -138,6 +138,7 @@ public class DisplayUI : MonoBehaviour {
             HideBuildings();
             ShowMenu();
             thumbTracker.StartTracking();
+            ResetMenuColors();
             StartCoroutine("UpdateMenu");
         }
 
@@ -173,6 +174,8 @@ public class DisplayUI : MonoBehaviour {
 
     void DoTouchpadRelease(object sender, ControllerInteractionEventArgs e)
     {
+        Debug.Log("Releasing" + interruptRelease);
+        interruptRelease = false;
         StartCoroutine("ReleaseDelay");
     }
 
@@ -410,7 +413,8 @@ public class DisplayUI : MonoBehaviour {
     public IEnumerator ReleaseDelay()
     {
         yield return new WaitForSeconds(1f);
-        if(!interruptRelease)
+
+        if (!interruptRelease)
         {
             firstTouch = true;
             displaying = false;

@@ -6,6 +6,7 @@ using VRTK;
 public class SpawnController : MonoBehaviour {
 
     SpawnManager spawnManager;  // Reference saved to help spawn in new building on enable of old
+    EconomyManager economyManager; 
     ThumbTracker thumb;
 
     int level;
@@ -20,6 +21,8 @@ public class SpawnController : MonoBehaviour {
     int containedType;  // contained building type
     int menuSelection;  // What the type should be
     DisplayUI displayUI;
+    float price;
+
 
     bool disablePurchase;
     public Material disablePurchaseMaterial;
@@ -35,7 +38,8 @@ public class SpawnController : MonoBehaviour {
 
     private void Start()
     {
-        displayUI = GameObject.Find("UI").GetComponent<DisplayUI>();
+        displayUI = transform.parent.transform.parent.GetComponent<DisplayUI>();
+        economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         thumb = transform.parent.transform.parent.GetComponent<ThumbTracker>();
     }
 
@@ -55,10 +59,11 @@ public class SpawnController : MonoBehaviour {
     public void EnableBuilding()
     // Call this to spawn the building 
     {
-        if(!disablePurchase)
+        if(!disablePurchase && economyManager.GetBalance() > price && containedBuilding)
         {
             SizeForPlay();
             DeselectBuilding();
+            EconomyManager.ChangeBalance(price);
             EnablePhysics();
             if (containedType == 0)
             {
@@ -129,24 +134,27 @@ public class SpawnController : MonoBehaviour {
     }
 
     void DeselectBuilding()
-
     {
         selected = false;
+        containedBuilding.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
     }
 
     public void DisableBuilding(SpawnManager sm, GameObject newBuilding)
     // Called on every new building
     {
+        Debug.Log("Gets to first marker" + newBuilding);
         if (!spawnManager)
         {
             spawnManager = sm;
         }
         disablePurchase = false;
         UpdateContainedBuilding(newBuilding);
+        Debug.Log("Contained building reached: " + containedBuilding);
         SetTracker();
 
         CheckLevel();
         DisablePhysics();
+        Debug.Log("Physics disabled");
         SizeForMenu();
 
         if (unit == 2)
@@ -193,7 +201,7 @@ public class SpawnController : MonoBehaviour {
 
     public Vector3 GetInstantiatePosition()
     {
-        return transform.position - (new Vector3(0f, 0.5f, 0));
+        return transform.position - (new Vector3(0f, 0.3f, 0));
     }
 
     public bool Empty()
@@ -203,26 +211,31 @@ public class SpawnController : MonoBehaviour {
 
     void EnableResidential()
     {
+        price = res.buyCost;
         res.usable = true;
     }
 
     void EnableCommercial()
     {
+        price = com.buyCost;
         com.usable = true;
     }
 
     void EnableIndustrial()
     {
+        price = ind.buyCost;
         ind.usable = true;
     }
 
     void EnableComponent()
     {
+        price = indc.buyCost;
         indc.usable = true;
     }
 
     void EnableFoliage()
     {
+        price = 25f;
         fol.usable = true;
     }
 
@@ -231,6 +244,7 @@ public class SpawnController : MonoBehaviour {
         containedBuilding.transform.parent = this.transform;
         Rigidbody rb = containedBuilding.GetComponent<Rigidbody>();
         containedBuilding.GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+        containedBuilding.GetComponent<BoxCollider>().enabled = false;
         rb.useGravity = false;
         rb.isKinematic = true;
     }
@@ -240,12 +254,18 @@ public class SpawnController : MonoBehaviour {
         containedBuilding.transform.parent = null;
         Rigidbody rb = containedBuilding.GetComponent<Rigidbody>();
         containedBuilding.GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+        containedBuilding.GetComponent<BoxCollider>().enabled = true;
         rb.useGravity = true;
         rb.isKinematic = false;
     }
 
     void UpdateContainedBuilding(GameObject newBuilding)
     {
+        Debug.Log("DisplayUI: " + displayUI);
+        if (!displayUI)
+        {
+            displayUI = transform.parent.transform.parent.gameObject.GetComponent<DisplayUI>();
+        }
         menuSelection = displayUI.GetSelection();
         containedBuilding = newBuilding;
 

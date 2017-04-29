@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using VRTK;
 
 public class SpawnManager : MonoBehaviour {
 
@@ -30,6 +31,8 @@ public class SpawnManager : MonoBehaviour {
     SpawnController spawnController3;
     SpawnController spawnController4;
 
+    VRTK_ControllerEvents events;
+
     private void Awake()
     {
         LoadAllBuildings();
@@ -38,12 +41,19 @@ public class SpawnManager : MonoBehaviour {
     private void Start()
     {
         FindSpheres();
+        events = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
+        events.TriggerPressed += DoTriggerPull;
     }
 
     public GameObject Spawn(Vector3 targetPosition, int type, int unit)
     // Starts spawn process, enables static spawn calls
     {
         return Instantiate(FindBuilding(type, unit), targetPosition, Quaternion.identity) as GameObject;
+    }
+
+    void DoTriggerPull(object sender, ControllerInteractionEventArgs e)
+    {
+        spawnController2.EnableBuilding();
     }
 
     public void ResetUIBuildings()

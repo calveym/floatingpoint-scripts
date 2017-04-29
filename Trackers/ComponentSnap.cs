@@ -53,7 +53,10 @@ public class ComponentSnap : VRTK_InteractableObject {
     {
         if (objectUsed == true)
         {
-            DetachSphere();
+            if(sphere)
+            {
+                DetachSphere();
+            }
             nearestBuilding = U.ReturnIndustrialTrackers(U.FindNearestBuildings(transform.position, 5f))[0].gameObject;
             if(nearestBuilding)
             {
@@ -79,6 +82,7 @@ public class ComponentSnap : VRTK_InteractableObject {
 
     void DetachSphere()
     {
+        Debug.Log("Sphere: " + sphere);
         sphere.GetComponent<Sphere>().UnlinkSphere();
         Destroy(sphere.gameObject);
     }
