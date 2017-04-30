@@ -142,19 +142,16 @@ public class SpawnController : MonoBehaviour {
     public void DisableBuilding(SpawnManager sm, GameObject newBuilding)
     // Called on every new building
     {
-        Debug.Log("Gets to first marker" + newBuilding);
         if (!spawnManager)
         {
             spawnManager = sm;
         }
         disablePurchase = false;
         UpdateContainedBuilding(newBuilding);
-        Debug.Log("Contained building reached: " + containedBuilding);
         SetTracker();
 
         CheckLevel();
         DisablePhysics();
-        Debug.Log("Physics disabled");
         SizeForMenu();
 
         if (unit == 2)
@@ -261,7 +258,6 @@ public class SpawnController : MonoBehaviour {
 
     void UpdateContainedBuilding(GameObject newBuilding)
     {
-        Debug.Log("DisplayUI: " + displayUI);
         if (!displayUI)
         {
             displayUI = transform.parent.transform.parent.gameObject.GetComponent<DisplayUI>();

@@ -96,10 +96,11 @@ public class CommercialTracker : ItemTracker {
 
     void UpdateSalesHappiness()
     {
-        if(capacity != 0 && requiredSales != 0)
+        if (capacity != 0 && requiredSales != 0)
         {
             salesHappiness = (goodsSold / capacity * requiredSales) * 40;
         }
+        else salesHappiness = 0;
     }
 
     void UpdateSecond()

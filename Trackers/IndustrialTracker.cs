@@ -149,6 +149,7 @@ public class IndustrialTracker : ItemTracker {
                 productionHappiness = 40; // Capped at 40
             }
         }
+        else productionHappiness = 0;
     }
 
     void UpdateSecond()

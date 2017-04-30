@@ -55,9 +55,17 @@ public class ComponentSnap : VRTK_InteractableObject {
         {
             if(sphere)
             {
+                Debug.Log("Trying to detach");
                 DetachSphere();
             }
-            nearestBuilding = U.ReturnIndustrialTrackers(U.FindNearestBuildings(transform.position, 5f))[0].gameObject;
+            if(gameObject.tag == "industrialComponent")
+            {
+                nearestBuilding = U.ReturnIndustrialTrackers(U.FindNearestBuildings(transform.position, 5f))[0].gameObject;
+            }
+            else if(gameObject.tag == "foliage")
+            {
+                nearestBuilding = U.ReturnResidentialTrackers(U.FindNearestBuildings(transform.position, 5f))[0].gameObject;
+            }
             if(nearestBuilding)
             {
                 ClosestFound(nearestBuilding);
@@ -94,10 +102,6 @@ public class ComponentSnap : VRTK_InteractableObject {
             if(closest.tag == "industrial")
             {
                 PurchaseComponent();
-            }
-            else if(closest.tag == "foliage")
-            {
-                closest.GetComponent<FoliageTracker>().StartFoliage();
             }
         }
         else

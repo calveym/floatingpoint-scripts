@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class SaveManager : MonoBehaviour {
@@ -54,5 +55,15 @@ public class SaveManager : MonoBehaviour {
     {
         Debug.Log("Loading slot 1");
         Load("slot1");
+    }
+
+    public void LoadEmpty()
+    {
+        SceneManager.LoadScene("main-0.5.0-empty");
+    }
+
+    public void LoadTutorial()
+    {
+        SceneManager.LoadScene("main-0.5.0-tutorial");
     }
 }

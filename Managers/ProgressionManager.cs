@@ -69,17 +69,7 @@ public class ProgressionManager : MonoBehaviour {
         levelReq.Add(13, 3000);
         levelReq.Add(14, 5000);
         levelReq.Add(15, 7500);
-        levelReq.Add(16, 10000);
-        levelReq.Add(17, 12500);
-        levelReq.Add(18, 15000);
-        levelReq.Add(19, 17500);
-        levelReq.Add(20, 20000);
         StartCoroutine("SlowUpdate");
-    }
-
-    void Update()
-    {
-        pop = populationManager.totalPopulation;
     }
     
     public void CheckLevelUp()
@@ -87,7 +77,7 @@ public class ProgressionManager : MonoBehaviour {
         // Perform check to see whether next level that returns false from levelInfo can be completed.
         int currentLevelReq;
         levelReq.TryGetValue(level + 1, out currentLevelReq);
-        if(pop >= currentLevelReq)
+        if(populationManager.totalPopulation >= currentLevelReq)
         {
             PerformLevelUp(level + 1);
         }
@@ -174,9 +164,12 @@ public class ProgressionManager : MonoBehaviour {
 
     IEnumerator SlowUpdate()
     {
-        while(allowLevelUp)
+        while(true)
         {
-            CheckLevelUp();
+            if(allowLevelUp)
+            {
+                CheckLevelUp();
+            }
             yield return new WaitForSeconds(5);
         }
     }

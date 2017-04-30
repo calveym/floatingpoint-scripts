@@ -32,7 +32,7 @@ public class DisplayUI : MonoBehaviour {
     public Text globalHappiness;
     public Text globalTotalPopulation;
     public Text globalUnemployedPopulation;
-    public Text globalGoodsProduced;
+    public Text globalLevel;
     public Text globalGoodsConsumed;
 
     public Text buildingType;
@@ -176,7 +176,14 @@ public class DisplayUI : MonoBehaviour {
     {
         Debug.Log("Releasing" + interruptRelease);
         interruptRelease = false;
-        StartCoroutine("ReleaseDelay");
+        if(firstTouch)
+        {
+            StartCoroutine("ReleaseDelay", 1f);
+        }
+        else
+        {
+            StartCoroutine("ReleaseDelay", 3f);
+        }
     }
 
     public void SendSwipe(float swipe)
@@ -348,7 +355,7 @@ public class DisplayUI : MonoBehaviour {
         globalBalance.enabled = false;
         globalTotalPopulation.enabled = false;
         globalUnemployedPopulation.enabled = false;
-        globalGoodsProduced.enabled = false;
+        globalLevel.enabled = false;
         globalGoodsConsumed.enabled = false;
     }
 
@@ -358,7 +365,7 @@ public class DisplayUI : MonoBehaviour {
         globalBalance.enabled = true;
         globalTotalPopulation.enabled = true;
         globalUnemployedPopulation.enabled = true;
-        globalGoodsProduced.enabled = true;
+        globalLevel.enabled = true;
         globalGoodsConsumed.enabled = true;
         UpdateGlobalText();
     }
@@ -378,8 +385,8 @@ public class DisplayUI : MonoBehaviour {
         globalBalance.text = economyManager.FancyBalance();
         globalTotalPopulation.text = populationManager.FancyTotalPopulation();
         globalUnemployedPopulation.text = populationManager.FancyUnemployedPopulation();
-        globalGoodsProduced.text = economyManager.FancyGoodsProduced();
-        globalGoodsConsumed.text = economyManager.FancyGoodsConsumed();
+        globalLevel.text = "Level: " + ProgressionManager.level;
+        globalGoodsConsumed.text = economyManager.FancyGoods();
         SetHappiness();
     }
 
@@ -410,9 +417,9 @@ public class DisplayUI : MonoBehaviour {
         }
     }
 
-    public IEnumerator ReleaseDelay()
+    public IEnumerator ReleaseDelay(float seconds)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(seconds);
 
         if (!interruptRelease)
         {

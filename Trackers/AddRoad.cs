@@ -6,11 +6,6 @@ public class AddRoad : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+        GameObject.Find("Island").GetComponent<RoadGenerator>().AddRoad(transform.position, gameObject);
 	}
 }

@@ -204,7 +204,11 @@ public class ResidentialTracker : ItemTracker {
 
     void UpdateEmploymentHappiness()
     {
-        employmentHappiness = (users - unemployedPopulation) / capacity * 40;
+        if (capacity != 0)
+        {
+            employmentHappiness = (users - unemployedPopulation) / capacity * 40;
+        }
+        else employmentHappiness = 0;
     }
 
     void UpdateHappiness()
@@ -216,15 +220,10 @@ public class ResidentialTracker : ItemTracker {
 
     void CalculateIncome()
     {
-        income = users * availableTransportation * landValue / 5;
+        income = users * (1 + (landValue * 0.01f)) * (happinessState);
         income += foliageIncome;
         income -= baseCost;
         totalResidentialIncome += income;
-    }
-
-    public void AddFoliage(float addAmount)
-    {
-        foliage += addAmount;
     }
 
     public string ValidPosition()

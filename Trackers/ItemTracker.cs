@@ -92,6 +92,7 @@ public class ItemTracker : MonoBehaviour {
     public void UpdateLocalHappiness()
     //  Sets local happiness level based on surroundings
     {
+        Debug.Log("Added Happiness: " + addedHappiness);
         if(addedHappiness < 40)
         {
             localHappiness = addedHappiness;
@@ -102,7 +103,10 @@ public class ItemTracker : MonoBehaviour {
         }
         addedHappiness = 0;
 
-        fillRateHappiness = (users / capacity) * 20;
+        if(capacity != 0)
+        {
+            fillRateHappiness = (users / capacity) * 20;
+        }
         happinessManager.SendHappiness(happinessState);
     }
 
@@ -212,7 +216,14 @@ public class ItemTracker : MonoBehaviour {
     public void CalculateLongtermHappiness()
     // makes the longterm happiness tend towards the current happiness
     {
-        longtermHappiness += (currentHappiness - longtermHappiness) * 0.1f;
+        if(currentHappiness - longtermHappiness < 0.2f)
+        {
+            longtermHappiness = currentHappiness;
+        }
+        else
+        {
+            longtermHappiness += (currentHappiness - longtermHappiness) * 0.1f;
+        }
     }
 
     public void CalculateHappinessState()
