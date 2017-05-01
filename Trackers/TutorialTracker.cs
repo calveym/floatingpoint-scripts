@@ -23,7 +23,6 @@ public class TutorialTracker : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Yeyeye running famalamalam: " + other.name);
         if (other.name == "Head" ||
             other.name == "SideA" ||
             other.name == "Controller(right)" ||

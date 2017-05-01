@@ -8,7 +8,7 @@ public class TutorialManager : MonoBehaviour {
     VRTK_ControllerEvents leftEvents;
     VRTK_ControllerEvents rightEvents;
 
-    AudioClip rewardEntry;
+    public AudioClip rewardEntry;
     public static int tutorialProgress;
     bool continueTutorial;
 
@@ -30,11 +30,13 @@ public class TutorialManager : MonoBehaviour {
 
     private void Awake()
     {
+        tutorialProgress = 0;
         tutorialStrings = new Dictionary<int, string>();
         tutorialRequirements = new List<string>();
         continueTutorial = true;
-        tutorialRequirements.Add("001100000");
-        tutorialRequirements.Add("000000001");
+        tutorialRequirements.Add("000100001");
+        tutorialRequirements.Add("100000000");
+        tutorialRequirements.Add("000010000");
 
         levelReq = new Dictionary<int, int>();
         levelReq.Add(1, 10);
@@ -56,8 +58,6 @@ public class TutorialManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        tutorialProgress = 0;
-
         leftEvents = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
         rightEvents = GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>();
 
@@ -127,7 +127,6 @@ public class TutorialManager : MonoBehaviour {
         {
             AudioSource.PlayClipAtPoint(rewardEntry, sender.transform.position);
             triggerEntry = true;
-            PopupManager.Popup(tutorialStrings[tutorialProgress]);
         }
     }
 
@@ -149,7 +148,9 @@ public class TutorialManager : MonoBehaviour {
             leftTriggerPress = false;
             rightTriggerPress = false;
 
-            PopupManager.Popup("Tutorial stage completed, reach " + GetLevelReq() + " population to level up");
+            PopupManager.Popup(tutorialStrings[tutorialProgress]);
+
+            //PopupManager.Popup("Tutorial stage " + tutorialProgress + " completed, reach " + GetLevelReq() + " population to level up and continue");
 
             tutorialProgress++;
             // Tutorial progress complete here
@@ -217,9 +218,9 @@ public class TutorialManager : MonoBehaviour {
 
     void SetupTutorial()
     {
-        tutorialStrings.Add(0, "Great! Now, let's move some of these homes closer to the shops so your citizens can find work!");
-        tutorialStrings.Add(1, "Good work. Now open up the global info panel by touching the left trackpad.");
-        tutorialStrings.Add(2, "You can view more detailed building stats by pressing the right menu button");
+        tutorialStrings.Add(0, "Great! Now it's time to add in our first building. \n Click the left trackpad to open up the buildings menu");
+        tutorialStrings.Add(1, "Well done. You can swipe between the building types by swiping on the left trackpad. \n Try that now, then press the left trackpad to select a category");
+        tutorialStrings.Add(2, "These are residential buildings. Scroll through the menu by scrolling with the left trackpad.\n Once a valid building is selected, pull the left trigger to purchase");
         tutorialStrings.Add(3, "Your people need more places to work! Let's add an industrial building just out of the town.");
         tutorialStrings.Add(4, "Open up the buildings panel by pressing the left trackpad, and select an industrial building");
         tutorialStrings.Add(5, "You level up as your population grows. Unlock more buildings and building types at higher levels");
@@ -234,7 +235,7 @@ public class TutorialManager : MonoBehaviour {
         while(true)
         {
             CheckTutorialProgress();
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 }
