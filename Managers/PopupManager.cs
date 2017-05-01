@@ -19,7 +19,8 @@ public class PopupManager : MonoBehaviour {
         WAIT_TIME = 5;
         queuedPopups = new List<string>();
         tooltip = popup.transform.Find("TooltipCanvas/UIContainer/UITextFront").GetComponent<Text>();
-        QueuePopup("Welcome to CloudCity! Fly over to the town to get started.");
+        QueuePopup("Welcome to your town! Let's go have a closer look at those buildings-");
+        QueuePopup("Fly over to the blue orb with the right trackpad");
     }
 
     public static void Popup(string message)

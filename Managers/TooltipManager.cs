@@ -42,17 +42,14 @@ public class TooltipManager : MonoBehaviour {
 
     void EnableObjectTooltip (object sender, ControllerInteractionEventArgs e)
     {
-        if(!displayUI.displaying)
+        tick = 0;
+        pressed = true;
+        nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 10f);
+        foreach (GameObject building in nearestBuildings)
         {
-            tick = 0;
-            pressed = true;
-            nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 10f);
-            foreach (GameObject building in nearestBuildings)
-            {
-                EnableTooltip(building);
-            }
-            StartCoroutine("SecondTick");
+            EnableTooltip(building);
         }
+        StartCoroutine("SecondTick");
     }
 
     public void EnableTooltip(GameObject building)

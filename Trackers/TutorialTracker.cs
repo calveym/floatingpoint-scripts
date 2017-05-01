@@ -23,7 +23,12 @@ public class TutorialTracker : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if(trackerLevel == TutorialManager.tutorialProgress + 1 &&( other.name == "Headset" || other.name == "LeftController" || other.name == "RightController"))
+        Debug.Log("Yeyeye running famalamalam: " + other.name);
+        if (other.name == "Head" ||
+            other.name == "SideA" ||
+            other.name == "Controller(right)" ||
+            other.name == "RightController" ||
+            other.name == "Headset")
         {
             SendTriggerEntry();
         }
@@ -31,8 +36,8 @@ public class TutorialTracker : MonoBehaviour {
 
     void SendTriggerEntry()
     {
-        manager.TutorialTriggerEnter(trackerLevel, this);
         StartCoroutine("DoEntry");
+        manager.TutorialTriggerEnter(trackerLevel, this);
     }
 
     IEnumerator DoEntry()
@@ -42,7 +47,7 @@ public class TutorialTracker : MonoBehaviour {
         while (time < 1)
         {
             time += Time.deltaTime;
-            transform.localScale *= 1.001f;
+            transform.localScale += new Vector3(0.1f, 0.1f, 0.1f);
             yield return null;
         }
     }
