@@ -124,7 +124,7 @@ public class SpawnManager : MonoBehaviour {
         spawnController0 = sphere0.GetComponent<SpawnController>();
         spawnController1 = sphere1.GetComponent<SpawnController>();
         spawnController2 = sphere2.GetComponent<SpawnController>();
-        spawnController3 = sphere3.GetComponent<SpawnController>();
+        spawnController3 = sphere3.GetComponent<SpawnController>(); 
         spawnController4 = sphere4.GetComponent<SpawnController>();
     }
 

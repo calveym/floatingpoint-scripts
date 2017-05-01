@@ -92,7 +92,6 @@ public class ItemTracker : MonoBehaviour {
     public void UpdateLocalHappiness()
     //  Sets local happiness level based on surroundings
     {
-        Debug.Log("Added Happiness: " + addedHappiness);
         if(addedHappiness < 40)
         {
             localHappiness = addedHappiness;

@@ -37,7 +37,6 @@ public class CommercialTracker : ItemTracker {
 
     public void Apply(float applicantLandValue, int residentID, ResidentialTracker applicantTracker)
     {
-        Debug.Log("Commercial receiving job application");
         // TODO: the application is considered by the tracker, and the value of residential land has
         // an impact on the final decision, along with an element of chance
         System.Random rand = new System.Random(); //reuse this if you are generating many

@@ -91,4 +91,20 @@ public static class U : object {
         Debug.Log("typecount : " + type.Count);
         return type[value];
     }
+
+    public static bool CompareStrings(string currentString, string requirementString)
+    {
+        bool completed = true;
+        for(int i = 0; i < requirementString.Length; i++)
+        {
+            if(requirementString[i] == "1"[0])
+            {
+                if(currentString[i] == "0"[0])
+                {
+                    completed = false;
+                }
+            }
+        }
+        return completed;
+    }
 }
