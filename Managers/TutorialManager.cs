@@ -36,6 +36,7 @@ public class TutorialManager : MonoBehaviour {
         continueTutorial = true;
         tutorialRequirements.Add("000100001");
         tutorialRequirements.Add("100000000");
+        tutorialRequirements.Add("100000000");
         tutorialRequirements.Add("000010000");
 
         levelReq = new Dictionary<int, int>();

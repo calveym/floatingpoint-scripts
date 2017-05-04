@@ -8,13 +8,11 @@ public class SaveManager : MonoBehaviour {
 
     void Save (string slot)
     {
-        // TEST
         LevelSerializer.SaveGame(slot);
     }
 
     void Load(string slot)
     {
-        // TEST
         foreach (LevelSerializer.SaveEntry sg in LevelSerializer.SavedGames[LevelSerializer.PlayerName])
         {
             Debug.Log(sg.Name);
@@ -33,22 +31,22 @@ public class SaveManager : MonoBehaviour {
 
     public void SaveSlotTwo()
     {
-
+        Save("slot2");
     }
 
     public void SaveSlotThree()
     {
-
+        Save("slot3");
     }
 
     public void LoadSlotThree()
     {
-
+        Load("slot3");
     }
 
     public void LoadSlotTwo()
     {
-
+        Load("slot2");
     }
 
     public void LoadSlotOne()

@@ -49,5 +49,6 @@ public class TutorialTracker : MonoBehaviour {
             transform.localScale += new Vector3(0.1f, 0.1f, 0.1f);
             yield return null;
         }
+        Destroy(gameObject);
     }
 }

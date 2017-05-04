@@ -162,6 +162,7 @@ public class DisplayUI : MonoBehaviour {
                 ShowBuildings();
                 HideGlobalStats();
                 HideMenu();
+                DisableSprites();
                 thumbTracker.StartTracking();
                 if(!showingGlobalStats)
                 {
@@ -174,7 +175,6 @@ public class DisplayUI : MonoBehaviour {
 
     void DoTouchpadRelease(object sender, ControllerInteractionEventArgs e)
     {
-        Debug.Log("Releasing" + interruptRelease);
         interruptRelease = false;
         if(firstTouch)
         {
@@ -278,7 +278,6 @@ public class DisplayUI : MonoBehaviour {
     void ShowBuildings()
     {
         HideMenu();
-
         wheelBase.SetActive(true);
         staticSpheres.SetActive(true);
 
@@ -372,6 +371,9 @@ public class DisplayUI : MonoBehaviour {
 
     void UpdateBuildingText()
     {
+        ShowBuildings();
+        buildingType.text = "Game on";
+        Debug.Log(buildingType.text);
         buildingType.text = text[0];
         buildingCapacity.text = text[1];
         buildingLevel.text = text[2];
