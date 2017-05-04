@@ -372,8 +372,6 @@ public class DisplayUI : MonoBehaviour {
     void UpdateBuildingText()
     {
         ShowBuildings();
-        buildingType.text = "Game on";
-        Debug.Log(buildingType.text);
         buildingType.text = text[0];
         buildingCapacity.text = text[1];
         buildingLevel.text = text[2];

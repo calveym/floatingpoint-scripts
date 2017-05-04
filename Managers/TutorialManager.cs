@@ -91,13 +91,11 @@ public class TutorialManager : MonoBehaviour {
 
     void DoLeftTouchpadTouch(object sender, ControllerInteractionEventArgs e)
     {
-        Debug.Log("Touch - L");
         leftTouchpadTouch = true;
     }
 
     void DoRightTouchpadTouch(object sender, ControllerInteractionEventArgs e)
     {
-        Debug.Log("Touch - R");
         rightTouchpadTouch = true;
     }
 
@@ -220,14 +218,12 @@ public class TutorialManager : MonoBehaviour {
     void SetupTutorial()
     {
         tutorialStrings.Add(0, "Great! Now it's time to add in our first building. \n Click the left trackpad to open up the buildings menu");
-        tutorialStrings.Add(1, "Well done. You can swipe between the building types by swiping on the left trackpad. \n Try that now, then press the left trackpad to select a category");
-        tutorialStrings.Add(2, "These are residential buildings. Scroll through the menu by scrolling with the left trackpad.\n Once a valid building is selected, pull the left trigger to purchase");
-        tutorialStrings.Add(3, "Your people need more places to work! Let's add an industrial building just out of the town.");
-        tutorialStrings.Add(4, "Open up the buildings panel by pressing the left trackpad, and select an industrial building");
-        tutorialStrings.Add(5, "You level up as your population grows. Unlock more buildings and building types at higher levels");
-        tutorialStrings.Add(6, "It looks like that industrial area is doing pretty well, but it could be better.");
-        tutorialStrings.Add(7, "Let's upgrade it with some industrial components. Open up the building panel, and add one in now.");
-        tutorialStrings.Add(8, "You can check the effects of each component by viewing the building stats tooltip with the right menu button");
+        tutorialStrings.Add(1, "Well done. You can swipe between the building types by swiping on the left trackpad. \n Try that now, then press the left trackpad to select Residential");
+        tutorialStrings.Add(2, "These are residential buildings. Select a building by scrolling with your left trackpad.\n Once a valid building is selected, pull the left trigger to purchase");
+        tutorialStrings.Add(3, "Your people need more places to work! Let's add a small shop nearby. Open up the building menu again, and add a commercial building");
+        tutorialStrings.Add(4, "Good work. You can also keep a closer eye on the development of individual buildings by pressing the right menu button");
+        tutorialStrings.Add(6, "Let's upgrade it with some industrial components. Open up the building panel, and add one in now.");
+        tutorialStrings.Add(7, "You can check the effects of each component by viewing the building stats tooltip with the right menu button");
 
     }
 
