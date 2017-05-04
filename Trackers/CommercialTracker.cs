@@ -5,22 +5,33 @@ using UnityEngine;
 public class CommercialTracker : ItemTracker {
     // Manages individual stats of each commercial building.
 
+    int requiredSales = 4;
+    float salesHappiness;
+
     public int visitors;
     public int lifetimeVisitors;
 
     public float goodsSold;
     public float goodsAvailable;
 
-    void Awake()
+    new void Start()
     {
+        base.Start();
         EconomyManager.ecoTick += UpdateSecond;
     }
 
     void Update()
     {
-        if (!updateStarted)
+        if (!updateStarted && usable)
         {
-            StartCoroutine("UpdateSecond");
+            updateStarted = true;
+            EconomyManager.ecoTick += UpdateSecond;
+            GameObject.Find("Managers").GetComponent<ItemManager>().addCommercial(capacity, gameObject);
+        }
+        else if (updateStarted && !usable)
+        {
+            updateStarted = false;
+            EconomyManager.ecoTick -= UpdateSecond;
         }
     }
 
@@ -59,16 +70,36 @@ public class CommercialTracker : ItemTracker {
 
     void SellGoods()
     {
-        if (visitors > goodsAvailable)
+        goodsSold = users * happinessState + (1f + visitors * 0.01f);
+        if(goodsSold > goodsAvailable)
         {
             goodsSold = goodsAvailable;
         }
-        else goodsSold = visitors;
+
+        if (IndustrialTracker.allGoods >= capacity)
+        {
+            IndustrialTracker.allGoods -= capacity;
+            goodsAvailable = capacity;
+        }
+        else if(IndustrialTracker.allGoods < capacity && IndustrialTracker.allGoods > 0)
+        {
+            goodsAvailable = IndustrialTracker.allGoods;
+            IndustrialTracker.allGoods = 0;
+        }
     }
 
     void UpdateVisitors()
     {
-        visitors = populationManager.population - populationManager.unemployedPopulation;
+        visitors = populationManager.population - populationManager.unemployedPopulation; // TODOA: MAKE THIS ONLY LOCAL
+    }
+
+    void UpdateSalesHappiness()
+    {
+        if (capacity != 0 && requiredSales != 0)
+        {
+            salesHappiness = (goodsSold / capacity * requiredSales) * 40;
+        }
+        else salesHappiness = 0;
     }
 
     void UpdateSecond()
@@ -79,12 +110,65 @@ public class CommercialTracker : ItemTracker {
         {
             return;
         }
+        UpdateLocalHappiness();
+        UpdateSalesHappiness();
+        UpdateHappiness();
         UpdateLandValue();
         UpdateTransportationValue();
         UpdateVisitors();
-        goodsAvailable = capacity;
         SellGoods();
         income = goodsSold;
         totalIndustrialIncome += income;
+    }
+
+    void UpdateHappiness()
+    {
+        currentHappiness = localHappiness + salesHappiness + fillRateHappiness;
+        CalculateLongtermHappiness();
+        CalculateHappinessState();
+    }
+
+    public string ValidPosition()
+    {
+        if (validPosition)
+        {
+            return "Active";
+        }
+        else return "Inactive";
+    }
+
+    public string FancyIncome()
+    {
+        return "Income: $" + Mathf.Round(income * 100) / 100 + "/w";
+    }
+
+    public string FancyCapacity()
+    {
+        return "Workers: " + users + " / " + capacity;
+    }
+
+    public int FancyHappiness()
+    {
+        return happinessState;
+    }
+
+    public string FancyTitle()
+    {
+        return ValidPosition();
+    }
+
+    public string FancyGoods()
+    {
+        return "Goods sold: " + goodsSold;
+    }
+
+    public string FancyVisitors()
+    {
+        return "Visitors: " + visitors;
+    }
+
+    public string FancyLandValue()
+    {
+        return "Land Value: $" + landValue;
     }
 }

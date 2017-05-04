@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class IndustrialComponent : ItemTracker {
 
-    public float goodsCapacity;
-    public float sellAmount;
-    public float sellPrice;
-    public float productionAmount;
+    public float goodsCapacityMulti;
+    public float sellAmountMulti;
+    public float sellPriceMulti;
+    public float productionMulti;
     //  See IndustrialTracker for definitions
 
     GameObject linkedBuilding;
@@ -15,14 +15,16 @@ public class IndustrialComponent : ItemTracker {
     GameObject tempLinkedBuilding;
     IndustrialTracker tempLinkedTracker;
 
-    public float cost;  // Upfront purchase cost
+    new void Start()
+    {
+        base.Start();
+    }
 
     public void FoundIndustrial(GameObject found)
     // Runs every time new industrial building is found
     {
         tempLinkedBuilding = found;
         tempLinkedTracker = found.GetComponent<IndustrialTracker>();
-
         tempLinkedTracker.AddMarker();
     }
 

@@ -30,84 +30,54 @@ public class ItemGenerator : MonoBehaviour {
 
     // Models
     public GameObject smlResidential1;
-    public GameObject smlResidential2;
-    public GameObject smlResidential3;
 
     public GameObject smlCommercial1;
-    public GameObject smlCommercial2;
-    public GameObject smlCommercial3;
 
     public GameObject smlIndustrial1;
-    public GameObject smlIndustrial2;
-    public GameObject smlIndustrial3;
 
     public GameObject smlFoliage1;
-    public GameObject smlFoliage2;
-    public GameObject smlFoliage3;
 
     public GameObject smlLeisure1;
-    public GameObject smlLeisure2;
-    public GameObject smlLeisure3;
 
     public GameObject midResidential1;
-    public GameObject midResidential2;
-    public GameObject midResidential3;
 
     public GameObject midCommercial1;
-    public GameObject midCommercial2;
-    public GameObject midCommercial3;
 
     public GameObject midIndustrial1;
-    public GameObject midIndustrial2;
-    public GameObject midIndustrial3;
 
     public GameObject midFoliage1;
-    public GameObject midFoliage2;
-    public GameObject midFoliage3;
 
     public GameObject midLeisure1;
-    public GameObject midLeisure2;
-    public GameObject midLeisure3;
 
     public GameObject lrgResidential1;
-    public GameObject lrgResidential2;
-    public GameObject lrgResidential3;
 
     public GameObject lrgCommercial1;
-    public GameObject lrgCommercial2;
-    public GameObject lrgCommercial3;
 
     public GameObject lrgIndustrial1;
-    public GameObject lrgIndustrial2;
-    public GameObject lrgIndustrial3;
 
     public GameObject lrgFoliage1;
-    public GameObject lrgFoliage2;
-    public GameObject lrgFoliage3;
 
     public GameObject lrgLeisure1;
-    public GameObject lrgLeisure2;
-    public GameObject lrgLeisure3;
 
     private void Start()
     {
-        smlRes = new GameObject[3] { smlResidential1, smlResidential2, smlResidential3 };
-        smlCom = new GameObject[3] { smlCommercial1, smlCommercial2, smlCommercial3 };
-        smlInd = new GameObject[3] { smlIndustrial1, smlIndustrial2, smlIndustrial3 };
-        smlFol = new GameObject[3] { smlFoliage1, smlFoliage2, smlFoliage3 };
-        smlLes = new GameObject[3] { smlFoliage1, smlFoliage2, smlFoliage3 };
+        smlRes = new GameObject[3] { smlResidential1, smlResidential1, smlResidential1 };
+        smlCom = new GameObject[3] { smlCommercial1, smlCommercial1, smlCommercial1 };
+        smlInd = new GameObject[3] { smlIndustrial1, smlIndustrial1, smlIndustrial1 };
+        smlFol = new GameObject[3] { smlFoliage1, smlFoliage1, smlFoliage1 };
+        smlLes = new GameObject[3] { smlLeisure1, smlLeisure1, smlLeisure1 };
 
-        midRes = new GameObject[3] { midResidential1, midResidential2, midResidential3 };
-        midCom = new GameObject[3] { midCommercial1, midCommercial2, midCommercial3 };
-        midInd = new GameObject[3] { midIndustrial1, midIndustrial2, midIndustrial3 };
-        midFol = new GameObject[3] { midFoliage1, midFoliage2, midFoliage3 };
-        midLes = new GameObject[3] { midFoliage1, midFoliage2, midFoliage3 };
+        midRes = new GameObject[3] { smlResidential1, midResidential1, midResidential1 };
+        midCom = new GameObject[3] { midCommercial1, midCommercial1, midCommercial1 };
+        midInd = new GameObject[3] { midIndustrial1, midIndustrial1, midIndustrial1 };
+        midFol = new GameObject[3] { midFoliage1, midFoliage1, midFoliage1 };
+        midLes = new GameObject[3] { smlLeisure1, smlLeisure1, smlLeisure1 };
 
-        lrgRes = new GameObject[3] { lrgResidential1, lrgResidential2, lrgResidential3 };
-        lrgCom = new GameObject[3] { lrgCommercial1, lrgCommercial2, lrgCommercial3 };
-        lrgInd = new GameObject[3] { lrgIndustrial1, lrgIndustrial2, lrgIndustrial3 };
-        lrgFol = new GameObject[3] { lrgFoliage1, lrgFoliage2, lrgFoliage3 };
-        lrgLes = new GameObject[3] { lrgFoliage1, lrgFoliage2, lrgFoliage3 };
+        lrgRes = new GameObject[3] { lrgResidential1, lrgResidential1, lrgResidential1 };
+        lrgCom = new GameObject[3] { lrgCommercial1, lrgCommercial1, lrgCommercial1 };
+        lrgInd = new GameObject[3] { lrgIndustrial1, lrgIndustrial1, lrgIndustrial1 };
+        lrgFol = new GameObject[3] { lrgFoliage1, lrgFoliage1, lrgFoliage1 };
+        lrgLes = new GameObject[3] { smlLeisure1, smlLeisure1, smlLeisure1 };
 
 		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
     }
@@ -221,11 +191,6 @@ public class ItemGenerator : MonoBehaviour {
 		}
 		else if(newObject.tag == "foliage")
 		{
-			newObject.GetComponent<ItemTracker>().setValues();
-		}
-		else if(newObject.tag == "leisure")
-		{
-            newObject.GetComponent<ItemTracker>().setValues();
 		}
 	}
 }

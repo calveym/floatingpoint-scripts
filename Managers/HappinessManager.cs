@@ -4,113 +4,39 @@ using UnityEngine;
 
 public class HappinessManager : MonoBehaviour {
 
-    ItemManager itemManager;
-    PopulationManager populationManager;
-    EconomyManager economyManager;
-
+    public int numSent;
+    public float addedHappiness;
     public float happiness;
-    int population;
-    int residentialCap;
-    int industrialCap;
-    int commercialCap;
-    int leisureCap;
-    int foliageCap;
-    int availableJobs;
-    int availableResidential;
 
-    float jobHappiness;
-    float foliageHappiness;
-    float leisureHappiness;
-    float taxHappiness;
+    bool keepUpdating;
 
-    void Start ()
-    // Set values pre-initialization
+    public void SendHappiness(int newHappiness)
     {
-        itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-        populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
-        economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
-    }
-	
-	void Update ()
-    // Set values pre-initialization
-    {
-        UpdateValues();
-
-        SetJobHappiness();
-        SetFoliageHappiness();
-        SetLeisureHappiness();
-        SetTaxHappiness();
-
-        SetHappiness();
-	}
-
-    void UpdateValues()
-    {
-        population = populationManager.population;
-        foliageCap = itemManager.foliageCap;
-        availableResidential = populationManager.AvailableResidential();
-        residentialCap = itemManager.residentialCap;
-        commercialCap = itemManager.commercialCap;
-        industrialCap = itemManager.industrialCap;
+        addedHappiness += newHappiness;
+        numSent++;
     }
 
-    void SetHappiness()
-    // Sets happiness value from components
+    void Start()
     {
-        happiness = jobHappiness + foliageHappiness + leisureHappiness + taxHappiness;
+        happiness = 0;
+        keepUpdating = true;
+        StartCoroutine("UpdateHappiness");
     }
 
-    void SetJobs()
-    // Job availability
+    IEnumerator UpdateHappiness()
     {
-        availableJobs = industrialCap + commercialCap - population;
-    }
-
-    void SetJobHappiness()
-    // Job happiness algorithm
-    {
-        SetJobs();
-        if(availableJobs != 0 && availableResidential != 0)
+        while(keepUpdating)
         {
-            if (availableResidential / availableJobs <= 1)
+            if (numSent != 0)
             {
-                jobHappiness = 25;
+                happiness = addedHappiness / numSent;
             }
-            {
-                jobHappiness = (availableJobs / availableResidential * 25);
-            }
-        }
-        else
-        {
-            jobHappiness = 0;
-        }
+            else happiness = 1;
 
-    }
-
-    void SetFoliageHappiness()
-    // Foliage happiness algorithm
-    {
-        if (population != 0)
-        {
-            foliageHappiness = foliageCap / (population * 10);
+            numSent = 0;
+            addedHappiness = 0;
+            yield return new WaitForSeconds(2);
         }
-        else foliageHappiness = 25;
-    }
-
-    void SetLeisureHappiness()
-    // Leisure happiness algorithm
-    {
-        if(population != 0)
-        {
-            leisureHappiness = leisureCap / population;
-        }
-    }
-
-    void SetTaxHappiness()
-    // IDEA: Make this more of an overall metric of cost of living
-    {
-        taxHappiness = 100 - ((economyManager.residentialTaxRate * 2) + economyManager.industrialTaxRate + economyManager.commercialTaxRate);
-        taxHappiness = taxHappiness / 4;
     }
 }
 

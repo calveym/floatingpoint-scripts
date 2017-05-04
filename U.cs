@@ -8,11 +8,8 @@ public static class U : object {
     {
         List<GameObject> returnObjects = new List<GameObject>();
         int layerMask = 1 << 8;
-        layerMask = ~layerMask;
 
         Collider[] hitColliders = Physics.OverlapSphere(position, radius, layerMask);
-
-        Debug.Log(hitColliders.Length);
 
         if (hitColliders.Length != 0)
         {
@@ -20,10 +17,6 @@ public static class U : object {
             {
                 returnObjects.Add(hitcol.gameObject);
             }
-        }
-        else
-        {
-            returnObjects = null;
         }
         return returnObjects;
     }
@@ -47,7 +40,7 @@ public static class U : object {
         List<IndustrialTracker> returnObject = new List<IndustrialTracker>();
         for (int i = 0; i < objectList.Count; i++)
         {
-            if (objectList[i].tag == "industrial")
+            if (objectList[i].gameObject.tag == "industrial")
             {
                 returnObject.Add(objectList[i].GetComponent<IndustrialTracker>());
             }
@@ -82,5 +75,36 @@ public static class U : object {
         }
 
         return returnObject;
+    }
+
+    public static string IntToTag(int value)
+    {
+        Dictionary<int, string> type = new Dictionary<int, string>();
+
+        type.Add(0, "residential");
+        type.Add(1, "commercial");
+        type.Add(2, "industrial");
+        type.Add(3, "commercial");
+        type.Add(4, "industrialComponent");
+        type.Add(5, "foliage");
+
+        Debug.Log("typecount : " + type.Count);
+        return type[value];
+    }
+
+    public static bool CompareStrings(string currentString, string requirementString)
+    {
+        bool completed = true;
+        for(int i = 0; i < requirementString.Length; i++)
+        {
+            if(requirementString[i] == "1"[0])
+            {
+                if(currentString[i] == "0"[0])
+                {
+                    completed = false;
+                }
+            }
+        }
+        return completed;
     }
 }

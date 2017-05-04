@@ -6,6 +6,7 @@ using UnityEngine;
 public class ResidentialTracker : ItemTracker {
     // Manages specific residential functions.
 
+    public int employmentHappiness;
     public int unemployedPopulation;
     public Dictionary <int, int> educationLevel; // maps individual residents to their education levels
     public Dictionary <int, int> age; // maps individual residents to their age
@@ -14,10 +15,10 @@ public class ResidentialTracker : ItemTracker {
     List<int> takenIDs; // List of currently active IDs for finding new ones
 
     float foliage;
-    float foliageIncome;
 
-    void Start()
+    new void Start()
     {
+        base.Start();
         educationLevel = new Dictionary<int, int>();
         age = new Dictionary<int, int>();
         employed = new Dictionary<int, bool>();
@@ -28,11 +29,16 @@ public class ResidentialTracker : ItemTracker {
 
     void Update()
     {
-        if (!updateStarted)
+        if (!updateStarted && usable)
         {
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
-            GameObject.Find("Managers").GetComponent<ItemManager>().addResidential(capacity, gameObject);
+            itemManager.addResidential(capacity, gameObject);
+        }
+        else if(updateStarted && !usable)
+        {
+            updateStarted = false;
+            EconomyManager.ecoTick -= UpdateSecond;
         }
     }
 
@@ -121,7 +127,7 @@ public class ResidentialTracker : ItemTracker {
         Dictionary<GameObject, float> landValues = AnalyzeValues(allPotentialLocations);
         Dictionary<GameObject, float> aggregate = CreateAggregate(allPotentialLocations, distances, landValues);
         GameObject finalEmploymentLocation = aggregate.FirstOrDefault(x => x.Value == aggregate.Values.Max()).Key;
- 
+
         return finalEmploymentLocation;
     }
 
@@ -133,7 +139,7 @@ public class ResidentialTracker : ItemTracker {
         {
             if (returnObject.ContainsKey(allObjects[i]) == false)
             {
-                returnObject.Add(allObjects[i], (1 / distances[allObjects[i]] + landValues[allObjects[i]]));
+                returnObject.Add(allObjects[i], (distances[allObjects[i]] + landValues[allObjects[i]]));
             }
         }
         return returnObject;
@@ -169,7 +175,7 @@ public class ResidentialTracker : ItemTracker {
         {
             if(returnObject.ContainsKey(trialObjects[i]) == false)
             {
-                returnObject.Add(trialObjects[i], Vector3.Distance(transform.position, trialObjects[i].transform.position));
+                returnObject.Add(trialObjects[i], 1 / Vector3.Distance(transform.position, trialObjects[i].transform.position));
             }
         }
         return returnObject;
@@ -180,7 +186,7 @@ public class ResidentialTracker : ItemTracker {
         return employed[ID];
     }
 
-    void UpdateSecond()
+    public void UpdateSecond()
     // Updates values once per second
     {
         updateStarted = true;
@@ -188,23 +194,69 @@ public class ResidentialTracker : ItemTracker {
         {
             return;
         }
+        UpdateLocalHappiness();
+        UpdateEmploymentHappiness();
+        UpdateHappiness();
         UpdateLandValue();
         UpdateTransportationValue();
-        UpdateHappiness();
         CalculateIncome();
+    }
+
+    void UpdateEmploymentHappiness()
+    {
+        if (capacity != 0)
+        {
+            employmentHappiness = (users - unemployedPopulation) / capacity * 40;
+        }
+        else employmentHappiness = 0;
+    }
+
+    void UpdateHappiness()
+    {
+        currentHappiness = localHappiness + employmentHappiness + fillRateHappiness;
+        CalculateLongtermHappiness();
+        CalculateHappinessState();
     }
 
     void CalculateIncome()
     {
-        income = users * availableTransportation * landValue / 5;
+        income = users * (1 + (landValue * 0.01f)) * (happinessState);
         income += foliageIncome;
         income -= baseCost;
         totalResidentialIncome += income;
     }
 
-    public void AddFoliage(float addAmount)
+    public string ValidPosition()
     {
-        foliage += addAmount;
+        if (validPosition)
+        {
+            return "Active";
+        }
+        else return "Inactive";
     }
 
+    public string FancyIncome()
+    {
+        return "Income: $" + Mathf.Round(income * 100) / 100 + "/w";
+    }
+
+    public string FancyCapacity()
+    {
+        return "Residents: " + users + " / " + capacity;
+    }
+
+    public int FancyHappiness()
+    {
+        return happinessState;
+    }
+
+    public string FancyLandValue()
+    {
+        return "Land Value: $" + landValue;
+    }
+
+    public string FancyTitle()
+    {
+        return ValidPosition();
+    }
 }

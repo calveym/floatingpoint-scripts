@@ -41,10 +41,10 @@ public class TestRunner : MonoBehaviour
         //if (Input.GetKeyDown("q")) FirstTest();
         //if (Input.GetKeyDown("w")) SecondTest();
         //if (Input.GetKeyDown("e")) ThirdTest();
-        if (Input.GetKeyDown("r")) FourthTest();
-        //if (Input.GetKeyDown("t")) FifthTest();
-        //if (Input.GetKeyDown("y")) SixthTest();
-        //if (Input.GetKeyDown("u")) SeventhTest();
+        //if (Input.GetKeyDown("r")) FourthTest();
+        if (Input.GetKeyDown("t")) FifthTest();
+        if (Input.GetKeyDown("y")) SixthTest();
+        if (Input.GetKeyDown("u")) SeventhTest();
         //if (Input.GetKeyDown("i")) EighthTest();
         //if (Input.GetKeyDown("o")) NinthTest();
     }
@@ -73,22 +73,28 @@ public class TestRunner : MonoBehaviour
     public void FourthTest()
     {
         Debug.Log("Test 4 Running");
-        PopupManager.Popup("TEST POPUP WORKS!!!");
+        TooltipManager tooltip = manager.GetComponent<TooltipManager>();
+        TooltipManager.pressed = true;
+        tooltip.StartCoroutine("SecondTick");
+        tooltip.EnableTooltip(gameObject);
     }
 
     void FifthTest()
     {
         Debug.Log("Test 5 Running");
+        manager.GetComponent<TooltipManager>().TestTooltip();
     }
 
     void SixthTest()
     {
         Debug.Log("Test 6 Running");
+        manager.GetComponent<TooltipManager>().TestDisableTooltip();
     }
 
     void SeventhTest()
     {
         Debug.Log("Test 7 Running");
+        // SpawnManager.Spawn(transform.position, "res_a1_green");
     }
 
     void EighthTest()
@@ -103,24 +109,24 @@ public class TestRunner : MonoBehaviour
 
     void FindAllChildren()
     {
-        residentialTrackers = transform.GetAllComponentsInChildren<ResidentialTracker>();
-        commercialTrackers = transform.GetAllComponentsInChildren<CommercialTracker>();
-        industrialTrackers = transform.GetAllComponentsInChildren<IndustrialTracker>();
+        // residentialTrackers = transform.GetAllComponentsInChildren<ResidentialTracker>();
+        // commercialTrackers = transform.GetAllComponentsInChildren<CommercialTracker>();
+        // industrialTrackers = transform.GetAllComponentsInChildren<IndustrialTracker>();
     }
 
     void EnableAllChildren()
     {
-        for(int i = 0; i < residentialTrackers.Length; i++)
+        // for(int i = 0; i < residentialTrackers.Length; i++)
         {
-            residentialTrackers[i].SetUsable();
+            // residentialTrackers[i].SetUsable();
         }
-        for(int i = 0; i < commercialTrackers.Length; i++)
+        // for(int i = 0; i < commercialTrackers.Length; i++)
         {
-            commercialTrackers[i].SetUsable();
+            // commercialTrackers[i].SetUsable();
         }
-        for(int i = 0; i < industrialTrackers.Length; i++)
+        // for(int i = 0; i < industrialTrackers.Length; i++)
         {
-            industrialTrackers[i].SetUsable();
+            // industrialTrackers[i].SetUsable();
         }
     }
 }

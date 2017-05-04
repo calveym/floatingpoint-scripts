@@ -17,46 +17,42 @@ public class LandValue : MonoBehaviour {
     float aggLeisure;
 
     float landValue;
+
+    void Awake()
+    {
+        // Debug.Log("Waking up");
+    }
     
     public float RecalculateLandValue()
     // Controls recalculation process
     {
         UpdateValues();
         CalculateAggregates();
-        CalculateFinalValue();
-        return landValue;
+        return CalculateFinalValue();
     }
 
-    void CalculateFinalValue()
+    float CalculateFinalValue()
     {
-        landValue = aggResidential + aggCommercial + aggIndustrial + aggLeisure;
+        return aggResidential + aggCommercial + aggIndustrial + aggLeisure;
     }
 
     void CalculateAggregates()
     {
-        aggResidential = CalculateResidentialAggregate();
-        aggCommercial = CalculateCommercialAggregate();
-        aggIndustrial = CalculateIndustrialAggregate();
-        aggLeisure = CalculateLeisureAggregate();
+        aggResidential = CalculateResidentialAggregate() * 5;
+        aggCommercial = CalculateCommercialAggregate() * 5;
+        aggIndustrial = CalculateIndustrialAggregate() * 7;
+        // aggLeisure = CalculateLeisureAggregate();
     }
 
     float CalculateResidentialAggregate()
     {
-        float aggTemp = 0;
-        foreach(ResidentialTracker res in surroundingResidential)
-        {
-            aggTemp += 1 / Vector3.Distance(transform.position, res.transform.position);
-        }
+        float aggTemp = surroundingResidential.Count;
         return aggTemp;
     }
 
     float CalculateCommercialAggregate()
     {
-        float aggTemp = 0;
-        foreach(CommercialTracker com in surroundingCommercial)
-        {
-            aggTemp += 1 / Vector3.Distance(transform.position, com.transform.position);
-        }
+        float aggTemp = surroundingCommercial.Count;
         return aggTemp;
     }
 
@@ -67,11 +63,11 @@ public class LandValue : MonoBehaviour {
         {
             if(gameObject.tag == "industrial")
             {
-                aggTemp += 1 / Vector3.Distance(transform.position, ind.transform.position);
+                aggTemp ++;
             }
             else if(gameObject.tag == "residential")
             {
-                aggTemp -= 1 / Vector3.Distance(transform.position, ind.transform.position);
+                aggTemp --;
             }
         }
         return aggTemp;
@@ -79,20 +75,16 @@ public class LandValue : MonoBehaviour {
 
     float CalculateLeisureAggregate()
     {
-        float aggTemp = 0;
-        foreach(LeisureTracker leis in surroundingLeisure)
-        {
-            aggTemp += 1 / Vector3.Distance(transform.position, leis.transform.position);
-        }
+        float aggTemp = surroundingLeisure.Count;
         return aggTemp;
     }
 
     void UpdateValues()
     {
-        surroundingBuildings = U.FindNearestBuildings(transform.position, 5f);
+        surroundingBuildings = U.FindNearestBuildings(gameObject.transform.position, 10f);
         surroundingResidential = U.ReturnResidentialTrackers(surroundingBuildings);
         surroundingCommercial = U.ReturnCommercialTrackers(surroundingBuildings);
         surroundingIndustrial = U.ReturnIndustrialTrackers(surroundingBuildings);
-        surroundingLeisure = U.ReturnLeisureTrackers(surroundingBuildings); 
+        surroundingLeisure = U.ReturnLeisureTrackers(surroundingBuildings);
     }
 }

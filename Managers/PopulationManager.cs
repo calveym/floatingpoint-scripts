@@ -21,9 +21,9 @@ public class PopulationManager : MonoBehaviour {
     public List<IndustrialTracker> emptyIndustrial;
 
 
-    public int resUpdate;
-    public int comUpdate;
-    public int indUpdate;
+    public float resUpdate;
+    public float comUpdate;
+    public float indUpdate;
 
 	float newPopulationSpawn;
 	float populationIncreaseRate;
@@ -43,9 +43,6 @@ public class PopulationManager : MonoBehaviour {
 
     void Awake()
     {
-        names = gameObject.GetComponent<NameGenerator>();
-        itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-        happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
         population = 0;
         populationIncreaseRate = 0;
         resUpdate = 0;
@@ -56,12 +53,18 @@ public class PopulationManager : MonoBehaviour {
     void Start ()
 	// Set values pre-initialization
 	{
+        names = gameObject.GetComponent<NameGenerator>();
         firstNames = names.FirstNames();
         lastNames = names.LastNames();
-        QueueUpdates();
-	}
+        itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
+        happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
+        EconomyManager.ecoTick += PopulationUpdate;
 
-	void Update ()
+        QueueUpdates();
+
+    }
+
+    void PopulationUpdate ()
 	// Updates values & calls increasePopulation if conditions are met
 	{
         UpdateValues();
@@ -79,25 +82,16 @@ public class PopulationManager : MonoBehaviour {
 		industrialTrackers = itemManager.industrialTrackers;
         totalPopulation = population + unallocatedPopulation;
         happiness = happinessManager.happiness;
-
-        if (resUpdate > 0)
-        {
-            UpdateEmptyResidential();
-        }
-        if (resUpdate > 0)
-        {
-            UpdateCommercialTrackers();
-        }
-        if (resUpdate > 0)
-        {
-            UpdateIndustrialTrackers();
-        }
+        
+        UpdateEmptyResidential();
+        UpdateCommercialTrackers();
+        UpdateIndustrialTrackers();
     }
 
     void UpdateEmptyResidential()
     // Updates list of properties with vacancies
     {
-        resUpdate--;
+        resUpdate = 0;
         emptyResidential = new List<ResidentialTracker>();
         numEmptyResidential = new List<int>();
         residentialWithUnemployed = new List<ResidentialTracker>();
@@ -105,17 +99,17 @@ public class PopulationManager : MonoBehaviour {
 
         if (residentialTrackers != null)
         {
-            for (int i = 0; i < residentialTrackers.Count; i++)
+            foreach(ResidentialTracker residentialTracker in residentialTrackers)
             {
-                if (residentialTrackers[i].NumEmpty() > 0 && residentialTrackers[i].usable == true)
+                if (residentialTracker.NumEmpty() > 0 && residentialTracker.usable == true)
                 {
-                    emptyResidential.Add(residentialTrackers[i]);
-                    numEmptyResidential.Add(residentialTrackers[i].NumEmpty());
+                    emptyResidential.Add(residentialTracker);
+                    numEmptyResidential.Add(residentialTracker.NumEmpty());
                 }
-                if(residentialTrackers[i].unemployedPopulation > 0)
+                if(residentialTracker.unemployedPopulation > 0)
                 {
-                    residentialWithUnemployed.Add(residentialTrackers[i]);
-                    numResidentialWithUnemployed.Add(residentialTrackers[i].unemployedPopulation);
+                    residentialWithUnemployed.Add(residentialTracker);
+                    numResidentialWithUnemployed.Add(residentialTracker.unemployedPopulation);
                 }
             }
         }
@@ -130,7 +124,7 @@ public class PopulationManager : MonoBehaviour {
 
     void UpdateCommercialTrackers()
     {
-        comUpdate--;
+        comUpdate = 0;
         emptyCommercial = new List<CommercialTracker>();
         if(commercialTrackers != null)
         {
@@ -146,7 +140,7 @@ public class PopulationManager : MonoBehaviour {
 
     void UpdateIndustrialTrackers()
     {
-        indUpdate--;
+        indUpdate = 0;
         emptyIndustrial = new List<IndustrialTracker>();
         if(industrialTrackers != null)
         {
@@ -220,7 +214,7 @@ public class PopulationManager : MonoBehaviour {
 	void TryFindJob()
 	// TODO: allocate to either industrial or commercial, select type first, then allocate
 	{
-		if(unemployedPopulation > 0 && AvailableJobs() > 0)
+		if(unemployedPopulation > 0 && residentialWithUnemployed.Count > 0 && AvailableJobs() > 0)
 		{
 			FindJob();
 		}
@@ -228,11 +222,9 @@ public class PopulationManager : MonoBehaviour {
 
 	void FindJob()
 	{
-		for(int i = 0; i < residentialWithUnemployed.Count; i++)
-        {
-            residentialWithUnemployed[i].TryEmployWorker();
-            QueueUpdates();
-        }
+        // Finding job started
+        residentialWithUnemployed[0].TryEmployWorker();
+        QueueUpdates();
 		// itemTrackers allocate nearest jobs to their users
 	}
 
@@ -240,7 +232,7 @@ public class PopulationManager : MonoBehaviour {
     // Tries to increase population
     {
         happiness = happinessManager.happiness;
-        residentialDemand += happiness * Time.deltaTime * 0.01f;
+        residentialDemand += 0.1f + happiness * Time.deltaTime * 1000;
         if (residentialDemand >= 1 )
         {
             unallocatedPopulation++;
@@ -276,4 +268,28 @@ public class PopulationManager : MonoBehaviour {
 	{
 		return commercialCap + industrialCap;
 	}
+
+    public float GetHappiness()
+    {
+        return happinessManager.happiness;
+    }
+
+    public string FancyTotalPopulation()
+    {
+        return "Total Population: " + totalPopulation.ToString();
+    }
+
+    public string FancyEmployedPopulation()
+    {
+        return "Employed: " + (totalPopulation - unemployedPopulation).ToString();
+    }
+
+    public string FancyUnemployedPopulation()
+    {
+        if (totalPopulation != 0)
+        {
+            return "Unemployed: %" + (unemployedPopulation / totalPopulation * 100).ToString();
+        }
+        else return "0 Unemployed";
+    }
 }

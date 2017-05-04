@@ -27,5 +27,6 @@ public class Marker : MonoBehaviour {
             transform.Rotate(new Vector3(0f, spinSpeed * Time.deltaTime, 0f));
             yield return null;
         }
+        Destroy(gameObject);
     }
 }

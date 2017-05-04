@@ -41,7 +41,12 @@ public class ItemManager : MonoBehaviour {
     public delegate void TenSecondUpdate();
     public static TenSecondUpdate tenUpdate;
 
-	void Awake ()
+    void Awake()
+    {
+
+    }
+
+    void Start ()
 	// Get manager instances
 	{
         fiveUpdate += Empty;

@@ -22,11 +22,9 @@ public class RoadGenerator : VRTK_InteractableObject {
 	public Dictionary<Vector3, GameObject> roads; // Dictionary of all road positions and objects
 	public Dictionary<Vector3, string> surroundingRoads; // Dictionary of all road positions and associated surroundingRoadString
 
-	void Start()
+    void Awake()
 	// Initiates all of the dictionaries for lookups and all other variables that need to be initialized
 	{
-        controller = GameObject.Find("RightController");
-        events = controller.GetComponent<VRTK_ControllerEvents>();
 		roads = new Dictionary<Vector3, GameObject>();
 		surroundingRoads = new Dictionary<Vector3, string>();
 
@@ -71,6 +69,19 @@ public class RoadGenerator : VRTK_InteractableObject {
 		roadRotation.Add("1101", ninety);
 		roadRotation.Add("1111", zero);
 	}
+
+    private void Start()
+    {
+        controller = GameObject.Find("RightController");
+        events = controller.GetComponent<VRTK_ControllerEvents>();
+    }
+
+    public void AddRoad(Vector3 position, GameObject newRoad)
+    {
+        position = Round(position);
+        roads.Add(position, newRoad);
+        surroundingRoads.Add(position, CheckSurroundingRoads(position));
+    }
 
 	public override void StartUsing (GameObject usingObject)
 	// Runs when object is used by vrtk controller

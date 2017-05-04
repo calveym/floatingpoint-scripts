@@ -7,6 +7,7 @@ public class ItemTracker : MonoBehaviour {
 
     // Declare variables
     public PopulationManager populationManager;
+    public HappinessManager happinessManager;
     public EconomyManager economyManager;
     public ItemManager itemManager;
     public LandValue land;
@@ -19,33 +20,40 @@ public class ItemTracker : MonoBehaviour {
     public static float totalIndustrialIncome;
     public static float historicIndustrialIncome;
 
+    public float buyCost;
     public float baseCost;
-    public float localHappiness;
     public int level;
     public string type;
+    public bool usable;
+    public bool grabbableObject;
+
     public int capacity;
     public float income;
     public int users;
-    public bool usable;
     public float numSnappedRoads;
     public bool updateStarted;
-    public bool grabbableObject;
     public bool validPosition;
-    GameObject tooltip;
-    public float addedHappiness;
-
+    public float foliageIncome;
     public float landValue;
 
-    private void Start()
+    public float localHappiness; // Happiness based on number of nice surroundings
+    public float fillRateHappiness; // Happiness based on fill rate (users / cap * 40)
+    public float addedHappiness; // Temporary tracking figure
+    public float currentHappiness;  // Used to affect longterm happiness- longerm happiness tends towards this number
+    public float longtermHappiness; // Most important happiness figure, should be used in most significant income, landvalue etc calculations
+    public int happinessState;
+
+    public void Start()
     // Sets start variables
     {
+        longtermHappiness = 0;
         availableTransportation = 1;
         landValue = 10f;
-        land = GetComponent<LandValue>();
+        land = gameObject.GetComponent<LandValue>();
+        happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-
         //usable = false;
     }
 
@@ -61,8 +69,13 @@ public class ItemTracker : MonoBehaviour {
 
     public void UpdateLandValue()
     {
+        if(land == null)
+        {
+            land = gameObject.GetComponent<LandValue>();
+            Debug.Log("Getting land value" + gameObject.name);
+        }
         landValue = land.RecalculateLandValue();
-        landValue += users;
+        landValue += users * 1.2f;
         landValue += numSnappedRoads;
         if (capacity == users)
         {
@@ -76,11 +89,24 @@ public class ItemTracker : MonoBehaviour {
         availableTransportation = RoadAccess() + ProgressionManager.Airport() + ProgressionManager.Train();
     }
 
-    public void UpdateHappiness()
+    public void UpdateLocalHappiness()
     //  Sets local happiness level based on surroundings
     {
-        localHappiness = addedHappiness;
+        if(addedHappiness < 40)
+        {
+            localHappiness = addedHappiness;
+        }
+        else
+        {
+            localHappiness = 40;
+        }
         addedHappiness = 0;
+
+        if(capacity != 0)
+        {
+            fillRateHappiness = (users / capacity) * 20;
+        }
+        happinessManager.SendHappiness(happinessState);
     }
 
     float RoadAccess()
@@ -183,6 +209,39 @@ public class ItemTracker : MonoBehaviour {
         {
             //PopupManager.Popup("Warning!");
             //PopupManager.Popup("Factories reducing happiness");
+        }
+    }
+
+    public void CalculateLongtermHappiness()
+    // makes the longterm happiness tend towards the current happiness
+    {
+        if(currentHappiness - longtermHappiness < 0.2f)
+        {
+            longtermHappiness = currentHappiness;
+        }
+        else
+        {
+            longtermHappiness += (currentHappiness - longtermHappiness) * 0.1f;
+        }
+    }
+
+    public void CalculateHappinessState()
+    {
+        if (longtermHappiness < 20)
+        {
+            happinessState = 1;
+        }
+        else if (longtermHappiness < 60 && longtermHappiness >= 20)
+        {
+            happinessState = 2;
+        }
+        else if (longtermHappiness < 80 && longtermHappiness >= 60)
+        {
+            happinessState = 3;
+        }
+        else if (longtermHappiness >= 80)
+        {
+            happinessState = 4;
         }
     }
 }

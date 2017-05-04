@@ -5,57 +5,72 @@ using UnityEngine;
 public class IndustrialTracker : ItemTracker {
     // Manages individual stats of each industrial building.
 
+    int requiredProduction = 5;
+
     GameObject markerPrefab;
     Marker marker;
     List<IndustrialComponent> components;
+    List<float> sales; // List of recent sales counted in goodsSold
+
+    public float productionHappiness; // Happiness from reaching sales targets
 
     public int visitors;
     public int lifetimeVisitors;
 
-    public float goodsCapacity;  // obvious
+    public float goodsCapacity;  // max amount of goods storeable
     public float goodsProduced;  // Goods produced in last economic tick
-    public float goodsOwned;  // All goods currently owned by this 
     public static float allGoods; // Base goods tracking figure for each economic tick
 
-    public float productionAmount;  // Production multiplier, used for components
-    public float sellPrice;  // Sales price for goods
-    public float sellAmount;  // Amount sold per economy tick
+    public float sellPrice;  // Base sell price
+    public float sellAmount;  // Base maximum amount sold per economy tick
 
-    int sellPriceComponents;
-    int productionAmountComponents;
-    int goodsCapacityComponents;
-    int sellAmountComponents;
+    // Multipliers from components
+    public float productionMulti;
+    public float goodsCapacityMulti;
+    public float sellPriceMulti;
+    public float sellAmountMulti;
+
+    float goodsSold;  // Number of goods sold last week
 
     void Awake()
     {
-        markerPrefab = GameObject.Find("MarkerPrefab");
+        sales = new List<float>();
         components = new List<IndustrialComponent>();
-        EconomyManager.ecoTick += UpdateSecond;
+        goodsSold = 0;
+        productionMulti = 1;
+        goodsCapacityMulti = 1;
+        sellPriceMulti = 1;
+        sellAmountMulti = 1;
+    }
+
+    new void Start()
+    {
+        base.Start();
+        markerPrefab = GameObject.Find("MarkerPrefab");
     }
 
     void Update()
     {
-        if(!updateStarted)
+        if (!updateStarted && usable)
         {
-            StartCoroutine("UpdateSecond");  // Economic update tick
+            updateStarted = true;
+            EconomyManager.ecoTick += UpdateSecond;
+            GameObject.Find("Managers").GetComponent<ItemManager>().addIndustrial(capacity, gameObject);
+        }
+        else if (updateStarted && !usable)
+        {
+            updateStarted = false;
+            EconomyManager.ecoTick -= UpdateSecond;
         }
     }
 
     void ProduceGoods()
     {
-        if(goodsOwned < goodsCapacity)
-        {
-            goodsProduced = users * localHappiness * productionAmount;
-            if(goodsProduced + goodsOwned <= goodsCapacity)
-            {
-                goodsOwned += goodsProduced;
-            }
-            else
-            {
-                goodsProduced = goodsCapacity - goodsOwned;
-                goodsOwned += goodsProduced;
-            }
-        }
+        goodsProduced = users * happinessState * productionMulti;
+
+        income = goodsProduced * sellPrice * sellPriceMulti;
+        income -= baseCost;
+        allGoods += goodsProduced;
     }
 
     public void Apply(float applicantLandValue, int residentID, ResidentialTracker applicantTracker)
@@ -67,7 +82,7 @@ public class IndustrialTracker : ItemTracker {
                      Mathf.Sin(2.0f * Mathf.PI * (float)u2); //random normal(0,1)
         double randNormal =
                      landValue - 5 + 5 * randStdNormal; //random normal(mean,stdDev^2)
-        if (applicantLandValue > randNormal && usable && users < capacity)
+        if (usable && users < capacity) // TODO: ADD LAND VALUE CHECKS BACK IN
         {
             AcceptApplication(residentID, applicantTracker);
         }
@@ -87,35 +102,20 @@ public class IndustrialTracker : ItemTracker {
     void RejectApplication(int residentID, ResidentialTracker applicantTracker)
     {
         // TODO:
-    }
-
-    void SellGoods()
-    // Calculates income from goods sale
-    {
-        if(goodsOwned > sellAmount)
-        {
-            goodsOwned -= sellAmount;
-            allGoods += sellAmount;
-        }
-        else
-        {
-            allGoods += goodsOwned;
-            goodsOwned = 0;
-        }
-        income = goodsProduced * sellPrice;
-        income -= baseCost;
-        totalIndustrialIncome += goodsProduced;
+        Debug.Log("Applicant rejected!!!");
     }
 
     public void AddMarker()
     {
         marker = Instantiate(markerPrefab, transform.position + new Vector3(0f, 2f, 0f), transform.rotation, transform).GetComponent<Marker>();
+        marker.transform.localScale *= 10;
         marker.StartRotation();
     }
 
     public void LinkComponent(IndustrialComponent component)
     // Sent from component, completes link
     {
+        Debug.Log("Gettin linked eh@ " + gameObject.name);
         components.Add(component);
         RecalculateComponents();
     }
@@ -124,7 +124,7 @@ public class IndustrialTracker : ItemTracker {
     {
         for(int i = 0; i < components.Count; i++)
         {
-            if (components[i].type == "sellPrice" || components[i].type == "productionAmount" || components[i].type == "goodsCapacity" || components[i].type == "sellAmount" || components[i].type == "capacity")
+            if (components[i].type == "sellPrice" || components[i].type == "productionAmount" || components[i].type == "goodsCapacity" || components[i].type == "sellAmount")
             {
                 AddBonus(components[i]);
             }
@@ -133,12 +133,23 @@ public class IndustrialTracker : ItemTracker {
 
     void AddBonus(IndustrialComponent component)
     {
-        sellPrice += component.sellPrice;
-        productionAmount += component.productionAmount;
-        goodsCapacity += component.goodsCapacity;
-        sellAmount += component.sellAmount;
-        capacity += component.capacity;
+        sellPriceMulti += component.sellPriceMulti;
+        productionMulti += component.productionMulti;
+        goodsCapacityMulti += component.goodsCapacityMulti;
+        sellAmountMulti += component.sellAmountMulti;
+    }
 
+    void UpdateProductionHappiness()
+    {
+        if (capacity != 0 && requiredProduction != 0)
+        {
+            productionHappiness = (goodsProduced / capacity * requiredProduction) * 40;
+            if (productionHappiness > 40)
+            {
+                productionHappiness = 40; // Capped at 40
+            }
+        }
+        else productionHappiness = 0;
     }
 
     void UpdateSecond()
@@ -149,11 +160,64 @@ public class IndustrialTracker : ItemTracker {
         {
             return;
         }
+        UpdateLocalHappiness();
+        UpdateProductionHappiness();
         UpdateHappiness();
         UpdateLandValue();
         UpdateTransportationValue();
         ProduceGoods();
-        SellGoods();
         totalIndustrialIncome += income;
+    }
+
+    void UpdateHappiness()
+    // Performs all necessary final happiness calculations, including longterm
+    {
+        currentHappiness = localHappiness + productionHappiness + fillRateHappiness;
+        CalculateLongtermHappiness();
+        CalculateHappinessState();
+    }
+
+    public string ValidPosition()
+    {
+        if (validPosition)
+        {
+            return "Active";
+        }
+        else return "Inactive";
+    }
+
+    public string FancyIncome()
+    {
+        return "Income: $" + Mathf.Round(income * 100) / 100 + "/w";
+    }
+
+    public string FancyCapacity()
+    {
+        return "Workers: " + users + " / " + capacity;
+    }
+
+    public int FancyHappiness()
+    {
+        return happinessState;
+    }
+    
+    public string FancyTitle()
+    {
+        // TODO: NICE TITLES
+        return ValidPosition();
+    }
+
+    public string FancyGoods()
+    {
+        return "Goods sold: " + goodsSold.ToString();
+    }
+
+    public string FancyLandValue()
+    {
+        return "Land Value: $" + landValue;
+    }
+    public void MarkWithComponent()
+    {
+        StartCoroutine("MarkWithComponent");
     }
 }
