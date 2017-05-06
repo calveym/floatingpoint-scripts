@@ -6,6 +6,8 @@ using VRTK;
 
 public class SpawnManager : MonoBehaviour {
 
+
+    public DisplayUI displayUI;
     // Small size residential buildings
     Object[] res;
     Object[] com;
@@ -42,7 +44,6 @@ public class SpawnManager : MonoBehaviour {
     {
         FindSpheres();
         events = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
-        events.TriggerPressed += DoTriggerPull;
     }
 
     public GameObject Spawn(Vector3 targetPosition, int type, int unit)
@@ -51,9 +52,17 @@ public class SpawnManager : MonoBehaviour {
         return Instantiate(FindBuilding(type, unit), targetPosition, Quaternion.identity) as GameObject;
     }
 
-    void DoTriggerPull(object sender, ControllerInteractionEventArgs e)
+    public void PurchaseBuilding()
     {
-        spawnController2.EnableBuilding();
+        Debug.Log("Running here");
+        if(!displayUI)
+        {
+            displayUI = GameObject.Find("UI").GetComponent<DisplayUI>();
+        }
+        if (displayUI.showBuildings)
+        {
+            spawnController2.EnableBuilding();
+        }
     }
 
     public void ResetUIBuildings()
@@ -63,7 +72,6 @@ public class SpawnManager : MonoBehaviour {
         spawnController2.gameObject.SetActive(true);
         spawnController3.gameObject.SetActive(true);
         spawnController4.gameObject.SetActive(true);
-
 
         spawnController0.DeleteBuilding();
         spawnController1.DeleteBuilding();

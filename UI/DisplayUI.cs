@@ -6,12 +6,14 @@ using VRTK;
 
 public class DisplayUI : MonoBehaviour {
 
+    SpawnManager spawnManager;
     VRTK_ControllerEvents events;
     EconomyManager economyManager;
     PopulationManager populationManager;
     GameObject staticSpheres;
     GameObject wheelBase;
     GameObject canvas;
+    GameObject leftController;
     ThumbTracker thumbTracker;
 
     GameObject menu;
@@ -71,7 +73,7 @@ public class DisplayUI : MonoBehaviour {
     private void Awake()
     {
         firstTouch = true;
-        showBuildings = true;
+        showBuildings = false;
         displaying = false;
         showingGlobalStats = false;
         menuSelection = 0;
@@ -90,6 +92,7 @@ public class DisplayUI : MonoBehaviour {
 
     private void Start()
     {
+        spawnManager = GameObject.Find("Managers").GetComponent<SpawnManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         populationManager = economyManager.populationManager;
         thumbTracker = GetComponent<ThumbTracker>();
@@ -107,12 +110,10 @@ public class DisplayUI : MonoBehaviour {
 
     void DoTouchpadTouch(object sender, ControllerInteractionEventArgs e)
     {
-        interruptRelease = true;
-        updateRequired = true;
-        displaying = true;
-
-        if(firstTouch)
+        if(!displaying)
         {
+            interruptRelease = true;
+            updateRequired = true;
             ShowUI();
             ShowGlobalStats();
             HideBuildings();
@@ -120,9 +121,19 @@ public class DisplayUI : MonoBehaviour {
             showingGlobalStats = true;
             StartCoroutine("UpdateGlobalStats");
         }
-        else if(!firstTouch)
+
+        else if(displaying)
         {
             thumbTracker.StartTracking();
+        }
+    }
+
+    void DoTouchpadRelease(object sender, ControllerInteractionEventArgs e)
+    {
+        if(!displaying && showingGlobalStats)
+        {
+            Debug.Log("Not getting through");
+            HideUI();
         }
     }
 
@@ -130,60 +141,70 @@ public class DisplayUI : MonoBehaviour {
     {
         interruptRelease = true;
         updateRequired = true;
-        displaying = true;
         if (firstTouch)
         {
+            displaying = true;
+            showingGlobalStats = true;
+            ShowUI();
             showBuildings = false;
             firstTouch = false;
             HideBuildings();
             ShowMenu();
             thumbTracker.StartTracking();
             ResetMenuColors();
-            StartCoroutine("UpdateMenu");
+            StartCoroutine("UpdateGlobalStats");
         }
 
-        else if (!firstTouch)
+        else if(!firstTouch)
         {
-            ShowUI();
-            if(showBuildings)
+            if(TopButton())
+                // Go in/ select
             {
-                showBuildings = false;
-                showingGlobalStats = false;
-                thumbTracker.ForceStopTrackingAngle();
-                HideBuildings();
-                ShowMenu();
-                thumbTracker.StartTracking();
-                StartCoroutine("UpdateMenu");
-            }
-            else if(!showBuildings)
-            {
-                showBuildings = true;
-                thumbTracker.ForceStopTrackingPosition();
-                ShowBuildings();
-                HideGlobalStats();
-                HideMenu();
-                DisableSprites();
-                thumbTracker.StartTracking();
-                if(!showingGlobalStats)
+                if(showBuildings)
                 {
-                    showingGlobalStats = true;
+                    spawnManager.PurchaseBuilding();
+                }
+                else
+                {
+                    ShowBuildings();
+                    showingGlobalStats = false;
                     StartCoroutine("UpdateBuildings");
+                }
+            }
+            else if(!TopButton())
+                // Go back/ hide
+            {
+                if(showBuildings)
+                    // Show menu
+                {
+                    showBuildings = false;
+                    showingGlobalStats = true;
+                    ShowMenu();
+                    thumbTracker.ForceStopTrackingAngle();
+                    StartCoroutine("UpdateGlobalStats");
+                }
+                else if(!showBuildings)
+                    // Hide UI
+                {
+                    thumbTracker.ForceStopTrackingAngle();
+                    menuSelection = 0;
+                    showingGlobalStats = false;
+                    showBuildings = false;
+                    firstTouch = true;
+                    displaying = false;
+                    HideUI();
                 }
             }
         }
     }
 
-    void DoTouchpadRelease(object sender, ControllerInteractionEventArgs e)
+    bool TopButton()
     {
-        interruptRelease = false;
-        if(firstTouch)
+        if (events.GetTouchpadAxis().y > 0)
         {
-            StartCoroutine("ReleaseDelay", 1f);
+            return true;
         }
-        else
-        {
-            StartCoroutine("ReleaseDelay", 3f);
-        }
+        else return false;
     }
 
     public void SendSwipe(float swipe)
@@ -278,8 +299,12 @@ public class DisplayUI : MonoBehaviour {
     void ShowBuildings()
     {
         HideMenu();
-        wheelBase.SetActive(true);
+        DisableSprites();
+        HideGlobalStats();
+
         staticSpheres.SetActive(true);
+        spawnManager.SpawnUIBuildings(menuSelection, thumbTracker.angleIncrement);
+        showBuildings = true;
 
         buildingType.enabled = true;
         buildingWeeklyCost.enabled = true;
@@ -349,7 +374,6 @@ public class DisplayUI : MonoBehaviour {
 
     void HideGlobalStats()
     {
-        DisableSprites();
         globalIncome.enabled = false;
         globalBalance.enabled = false;
         globalTotalPopulation.enabled = false;
@@ -366,12 +390,10 @@ public class DisplayUI : MonoBehaviour {
         globalUnemployedPopulation.enabled = true;
         globalLevel.enabled = true;
         globalGoodsConsumed.enabled = true;
-        UpdateGlobalText();
     }
 
     void UpdateBuildingText()
     {
-        ShowBuildings();
         buildingType.text = text[0];
         buildingCapacity.text = text[1];
         buildingLevel.text = text[2];
@@ -390,18 +412,9 @@ public class DisplayUI : MonoBehaviour {
         SetHappiness();
     }
 
-    IEnumerator UpdateMenu()
-    {
-        while(displaying && !showBuildings)
-        {
-            UpdateGlobalText();
-            yield return null;
-        }
-    }
-
     IEnumerator UpdateGlobalStats()
     {
-        while (displaying && showingGlobalStats)
+        while (showingGlobalStats)
         {
             UpdateGlobalText();
             yield return null;
@@ -414,21 +427,6 @@ public class DisplayUI : MonoBehaviour {
         {
             UpdateBuildingText();
             yield return null;
-        }
-    }
-
-    public IEnumerator ReleaseDelay(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-
-        if (!interruptRelease)
-        {
-            firstTouch = true;
-            displaying = false;
-            HideUI();
-            HideMenu();
-            HideGlobalStats();
-            HideBuildings();
         }
     }
 }

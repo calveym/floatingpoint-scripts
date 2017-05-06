@@ -92,7 +92,7 @@ public class SpawnController : MonoBehaviour {
 
             // Spawns new from here!!!!!
             showingBuilding = false;
-            spawnManager.SpawnUIBuildings(displayUI.GetSelection(), unit + thumb.angleIncrement);
+            spawnManager.SpawnUIBuildings(displayUI.GetSelection(), thumb.angleIncrement);
         }
     }
 
@@ -166,8 +166,8 @@ public class SpawnController : MonoBehaviour {
         //Debug.Log("Level: " + level);
         if (level > ProgressionManager.level)
         {
-            disablePurchase = true;
-            containedBuilding.GetComponent<Renderer>().material = disablePurchaseMaterial;
+            //disablePurchase = true;
+            //containedBuilding.GetComponent<Renderer>().material = disablePurchaseMaterial;
         }
     }
 
@@ -214,8 +214,16 @@ public class SpawnController : MonoBehaviour {
 
     void EnableCommercial()
     {
-        price = com.buyCost;
-        com.usable = true;
+        if(com)
+        {
+            price = com.buyCost;
+            com.usable = true;
+        }
+        else if(off)
+        {
+            price = off.buyCost;
+            off.usable = true;
+        }
     }
 
     void EnableIndustrial()

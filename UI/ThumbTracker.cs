@@ -43,11 +43,8 @@ public class ThumbTracker : MonoBehaviour {
     {
         if (displayUI.showBuildings)
         {
-            trackingAngle = true;
-            angle = events.GetTouchpadAxisAngle();
-            spawnManager.SpawnUIBuildings(displayUI.GetSelection(), angleIncrement);
-
-            StartCoroutine("TrackThumbAngle");
+            trackingPosition = true;
+            position = events.GetTouchpadAxis().x;
         }
         else if(!displayUI.showBuildings)
         {
@@ -59,7 +56,6 @@ public class ThumbTracker : MonoBehaviour {
     void StopTracking(object sender, ControllerInteractionEventArgs e)
     // Stops tracking coroutine
     {
-        ForceStopTrackingAngle();
         UpdatePosition();
     }
 
@@ -76,34 +72,12 @@ public class ThumbTracker : MonoBehaviour {
 
     public void ForceStopTrackingAngle()
     {
-        trackingAngle = false;
         angleIncrement = 0;
     }
 
     public void ForceStopTrackingPosition()
     {
         trackingPosition = false;
-    }
-
-    void SendAngle()
-    // Sends position to Wheel Controller
-    {
-        int selection = displayUI.GetSelection();
-        if(totalAngle > 45 || totalAngle < -45)
-        {
-            if (totalAngle < 45 && angleIncrement >= 1)
-            {
-                angleIncrement--;
-                totalAngle = 0;
-                // TODO: play noise
-            }
-            else if (totalAngle > 45 && angleIncrement + 2 < spawnManager.GetNumBuildings(selection))
-            {
-                angleIncrement++;
-                totalAngle = 0;
-            }
-            spawnManager.SpawnUIBuildings(selection, angleIncrement);
-        }
     }
    
     void RecalculateAngle()
@@ -134,17 +108,33 @@ public class ThumbTracker : MonoBehaviour {
     void SendPosition()
     // Sends new swipe info to displayUI
     {
-        if(swipe > swipeReq)
+        int selection = displayUI.GetSelection();
+
+        if (swipe > swipeReq)
         {
-            Debug.Log("Sending positive swipe");
-            displayUI.SendSwipe(1);
+            if(displayUI.showBuildings && angleIncrement + 4 < spawnManager.GetNumBuildings(selection))
+            {
+                angleIncrement++;
+                spawnManager.SpawnUIBuildings(selection, angleIncrement);
+            }
+            else if(!displayUI.showBuildings)
+            {
+                displayUI.SendSwipe(1);
+            }
             
             swipe = 0;
         }
         else if(swipe < -swipeReq)
         {
-            Debug.Log("Sending negative swipe");
-            displayUI.SendSwipe(-1);
+            if (displayUI.showBuildings && angleIncrement >= 1)
+            {
+                angleIncrement--;
+                spawnManager.SpawnUIBuildings(selection, angleIncrement);
+            }
+            else if (!displayUI.showBuildings)
+            {
+                displayUI.SendSwipe(-1);
+            }
             swipe = 0;
         }
     }
@@ -153,11 +143,11 @@ public class ThumbTracker : MonoBehaviour {
     {
         while(trackingAngle)
         {
-            rawAngle = events.GetTouchpadAxisAngle();
+            //rawAngle = events.GetTouchpadAxisAngle();
             if (rawAngle != angle)
             {
-                RecalculateAngle();
-                SendAngle();
+                //RecalculateAngle();
+                //SendAngle();
             }
             yield return null;
         }

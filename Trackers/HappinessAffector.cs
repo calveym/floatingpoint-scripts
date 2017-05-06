@@ -15,7 +15,7 @@ public class HappinessAffector : MonoBehaviour {
 	
     public void StartAffect()
     {
-        List<GameObject> surroundingBuildings = FindSurroundingBuildings();
+        List<GameObject> surroundingBuildings = U.FindNearestBuildings(transform.position, radius);
         foreach (GameObject building in surroundingBuildings)
         {
             if (building.tag == "residential")
@@ -42,23 +42,5 @@ public class HappinessAffector : MonoBehaviour {
                 building.GetComponent<LeisureTracker>().ModifyHappiness(affectAmount, "");
             }
         }
-    }
-
-	List<GameObject> FindSurroundingBuildings()
-    {
-        List<GameObject> returnList = new List<GameObject>();
-        int layerMask = 1 << 8;
-        layerMask = ~layerMask;
-
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius, layerMask);
-        if (hitColliders.Length > 0)
-        {
-            foreach (Collider hitcol in hitColliders)
-            {
-                returnList.Add(hitcol.gameObject);
-            }
-        }
-
-        return returnList;
     }
 }
