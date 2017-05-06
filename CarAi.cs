@@ -24,10 +24,10 @@ public class CarAi : MonoBehaviour {
 		transform.rotation = Quaternion.Slerp (transform.rotation, newLookRotation, rotationSpeed * Time.deltaTime);
 	}
 
-	void OnTriggerEnter(Collider Col)
+    void OnTriggerEnter(Collider Col)
 
     {
-        switch(Col.gameObject.name)
+        switch (Col.gameObject.name)
         {
             case "StraightLeftStart":
                 TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("StraightLeftEnd");
@@ -60,7 +60,7 @@ public class CarAi : MonoBehaviour {
                 PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TSectionRightStart");
                 break;
             case "TSectionTurnNodeRS":
-                if(PrevNode.name == "TSectionRightStart")
+                if (PrevNode.name == "TSectionRightStart")
                 {
                     int num = Random.Range(0, 2);
                     if (num == 0)
@@ -76,7 +76,7 @@ public class CarAi : MonoBehaviour {
                 }
                 break;
             case "TSectionTurnNodeRSS":
-                if(PrevNode.name == "TSectionRightStraightStart")
+                if (PrevNode.name == "TSectionRightStraightStart")
                 {
                     int num = Random.Range(0, 2);
                     if (num == 0)
@@ -107,105 +107,110 @@ public class CarAi : MonoBehaviour {
                     }
                 }
                 break;
-                case ""
+            case "InterRightVerticalStart":
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TopLeftTurnNode");
+                PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightVerticalStart");
+                break;
+            case "InterLeftVerticalStart":
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("BottomRightTurnNode");
+                PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftVerticalStart");
+                break;
+            case "InterRightHorizontalStart":
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TopRightTurnNode");
+                PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightHorizontalStart");
+                break;
+            case "InterLeftHorizontalStart":
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("BottomLeftTurnNode");
+                PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftHorizontalStart");
+                break;
+            case "TopLeftTurnNode":
+                if (PrevNode.name == "InterRightVerticalStart")
+                {
+                    int num = Random.Range(0, 3);
+                    if (num == 0)
+                    {
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightVerticalEnd");
+                        PrevNode = null;
+                    }
+                    else if (num == 1)
+                    {
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightHorizontalEnd");
+                        PrevNode = null;
+                    }
+                    else
+                    {
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftHorizontalEnd");
+                        PrevNode = null;
+                    }
+                }
+                break;
+            case "TopRightTurnNode":
+                if (PrevNode.name == "InterRightHorizontalStart")
+                {
+                    int num = Random.Range(0, 3);
+                    if (num == 0)
+                    {
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightVerticalEnd");
+                        PrevNode = null;
+                    }
+                    else if (num == 1)
+                    {
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightHorizontalEnd");
+                        PrevNode = null;
+                    }
+                    else
+                    {
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftVerticalEnd");
+                        PrevNode = null;
+                    }
+                }
+                break;
+            case "BottomRightTurnNode":
+                if (PrevNode.name == "InterLeftVerticalStart")
+                {
+                    int num = Random.Range(0, 3);
+                    if (num == 0)
+                    {
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftVerticalEnd");
+                        PrevNode = null;
+                    }
+                    else if (num == 1)
+                    {
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightHorizontalEnd");
+                        PrevNode = null;
+                    }
+                    else
+                    {
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftHorizontalEnd");
+                        PrevNode = null;
+                    }
+                }
+                break;
+            case "BottomLeftTurnNode":
+                if (PrevNode.name == "InterLeftHorizontalStart")
+                {
+                    int num = Random.Range(0, 3);
+                    if (num == 0)
+                    {
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightVerticalEnd");
+                        PrevNode = null;
+                    }
+                    else if (num == 1)
+                    {
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftVerticalEnd");
+                        PrevNode = null;
+                    }
+                    else
+                    {
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftHorizontalEnd");
+                        PrevNode = null;
+                    }
+                }
+                break;
+
             default:
                 Destroy(gameObject);
                 break;
         }
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-		// Intersection
-
-		if (Col.gameObject.name == "InterRightVerticalStart") {
-			TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("TopLeftTurnNode");
-			PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterRightVerticalStart");
-		}
-
-		if (Col.gameObject.name == "InterLeftVerticalStart") {
-			TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("BottomRightTurnNode");
-			PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterLeftVerticalStart");
-		}
-
-		if (Col.gameObject.name == "InterRightHorizontalStart") {
-			TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("TopRightTurnNode");
-			PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterRightHorizontalStart");
-		}
-
-		if (Col.gameObject.name == "InterLeftHorizontalStart") {
-			TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("BottomLeftTurnNode");
-			PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterLeftHorizontalStart");
-		}
-
-		if (Col.gameObject.name == "TopLeftTurnNode" && PrevNode.name == "InterRightVerticalStart") {
-			int num = Random.Range (0, 3);
-			if (num == 0) {
-				TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterRightVerticalEnd");
-				PrevNode = null;
-			} else if (num == 1) {
-				TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterRightHorizontalEnd");
-				PrevNode = null;
-			} else {
-				TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterLeftHorizontalEnd");
-				PrevNode = null;
-			}
-		}
-
-		if (Col.gameObject.name == "TopRightTurnNode" && PrevNode.name == "InterRightHorizontalStart") {
-			int num = Random.Range (0, 3);
-			if (num == 0) {
-				TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterRightVerticalEnd");
-				PrevNode = null;
-			} else if (num == 1) {
-				TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterRightHorizontalEnd");
-				PrevNode = null;
-			} else {
-				TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterLeftVerticalEnd");
-				PrevNode = null;
-			}
-		}
-
-		if (Col.gameObject.name == "BottomRightTurnNode" && PrevNode.name == "InterLeftVerticalStart") {
-			int num = Random.Range (0, 3);
-			if (num == 0) {
-				TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterLeftVerticalEnd");
-				PrevNode = null;
-			} else if (num == 1) {
-				TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterRightHorizontalEnd");
-				PrevNode = null;
-			} else {
-				TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterLeftHorizontalEnd");
-				PrevNode = null;
-			}
-		}
-
-		if (Col.gameObject.name == "BottomLeftTurnNode" && PrevNode.name == "InterLeftHorizontalStart") {
-			int num = Random.Range (0, 3);
-			if (num == 0) {
-				TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterRightVerticalEnd");
-				PrevNode = null;
-			} else if (num == 1) {
-				TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterLeftVerticalEnd");
-				PrevNode = null;
-			} else {
-				TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild ("InterLeftHorizontalEnd");
-				PrevNode = null;
-			}
-		}
-	}
-
+    }
 }
