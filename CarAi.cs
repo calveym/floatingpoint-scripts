@@ -209,7 +209,6 @@ public class CarAi : MonoBehaviour {
                 break;
 
             default:
-                Destroy(gameObject);
                 break;
         }
     }

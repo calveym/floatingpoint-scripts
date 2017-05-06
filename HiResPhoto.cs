@@ -6,6 +6,15 @@ public class HiResPhoto : MonoBehaviour
     private int resWidth = 4920;
     private int resHeight = 3264;
     private Camera cam;
+    public GameObject target;
+
+    private void Update()
+    {
+        if(target)
+        {
+            transform.LookAt(target.transform);
+        }
+    }
 
     private void Awake()
     {
