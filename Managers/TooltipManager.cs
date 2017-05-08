@@ -8,7 +8,6 @@ public class TooltipManager : MonoBehaviour {
     public delegate void UpdateTooltips();
     public UpdateTooltips updateTooltips;
 
-    public DisplayUI displayUI;
     List<GameObject> nearestBuildings;
     GameObject headset;
     GameObject rightController;
