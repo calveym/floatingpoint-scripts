@@ -139,6 +139,7 @@ public class DisplayUI : MonoBehaviour {
 
     void DoTouchpadPress(object sender, ControllerInteractionEventArgs e)
     {
+        U.LeftPulse(750);
         interruptRelease = true;
         updateRequired = true;
         if (firstTouch)
@@ -162,6 +163,7 @@ public class DisplayUI : MonoBehaviour {
             {
                 if(showBuildings)
                 {
+                    Debug.Log("Tryna purchase building");
                     spawnManager.PurchaseBuilding();
                 }
                 else

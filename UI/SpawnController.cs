@@ -158,6 +158,15 @@ public class SpawnController : MonoBehaviour {
         {
             SelectBuilding();
         }
+
+        if (newBuilding.tag == "industrial")
+        // Smoke deactivation
+        {
+            foreach (Transform child in newBuilding.transform)
+            {
+                child.gameObject.SetActive(false);
+            }
+        }
     }
 
     void CheckLevel()

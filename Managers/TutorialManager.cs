@@ -12,9 +12,10 @@ public class TutorialManager : MonoBehaviour {
     public static int tutorialProgress;
     bool continueTutorial;
 
-    Dictionary<int, string> tutorialStrings;
-    Dictionary<int, int> levelReq; // Requirement for population to level up
-    List<string> tutorialRequirements;
+    Dictionary<int, string> tutorialStrings;  // Strings for each level, printed via popup manager
+    Dictionary<int, int> levelReq;  // Requirement for population to level up
+    List<string> tutorialRequirements;  // Requirements for each tutorial level
+    Dictionary<int, TutorialTracker> spheres;  // Stores sphere for each tutorial level
 
 
     // Booleans for checking requirements
@@ -30,14 +31,19 @@ public class TutorialManager : MonoBehaviour {
 
     private void Awake()
     {
+        spheres = new Dictionary<int, TutorialTracker>();
         tutorialProgress = 0;
         tutorialStrings = new Dictionary<int, string>();
         tutorialRequirements = new List<string>();
         continueTutorial = true;
         tutorialRequirements.Add("000100001");
+        tutorialRequirements.Add("101000000");
         tutorialRequirements.Add("100000000");
         tutorialRequirements.Add("100000000");
-        tutorialRequirements.Add("000010000");
+        tutorialRequirements.Add("001000000");
+        tutorialRequirements.Add("101000001");
+        tutorialRequirements.Add("000000010");
+        tutorialRequirements.Add("000000100");
 
         levelReq = new Dictionary<int, int>();
         levelReq.Add(1, 10);
@@ -61,7 +67,6 @@ public class TutorialManager : MonoBehaviour {
     void Start () {
         leftEvents = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
         rightEvents = GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>();
-
 
         leftEvents.TouchpadPressed += DoLeftTouchpadPress;
         rightEvents.TouchpadPressed += DoRightTouchpadPress;
@@ -134,9 +139,22 @@ public class TutorialManager : MonoBehaviour {
         tutorialProgress = newLevel;
     }
 
-    void CheckTutorialProgress()
+    public void AddSphere(TutorialTracker tracker)
     {
-        if(U.CompareStrings(GetStateString(), tutorialRequirements[tutorialProgress]))
+        TutorialTracker check;
+        spheres.TryGetValue(tracker.trackerLevel, out check);
+        if(!check)
+        {
+            spheres.Add(tracker.trackerLevel, tracker);
+        }
+    }
+
+    void CheckTutorialProgress()
+    // Checks to see if tutorial is completed
+    {
+        SphereCheck();
+
+        if (U.CompareStrings(GetStateString(), tutorialRequirements[tutorialProgress]))
         {
             leftTouchpadPress = false;
             rightTouchpadPress = false;
@@ -150,11 +168,30 @@ public class TutorialManager : MonoBehaviour {
             PopupManager.Popup(tutorialStrings[tutorialProgress]);
 
             //PopupManager.Popup("Tutorial stage " + tutorialProgress + " completed, reach " + GetLevelReq() + " population to level up and continue");
+            // Tutorial progress complete here
 
             tutorialProgress++;
-            // Tutorial progress complete here
+            
             //ProgressionManager.TryLevelUp();
         }
+    }
+
+    void SphereCheck()
+    // Checks if next level has a sphere
+    {
+        TutorialTracker check;
+        spheres.TryGetValue(tutorialProgress, out check);
+        if(check)
+        // Level has a sphere
+        {
+            EnableSphere(check);
+        }
+    }
+
+    void EnableSphere(TutorialTracker sphere)
+    // Called if tutorial level has a sphere
+    {
+        sphere.gameObject.SetActive(true);
     }
 
     int GetLevelReq()
@@ -165,6 +202,7 @@ public class TutorialManager : MonoBehaviour {
     }
 
     string GetStateString()
+    // Wheeeee! if if if if if if if if if if......
     {
         string returnString = "";
         if (leftTouchpadPress)
@@ -216,15 +254,17 @@ public class TutorialManager : MonoBehaviour {
     }
 
     void SetupTutorial()
+    // Use this for scripting strings
     {
         tutorialStrings.Add(0, "Great! Now it's time to add in our first building. \n Click the left trackpad to open up the buildings menu");
-        tutorialStrings.Add(1, "Well done. You can swipe between the building types by swiping on the left trackpad. \n Try that now, then press the left trackpad to select Residential");
-        tutorialStrings.Add(2, "These are residential buildings. Select a building by scrolling with your left trackpad.\n Once a valid building is selected, pull the left trigger to purchase");
-        tutorialStrings.Add(3, "Your people need more places to work! Let's add a small shop nearby. Open up the building menu again, and add a commercial building");
-        tutorialStrings.Add(4, "Good work. You can also keep a closer eye on the development of individual buildings by pressing the right menu button");
-        tutorialStrings.Add(6, "Let's upgrade it with some industrial components. Open up the building panel, and add one in now.");
-        tutorialStrings.Add(7, "You can check the effects of each component by viewing the building stats tooltip with the right menu button");
-
+        tutorialStrings.Add(1, "Well done. Clicking the top half of the left trackpad selects or advances, and the bottom half goes back. \n Try selecting the first building category now.");
+        tutorialStrings.Add(2, "These are residential buildings. Select a building by scrolling side to side with your left trackpad.\n Once a valid building is selected, press the top half of the left trackpad to purchase");
+        tutorialStrings.Add(3, "Good job. Now, to move your new building, try grabbing it with either controller's bumper buttons.\n When you are ready to continue, exit the building UI.");
+        tutorialStrings.Add(4, "Try viewing the global info panel by touching the left trackpad with your thumb.");
+        tutorialStrings.Add(5, "Your citizens are unhappy! You can manage happiness by adding jobs, shops and landscaping. \n Try adding a shop in now (Second menu panel)");
+        tutorialStrings.Add(6, "Great, now your citizens can find work! You can check on individual buildings' progress \n by viewing the building stats tooltip with the right menu button.");
+        tutorialStrings.Add(7, "Now it's time to explore what you've created! \n Press the left menu button to toggle between first person mode. \n Flight in first person is limited to walking height.");
+        tutorialStrings.Add(8, "Ok, now it's up to you! Don't forget to add offices and factories as your population grows to keep them occupied!");
     }
 
     IEnumerator TutorialChecker()

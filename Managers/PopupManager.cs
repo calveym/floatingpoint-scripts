@@ -43,10 +43,10 @@ public class PopupManager : MonoBehaviour {
         while (queuedPopups.Count > 0)
         {
             AudioSource.PlayClipAtPoint(notificationSound, tooltip.gameObject.transform.position);
+            U.LeftPulse(1000);
             tooltip.text = queuedPopups[0];
             popup.SetActive(true);
             queuedPopups.RemoveAt(0);
-            SteamVR_Controller.Input(0).TriggerHapticPulse(500);
             yield return new WaitForSeconds(WAIT_TIME);
         }
         if (queuedPopups.Count == 0)

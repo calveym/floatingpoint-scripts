@@ -107,4 +107,24 @@ public static class U : object {
         }
         return completed;
     }
+
+    public static void LeftPulse()
+    {
+        SteamVR_Controller.Input(1).TriggerHapticPulse(500);
+    }
+
+    public static void LeftPulse(int time)
+    {
+        SteamVR_Controller.Input(1).TriggerHapticPulse((ushort)time);
+    }
+
+    public static void RightPulse()
+    {
+        SteamVR_Controller.Input(2).TriggerHapticPulse(500);
+    }
+
+    public static void RightPulse(int time)
+    {
+        SteamVR_Controller.Input(2).TriggerHapticPulse((ushort)time);
+    }
 }

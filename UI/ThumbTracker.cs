@@ -112,6 +112,7 @@ public class ThumbTracker : MonoBehaviour {
 
         if (swipe > swipeReq)
         {
+            U.LeftPulse();
             if(displayUI.showBuildings && angleIncrement + 4 < spawnManager.GetNumBuildings(selection))
             {
                 angleIncrement++;

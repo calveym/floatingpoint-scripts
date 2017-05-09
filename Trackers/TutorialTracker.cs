@@ -18,7 +18,9 @@ public class TutorialTracker : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         manager = GameObject.Find("Managers").GetComponent<TutorialManager>();
+        manager.AddSphere(this);
         rend = GetComponent<MeshRenderer>();
+        gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
