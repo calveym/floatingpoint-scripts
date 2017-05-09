@@ -16,7 +16,7 @@ public class PopupManager : MonoBehaviour {
 
     void Start()
     {
-        WAIT_TIME = 5;
+        WAIT_TIME = 10f;
         queuedPopups = new List<string>();
         tooltip = popup.transform.Find("TooltipCanvas/UIContainer/UITextFront").GetComponent<Text>();
         QueuePopup("Welcome to CloudCity! It's time to start building your city!\n Fly over to the blue orb by touching the top half of the right trackpad ");
@@ -46,6 +46,7 @@ public class PopupManager : MonoBehaviour {
             tooltip.text = queuedPopups[0];
             popup.SetActive(true);
             queuedPopups.RemoveAt(0);
+            SteamVR_Controller.Input(0).TriggerHapticPulse(500);
             yield return new WaitForSeconds(WAIT_TIME);
         }
         if (queuedPopups.Count == 0)
