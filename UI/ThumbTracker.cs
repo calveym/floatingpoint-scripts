@@ -127,6 +127,7 @@ public class ThumbTracker : MonoBehaviour {
         }
         else if(swipe < -swipeReq)
         {
+            U.LeftPulse();
             if (displayUI.showBuildings && angleIncrement >= 1)
             {
                 angleIncrement--;

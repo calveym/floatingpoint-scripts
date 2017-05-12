@@ -8,56 +8,45 @@ public class ResidentialTracker : ItemTracker {
 
     public int employmentHappiness;
     public int unemployedPopulation;
-    public Dictionary <int, int> educationLevel; // maps individual residents to their education levels
-    public Dictionary <int, int> age; // maps individual residents to their age
-    public Dictionary <int, bool> employed; // matches residents with employment status
-    public Dictionary<int, string> residents; // matches slots to residents
-    List<int> takenIDs; // List of currently active IDs for finding new ones
 
     float foliage;
+    bool checkEnable;
 
     new void Start()
     {
         base.Start();
-        educationLevel = new Dictionary<int, int>();
-        age = new Dictionary<int, int>();
-        employed = new Dictionary<int, bool>();
-        residents = new Dictionary<int, string>();
-        takenIDs = new List<int>();
         foliage = 0;
+        StartCoroutine("CheckEnable");
     }
 
     void Update()
     {
         if (!updateStarted && usable)
         {
+            Debug.Log("Trying to start update");
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
             itemManager.addResidential(capacity, gameObject);
+            Debug.Log("UpdateStarted");
         }
         else if(updateStarted && !usable)
         {
             updateStarted = false;
             EconomyManager.ecoTick -= UpdateSecond;
         }
+        else if(!usable && !updateStarted)
+        {
+            checkEnable = true;
+        }
     }
 
-    public void AddUsers(int numUsers, List<string> names, int newAge)
+    new public void AddUsers(int numUsers)
     // Adds numUsers to users if capacity is not exceeded
     {
         if (numUsers + users <= capacity)
         {
             users += numUsers;
-            for(int i = 0; i < numUsers; i++)
-            {
-                int newID = FindAvailableID();
-                educationLevel.Add(newID, 0);
-                age.Add(newID, newAge); 
-                employed.Add(newID, false);
-                unemployedPopulation++;
-                residents.Add(newID, names[i]);
-                takenIDs.Add(newID);
-            }
+            unemployedPopulation += numUsers;
         }
         else
         {
@@ -66,24 +55,13 @@ public class ResidentialTracker : ItemTracker {
         }
     }                     
 
-    int FindAvailableID()
-    // Finds next lowest available resident ID
+    public void RemoveAllUsers()
     {
-        int availableID = users + 1;
-        for(int i = 0; i <= takenIDs.Count; i++)
-        {
-            if (!takenIDs.Contains(i))
-            {
-                availableID = i;
-                break;
-            }
-        }
-        return availableID;
+        // TODO: Inform employment location of vacancies
     }
 
-    public void AcceptApplication(int acceptedApplicantID)
+    public void AcceptApplication()
     {
-        employed[acceptedApplicantID] = true;
         unemployedPopulation--;
         populationManager.unemployedPopulation--;
         populationManager.QueueUpdates();
@@ -92,20 +70,22 @@ public class ResidentialTracker : ItemTracker {
     public void TryEmployWorker()
     // Called by populationManager
     {
-        int unemployedID = employed.FirstOrDefault(x => x.Value == false).Key;
         GameObject employmentLocation = FindPreferredEmployment();
-        ApplyForJob(employmentLocation, unemployedID);
+        if(employmentLocation)
+        {
+            ApplyForJob(employmentLocation);
+        }
     }
 
-    void ApplyForJob(GameObject targetLocation, int residentID)
+    void ApplyForJob(GameObject targetLocation)
     {
         if(targetLocation.tag == "commercial")
         {
-            targetLocation.GetComponent<CommercialTracker>().Apply(landValue, residentID, this);
+            targetLocation.GetComponent<CommercialTracker>().Apply(landValue, this);
         }
         else if (targetLocation.tag == "industrial")
         {
-            targetLocation.GetComponent<IndustrialTracker>().Apply(landValue, residentID, this);
+            targetLocation.GetComponent<IndustrialTracker>().Apply(landValue, this);
         }
     }
 
@@ -181,11 +161,6 @@ public class ResidentialTracker : ItemTracker {
         return returnObject;
     }
 
-    public bool IsEmployed(int ID)
-    {
-        return employed[ID];
-    }
-
     public void UpdateSecond()
     // Updates values once per second
     {
@@ -220,8 +195,7 @@ public class ResidentialTracker : ItemTracker {
 
     void CalculateIncome()
     {
-        income = users * (1 + (landValue * 0.01f)) * (happinessState);
-        income += foliageIncome;
+        income = users * (1 + (landValue * 0.01f)) * (longtermHappiness / 20);
         income -= baseCost;
         totalResidentialIncome += income;
     }
@@ -258,5 +232,21 @@ public class ResidentialTracker : ItemTracker {
     public string FancyTitle()
     {
         return ValidPosition();
+    }
+
+    IEnumerator CheckEnable()
+    {
+        while(true)
+        {
+            if(checkEnable)
+            {
+                checkEnable = false;
+                if(transform.parent == null)
+                {
+                    usable = true;
+                }
+            }
+            yield return new WaitForSeconds(5);
+        }
     }
 }

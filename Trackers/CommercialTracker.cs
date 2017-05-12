@@ -1,5 +1,5 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CommercialTracker : ItemTracker {
@@ -13,10 +13,16 @@ public class CommercialTracker : ItemTracker {
 
     public float goodsSold;
     public float goodsAvailable;
+    bool checkEnable;
+
+    List<ResidentialTracker> employees;
+
+
 
     new void Start()
     {
         base.Start();
+        employees = new List<ResidentialTracker>();
         EconomyManager.ecoTick += UpdateSecond;
     }
 
@@ -33,9 +39,13 @@ public class CommercialTracker : ItemTracker {
             updateStarted = false;
             EconomyManager.ecoTick -= UpdateSecond;
         }
+        else if (!usable && !updateStarted)
+        {
+            checkEnable = true;
+        }
     }
 
-    public void Apply(float applicantLandValue, int residentID, ResidentialTracker applicantTracker)
+    public void Apply(float applicantLandValue, ResidentialTracker applicantTracker)
     {
         // TODO: the application is considered by the tracker, and the value of residential land has
         // an impact on the final decision, along with an element of chance
@@ -48,22 +58,23 @@ public class CommercialTracker : ItemTracker {
                      landValue - 5 + 5 * randStdNormal; //random normal(mean,stdDev^2)
         if (applicantLandValue > randNormal && usable && users < capacity)
         {
-            AcceptApplication(residentID, applicantTracker);
+            AcceptApplication(applicantTracker);
         }
-        else RejectApplication(residentID, applicantTracker);
+        else RejectApplication(applicantTracker);
     }
 
-    void AcceptApplication(int residentID, ResidentialTracker applicantTracker)
+    void AcceptApplication(ResidentialTracker applicantTracker)
     {
-        if (!applicantTracker.IsEmployed(residentID))
+        if (applicantTracker.unemployedPopulation >= 1)
         {
             AddUsers(1);
-            applicantTracker.AcceptApplication(residentID);
+            employees.Add(applicantTracker);
+            applicantTracker.AcceptApplication();
         }
-        else RejectApplication(residentID, applicantTracker);
+        else RejectApplication(applicantTracker);
     }
 
-    void RejectApplication(int residentID, ResidentialTracker applicantTracker)
+    void RejectApplication(ResidentialTracker applicantTracker)
     {
         // TODO
     }
@@ -88,9 +99,17 @@ public class CommercialTracker : ItemTracker {
         }
     }
 
+    public void RemoveAllUsers()
+    {
+        foreach(ResidentialTracker res in employees)
+        {
+            res.unemployedPopulation++;
+        }
+    }
+
     void UpdateVisitors()
     {
-        visitors = populationManager.population - populationManager.unemployedPopulation; // TODOA: MAKE THIS ONLY LOCAL
+        visitors = U.NumResidents(U.ReturnResidentialTrackers(U.FindNearestBuildings(transform.position, users * 2)));
     }
 
     void UpdateSalesHappiness()
@@ -117,8 +136,8 @@ public class CommercialTracker : ItemTracker {
         UpdateTransportationValue();
         UpdateVisitors();
         SellGoods();
-        income = goodsSold;
-        totalIndustrialIncome += income;
+        income = visitors * (1 + (landValue * 0.01f)) * (happinessState) - baseCost;
+        totalCommercialIncome += income;
     }
 
     void UpdateHappiness()
@@ -170,5 +189,21 @@ public class CommercialTracker : ItemTracker {
     public string FancyLandValue()
     {
         return "Land Value: $" + landValue;
+    }
+
+    IEnumerator CheckEnable()
+    {
+        while (true)
+        {
+            if (checkEnable)
+            {
+                checkEnable = false;
+                if (transform.parent.transform.parent.transform.parent.gameObject.name != "UI")
+                {
+                    usable = true;
+                }
+            }
+            yield return new WaitForSeconds(5);
+        }
     }
 }

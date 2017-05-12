@@ -48,14 +48,20 @@ public class EconomyManager : MonoBehaviour {
     public delegate void TickDelegate();
 
     public static TickDelegate ecoTick;  // Multicast delegate run once per economic tick
+    public static TickDelegate foliageTick;  // Multicast delegate for foliage, extracted to reduce potential crashes
 
     IEnumerator EconomicTick()
     {
         while (keepUpdating)
         {
+
             if (ecoTick != null)
             {
                 ecoTick();
+            }
+            if(foliageTick != null)
+            {
+                foliageTick();
             }
 
             ResidentialTracker.historicResidentialIncome = ResidentialTracker.totalResidentialIncome;
@@ -105,7 +111,7 @@ public class EconomyManager : MonoBehaviour {
         float industrialIncome = CalculateIndustrialIncome();
 
         float expenses = roadExpenses + CalculateCapacityExpenses();
-		income = rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses;
+		income = (rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses) * 0.25f;
 	}
 
     float CalculateCapacityExpenses()

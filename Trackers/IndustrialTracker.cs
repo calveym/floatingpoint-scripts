@@ -11,6 +11,7 @@ public class IndustrialTracker : ItemTracker {
     Marker marker;
     List<IndustrialComponent> components;
     List<float> sales; // List of recent sales counted in goodsSold
+    List<ResidentialTracker> employees;
 
     public float productionHappiness; // Happiness from reaching sales targets
 
@@ -31,9 +32,12 @@ public class IndustrialTracker : ItemTracker {
     public float sellAmountMulti;
 
     float goodsSold;  // Number of goods sold last week
+    bool checkEnable;
+
 
     void Awake()
     {
+        employees = new List<ResidentialTracker>();
         sales = new List<float>();
         components = new List<IndustrialComponent>();
         goodsSold = 0;
@@ -41,6 +45,7 @@ public class IndustrialTracker : ItemTracker {
         goodsCapacityMulti = 1;
         sellPriceMulti = 1;
         sellAmountMulti = 1;
+        StartCoroutine("CheckEnable");
     }
 
     new void Start()
@@ -62,18 +67,22 @@ public class IndustrialTracker : ItemTracker {
             updateStarted = false;
             EconomyManager.ecoTick -= UpdateSecond;
         }
+        else if (!usable && !updateStarted)
+        {
+            checkEnable = true;
+        }
     }
 
     void ProduceGoods()
     {
-        goodsProduced = users * happinessState * productionMulti;
+        goodsProduced = users * productionMulti * longtermHappiness / 20;
 
-        income = goodsProduced * sellPrice * sellPriceMulti;
+        income = goodsProduced * sellPrice * sellPriceMulti * (1 + (landValue * 0.01f));
         income -= baseCost;
         allGoods += goodsProduced;
     }
 
-    public void Apply(float applicantLandValue, int residentID, ResidentialTracker applicantTracker)
+    public void Apply(float applicantLandValue, ResidentialTracker applicantTracker)
     {
         System.Random rand = new System.Random(); //reuse this if generating many
         double u1 = 1.0 - rand.NextDouble(); //uniform(0,1] random doubles
@@ -84,25 +93,34 @@ public class IndustrialTracker : ItemTracker {
                      landValue - 5 + 5 * randStdNormal; //random normal(mean,stdDev^2)
         if (usable && users < capacity) // TODO: ADD LAND VALUE CHECKS BACK IN
         {
-            AcceptApplication(residentID, applicantTracker);
+            AcceptApplication(applicantTracker);
         }
-        else RejectApplication(residentID, applicantTracker);
+        else RejectApplication(applicantTracker);
     }
 
-    void AcceptApplication(int residentID, ResidentialTracker applicantTracker)
+    void AcceptApplication(ResidentialTracker applicantTracker)
     {
-        if (!applicantTracker.IsEmployed(residentID))
+        if (applicantTracker.unemployedPopulation >= 1)
         {
             AddUsers(1);
-            applicantTracker.AcceptApplication(residentID);
+            employees.Add(applicantTracker);
+            applicantTracker.AcceptApplication();
         }
-        else RejectApplication(residentID, applicantTracker);
+        else RejectApplication(applicantTracker);
     }
 
-    void RejectApplication(int residentID, ResidentialTracker applicantTracker)
+    void RejectApplication(ResidentialTracker applicantTracker)
     {
         // TODO:
         Debug.Log("Applicant rejected!!!");
+    }
+
+    public void RemoveAllUsers()
+    {
+        foreach (ResidentialTracker res in employees)
+        {
+            res.unemployedPopulation++;
+        }
     }
 
     public void AddMarker()
@@ -219,5 +237,21 @@ public class IndustrialTracker : ItemTracker {
     public void MarkWithComponent()
     {
         StartCoroutine("MarkWithComponent");
+    }
+
+    IEnumerator CheckEnable()
+    {
+        while (true)
+        {
+            if (checkEnable)
+            {
+                checkEnable = false;
+                if (transform.parent == null)
+                {
+                    usable = true;
+                }
+            }
+            yield return new WaitForSeconds(5);
+        }
     }
 }

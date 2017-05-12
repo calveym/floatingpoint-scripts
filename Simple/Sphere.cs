@@ -9,6 +9,11 @@ public class Sphere : MonoBehaviour
     MeshRenderer rend;
     bool linked;
 
+    void Awake()
+    {
+
+    }
+
     private void Start()
     {
         rend = gameObject.GetComponent<MeshRenderer>();
@@ -26,6 +31,7 @@ public class Sphere : MonoBehaviour
         rend.enabled = false;
         parent = null;
         linked = false;
+        Destroy(gameObject);
     }
 
     public IEnumerator AdjustPosition()

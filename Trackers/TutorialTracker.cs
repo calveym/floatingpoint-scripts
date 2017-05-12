@@ -15,6 +15,11 @@ public class TutorialTracker : MonoBehaviour {
     TutorialManager manager;
     MeshRenderer rend;
 
+    private void Awake()
+    {
+
+    }
+
 	// Use this for initialization
 	void Start () {
         manager = GameObject.Find("Managers").GetComponent<TutorialManager>();

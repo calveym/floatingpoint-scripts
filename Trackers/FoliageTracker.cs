@@ -1,94 +1,68 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using VRTK;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class FoliageTracker : VRTK_InteractableObject {
+
+    float radius;
+    float affectAmount;
+    static ItemManager itemManager;
+    public HappinessAffector happinessAffector;
 
     VRTK_InteractableObject interact;
     GameObject spherePrefab;
     GameObject sphere;
     Vector3 oldPosition;
-    bool working;
-    public bool usable;
     bool grabbed;
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
 
     void Start()
     {
-        spherePrefab = GameObject.Find("SpherePrefab");
-        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn +=
-            DoFoliageGrabStart;
-        GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn +=
-            DoFoliageGrabStart;
-
-        // Add listeners for controller release to both controllers
-        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff +=
-            DoFoliageGrabEnd;
-        GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff +=
-            DoFoliageGrabEnd;
-
-        usable = true;
-    }
-    
-    public void DoFoliageGrabStart(object sender, ControllerInteractionEventArgs e)
-    {
-        if(IsGrabbed())
+        if(!itemManager)
         {
-            grabbed = true;
-            AttachSphere();
+            itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
         }
+        happinessAffector = GetComponent<HappinessAffector>();
+        happinessAffector.enabled = true;
+        radius = happinessAffector.radius;
+        affectAmount = happinessAffector.affectAmount;
+        itemManager.addFoliage((int)affectAmount, gameObject);
+        spherePrefab = GameObject.Find("SpherePrefab");
+
+        InteractableObjectGrabbed += new InteractableObjectEventHandler(DoFoliageGrabStart);
+        InteractableObjectUngrabbed += new InteractableObjectEventHandler(DoFoliageGrabEnd);
     }
 
-    public void DoFoliageGrabEnd(object sender, ControllerInteractionEventArgs e)
+    public void DoFoliageGrabStart(object sender, InteractableObjectEventArgs e)
+    {
+        grabbed = true;
+        AttachSphere();
+    }
+
+    public void DoFoliageGrabEnd(object sender, InteractableObjectEventArgs e)
     {
         if(grabbed)
         {
+            grabbed = false;
             DetachSphere();
             oldPosition = transform.position;
-            working = true;
-            StartCoroutine("FoliageTick");
         }
     }
 
     void AttachSphere()
     {
         sphere = Instantiate(spherePrefab, new Vector3(transform.position.x, 10.1f, transform.position.z), Quaternion.identity);
+        sphere.transform.localScale = new Vector3(radius, 0.1f, radius);
         sphere.GetComponent<Sphere>().LinkSphere(gameObject);
     }
 
     void DetachSphere()
     {
         sphere.GetComponent<Sphere>().UnlinkSphere();
-        Destroy(sphere.gameObject);
-    }
-
-    public void UpgradeBuildings()
-    {
-        Vector3 center = transform.position;
-        float radius = 5f;
-        Collider[] hitColliders = Physics.OverlapSphere(center, radius);
-        int i = 0;
-        while (i < hitColliders.Length)
-        {
-            if(hitColliders[i].tag == "residential")
-            {
-                hitColliders[i].gameObject.GetComponent<ResidentialTracker>().ModifyHappiness(3f, "foliage");
-            }
-            i++;
-        }
-    }
-
-    float Size()
-    {
-        return transform.localScale.x * transform.localScale.y * transform.localScale.z;
-    }
-
-    public IEnumerator FoliageTick()
-    {
-        while(working && usable)
-        {
-            UpgradeBuildings();
-            yield return new WaitForSeconds(10);
-        }
     }
 }

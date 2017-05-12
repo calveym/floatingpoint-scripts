@@ -10,7 +10,10 @@ public class TrackpadFlight : MonoBehaviour {
     Rigidbody rb;
     GameObject head;
     PlayerScale scale;
+    [Tooltip("Warning: not set in editor")]
     public float speedMultiplier; // DO NOT SET IN EDITOR
+    [Tooltip("AudioClip used for wind effect")]
+    public AudioClip wind;
 
     float speed;
     bool stop;
@@ -31,6 +34,7 @@ public class TrackpadFlight : MonoBehaviour {
     void DoTouchpadTouchStart(object sender, ControllerInteractionEventArgs e)
     {
         stop = false;
+        AudioManager.instance.PlayLoop(wind);
         StartCoroutine("Fly");
     }
     
@@ -64,6 +68,10 @@ public class TrackpadFlight : MonoBehaviour {
                 rig.transform.position += (newMoveVector * speed * forward * Time.deltaTime);
             }
             yield return null;
+        }
+        if(stop)
+        {
+            AudioManager.instance.TryStopEfx(wind);
         }
     }
 

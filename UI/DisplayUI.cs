@@ -132,7 +132,6 @@ public class DisplayUI : MonoBehaviour {
     {
         if(!displaying && showingGlobalStats)
         {
-            Debug.Log("Not getting through");
             HideUI();
         }
     }
@@ -163,7 +162,6 @@ public class DisplayUI : MonoBehaviour {
             {
                 if(showBuildings)
                 {
-                    Debug.Log("Tryna purchase building");
                     spawnManager.PurchaseBuilding();
                 }
                 else

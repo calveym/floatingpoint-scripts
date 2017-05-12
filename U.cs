@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class U : object {
+public class U : MonoBehaviour {
+
+    private void Awake()
+    {
+
+    }
 
     public static List <GameObject> FindNearestBuildings (Vector3 position, float radius )
     {
@@ -75,6 +80,16 @@ public static class U : object {
         }
 
         return returnObject;
+    }
+
+    public static int NumResidents(List<ResidentialTracker> allBuildings)
+    {
+        int returnValue = 0;
+        foreach(ResidentialTracker res in allBuildings)
+        {
+            returnValue += res.users;
+        }
+        return returnValue;
     }
 
     public static string IntToTag(int value)

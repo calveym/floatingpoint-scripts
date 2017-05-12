@@ -8,38 +8,48 @@ public class HappinessAffector : MonoBehaviour {
     public float affectAmount;
     public string affectType;
 
-	// Use this for initialization
-	void Start () {
-        EconomyManager.ecoTick += StartAffect;	
+    public bool usable;
+
+    private void Awake()
+    {
+        usable = false;
+    }
+
+    // Use this for initialization
+    void Start () {
+        EconomyManager.foliageTick += StartAffect;
 	}
 	
     public void StartAffect()
     {
-        List<GameObject> surroundingBuildings = U.FindNearestBuildings(transform.position, radius);
-        foreach (GameObject building in surroundingBuildings)
+        if(usable)
         {
-            if (building.tag == "residential")
+            List<GameObject> surroundingBuildings = U.FindNearestBuildings(transform.position, radius);
+            foreach (GameObject building in surroundingBuildings)
             {
-                if(affectType == "industrialReduce")
+                if (building.tag == "residential")
                 {
-                    building.GetComponent<ResidentialTracker>().ModifyHappiness(affectAmount, "industrialReduce");
+                    if (affectType == "industrialReduce")
+                    {
+                        building.GetComponent<ResidentialTracker>().ModifyHappiness(affectAmount, "industrialReduce");
+                    }
+                    else
+                    {
+                        building.GetComponent<ResidentialTracker>().ModifyHappiness(affectAmount, "");
+                    }
                 }
-                else
+                else if (building.tag == "industrial")
                 {
-                    building.GetComponent<ResidentialTracker>().ModifyHappiness(affectAmount, "");
+                    building.GetComponent<IndustrialTracker>().ModifyHappiness(affectAmount, "");
                 }
-            }
-            else if(building.tag == "industrial")
-            {
-                building.GetComponent<IndustrialTracker>().ModifyHappiness(affectAmount, "");
-            }
-            else if(building.tag == "commercial")
-            {
-                building.GetComponent<CommercialTracker>().ModifyHappiness(affectAmount, "");
-            }
-            else if(building.tag == "leisure")
-            {
-                building.GetComponent<LeisureTracker>().ModifyHappiness(affectAmount, "");
+                else if (building.tag == "commercial")
+                {
+                    building.GetComponent<CommercialTracker>().ModifyHappiness(affectAmount, "");
+                }
+                else if (building.tag == "leisure")
+                {
+                    building.GetComponent<LeisureTracker>().ModifyHappiness(affectAmount, "");
+                }
             }
         }
     }

@@ -63,6 +63,14 @@ public class SpawnController : MonoBehaviour {
         {
             SizeForPlay();
             DeselectBuilding();
+            if (containedBuilding.tag == "industrial")
+            // Smoke deactivation
+            {
+                foreach (Transform child in containedBuilding.transform)
+                {
+                    child.gameObject.SetActive(true);
+                }
+            }
             EconomyManager.ChangeBalance(price);
             EnablePhysics();
             if (containedType == 0)
@@ -250,7 +258,7 @@ public class SpawnController : MonoBehaviour {
     void EnableFoliage()
     {
         price = 25f;
-        fol.usable = true;
+        fol.happinessAffector.usable = true;
     }
 
     void DisablePhysics()
@@ -318,7 +326,7 @@ public class SpawnController : MonoBehaviour {
         else if (containedType == 5)
         {
             fol = containedBuilding.GetComponent<FoliageTracker>();
-            fol.usable = false;
+            fol.happinessAffector.usable = false;
         }
     }
 

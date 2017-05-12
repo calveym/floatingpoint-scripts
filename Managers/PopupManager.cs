@@ -42,7 +42,7 @@ public class PopupManager : MonoBehaviour {
         running = true;
         while (queuedPopups.Count > 0)
         {
-            AudioSource.PlayClipAtPoint(notificationSound, tooltip.gameObject.transform.position);
+            AudioManager.instance.PlaySingle(notificationSound);
             U.LeftPulse(1000);
             tooltip.text = queuedPopups[0];
             popup.SetActive(true);

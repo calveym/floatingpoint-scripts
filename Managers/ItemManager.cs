@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour {
 
-	// Declare other managers
+    // Declare other managers
+    PopulationManager populationManager;
 	EconomyManager economyManager;
 	RoadGenerator roadGenerator;
 	ContractManager contractManager;
@@ -52,10 +53,12 @@ public class ItemManager : MonoBehaviour {
         fiveUpdate += Empty;
         tenUpdate += Empty;
 		economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
+        populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
 		roadGenerator = GameObject.Find("Island").GetComponent<RoadGenerator>();
         // contractmanager = GameObject.Find("Managers").GetComponent<ContractManager>();
         StartCoroutine("FiveUpdate");
         StartCoroutine("TenUpdate");
+        Debug.LogError("Open logs");
 	}
 
 	public int getNumRoads()
@@ -110,8 +113,10 @@ public class ItemManager : MonoBehaviour {
     public void removeResidential(GameObject removeObject)
     // Removes residential building
     {
-        residentialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
-        removeObject.GetComponent<ItemTracker>().RemoveAllUsers();
+        ResidentialTracker temp = removeObject.GetComponent<ResidentialTracker>();
+        residentialCap -= removeObject.GetComponent<ResidentialTracker>().GetCapacity();
+        temp.RemoveAllUsers();
+        populationManager.DeallocateUsers(temp.users, "residential");
         numResidential--;
         residential.Remove(removeObject);
     }
@@ -119,7 +124,10 @@ public class ItemManager : MonoBehaviour {
     public void removeCommercial(GameObject removeObject)
     // Removes commercial building
     {
-        commercialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
+        CommercialTracker temp = removeObject.GetComponent<CommercialTracker>();
+        commercialCap -= temp.capacity;
+        temp.RemoveAllUsers();
+        populationManager.DeallocateUsers(temp.users, "commercial");
         numCommercial--;
         commercial.Remove(removeObject);
     }
@@ -127,7 +135,10 @@ public class ItemManager : MonoBehaviour {
     public void removeIndustrial(GameObject removeObject)
     // Remove an industrial building
     {
-        industrialCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
+        IndustrialTracker temp = removeObject.GetComponent<IndustrialTracker>();
+        industrialCap -= temp.capacity;
+        temp.RemoveAllUsers();
+        populationManager.DeallocateUsers(temp.users, "commercial");
         numIndustrial--;
         industrial.Remove(removeObject);
     }
@@ -143,7 +154,7 @@ public class ItemManager : MonoBehaviour {
     public void removeFoliage(GameObject removeObject)
     // Remove foliage
     {
-        foliageCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
+        foliageCap -= (int)removeObject.GetComponent<HappinessAffector>().affectAmount;
         numLeisure--;
         leisure.Remove(removeObject);
     }

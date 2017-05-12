@@ -33,10 +33,11 @@ public class ItemTracker : MonoBehaviour {
     public float numSnappedRoads;
     public bool updateStarted;
     public bool validPosition;
-    public float foliageIncome;
     public float landValue;
 
+    [Range(-20f, 40f)]
     public float localHappiness; // Happiness based on number of nice surroundings
+
     public float fillRateHappiness; // Happiness based on fill rate (users / cap * 40)
     public float addedHappiness; // Temporary tracking figure
     public float currentHappiness;  // Used to affect longterm happiness- longerm happiness tends towards this number
@@ -92,19 +93,23 @@ public class ItemTracker : MonoBehaviour {
     public void UpdateLocalHappiness()
     //  Sets local happiness level based on surroundings
     {
-        if(addedHappiness < 40)
+        if(addedHappiness < 40 && addedHappiness > -20)
         {
             localHappiness = addedHappiness;
         }
-        else
+        else if(addedHappiness >= 40)
         {
             localHappiness = 40;
+        }
+        else if(addedHappiness <= -20)
+        {
+            localHappiness = -20;
         }
         addedHappiness = 0;
 
         if(capacity != 0)
         {
-            fillRateHappiness = (users / capacity) * 20;
+            fillRateHappiness = ((float)users / (float)capacity) * 20;
         }
         happinessManager.SendHappiness(happinessState);
     }
@@ -137,21 +142,12 @@ public class ItemTracker : MonoBehaviour {
     void DeallocateUsers(int numUsers)
     // Returns unallocated users to the populationManager
     {
-        populationManager.DeallocateUsers(numUsers, type);
-        users -= numUsers;
-    }
+        if(gameObject.tag == "residential")
+        {
+            populationManager.DeallocateUsers(numUsers, type);
+            users -= numUsers;
+        }
 
-    public void RemoveAllUsers()
-    // Removes all local and related itemManager users
-    {
-        if(type == "residential")
-        {
-            DeallocateUsers(users);
-        }
-        else if(type == "commercial" || type == "industrial")
-        {
-            // TODO: Write employment deallocation function in popman
-        }
     }
 
     public int NumEmpty()
@@ -221,7 +217,7 @@ public class ItemTracker : MonoBehaviour {
         }
         else
         {
-            longtermHappiness += (currentHappiness - longtermHappiness) * 0.1f;
+            longtermHappiness += (currentHappiness - longtermHappiness) * 0.05f;
         }
     }
 

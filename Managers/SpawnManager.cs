@@ -54,7 +54,6 @@ public class SpawnManager : MonoBehaviour {
 
     public void PurchaseBuilding()
     {
-        Debug.Log("Running here");
         if(!displayUI)
         {
             displayUI = GameObject.Find("UI").GetComponent<DisplayUI>();

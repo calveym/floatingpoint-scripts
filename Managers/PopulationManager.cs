@@ -61,7 +61,6 @@ public class PopulationManager : MonoBehaviour {
         EconomyManager.ecoTick += PopulationUpdate;
 
         QueueUpdates();
-
     }
 
     void PopulationUpdate ()
@@ -101,11 +100,13 @@ public class PopulationManager : MonoBehaviour {
         {
             foreach(ResidentialTracker residentialTracker in residentialTrackers)
             {
+                // First add empty users
                 if (residentialTracker.NumEmpty() > 0 && residentialTracker.usable == true)
                 {
                     emptyResidential.Add(residentialTracker);
                     numEmptyResidential.Add(residentialTracker.NumEmpty());
                 }
+                // Then add employment
                 if(residentialTracker.unemployedPopulation > 0)
                 {
                     residentialWithUnemployed.Add(residentialTracker);
@@ -183,7 +184,7 @@ public class PopulationManager : MonoBehaviour {
 				unemployedPopulation += numAdded;
                 unallocatedPopulation -= numAdded;
                 numEmptyResidential[i] -= numAdded;
-                emptyResidential[i].AddUsers(numAdded, GenerateNames(numAdded), 20);
+                emptyResidential[i].AddUsers(numAdded);
             }
         }
     }
@@ -232,7 +233,7 @@ public class PopulationManager : MonoBehaviour {
     // Tries to increase population
     {
         happiness = happinessManager.happiness;
-        residentialDemand += 0.1f + happiness * Time.deltaTime * 1000;
+        residentialDemand += (0.1f + happiness) * Time.deltaTime * 25;
         if (residentialDemand >= 1 )
         {
             unallocatedPopulation++;
@@ -244,15 +245,14 @@ public class PopulationManager : MonoBehaviour {
     public void DeallocateUsers(int numUsers, string type)
     // Adds users back to unallocatedPopulation for future reallocation
     {
-		if(type == "res")
+		if(type == "residential")
 		{
 	        population -= numUsers;
 	        unallocatedPopulation += numUsers;
 		}
-		else if(type == "ind" || type == "com")
+		else if(type == "industrial" || type == "commercial")
 		{
-            population -= numUsers;
-            unallocatedPopulation += numUsers;
+            unemployedPopulation += numUsers;
             // TODO: need to inform resitrack of newly unemployed
         }
     }
