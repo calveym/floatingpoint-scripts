@@ -98,6 +98,8 @@ public class AudioManager : MonoBehaviour {
     void UpdateTime()
     {
         time += 0.1f;
+        if(time >= 24)
+            time = 0;
     }
 
     int CalculateState(float newTime)
