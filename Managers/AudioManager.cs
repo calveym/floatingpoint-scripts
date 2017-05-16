@@ -6,6 +6,9 @@ using UnityEngine.Audio;
 public class AudioManager : MonoBehaviour {
 
     public AudioSource efxSource;
+    
+    [Tooltip("How long it takes for ambiences to transition.")]
+    public float ambienceTransitionTime;
 
     public AudioMixerSnapshot dayForest;
     public AudioMixerSnapshot dayCity;
@@ -99,6 +102,33 @@ public class AudioManager : MonoBehaviour {
         else return 2;
     }
 
+    void PlayNight()
+    // choose which night ambience to play
+    {
+        if (city)
+            nightCity.TransitionTo(ambienceTransitionTime);
+        else
+            nightForest.TransitionTo(ambienceTransitionTime);
+    }
+
+    void PlayTwilight()
+    // choose which twilight ambience to play
+    {
+        if (city)
+            sunsetCity.TransitionTo(ambienceTransitionTime);
+        else
+            sunsetForest.TransitionTo(ambienceTransitionTime);
+    }
+
+    void PlayDay()
+    // choose which day ambience to play
+    {
+        if (city)
+            dayCity.TransitionTo(ambienceTransitionTime);
+        else
+            dayForest.TransitionTo(ambienceTransitionTime);
+    }
+
     public IEnumerator TimeCheck()
     {
         while(checkTime)
@@ -107,6 +137,19 @@ public class AudioManager : MonoBehaviour {
             if(CalculateState(time) != state)
             {
                 // Update played sound, with fade (AudioMixerSnapshot.TransitionTo(float transitionTimeFam)
+                switch(state)
+                {
+                    case 0:
+                        PlayNight();
+                        break;
+                    case 1:
+                        PlayTwilight();
+                        break;
+                    case 2:
+                        PlayDay();
+                        break;
+                }
+                state = CalculateState(time);
             }
             yield return new WaitForSeconds(1f);
         }
