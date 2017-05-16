@@ -35,7 +35,6 @@ public class TrafficSpawner : MonoBehaviour {
 
     private void Start()
     {
-        Debug.Log("Starting");
         StartCoroutine("CheckNumCars");
     }
 
