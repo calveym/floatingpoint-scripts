@@ -4,9 +4,19 @@ using UnityEngine;
 
 public class U : MonoBehaviour {
 
+    public static U instance;
+
+    public GameObject rightController;
+    public GameObject leftController;
+    public RoadGenerator roadGenerator;
+    public PopulationManager populationManager;
+
     private void Awake()
     {
-
+        if(instance != this)
+        {
+            instance = this;
+        }
     }
 
     public static List <GameObject> FindNearestBuildings (Vector3 position, float radius )
@@ -24,6 +34,24 @@ public class U : MonoBehaviour {
             }
         }
         return returnObjects;
+    }
+
+    public static List<GameObject> FindNearestRoads(Vector3 position, float radius)
+    {
+        List<GameObject> returnObject = new List<GameObject>();
+
+        int layerMask = 1 << 11;
+
+        Collider[] hitColliders = Physics.OverlapSphere(position, radius, layerMask);
+        for (int i = 0; i < hitColliders.Length; i++)
+        {
+            if (hitColliders[i].tag == "road")
+            {
+                returnObject.Add(hitColliders[i].gameObject);
+            }
+        }
+
+        return returnObject;
     }
 
     public static List<ResidentialTracker> ReturnResidentialTrackers(List<GameObject> objectList)

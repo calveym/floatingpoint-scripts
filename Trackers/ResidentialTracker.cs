@@ -23,11 +23,9 @@ public class ResidentialTracker : ItemTracker {
     {
         if (!updateStarted && usable)
         {
-            Debug.Log("Trying to start update");
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
             itemManager.addResidential(capacity, gameObject);
-            Debug.Log("UpdateStarted");
         }
         else if(updateStarted && !usable)
         {

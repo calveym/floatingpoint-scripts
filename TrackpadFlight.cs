@@ -51,10 +51,12 @@ public class TrackpadFlight : MonoBehaviour {
             if (events.touchpadPressed)
             {
                 speed = 2 * speedMultiplier;
+                AudioManager.instance.EfxVolume(1f);
             }
             else
             {
                 speed = 1 * speedMultiplier;
+                AudioManager.instance.EfxVolume(0.5f);
             }
             if (!scale.isCameraSmall) // if regular
             {

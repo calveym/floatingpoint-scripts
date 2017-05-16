@@ -10,19 +10,37 @@ public class CarAi : MonoBehaviour {
 	private Transform PrevNode;
 	RaycastHit hit = new RaycastHit();
 
+    Vector3 oldPosition;
+    bool checkCar;
+    bool firstTick;
+
+    void Start()
+    {
+        checkCar = true;
+        oldPosition = transform.position;
+        firstTick = true;
+        StartCoroutine("CheckCar");
+    }
+
 	// Update is called once per frame
 	void Update () {
-		Vector3 dir = TargetNode.position - transform.position;
-		Quaternion newLookRotation = Quaternion.LookRotation(dir);
+        if(TargetNode)
+        {
+            Vector3 dir = TargetNode.position - transform.position;
 
-		if (Physics.Raycast (transform.position, Vector3.forward, out hit)) {
-			if (hit.collider.gameObject.tag == "Car") {
-				// Debug.Log ("hit");
-			}
-		}
-		transform.position = Vector3.MoveTowards (transform.position, TargetNode.position, Time.deltaTime * speed);
-		transform.rotation = Quaternion.Slerp (transform.rotation, newLookRotation, rotationSpeed * Time.deltaTime);
-	}
+            Quaternion newLookRotation = Quaternion.LookRotation(dir);
+
+            if (Physics.Raycast(transform.position, Vector3.forward, out hit))
+            {
+                if (hit.collider.gameObject.tag == "Car")
+                {
+                    // Debug.Log ("hit");
+                }
+            }
+            transform.position = Vector3.MoveTowards(transform.position, TargetNode.position, Time.deltaTime * speed);
+            transform.rotation = Quaternion.Slerp(transform.rotation, newLookRotation, rotationSpeed * Time.deltaTime);
+        }
+    }
 
     void OnTriggerEnter(Collider Col)
 
@@ -210,6 +228,20 @@ public class CarAi : MonoBehaviour {
 
             default:
                 break;
+        }
+    }
+
+    IEnumerator CheckCar()
+    {
+        while(checkCar)
+        {
+            if (Vector3.Distance(transform.position, oldPosition) <= 0.02f && !firstTick)
+            {
+                TrafficSpawner.instance.RemoveCar(gameObject);
+            }
+            firstTick = false;
+            oldPosition = transform.position;
+            yield return new WaitForSeconds(0.2f);
         }
     }
 }

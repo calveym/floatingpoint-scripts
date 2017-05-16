@@ -57,11 +57,11 @@ public class SaveManager : MonoBehaviour {
 
     public void LoadEmpty()
     {
-        SceneManager.LoadScene("main-0.5.0-empty");
+        SceneManager.LoadScene("_final-0.5.0-empty");
     }
 
     public void LoadTutorial()
     {
-        SceneManager.LoadScene("main-0.5.0-tutorial");
+        SceneManager.LoadScene("_final-0.5.0-tutorial");
     }
 }

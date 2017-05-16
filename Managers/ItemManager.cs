@@ -58,7 +58,6 @@ public class ItemManager : MonoBehaviour {
         // contractmanager = GameObject.Find("Managers").GetComponent<ContractManager>();
         StartCoroutine("FiveUpdate");
         StartCoroutine("TenUpdate");
-        Debug.LogError("Open logs");
 	}
 
 	public int getNumRoads()

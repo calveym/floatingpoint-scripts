@@ -15,12 +15,19 @@ public class RoadDeleter : VRTK_InteractableObject {
 		controller = GameObject.Find("LeftController");
         events = controller.GetComponent<VRTK_ControllerEvents>();
 		roadGenerator = GameObject.Find("Island").GetComponent<RoadGenerator>();
-	}
+    }
 
 	public override void StartUsing (GameObject usingObject)
 	{
         base.StartUsing (usingObject);
-        Debug.Log("Controller@ " + controller);
+        if(controller == null)
+        { 
+            controller = U.instance.leftController;
+        }
+        if(roadGenerator == null)
+        {
+            roadGenerator = U.instance.roadGenerator;
+        }
 		Physics.Raycast (controller.transform.position, controller.transform.forward, out hit, 100.0f);
 		if(hit.transform.gameObject.tag == "road") {
             Vector3 rounded = Round(hit.point);

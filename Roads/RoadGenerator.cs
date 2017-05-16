@@ -5,7 +5,9 @@ using VRTK;
 
 public class RoadGenerator : VRTK_InteractableObject {
 
-	GameObject controller;
+    public static RoadGenerator instance;
+
+    GameObject controller;
     VRTK_ControllerEvents events;
 
 	public GameObject smallRoadStraight;
@@ -22,9 +24,13 @@ public class RoadGenerator : VRTK_InteractableObject {
 	public Dictionary<Vector3, GameObject> roads; // Dictionary of all road positions and objects
 	public Dictionary<Vector3, string> surroundingRoads; // Dictionary of all road positions and associated surroundingRoadString
 
-    void Awake()
+    protected override void Awake()
 	// Initiates all of the dictionaries for lookups and all other variables that need to be initialized
 	{
+        base.Awake();
+        if(instance != this)
+            instance = this;
+
 		roads = new Dictionary<Vector3, GameObject>();
 		surroundingRoads = new Dictionary<Vector3, string>();
 
