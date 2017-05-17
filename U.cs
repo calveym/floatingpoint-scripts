@@ -10,6 +10,7 @@ public class U : MonoBehaviour {
     public GameObject leftController;
     public RoadGenerator roadGenerator;
     public PopulationManager populationManager;
+    public TOD_Sky tod;
 
     private void Awake()
     {

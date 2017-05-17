@@ -6,7 +6,7 @@ public class Preload : MonoBehaviour {
 	public void Awake () {
         Debug.Log("DDOL running");
         DontDestroyOnLoad(gameObject);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("_final-0.5.0-tutorial");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("_main-0.5.1");
 
     }
 }

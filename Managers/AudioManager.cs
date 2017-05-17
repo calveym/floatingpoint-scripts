@@ -56,6 +56,10 @@ public class AudioManager : MonoBehaviour {
         time = 0;
         state = 0;
         updateRequired = true;
+    }
+
+    void Start()
+    {
         StartCoroutine("TimeCheck");
     }
 
@@ -97,20 +101,18 @@ public class AudioManager : MonoBehaviour {
 
     void UpdateTime()
     {
-        time += 0.1f;
-        if(time >= 24)
-            time = 0;
+        time = U.instance.tod.Cycle.Hour;
     }
 
     int CalculateState(float newTime)
     {
         if (newTime > 0 && newTime < 5)
             return 0;
-        else if (newTime >= 5 && newTime < 6.50)
+        else if (newTime >= 5 && newTime < 7.3f)
             return 1;
-        else if (newTime >= 6.50 && newTime < 17.5)
+        else if (newTime >= 6.50f && newTime < 17.5f)
             return 2;
-        else if (newTime >= 17.5 && newTime < 19)
+        else if (newTime >= 17.5f && newTime < 19)
             return 1;
         else if (newTime >= 19 && newTime < 24)
             return 0;
@@ -166,6 +168,8 @@ public class AudioManager : MonoBehaviour {
 
     void CheckState()
     {
+        state = CalculateState(time);
+
         switch (state)
         {
             case 0:
@@ -178,7 +182,6 @@ public class AudioManager : MonoBehaviour {
                 PlayDay();
                 break;
         }
-        state = CalculateState(time);
     }
 
     public IEnumerator TimeCheck()
