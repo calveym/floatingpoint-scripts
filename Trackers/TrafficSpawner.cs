@@ -96,7 +96,7 @@ public class TrafficSpawner : MonoBehaviour {
         {
             int numRoads = RoadGenerator.instance.roads.Count;
             int difference = numRoads - (cars.Count * 3);
-            if(difference >= 1 && U.instance.populationManager.totalPopulation >= 1)
+            if(difference >= 1 && ReferenceManager.instance.populationManager.totalPopulation >= 1)
             {
                 SpawnCars(difference);
             }

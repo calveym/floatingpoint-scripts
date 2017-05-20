@@ -101,7 +101,7 @@ public class AudioManager : MonoBehaviour {
 
     void UpdateTime()
     {
-        time = U.instance.tod.Cycle.Hour;
+        time = ReferenceManager.instance.tod.Cycle.Hour;
     }
 
     int CalculateState(float newTime)

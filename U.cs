@@ -6,12 +6,6 @@ public class U : MonoBehaviour {
 
     public static U instance;
 
-    public GameObject rightController;
-    public GameObject leftController;
-    public RoadGenerator roadGenerator;
-    public PopulationManager populationManager;
-    public TOD_Sky tod;
-
     private void Awake()
     {
         if(instance != this)

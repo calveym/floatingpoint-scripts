@@ -22,11 +22,11 @@ public class RoadDeleter : VRTK_InteractableObject {
         base.StartUsing (usingObject);
         if(controller == null)
         { 
-            controller = U.instance.leftController;
+            controller = ReferenceManager.instance.leftController;
         }
         if(roadGenerator == null)
         {
-            roadGenerator = U.instance.roadGenerator;
+            roadGenerator = ReferenceManager.instance.roadGenerator;
         }
 		Physics.Raycast (controller.transform.position, controller.transform.forward, out hit, 100.0f);
 		if(hit.transform.gameObject.tag == "road") {
