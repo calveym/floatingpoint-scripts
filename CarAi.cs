@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[SelectionBase]
 public class CarAi : MonoBehaviour {
 
 	public float speed = 0.5f;

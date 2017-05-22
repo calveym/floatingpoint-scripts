@@ -5,7 +5,9 @@ using UnityEngine;
 public class IndustrialTracker : ItemTracker {
     // Manages individual stats of each industrial building.
 
-    int requiredProduction = 5;
+    [Tooltip("The amount each worker must produce to be happy")]
+    public int requiredProduction = 5; // How much each individual must produce to be satisfied
+    System.Random rand;
 
     GameObject markerPrefab;
     Marker marker;
@@ -37,6 +39,8 @@ public class IndustrialTracker : ItemTracker {
 
     void Awake()
     {
+        rand = new System.Random(); //reuse this if generating many
+
         employees = new List<ResidentialTracker>();
         sales = new List<float>();
         components = new List<IndustrialComponent>();
@@ -84,7 +88,6 @@ public class IndustrialTracker : ItemTracker {
 
     public void Apply(float applicantLandValue, ResidentialTracker applicantTracker)
     {
-        System.Random rand = new System.Random(); //reuse this if generating many
         double u1 = 1.0 - rand.NextDouble(); //uniform(0,1] random doubles
         double u2 = 1.0 - rand.NextDouble();
         double randStdNormal = Mathf.Sqrt(-2.0f * Mathf.Log((float)u1)) *

@@ -13,6 +13,7 @@ public class ComponentSnap : VRTK_InteractableObject {
     GameObject sphere;
 
     IndustrialComponent component;
+    EconomyManager economyManager;
     IndustrialTracker potentialTracker;
     Material tempMaterial;
     GameObject nearestBuilding;
@@ -35,6 +36,7 @@ public class ComponentSnap : VRTK_InteractableObject {
         GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff +=
             new ControllerInteractionEventHandler(ComponentGrabRelease);
 
+        economyManager = ReferenceManager.instance.economyManager;
         spherePrefab = GameObject.Find("SpherePrefab");
         objectUsed = false;
     }
@@ -97,7 +99,7 @@ public class ComponentSnap : VRTK_InteractableObject {
 
     void ClosestFound(GameObject closest)
     {
-        if(component.economyManager.GetBalance() >= component.buyCost)
+        if(economyManager.GetBalance() >= component.buyCost)
         {
             if(closest.tag == "industrial")
             {

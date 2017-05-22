@@ -68,6 +68,8 @@ public class ResidentialTracker : ItemTracker {
     public void TryEmployWorker()
     // Called by populationManager
     {
+        Debug.Log("Employment happening: ");
+
         GameObject employmentLocation = FindPreferredEmployment();
         if(employmentLocation)
         {

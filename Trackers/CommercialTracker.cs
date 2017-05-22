@@ -8,6 +8,7 @@ public class CommercialTracker : ItemTracker {
     int requiredSales = 4;
     float salesHappiness;
 
+    [Header("Instance Operation Variables")]
     public int visitors;
     public int lifetimeVisitors;
 
@@ -23,7 +24,6 @@ public class CommercialTracker : ItemTracker {
     {
         base.Start();
         employees = new List<ResidentialTracker>();
-        EconomyManager.ecoTick += UpdateSecond;
     }
 
     void Update()
@@ -32,7 +32,7 @@ public class CommercialTracker : ItemTracker {
         {
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
-            GameObject.Find("Managers").GetComponent<ItemManager>().addCommercial(capacity, gameObject);
+            ReferenceManager.instance.itemManager.addCommercial(capacity, gameObject);
         }
         else if (updateStarted && !usable)
         {
@@ -81,22 +81,13 @@ public class CommercialTracker : ItemTracker {
 
     void SellGoods()
     {
-        goodsSold = users * happinessState + (1f + visitors * 0.01f);
-        if(goodsSold > goodsAvailable)
+        goodsSold = visitors * happinessState;
+        if(goodsSold > economyManager.goods)
         {
-            goodsSold = goodsAvailable;
+            Debug.Log("goods: " + economyManager.goods);
+            goodsSold = economyManager.goods;
         }
-
-        if (IndustrialTracker.allGoods >= capacity)
-        {
-            IndustrialTracker.allGoods -= capacity;
-            goodsAvailable = capacity;
-        }
-        else if(IndustrialTracker.allGoods < capacity && IndustrialTracker.allGoods > 0)
-        {
-            goodsAvailable = IndustrialTracker.allGoods;
-            IndustrialTracker.allGoods = 0;
-        }
+        economyManager.goods -= goodsSold;
     }
 
     public void RemoveAllUsers()
@@ -109,7 +100,7 @@ public class CommercialTracker : ItemTracker {
 
     void UpdateVisitors()
     {
-        visitors = U.NumResidents(U.ReturnResidentialTrackers(U.FindNearestBuildings(transform.position, users * 2)));
+        visitors = U.NumResidents(U.ReturnResidentialTrackers(U.FindNearestBuildings(transform.position, users)));
     }
 
     void UpdateSalesHappiness()
@@ -136,7 +127,7 @@ public class CommercialTracker : ItemTracker {
         UpdateTransportationValue();
         UpdateVisitors();
         SellGoods();
-        income = visitors * (1 + (landValue * 0.01f)) * (happinessState) - baseCost;
+        income = goodsSold * (1 + (landValue * 0.01f)) * (happinessState) - baseCost;
         totalCommercialIncome += income;
     }
 

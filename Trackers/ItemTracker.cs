@@ -6,12 +6,16 @@ using UnityEngine;
 public class ItemTracker : MonoBehaviour {
 
     // Declare variables
-    public PopulationManager populationManager;
-    public HappinessManager happinessManager;
-    public EconomyManager economyManager;
-    public ItemManager itemManager;
+    protected PopulationManager populationManager;
+    protected HappinessManager happinessManager;
+    protected EconomyManager economyManager;
+    protected ItemManager itemManager;
+
+    [Header("Components")]
+    [Space(10)]
     public LandValue land;
     public float availableTransportation;
+    public float numSnappedRoads;
 
     public static float totalResidentialIncome;
     public static float historicResidentialIncome;
@@ -20,21 +24,26 @@ public class ItemTracker : MonoBehaviour {
     public static float totalIndustrialIncome;
     public static float historicIndustrialIncome;
 
+    [Header("Basic attributes")]
+    [Space(10)]
+    public int level;
     public float buyCost;
     public float baseCost;
-    public int level;
     public string type;
-    public bool usable;
     public bool grabbableObject;
-
     public int capacity;
+
+    [Header("Instance attributes")]
+    [Space(10)]
+    public bool usable;
     public float income;
     public int users;
-    public float numSnappedRoads;
     public bool updateStarted;
     public bool validPosition;
     public float landValue;
 
+    [Header("Happiness")]
+    [Space(10)]
     [Range(-20f, 40f)]
     public float localHappiness; // Happiness based on number of nice surroundings
 

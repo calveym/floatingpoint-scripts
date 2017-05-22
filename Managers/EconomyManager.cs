@@ -8,6 +8,7 @@ public class EconomyManager : MonoBehaviour {
     // Declare other managers
 	public ItemManager itemManager;
 	public PopulationManager populationManager;
+    public HappinessManager happinessManager;
 
     // Declare variables
 	float balance;
@@ -15,8 +16,26 @@ public class EconomyManager : MonoBehaviour {
 	float income; // Net income, after expenses
 	int population;
     float happiness;
-	public float goods;
-	public float historicGoods;
+
+    [SerializeField]
+    float goodsProduction;
+    [SerializeField]
+    float goodsConsumption;
+    [SerializeField]
+    bool transferQueued;
+    float export;
+    float import;
+    float netGoodsTransfered;
+
+    [Header("Goods")]
+    public float goods;
+    public float historicGoods;
+    [Tooltip("Allow importing goods to make up for defecit")]
+    public bool enableImport;
+    [Tooltip("Allow exporting goods to make money from surplus")]
+    public bool enableExport;
+    [Tooltip("Maximum amount of goods that can be imported or exported")]
+    public float maxTransfer;
 
     // Tracked items
     int residentialCap;
@@ -38,10 +57,15 @@ public class EconomyManager : MonoBehaviour {
         industrialTaxRate = 15;
         rawIncome = 25;
 		balance = 1000;
-		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-		populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         income = rawIncome;
         keepUpdating = true;
+    }
+
+    private void Start()
+    {
+        itemManager = ReferenceManager.instance.itemManager;
+        populationManager = ReferenceManager.instance.populationManager;
+        happinessManager = ReferenceManager.instance.happinessManager;
         StartCoroutine("EconomicTick");
     }
 
@@ -68,10 +92,9 @@ public class EconomyManager : MonoBehaviour {
             CommercialTracker.historicCommercialIncome = CommercialTracker.totalCommercialIncome;
             IndustrialTracker.historicIndustrialIncome = IndustrialTracker.totalIndustrialIncome;
 
-            TransferGoods();
             UpdateIncome();
+            TransferGoods();
             UpdateBalance();
-
 
             ResidentialTracker.totalResidentialIncome = 0;
             CommercialTracker.totalCommercialIncome = 0;
@@ -83,10 +106,56 @@ public class EconomyManager : MonoBehaviour {
 
     void TransferGoods()
     {
+        UpdateGoods();
         goods += IndustrialTracker.allGoods;
         IndustrialTracker.allGoods = 0;
+
+        if(goods < goodsConsumption && enableImport)
+        {
+            transferQueued = true;
+            PrepareImport();
+        }
+        else if((goods / 2) >= goodsConsumption && enableExport)
+        {
+            transferQueued = true;
+            PrepareExport();
+        }
+        if(transferQueued)
+            DoGoodsTransfer();
     }
 
+    void UpdateGoods()
+    {
+        goodsConsumption = itemManager.residentialCap * happinessManager.happiness;
+        goodsProduction = itemManager.industrialCap * happinessManager.happiness;
+    }
+
+    void DoGoodsTransfer()
+    {
+        transferQueued = false;
+        goods -= export;
+        goods += import;
+
+        income -= import * 1.25f;
+        income += export * 0.75f;
+    }
+
+    void PrepareImport()
+    // Imports required amount
+    {
+        import = goodsConsumption - goods;
+        if(balance <= import * 1.25f)
+        {
+            import = 0;
+        }        
+    }
+
+    void PrepareExport()
+    // Exports maximum amount
+    {
+        import = 0;
+        export = goodsProduction - goodsConsumption;
+    }
 
     void SetCapacity()
     // Updates capacity from itemManager
@@ -111,7 +180,7 @@ public class EconomyManager : MonoBehaviour {
         float industrialIncome = CalculateIndustrialIncome();
 
         float expenses = roadExpenses + CalculateCapacityExpenses();
-		income = (rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses) * 0.25f;
+        income = (rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses);
 	}
 
     float CalculateCapacityExpenses()
@@ -163,6 +232,11 @@ public class EconomyManager : MonoBehaviour {
 	{
 		GameObject.Find("Managers").GetComponent<EconomyManager>().balance += amount;
 	}
+
+    public void SellGoods(float numGoods)
+    {
+        goods -= numGoods;
+    }
 
 	void SetPopulation()
 	// Retrieves population from the pop manager

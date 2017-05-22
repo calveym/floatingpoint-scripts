@@ -213,9 +213,10 @@ public class PopulationManager : MonoBehaviour {
     }
 
 	void TryFindJob()
-	// TODO: allocate to either industrial or commercial, select type first, then allocate
-	{
-		if(unemployedPopulation > 0 && residentialWithUnemployed.Count > 0 && AvailableJobs() > 0)
+    // TODO: allocate to either industrial or commercial, select type first, then allocate
+    {
+
+        if (unemployedPopulation > 0 && residentialWithUnemployed.Count > 0 && AvailableJobs() > 0)
 		{
 			FindJob();
 		}
