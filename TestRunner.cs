@@ -21,6 +21,15 @@ public class TestRunner : MonoBehaviour
     public GameObject indSpawnerCube;
     public GameObject comSpawnerCube;
 
+    public delegate void First();
+    public static First first;
+
+    public delegate void Second();
+    public static Second second;
+
+    public delegate void Third();
+    public static Third third;
+
     // Use this for initialization
     void Start()
     {
@@ -38,9 +47,9 @@ public class TestRunner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown("q")) FirstTest();
-        //if (Input.GetKeyDown("w")) SecondTest();
-        //if (Input.GetKeyDown("e")) ThirdTest();
+        if (Input.GetKeyDown("z")) FirstTest();
+        if (Input.GetKeyDown("x")) SecondTest();
+        if (Input.GetKeyDown("c")) ThirdTest();
         //if (Input.GetKeyDown("r")) FourthTest();
         if (Input.GetKeyDown("t")) FifthTest();
         if (Input.GetKeyDown("y")) SixthTest();
@@ -51,23 +60,20 @@ public class TestRunner : MonoBehaviour
 
     void FirstTest()
     {
-        Debug.Log("Add residential");
-        GameObject newObj = itemGenerator.StartSpawn(1, resSpawnerCube);
-        resSpawnerCube.GetComponent<FakeSpawnerCube>().RemoveObject(newObj);
+        Debug.Log("Test 1");
+        first();
     }
 
     void SecondTest()
     {
-        Debug.Log("Add commercial");
-        GameObject newObj = itemGenerator.StartSpawn(1, comSpawnerCube);
-        comSpawnerCube.GetComponent<FakeSpawnerCube>().RemoveObject(newObj);
+        Debug.Log("Test 2");
+        second();
     }
 
     void ThirdTest()
     {
-        Debug.Log("Add industrial");
-        GameObject newObj = itemGenerator.StartSpawn(1, indSpawnerCube);
-        indSpawnerCube.GetComponent<FakeSpawnerCube>().RemoveObject(newObj);
+        Debug.Log("Test 3");
+        third();
     }
 
     public void FourthTest()

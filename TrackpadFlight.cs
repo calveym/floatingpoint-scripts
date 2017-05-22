@@ -50,7 +50,7 @@ public class TrackpadFlight : MonoBehaviour {
             SetForward();
             if (events.touchpadPressed)
             {
-                speed = 2 * speedMultiplier;
+                speed = 4 * speedMultiplier;
                 AudioManager.instance.EfxVolume(1f);
             }
             else
