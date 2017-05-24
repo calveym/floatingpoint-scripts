@@ -6,9 +6,10 @@ using UnityEngine;
 public class EconomyManager : MonoBehaviour {
 
     // Declare other managers
-	public ItemManager itemManager;
-	public PopulationManager populationManager;
-    public HappinessManager happinessManager;
+	ItemManager itemManager;
+	PopulationManager populationManager;
+    HappinessManager happinessManager;
+    AudioManager audioManager;
 
     // Declare variables
 	float balance;
@@ -28,13 +29,13 @@ public class EconomyManager : MonoBehaviour {
     float netGoodsTransfered;
 
     [Header("Goods")]
+    [Tooltip("Total goods available")]
     public float goods;
-    public float historicGoods;
     [Tooltip("Allow importing goods to make up for defecit")]
     public bool enableImport;
     [Tooltip("Allow exporting goods to make money from surplus")]
     public bool enableExport;
-    [Tooltip("Maximum amount of goods that can be imported or exported")]
+    [Tooltip("Maximum amount of goods that can be imported or exported, before bonuses")]
     public float maxTransfer;
 
     // Tracked items
@@ -43,21 +44,34 @@ public class EconomyManager : MonoBehaviour {
     int industrialCap;
 
     // Declares public variables
+    [Space(10)]
+
+    [Header("Taxes")]
+    [Space(5)]
     public int residentialTaxRate;
     public int commercialTaxRate;
     public int industrialTaxRate;
-    public int rawIncome; // Gross
+    [Range(0, 100)]
+    [Tooltip("Initial income, added every ecoTick to income")]
+    public int rawIncome = 25; // Gross
     bool keepUpdating;
-
-    [Header("Services")]
     [Space(10)]
+    [Header("Services")]
+    [Space(5)]
     [SerializeField]
-    [Tooltip("Total expenses for running power services")]
+    [Tooltip("[READ ONLY]  Total expenses for running all services")]
     float serviceExpenses;
+    [SerializeField]
+    [Tooltip("[READ ONLY]  Total expenses for running power services")]
     float powerExpenses;
 
-    [Tooltip("Production multiplier, influenced by power availability")]
-    public float productionMultiplier;
+    [SerializeField]
+    [Tooltip("[READ ONLY]  Production multiplier, influenced by power availability")]
+    float productionMultiplier;
+    [Space(10)]
+    [Header("Audio")]
+    [Space(5)]
+    public AudioClip purchaseSound;
 
     void Awake ()
     // Finds instances of all objects and sets up values
@@ -65,7 +79,6 @@ public class EconomyManager : MonoBehaviour {
         residentialTaxRate = 15;
         commercialTaxRate = 15;
         industrialTaxRate = 15;
-        rawIncome = 25;
 		balance = 1000;
         income = rawIncome;
         keepUpdating = true;
@@ -76,6 +89,7 @@ public class EconomyManager : MonoBehaviour {
         itemManager = ReferenceManager.instance.itemManager;
         populationManager = ReferenceManager.instance.populationManager;
         happinessManager = ReferenceManager.instance.happinessManager;
+        audioManager = ReferenceManager.instance.audioManager;
         StartCoroutine("EconomicTick");
     }
 
@@ -248,10 +262,12 @@ public class EconomyManager : MonoBehaviour {
 		return numRoads / 5;
 	}
 
-	public static void ChangeBalance(float amount)
-	// Modifies balance by "amount"
+	public void MakePurchase(float amount)
+	// Modifies balance by "amount", plays sound
 	{
-		GameObject.Find("Managers").GetComponent<EconomyManager>().balance += amount;
+		balance += amount;
+        ReferenceManager.instance.audioManager.PlaySingle(purchaseSound);
+        // TODO: ADD PURCHASE VISUAL FEEDBACK
 	}
 
     public void SellGoods(float numGoods)

@@ -14,8 +14,6 @@ public abstract class ServiceTrackerBase : SphereObject {
     [Tooltip("EcoTick cost of service")]
     public float cost;
 
-    protected EconomyManager economyManager;
-
     protected override void Start () {
         base.Start();
 

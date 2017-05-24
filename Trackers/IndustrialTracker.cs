@@ -136,28 +136,20 @@ public class IndustrialTracker : ItemTracker {
     public void LinkComponent(IndustrialComponent component)
     // Sent from component, completes link
     {
-        Debug.Log("Gettin linked eh@ " + gameObject.name);
-        components.Add(component);
-        RecalculateComponents();
-    }
-
-    void RecalculateComponents()
-    {
-        for(int i = 0; i < components.Count; i++)
+        if(!components.Contains(component))
         {
-            if (components[i].type == "sellPrice" || components[i].type == "productionAmount" || components[i].type == "goodsCapacity" || components[i].type == "sellAmount")
-            {
-                AddBonus(components[i]);
-            }
+            components.Add(component);
+            productionMulti += component.productionMulti;
         }
     }
 
-    void AddBonus(IndustrialComponent component)
+    public void UnlinkComponent(IndustrialComponent component)
     {
-        sellPriceMulti += component.sellPriceMulti;
-        productionMulti += component.productionMulti;
-        goodsCapacityMulti += component.goodsCapacityMulti;
-        sellAmountMulti += component.sellAmountMulti;
+        if(components.Contains(component))
+        {
+            components.Remove(component);
+            productionMulti -= component.productionMulti;
+        }
     }
 
     void UpdateProductionHappiness()

@@ -1,38 +1,120 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IndustrialComponent : ItemTracker {
+public class IndustrialComponent : ComponentSnap {
 
-    public float goodsCapacityMulti;
-    public float sellAmountMulti;
-    public float sellPriceMulti;
+    [Header("Tracker functionality setup")]
+    [Space(5)]
+
+    [Range(0, 1)]
+    [Tooltip("Production multiplier, added to total multiplier of industrials")]
     public float productionMulti;
-    //  See IndustrialTracker for definitions
 
-    GameObject linkedBuilding;
+    [Tooltip("Level at which item is unlocked")]
+    public int level = 0;
+
+    [Tooltip("Initial purchase cost")]
+    public float buyCost;
+
+    [Range(0, 100)]
+    [Tooltip("ecoTick recurring cost")]
+    public float baseCost;
+
+    public bool usable;
+
+    [Tooltip("Material to change sphere to on grab")]
+    public Material industrialMaterial;
+
     IndustrialTracker linkedTracker;
-    GameObject tempLinkedBuilding;
-    IndustrialTracker tempLinkedTracker;
 
-    new void Start()
+    bool checkStop;
+    Vector3 oldPosition;
+
+    public delegate void StopCheck();
+    public static StopCheck stopCheck;
+
+    protected override void Ungrab()
     {
-        base.Start();
+        base.Ungrab();
+
+        checkStop = true;
+        StartCoroutine("WaitForStop");
     }
 
-    public void FoundIndustrial(GameObject found)
-    // Runs every time new industrial building is found
+    protected override void SetSphereMaterial()
     {
-        tempLinkedBuilding = found;
-        tempLinkedTracker = found.GetComponent<IndustrialTracker>();
-        tempLinkedTracker.AddMarker();
+        sphereScript.SetSphereMaterial(industrialMaterial);
+        
     }
 
-	public void LinkComponent(IndustrialTracker tracker)
-    // Links component to tracker
+    bool CheckStopped()
+    // Returns if object moved since last check
     {
-        linkedBuilding = tracker.gameObject;
-        linkedTracker = tracker;
-        tracker.LinkComponent(this);
+        if (transform.position != oldPosition)
+        {
+            oldPosition = transform.position;
+            return false;
+        }
+        else return true;
+    }
+
+    void UnlinkIfStopped()
+    // Method that is attached to delegate to check if stopped. If stopped, component is unlinked
+    {
+        if(!CheckStopped())
+        {
+            Unlink();
+        }
+    }
+
+    void Link()
+    // Saves industrial tracker link and informs tracker of bonus
+    {
+        stopCheck += UnlinkIfStopped;
+
+        List<IndustrialTracker> surroundingIndustrials = U.ReturnIndustrialTrackers(U.FindNearestBuildings(transform.position, radius));
+        if(surroundingIndustrials.Count >= 1)
+        {
+            linkedTracker = surroundingIndustrials[0];
+            linkedTracker.LinkComponent(this);
+        }
+    }
+
+    void Unlink()
+    // Unlinks component from industrial tracker and restarts linking process
+    {
+        stopCheck -= UnlinkIfStopped;
+        linkedTracker.UnlinkComponent(this);
+
+        checkStop = true;
+        StartCoroutine("WaitForStop");
+    }
+
+    IEnumerator WaitForStop()
+    // Checks position until stopped, links component once stopped.
+    {
+        while(checkStop)
+        {
+            if(CheckStopped())
+            {
+                checkStop = false;
+                Link();
+            }
+        }
+        yield return new WaitForSeconds(5);
+    }
+
+    static IEnumerator StoppedCheck()
+    // Runs delegate for checking that components haven't moved.
+    {
+        while(true)
+        {
+            if(stopCheck != null)
+            {
+                stopCheck();
+            }
+        }
     }
 }

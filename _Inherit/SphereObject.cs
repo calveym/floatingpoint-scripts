@@ -5,11 +5,13 @@ using VRTK;
 
 public abstract class SphereObject : VRTK_InteractableObject {
 
+    // Manager declarations
+    protected EconomyManager economyManager;
+
     protected bool grabbed;
     GameObject spherePrefab;
     GameObject sphere;
-    protected Sphere sphereScript;
-    Vector3 oldPosition;
+    protected Sphere sphereScript;  // Attached sphere script
 
     [Header("Main settings")]
     [Space(10)]
@@ -20,7 +22,7 @@ public abstract class SphereObject : VRTK_InteractableObject {
     protected virtual void Start()
     {
         spherePrefab = GameObject.Find("SpherePrefab");
-
+        economyManager = ReferenceManager.instance.economyManager;
         InteractableObjectGrabbed += new InteractableObjectEventHandler(DoGrabStart);
         InteractableObjectUngrabbed += new InteractableObjectEventHandler(DoGrabEnd);
     }
@@ -28,17 +30,26 @@ public abstract class SphereObject : VRTK_InteractableObject {
     public virtual void DoGrabStart(object sender, InteractableObjectEventArgs e)
     {
         grabbed = true;
-        AttachSphere();
+        Grab();
     }
 
     public virtual void DoGrabEnd(object sender, InteractableObjectEventArgs e)
     {
         if (grabbed)
         {
-            grabbed = false;
-            DetachSphere();
-            oldPosition = transform.position;
+            Ungrab();
         }
+    }
+
+    protected virtual void Grab()
+    {
+        AttachSphere();
+    }
+
+    protected virtual void Ungrab()
+    {
+        grabbed = false;
+        DetachSphere();
     }
 
     protected virtual void AttachSphere()

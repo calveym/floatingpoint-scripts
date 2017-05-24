@@ -29,7 +29,10 @@ public class Power : ServiceBase
 
     protected override void RunAddLocalAmounts()
     {
-        addLocalPower();
+        if(addLocalPower != null)
+        {
+            addLocalPower();
+        }
     }
 
     protected override void DeductCost()

@@ -92,9 +92,9 @@ public class DisplayUI : MonoBehaviour {
 
     private void Start()
     {
-        spawnManager = GameObject.Find("Managers").GetComponent<SpawnManager>();
-        economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
-        populationManager = economyManager.populationManager;
+        spawnManager = ReferenceManager.instance.spawnManager;
+        economyManager = ReferenceManager.instance.economyManager;
+        populationManager = ReferenceManager.instance.populationManager;
         thumbTracker = GetComponent<ThumbTracker>();
         events = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
         events.TouchpadTouchStart += DoTouchpadTouch;

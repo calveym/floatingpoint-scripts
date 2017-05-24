@@ -20,6 +20,7 @@ public class ReferenceManager : MonoBehaviour {
     public PopupManager popupManager;
     public TutorialManager tutorialManager;
     public AudioManager audioManager;
+    public SpawnManager spawnManager;
 
     public Power power;
 

@@ -71,7 +71,7 @@ public class SpawnController : MonoBehaviour {
                     child.gameObject.SetActive(true);
                 }
             }
-            EconomyManager.ChangeBalance(price);
+            economyManager.MakePurchase(price);
             EnablePhysics();
             if (containedType == 0)
             {

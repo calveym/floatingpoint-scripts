@@ -27,11 +27,15 @@ public class ItemTracker : MonoBehaviour {
 
     [Header("Basic attributes")]
     [Space(5)]
-    public int level;
+    [Tooltip("Note- currently not used")]
+    public int level = 0;
+    [Tooltip("Initial purchase price")]
     public float buyCost;
+    [Tooltip("Upkeep cost, deducted each ecoTick from income")]
     public float baseCost;
     public string type;
     public bool grabbableObject;
+    [Tooltip("Maximum number of users")]
     public int capacity;
 
     [Header("Instance attributes")]

@@ -4,22 +4,15 @@ using UnityEngine;
 using UnityEngine.Events;
 using System;
 
-public class FoliageTracker : SphereObject {
+public class FoliageTracker : ComponentSnap {
 
+    [Tooltip("Amount of happiness to add, sets the same property on the happiness affector")]
     float affectAmount;
     private ItemManager itemManager;
     [Tooltip("Object's happiness affector")]
     public HappinessAffector happinessAffector;
     [Tooltip("Material to set sphere to during grab action")]
     public Material sphereMaterial;
-
-    VRTK_InteractableObject interact;
-
-
-    protected override void Awake()
-    {
-        base.Awake();
-    }
 
     protected override void Start()
     {
@@ -31,7 +24,7 @@ public class FoliageTracker : SphereObject {
         happinessAffector = GetComponent<HappinessAffector>();
         happinessAffector.enabled = true;
         radius = happinessAffector.radius;
-        affectAmount = happinessAffector.affectAmount;
+        happinessAffector.affectAmount = affectAmount;
         itemManager.addFoliage((int)affectAmount, gameObject);
     }
 
