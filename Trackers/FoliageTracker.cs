@@ -2,12 +2,16 @@
 using VRTK;
 using UnityEngine;
 using UnityEngine.Events;
+using System;
 
 public class FoliageTracker : SphereObject {
 
     float affectAmount;
-    static ItemManager itemManager;
+    private ItemManager itemManager;
+    [Tooltip("Object's happiness affector")]
     public HappinessAffector happinessAffector;
+    [Tooltip("Material to set sphere to during grab action")]
+    public Material sphereMaterial;
 
     VRTK_InteractableObject interact;
 
@@ -29,5 +33,10 @@ public class FoliageTracker : SphereObject {
         radius = happinessAffector.radius;
         affectAmount = happinessAffector.affectAmount;
         itemManager.addFoliage((int)affectAmount, gameObject);
+    }
+
+    protected override void SetSphereMaterial()
+    {
+        sphereScript.SetSphereMaterial(sphereMaterial);
     }
 }

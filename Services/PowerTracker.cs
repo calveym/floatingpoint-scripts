@@ -6,6 +6,7 @@ using UnityEngine;
 [SelectionBase]
 public class PowerTracker : ServiceTrackerBase {
 
+    Material sphereMaterial;
     Power power;
 
     protected override void Awake()
@@ -34,6 +35,11 @@ public class PowerTracker : ServiceTrackerBase {
         {
             building.GetComponent<ItemTracker>().power = true;
         }
+    }
+
+    protected override void SetSphereMaterial()
+    {
+        sphereScript.SetSphereMaterial(sphereMaterial);
     }
 
     protected override void PayForService()

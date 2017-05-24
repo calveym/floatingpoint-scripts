@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
 
-public class SphereObject : VRTK_InteractableObject {
+public abstract class SphereObject : VRTK_InteractableObject {
 
     protected bool grabbed;
     GameObject spherePrefab;
     GameObject sphere;
+    protected Sphere sphereScript;
     Vector3 oldPosition;
 
     [Header("Main settings")]
@@ -44,8 +45,12 @@ public class SphereObject : VRTK_InteractableObject {
     {
         sphere = Instantiate(spherePrefab, new Vector3(transform.position.x, 10.1f, transform.position.z), Quaternion.identity);
         sphere.transform.localScale = new Vector3(radius, 0.1f, radius);
-        sphere.GetComponent<Sphere>().LinkSphere(gameObject);
+        sphereScript = sphere.GetComponent<Sphere>();
+        sphereScript.LinkSphere(gameObject);
+        SetSphereMaterial();
     }
+
+    protected abstract void SetSphereMaterial();
 
     protected virtual void DetachSphere()
     {

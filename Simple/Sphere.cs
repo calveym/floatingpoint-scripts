@@ -34,6 +34,11 @@ public class Sphere : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void SetSphereMaterial(Material newMaterial)
+    {
+        rend.material = newMaterial;
+    }
+
     public IEnumerator AdjustPosition()
     {
         while(linked)
