@@ -15,12 +15,9 @@ public class IndustrialComponent : ComponentSnap {
     [Tooltip("Level at which item is unlocked")]
     public int level = 0;
 
-    [Tooltip("Initial purchase cost")]
-    public float buyCost;
-
     [Range(0, 100)]
     [Tooltip("ecoTick recurring cost")]
-    public float baseCost;
+    public int baseCost;
 
     public bool usable;
 

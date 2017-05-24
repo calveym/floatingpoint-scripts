@@ -7,7 +7,7 @@ public abstract class ComponentSnap : SphereObject {
 
     [Range(0, 10000)]
     [Tooltip("Component purchase cost")]
-    public int cost;  // Purchase cost of component
+    public int buyCost;  // Purchase cost of component
 
     protected override void Grab()
     {
@@ -32,6 +32,6 @@ public abstract class ComponentSnap : SphereObject {
     void Purchase()
     // Deduct one off purchase cost
     {
-        economyManager.MakePurchase(cost);
+        economyManager.MakePurchase(buyCost);
     }
 }

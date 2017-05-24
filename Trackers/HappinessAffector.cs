@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class HappinessAffector : MonoBehaviour {
 
+    [Header("Default Settings")]
+    [Space(5)]
+    [Range(0, 100)]
+    [Tooltip("[Optional Override]  Radius of happiness effect")]
     public float radius;
+    [Tooltip("Amount of happiness added per foliage tick to surrounding buildings")]
     public float affectAmount;
+    [Tooltip("Type of effect \n[industrialReduce/ foliage]")]
     public string affectType;
 
     public bool usable;

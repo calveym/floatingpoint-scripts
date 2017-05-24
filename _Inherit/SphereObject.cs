@@ -17,7 +17,7 @@ public abstract class SphereObject : VRTK_InteractableObject {
     [Space(10)]
     [Range(0f, 50f)]
     [Tooltip("Range of service effect in global units")]
-    public float radius = 10;  // Radius of effect
+    public int radius;  // Radius of effect
 
     protected virtual void Start()
     {
