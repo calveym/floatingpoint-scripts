@@ -12,7 +12,7 @@ public class ItemTracker : MonoBehaviour {
     protected ItemManager itemManager;
 
     [Header("Components")]
-    [Space(10)]
+    [Space(5)]
     public LandValue land;
     public float availableTransportation;
     public float numSnappedRoads;
@@ -23,9 +23,10 @@ public class ItemTracker : MonoBehaviour {
     public static float historicCommercialIncome;
     public static float totalIndustrialIncome;
     public static float historicIndustrialIncome;
+    [Space(10)]
 
     [Header("Basic attributes")]
-    [Space(10)]
+    [Space(5)]
     public int level;
     public float buyCost;
     public float baseCost;
@@ -34,16 +35,17 @@ public class ItemTracker : MonoBehaviour {
     public int capacity;
 
     [Header("Instance attributes")]
-    [Space(10)]
+    [Space(5)]
     public bool usable;
     public float income;
     public int users;
     public bool updateStarted;
     public bool validPosition;
     public float landValue;
+    [Space(10)]
 
     [Header("Unhappiness")]
-    [Space(10)]
+    [Space(5)]
     [Range(-20f, 40f)]
     public float localHappiness; // Happiness based on number of nice surroundings
 
@@ -60,9 +62,10 @@ public class ItemTracker : MonoBehaviour {
     public float unhappinessMinimum = 40;  // Used in unhappiness check calculations
 
     protected bool movingOut;  // Used to control moving out coroutine
+    [Space(10)]
 
     [Header("Happiness")]
-    [Space(10)]
+    [Space(5)]
     public float fillRateHappiness; // Happiness based on fill rate (users / cap * 40)
     public float addedHappiness; // Temporary tracking figure
     public float currentHappiness;  // Used to affect longterm happiness- longerm happiness tends towards this number
@@ -70,8 +73,15 @@ public class ItemTracker : MonoBehaviour {
     public int happinessState;
 
     protected int cumulativeUnhappiness = 0;  // Used to determine when people start moving out from unhappiness
+    [Space(10)]
 
-
+    [Header("Services")]
+    [Space(5)]
+    public bool power;
+    public bool health;
+    public bool education;
+    public bool fire;
+    public bool police;
 
     public void Start()
     // Sets start variables

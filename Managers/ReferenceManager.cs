@@ -21,6 +21,8 @@ public class ReferenceManager : MonoBehaviour {
     public TutorialManager tutorialManager;
     public AudioManager audioManager;
 
+    public Power power;
+
     // Use this for initialization
     void Awake () {
 		if(instance != this)

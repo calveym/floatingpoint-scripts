@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
 
+[SelectionBase]
 public class RoadGenerator : VRTK_InteractableObject {
 
     public static RoadGenerator instance;

@@ -49,6 +49,16 @@ public class EconomyManager : MonoBehaviour {
     public int rawIncome; // Gross
     bool keepUpdating;
 
+    [Header("Services")]
+    [Space(10)]
+    [SerializeField]
+    [Tooltip("Total expenses for running power services")]
+    float serviceExpenses;
+    float powerExpenses;
+
+    [Tooltip("Production multiplier, influenced by power availability")]
+    public float productionMultiplier;
+
     void Awake ()
     // Finds instances of all objects and sets up values
     {
@@ -107,7 +117,7 @@ public class EconomyManager : MonoBehaviour {
     void TransferGoods()
     {
         UpdateGoods();
-        goods += IndustrialTracker.allGoods;
+        goods += IndustrialTracker.allGoods * productionMultiplier;
         IndustrialTracker.allGoods = 0;
 
         if(goods < goodsConsumption && enableImport)
@@ -178,10 +188,21 @@ public class EconomyManager : MonoBehaviour {
 		float residentialIncome = CalculateResidentialIncome();
         float commercialIncome = CalculateCommercialIncome();
         float industrialIncome = CalculateIndustrialIncome();
+        serviceExpenses = powerExpenses;
 
-        float expenses = roadExpenses + CalculateCapacityExpenses();
+        float expenses = roadExpenses + CalculateCapacityExpenses() + serviceExpenses;
         income = (rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses);
 	}
+
+    public void SetPowerExpense(float newPowerExpenses)
+    {
+        powerExpenses = newPowerExpenses;
+    }
+
+    public void SetProduction(float newProduction)
+    {
+        productionMultiplier = newProduction;
+    }
 
     float CalculateCapacityExpenses()
     // Returns all expenses from capacity
