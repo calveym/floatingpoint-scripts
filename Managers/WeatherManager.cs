@@ -13,8 +13,11 @@ public class WeatherManager : MonoBehaviour {
     public GameObject rainSystem;  // Contains rain particles and clouds
     public GameObject rainScreen;  // Contains rain screen effects
 
+    AudioManager audioManager;
+
 	// Use this for initialization
 	void Start () {
+        audioManager = ReferenceManager.instance.audioManager;
         tod = ReferenceManager.instance.tod;
         ToggleRain(false);
         ToggleClouds(0.1f);
@@ -47,8 +50,9 @@ public class WeatherManager : MonoBehaviour {
 
     void Sunny()
     {
+        audioManager.StopRain();
         ToggleClouds(0.1f);
-        tod.Day.LightIntensity = 0.8f;
+        tod.Day.LightIntensity = 1f;
         tod.Day.AmbientMultiplier = 0.5f;
         //tod.Night.LightIntensity = 1.5f;
         //tod.Night.AmbientMultiplier = 4.26f;
@@ -57,6 +61,7 @@ public class WeatherManager : MonoBehaviour {
 
     void Cloudy()
     {
+        audioManager.StopRain();
         ToggleClouds(0.5f);
         tod.Day.LightIntensity = 0.7f;
         tod.Day.AmbientMultiplier = 0.5f;
@@ -67,6 +72,7 @@ public class WeatherManager : MonoBehaviour {
 
     void Rainy()
     {
+        audioManager.PlayRain();
         ToggleClouds(1f);
         tod.Day.LightIntensity = 0.38f;
         tod.Day.AmbientMultiplier = 0.6f;

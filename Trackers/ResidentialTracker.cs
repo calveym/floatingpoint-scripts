@@ -38,12 +38,12 @@ public class ResidentialTracker : ItemTracker {
         }
     }
 
-    new public void AddUsers(int numUsers)
+    public override void AddUsers(int numUsers)
     // Adds numUsers to users if capacity is not exceeded
     {
         if (numUsers + users <= capacity)
         {
-            users += numUsers;
+            base.AddUsers(numUsers);
             unemployedPopulation += numUsers;
         }
         else
@@ -68,8 +68,6 @@ public class ResidentialTracker : ItemTracker {
     public void TryEmployWorker()
     // Called by populationManager
     {
-        Debug.Log("Employment happening: ");
-
         GameObject employmentLocation = FindPreferredEmployment();
         if(employmentLocation)
         {
@@ -181,14 +179,14 @@ public class ResidentialTracker : ItemTracker {
     {
         if (capacity != 0)
         {
-            employmentHappiness = (users - unemployedPopulation) / capacity * 40;
+            employmentHappiness = (users - unemployedPopulation) / capacity * 20;
         }
         else employmentHappiness = 0;
     }
 
     void UpdateHappiness()
     {
-        currentHappiness = localHappiness + employmentHappiness + fillRateHappiness;
+        currentHappiness = localHappiness + employmentHappiness + fillRateHappiness + 20;
         CalculateLongtermHappiness();
         CalculateHappinessState();
     }
@@ -198,6 +196,28 @@ public class ResidentialTracker : ItemTracker {
         income = users * (1 + (landValue * 0.01f)) * (longtermHappiness / 20);
         income -= baseCost;
         totalResidentialIncome += income;
+    }
+
+    void UpdateUnhappiness()
+    {
+        Debug.Log("Updating unhappiness: " + cumulativeUnhappiness);
+        if(currentHappiness < unhappinessMinimum && cumulativeUnhappiness < requiredUnhappiness)
+        {
+            cumulativeUnhappiness++;
+        }
+        else if(currentHappiness >= unhappinessMaximum && cumulativeUnhappiness > 0)
+        {
+            cumulativeUnhappiness--;
+        }
+    }
+
+    void CheckUnhappiness()
+    {
+        if(cumulativeUnhappiness >= requiredUnhappiness)
+        {
+            movingOut = true;
+            StartCoroutine("MoveOut");
+        }
     }
 
     public string ValidPosition()
@@ -233,7 +253,7 @@ public class ResidentialTracker : ItemTracker {
     {
         return ValidPosition();
     }
-
+    
     IEnumerator CheckEnable()
     {
         while(true)
@@ -248,5 +268,14 @@ public class ResidentialTracker : ItemTracker {
             }
             yield return new WaitForSeconds(5);
         }
+    }
+
+    IEnumerator LongtermUnhappiness()
+    {
+        while(usable && updateStarted)
+        {
+            UpdateUnhappiness();
+        }
+        yield return new WaitForSeconds(10f);
     }
 }

@@ -25,14 +25,20 @@ public class AudioManager : MonoBehaviour {
     [Range(0, 10)]
     [Tooltip("How long it takes for ambiences to transition.")]
     public float ambienceTransitionTime;
+    [Range(0, 10)]
+    [Tooltip("How long it takes for rain to transition in/ out")]
+    public float rainTransitionTime;
 
-    [Header("Audio Sources")]
+    [Header("Audio Snapshots")]
     public AudioMixerSnapshot dayForest;
     public AudioMixerSnapshot dayCity;
     public AudioMixerSnapshot sunsetForest;
     public AudioMixerSnapshot sunsetCity;
     public AudioMixerSnapshot nightForest;
     public AudioMixerSnapshot nightCity;
+
+    public AudioMixerSnapshot rain;
+    public AudioMixerSnapshot noRain;
     public AudioSource efxSource;
     
     public static AudioManager instance = null;
@@ -97,6 +103,16 @@ public class AudioManager : MonoBehaviour {
         efxSource.pitch = randomPitch;
         efxSource.clip = clips[randomIndex];
         efxSource.Play();
+    }
+
+    public void PlayRain()
+    {
+        rain.TransitionTo(rainTransitionTime);
+    }
+
+    public void StopRain()
+    {
+        noRain.TransitionTo(rainTransitionTime);
     }
 
     void UpdateTime()

@@ -42,16 +42,36 @@ public class ItemTracker : MonoBehaviour {
     public bool validPosition;
     public float landValue;
 
-    [Header("Happiness")]
+    [Header("Unhappiness")]
     [Space(10)]
     [Range(-20f, 40f)]
     public float localHappiness; // Happiness based on number of nice surroundings
 
+    [Range(0f, 40f)]
+    [Tooltip("Amount of unhappiness required before users vacate")]
+    public float requiredUnhappiness = 10;
+
+    [Range(0f, 100f)]
+    [Tooltip("Amount of happiness required to decrease unhappiness")]
+    public float unhappinessMaximum = 60;  // Used in unhappiness check calculations
+
+    [Range(0f, 50f)]
+    [Tooltip("Amount of happiness required to increase unhappiness")]
+    public float unhappinessMinimum = 40;  // Used in unhappiness check calculations
+
+    protected bool movingOut;  // Used to control moving out coroutine
+
+    [Header("Happiness")]
+    [Space(10)]
     public float fillRateHappiness; // Happiness based on fill rate (users / cap * 40)
     public float addedHappiness; // Temporary tracking figure
     public float currentHappiness;  // Used to affect longterm happiness- longerm happiness tends towards this number
     public float longtermHappiness; // Most important happiness figure, should be used in most significant income, landvalue etc calculations
     public int happinessState;
+
+    protected int cumulativeUnhappiness = 0;  // Used to determine when people start moving out from unhappiness
+
+
 
     public void Start()
     // Sets start variables
@@ -128,7 +148,7 @@ public class ItemTracker : MonoBehaviour {
         return 1;
     }
 
-    public void AddUsers(int numAdded)
+    public virtual void AddUsers(int numAdded)
     {
         users += numAdded;
     }
@@ -138,7 +158,7 @@ public class ItemTracker : MonoBehaviour {
     {
         if (users > capacity)
         {
-            DeallocateUsers(capacity -= 1);
+            RemoveUsers(capacity -= 1);
         }
     }
 
@@ -148,7 +168,7 @@ public class ItemTracker : MonoBehaviour {
         type = gameObject.tag;
     }
 
-    void DeallocateUsers(int numUsers)
+    protected void RemoveUsers(int numUsers)
     // Returns unallocated users to the populationManager
     {
         if(gameObject.tag == "residential")
@@ -156,7 +176,6 @@ public class ItemTracker : MonoBehaviour {
             populationManager.DeallocateUsers(numUsers, type);
             users -= numUsers;
         }
-
     }
 
     public int NumEmpty()
@@ -247,6 +266,19 @@ public class ItemTracker : MonoBehaviour {
         else if (longtermHappiness >= 80)
         {
             happinessState = 4;
+        }
+    }
+
+    protected IEnumerator MoveOut()
+    {
+        while (movingOut)
+        {
+            if (users >= 1)
+            {
+                RemoveUsers(1);
+            }
+            else movingOut = false;
+            yield return new WaitForSeconds(2f);
         }
     }
 }

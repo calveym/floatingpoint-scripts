@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK;
 
 public class U : MonoBehaviour {
 
@@ -12,6 +13,24 @@ public class U : MonoBehaviour {
         {
             instance = this;
         }
+    }
+
+    private void Start()
+    {
+        GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn += LeftGrab;
+        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn += RightGrab;
+        GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff += LeftGrab;
+        GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff += RightGrab;
+    }
+
+    public void LeftGrab(object sender, ControllerInteractionEventArgs e)
+    {
+        LeftPulse();
+    }
+
+    public void RightGrab(object sender, ControllerInteractionEventArgs e)
+    {
+        RightPulse();
     }
 
     public static List <GameObject> FindNearestBuildings (Vector3 position, float radius )
