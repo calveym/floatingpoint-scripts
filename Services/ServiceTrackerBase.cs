@@ -14,12 +14,23 @@ public abstract class ServiceTrackerBase : SphereObject {
     [Tooltip("EcoTick cost of service")]
     public float cost;
 
+    protected List<GameObject> surroundingBuildings;
+    public int numSurroundingBuildings;
+
     protected override void Start () {
         base.Start();
 
         economyManager = ReferenceManager.instance.economyManager;
         EconomyManager.ecoTick += PayForService;
  	}
+
+    protected virtual void DoEffect()
+    {
+        surroundingBuildings = U.FindNearestBuildings(transform.position, radius);
+        numSurroundingBuildings = surroundingBuildings.Count - 1;  // Minus one to remove the tracker itself
+    }
+
+    protected abstract void AddService();
 
     protected abstract void PayForService();  // Adds price to relevant manager in overrider class
 }

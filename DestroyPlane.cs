@@ -29,9 +29,9 @@ public class DestroyPlane : MonoBehaviour {
         {
             itemManager.removeIndustrial(other.gameObject);
         }
-        else if(tag == "leisure")
+        else if(tag == "service")
         {
-            itemManager.removeLeisure(other.gameObject);
+            //itemManager.removeService(other.gameObject);
         }
         else if(tag == "foliage")
         {

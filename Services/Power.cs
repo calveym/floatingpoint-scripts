@@ -11,6 +11,11 @@ public class Power : ServiceBase
     public AddLocalPower addLocalPower;
 
 
+    protected void Awake()
+    {
+        power = new List<PowerTracker>();
+    }
+
     protected override void ApplyGlobalDefecit()
     {
         economyManager.SetProduction(0.6f);
@@ -24,7 +29,6 @@ public class Power : ServiceBase
     public void AddPower(PowerTracker incomingPower)
     {
         power.Add(incomingPower);
-        RunUpdates();
     }
 
     protected override void RunAddLocalAmounts()

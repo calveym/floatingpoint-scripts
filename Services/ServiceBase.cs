@@ -4,20 +4,24 @@ using UnityEngine;
 
 public abstract class ServiceBase: MonoBehaviour {
 
+    [Header("Setup")]
     [Tooltip("Max required amount, calculated at runtime based on current total population")]
     public int demand;  // Main demand variable, translation of overall population
     [Tooltip("Total amount of service, calculated at runtime")]
     public int amount;  // Amount of service available
+    [Tooltip("Service type, eg [power]")]
+    public string type; // Type of service, set in inspector
 
+    // STATIC DEMAND VARIABLES, FOR ACCESS. NOT SET HERE, TAKEN FROM RELEVANT service.demand
+    public static int powerDemand;
 
     protected float cost;  // All added costs from trackers
     protected float totalCost;  // Total cost, calculated with multiplier and cost, deducted from income
-    [Header("Setup")]
-    [Range(0, 1f)]
-    [Tooltip("Cost per unit of population")]
-    public float costMultiplier;  // used to calculate cost with amount
-    [Tooltip("Enables tweaking of demand level")]
-    public int demandMultiplier;[Tooltip("Multiplier for comparing amount to demand, for applying defecit/ surplus. \n [x < 1]: harder to stay out of defecit \n [x == 1]: Defecit if below demand\n [x > 1]: Easier to stay out of defecit")]
+    [Header("Effects")]
+    [Range(1f, 5f)]
+    [Tooltip("Enables tweaking of demand level, 1 to stay default")]
+    public int demandMultiplier = 1;
+    [Tooltip("Multiplier for comparing amount to demand, for applying defecit/ surplus. \n [x < 1]: harder to stay out of defecit \n [x == 1]: Defecit if below demand\n [x > 1]: Easier to stay out of defecit")]
     [Range(0f, 2f)]
     public float minDemandMultiplier;
 
@@ -50,6 +54,10 @@ public abstract class ServiceBase: MonoBehaviour {
     // Updates demand from population
     {
         demand = populationManager.totalPopulation * demandMultiplier;
+        if (type == "power")
+        {
+            powerDemand = demand;
+        }
     }
 
     protected void UpdateServices()
@@ -101,6 +109,15 @@ public abstract class ServiceBase: MonoBehaviour {
         cost += newCost;
     }
 
+    public static int FindDemand(string type)
+    {
+        if (type == "power")
+        {
+            return powerDemand;
+        }
+        else return 0;
+    }
+
 
     // Abstract members. All overriden by derived classes 
     protected abstract void ResetResidential();
@@ -131,7 +148,7 @@ public abstract class ServiceBase: MonoBehaviour {
                 servicePayment();
                 DeductCost();
             }
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(1f);
         }
     }
 }

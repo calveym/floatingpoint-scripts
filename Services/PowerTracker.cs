@@ -21,19 +21,35 @@ public class PowerTracker : ServiceTrackerBase {
         AddService();
     }
 
-    protected void AddService()
+    protected override void AddService()
     {
         power.AddPower(this);
         power.addLocalPower += DoEffect;
         power.servicePayment += PayForService;
     }
 
-    protected void DoEffect()
+    protected override void DoEffect()
     {
-        List<GameObject> surroundingBuildings = U.FindNearestBuildings(transform.position, radius);
-        foreach(GameObject building in surroundingBuildings)
+        base.DoEffect();
+        if(surroundingBuildings.Count <= amount)
         {
-            building.GetComponent<ItemTracker>().power = true;
+            foreach (GameObject building in surroundingBuildings)
+            {
+                if (building != gameObject && building.tag == "industrial" || building.tag == "commercial" || building.tag == "industrial")
+                {
+                    building.GetComponent<ItemTracker>().power = true;
+                }
+            }
+        }
+        else if(amount < surroundingBuildings.Count)
+        {
+            for(int i = 0; i < amount; i++)
+            {
+                if (surroundingBuildings[i] != gameObject)
+                {
+                    surroundingBuildings[i].GetComponent<ItemTracker>().power = true;
+                }
+            }
         }
     }
 

@@ -84,7 +84,6 @@ public class CommercialTracker : ItemTracker {
         goodsSold = visitors * happinessState;
         if(goodsSold > economyManager.goods)
         {
-            Debug.Log("goods: " + economyManager.goods);
             goodsSold = economyManager.goods;
         }
         economyManager.goods -= goodsSold;

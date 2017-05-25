@@ -11,49 +11,57 @@ public class TooltipManager : MonoBehaviour {
     List<GameObject> nearestBuildings;
     GameObject headset;
     GameObject rightController;
-    GameObject testSphere;
-    MeshRenderer rend;
-    int tick;
+    Transform stareat;
+    [Tooltip("Tooltips spawn from here if no controller present")]
+    public GameObject testTooltipObject;
 
     public static bool pressed;
 
 	// Use this for initialization
 	void Start () {
         headset = GameObject.Find("Headset");
-        testSphere = GameObject.Find("TestSphere");
+        if(!testTooltipObject)
+            testTooltipObject = GameObject.Find("TestSphere");
         rightController = GameObject.Find("RightController");
         rightController.GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
         rightController.GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
     }
 
-    public void TestTooltip()
+    void EnableObjectTooltip(object sender, ControllerInteractionEventArgs e)
+    {
+        StartTooltips();
+    }
+
+    void DisableObjectTooltip(object sender, ControllerInteractionEventArgs e)
+    {
+        DisableTooltips();
+    }
+
+    public void StartTooltips()
     // Used in conjunction with test runner to create tooltips without headset and controllers
     {
-        tick = 0;
         pressed = true;
-        nearestBuildings = U.FindNearestBuildings(testSphere.transform.position, 10f);
+        if(!testTooltipObject)
+        // Used during play
+        {
+            stareat = rightController.transform;
+            nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 10f);
+        }
+        else
+        // For testing
+        {
+            stareat = testTooltipObject.transform;
+            nearestBuildings = U.FindNearestBuildings(testTooltipObject.transform.position, 10f);
+        }
         foreach (GameObject building in nearestBuildings)
         {
-            EnableTooltip(building);
+            EnableTooltips(building);
         }
         StartCoroutine("SecondTick");
     }
 
-    void EnableObjectTooltip (object sender, ControllerInteractionEventArgs e)
+    void EnableTooltips(GameObject building)
     {
-        tick = 0;
-        pressed = true;
-        nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 10f);
-        foreach (GameObject building in nearestBuildings)
-        {
-            EnableTooltip(building);
-        }
-        StartCoroutine("SecondTick");
-    }
-
-    public void EnableTooltip(GameObject building)
-    {
-        tick = 0;
         if(building.tag == "residential")
         {
             building.GetComponent<ResidentialTooltip>().EnableObjectTooltip();
@@ -66,13 +74,13 @@ public class TooltipManager : MonoBehaviour {
         {
             building.GetComponent<IndustrialTooltip>().EnableObjectTooltip();
         }
-        if (building.tag == "leisure")
+        if (building.tag == "service")
         {
-            building.GetComponent<LeisureTooltip>().EnableObjectTooltip();
+            building.GetComponent<TooltipBase>().EnableTooltip(stareat);
         }
     }
 
-    public void TestDisableTooltip()
+    public void DisableTooltips()
     // Used with test runner to disable tooltips without controllerss
     {
         pressed = false;
@@ -90,45 +98,20 @@ public class TooltipManager : MonoBehaviour {
             {
                 building.GetComponent<IndustrialTooltip>().DisableObjectTooltip();
             }
-            if (building.tag == "leisure")
+            if (building.tag == "service")
             {
-                building.GetComponent<LeisureTooltip>().DisableObjectTooltip();
+                building.GetComponent<TooltipBase>().DisableTooltip();
             }
-        }
-    }
-
-    void DisableObjectTooltip(object sender, ControllerInteractionEventArgs e)
-    {
-        pressed = false;
-        foreach (GameObject building in nearestBuildings)
-        {
-            if (building.tag == "residential")
-            {
-                building.GetComponent<ResidentialTooltip>().DisableObjectTooltip();
-            }
-            if (building.tag == "commercial")
-            {
-                building.GetComponent<CommercialTooltip>().DisableObjectTooltip();
-            }
-            if (building.tag == "industrial")
-            {
-                building.GetComponent<IndustrialTooltip>().DisableObjectTooltip();
-            }
-            if (building.tag == "leisure") 
-            {
-                building.GetComponent<LeisureTooltip>().DisableObjectTooltip();
-            } 
         }
     }
 
     IEnumerator SecondTick()
     {
-        while(pressed && tick <= 5)
+        while(pressed)
         {
             if(updateTooltips != null)
             {
                 updateTooltips();
-                tick++;
             }
             yield return new WaitForSeconds(1);
         }

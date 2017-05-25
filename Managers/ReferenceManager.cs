@@ -8,6 +8,9 @@ public class ReferenceManager : MonoBehaviour {
 
     public GameObject rightController;
     public GameObject leftController;
+    public GameObject cameraEye;
+
+    public GameObject spherePrefab;
     public RoadGenerator roadGenerator;
     public TOD_Sky tod;
 

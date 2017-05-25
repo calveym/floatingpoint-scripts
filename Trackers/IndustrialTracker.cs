@@ -29,9 +29,6 @@ public class IndustrialTracker : ItemTracker {
 
     // Multipliers from components
     public float productionMulti;
-    public float goodsCapacityMulti;
-    public float sellPriceMulti;
-    public float sellAmountMulti;
 
     float goodsSold;  // Number of goods sold last week
     bool checkEnable;
@@ -46,9 +43,6 @@ public class IndustrialTracker : ItemTracker {
         components = new List<IndustrialComponent>();
         goodsSold = 0;
         productionMulti = 1;
-        goodsCapacityMulti = 1;
-        sellPriceMulti = 1;
-        sellAmountMulti = 1;
         StartCoroutine("CheckEnable");
     }
 
@@ -64,7 +58,7 @@ public class IndustrialTracker : ItemTracker {
         {
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
-            GameObject.Find("Managers").GetComponent<ItemManager>().addIndustrial(capacity, gameObject);
+            ReferenceManager.instance.itemManager.addIndustrial(capacity, gameObject);
         }
         else if (updateStarted && !usable)
         {
@@ -81,7 +75,7 @@ public class IndustrialTracker : ItemTracker {
     {
         goodsProduced = users * productionMulti * longtermHappiness / 20;
 
-        income = goodsProduced * sellPrice * sellPriceMulti * (1 + (landValue * 0.01f));
+        income = goodsProduced * sellPrice * (1 + (landValue * 0.01f));
         income -= baseCost;
         allGoods += goodsProduced;
     }

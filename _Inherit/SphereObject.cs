@@ -10,8 +10,8 @@ public abstract class SphereObject : VRTK_InteractableObject {
 
     protected bool grabbed;
     GameObject spherePrefab;
-    GameObject sphere;
-    protected Sphere sphereScript;  // Attached sphere script
+    protected GameObject sphere;
+    public Sphere sphereScript;  // Attached sphere script
 
     [Header("Main settings")]
     [Space(10)]
@@ -21,7 +21,7 @@ public abstract class SphereObject : VRTK_InteractableObject {
 
     protected virtual void Start()
     {
-        spherePrefab = GameObject.Find("SpherePrefab");
+        spherePrefab = ReferenceManager.instance.spherePrefab;
         economyManager = ReferenceManager.instance.economyManager;
         InteractableObjectGrabbed += new InteractableObjectEventHandler(DoGrabStart);
         InteractableObjectUngrabbed += new InteractableObjectEventHandler(DoGrabEnd);
@@ -52,8 +52,17 @@ public abstract class SphereObject : VRTK_InteractableObject {
         DetachSphere();
     }
 
-    protected virtual void AttachSphere()
+    public bool SphereAttached()
     {
+        return sphere;
+    }
+
+    public virtual void AttachSphere()
+    {
+        if(!spherePrefab)
+        {
+            spherePrefab = ReferenceManager.instance.spherePrefab;
+        }
         sphere = Instantiate(spherePrefab, new Vector3(transform.position.x, 10.1f, transform.position.z), Quaternion.identity);
         sphere.transform.localScale = new Vector3(radius, 0.1f, radius);
         sphereScript = sphere.GetComponent<Sphere>();
@@ -61,10 +70,10 @@ public abstract class SphereObject : VRTK_InteractableObject {
         SetSphereMaterial();
     }
 
-    protected abstract void SetSphereMaterial();
-
-    protected virtual void DetachSphere()
+    public virtual void DetachSphere()
     {
         sphere.GetComponent<Sphere>().UnlinkSphere();
     }
+
+    protected abstract void SetSphereMaterial();
 }

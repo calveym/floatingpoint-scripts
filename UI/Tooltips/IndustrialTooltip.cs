@@ -18,8 +18,8 @@ public class IndustrialTooltip : MonoBehaviour {
     Text landValueText;
     Text capacityText;
     // Text componentAText; Used as subtitle
-    Text componentBText;
-    Text componentCText;
+    Text goodsText;
+    Text productionText;
     Text componentDText;
 
     // Happiness sprites
@@ -54,9 +54,9 @@ public class IndustrialTooltip : MonoBehaviour {
         incomeText.text = industrialTracker.FancyIncome();
         capacityText.text = industrialTracker.FancyCapacity();
         landValueText.text = industrialTracker.FancyLandValue();
-        componentBText.text = industrialTracker.goodsCapacityMulti.ToString();
-        componentCText.text = industrialTracker.productionMulti.ToString();
-        componentDText.text = industrialTracker.sellAmountMulti.ToString();
+        goodsText.text = industrialTracker.goodsProduced.ToString();
+        productionText.text = industrialTracker.productionMulti.ToString();
+        //componentDText.text = industrialTracker.sellAmountMulti.ToString();
     }
 
     void UpdateHappiness()
@@ -110,9 +110,9 @@ public class IndustrialTooltip : MonoBehaviour {
         incomeText = tooltip.transform.Find("Canvas/IncomeText").GetComponent<Text>();
         capacityText = tooltip.transform.Find("Canvas/CapacityText").GetComponent<Text>();
         landValueText = tooltip.transform.Find("Canvas/LandValueText").GetComponent<Text>();
-        componentBText = tooltip.transform.Find("Canvas/StorageText").GetComponent<Text>();
-        componentCText = tooltip.transform.Find("Canvas/ProductionText").GetComponent<Text>();
-        componentDText = tooltip.transform.Find("Canvas/SalesText").GetComponent<Text>();
+        goodsText = tooltip.transform.Find("Canvas/GoodsText").GetComponent<Text>();
+        productionText = tooltip.transform.Find("Canvas/ProductionText").GetComponent<Text>();
+        //componentDText = tooltip.transform.Find("Canvas/SalesText").GetComponent<Text>();
 
         dead = tooltip.transform.Find("Canvas/Icons/Dead").GetComponent<SpriteRenderer>();
         happy = tooltip.transform.Find("Canvas/Icons/Happy").GetComponent<SpriteRenderer>();

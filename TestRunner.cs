@@ -50,7 +50,7 @@ public class TestRunner : MonoBehaviour
         if (Input.GetKeyDown("z")) FirstTest();
         if (Input.GetKeyDown("x")) SecondTest();
         if (Input.GetKeyDown("c")) ThirdTest();
-        //if (Input.GetKeyDown("r")) FourthTest();
+        if (Input.GetKeyDown("r")) FourthTest();
         if (Input.GetKeyDown("t")) FifthTest();
         if (Input.GetKeyDown("y")) SixthTest();
         if (Input.GetKeyDown("u")) SeventhTest();
@@ -82,19 +82,18 @@ public class TestRunner : MonoBehaviour
         TooltipManager tooltip = manager.GetComponent<TooltipManager>();
         TooltipManager.pressed = true;
         tooltip.StartCoroutine("SecondTick");
-        tooltip.EnableTooltip(gameObject);
+        tooltip.StartTooltips();
     }
 
     void FifthTest()
     {
         Debug.Log("Test 5 Running");
-        manager.GetComponent<TooltipManager>().TestTooltip();
+        manager.GetComponent<TooltipManager>().DisableTooltips();
     }
 
     void SixthTest()
     {
         Debug.Log("Test 6 Running");
-        manager.GetComponent<TooltipManager>().TestDisableTooltip();
     }
 
     void SeventhTest()

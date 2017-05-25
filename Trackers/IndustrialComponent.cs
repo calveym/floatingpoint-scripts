@@ -32,6 +32,14 @@ public class IndustrialComponent : ComponentSnap {
     public delegate void StopCheck();
     public static StopCheck stopCheck;
 
+    protected override void Start()
+    {
+        base.Start();
+
+        checkStop = true;
+        StartCoroutine("WaitForStop");
+    }
+
     protected override void Ungrab()
     {
         base.Ungrab();
@@ -57,7 +65,7 @@ public class IndustrialComponent : ComponentSnap {
         else return true;
     }
 
-    void UnlinkIfStopped()
+    void UnlinkIfMoving()
     // Method that is attached to delegate to check if stopped. If stopped, component is unlinked
     {
         if(!CheckStopped())
@@ -69,7 +77,7 @@ public class IndustrialComponent : ComponentSnap {
     void Link()
     // Saves industrial tracker link and informs tracker of bonus
     {
-        stopCheck += UnlinkIfStopped;
+        stopCheck += UnlinkIfMoving;
 
         List<IndustrialTracker> surroundingIndustrials = U.ReturnIndustrialTrackers(U.FindNearestBuildings(transform.position, radius));
         if(surroundingIndustrials.Count >= 1)
@@ -82,7 +90,7 @@ public class IndustrialComponent : ComponentSnap {
     void Unlink()
     // Unlinks component from industrial tracker and restarts linking process
     {
-        stopCheck -= UnlinkIfStopped;
+        stopCheck -= UnlinkIfMoving;
         linkedTracker.UnlinkComponent(this);
 
         checkStop = true;
