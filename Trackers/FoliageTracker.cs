@@ -46,6 +46,6 @@ public class FoliageTracker : ComponentSnap {
         }
         happinessAffector.enabled = true;
         happinessAffector.radius = radius;
-        happinessAffector.affectAmount = affectAmount;
+        affectAmount = happinessAffector.affectAmount;
     }
 }

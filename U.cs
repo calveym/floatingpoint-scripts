@@ -184,4 +184,18 @@ public class U : MonoBehaviour {
     {
         SteamVR_Controller.Input(2).TriggerHapticPulse((ushort)time);
     }
+
+    public static void DisablePhysics(GameObject disableObject)
+    {
+        Rigidbody rb = disableObject.GetComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.isKinematic = true;
+    }
+
+    public static void EnablePhysics(GameObject enableObject)
+    {
+        Rigidbody rb = enableObject.GetComponent<Rigidbody>();
+        rb.useGravity = true;
+        rb.isKinematic = false;
+    }
 }
