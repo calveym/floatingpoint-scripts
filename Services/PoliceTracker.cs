@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [SelectionBase]
-public class HealthTracker : ServiceTrackerBase {
+public class PoliceTracker : ServiceTrackerBase
+{
 
     Material sphereMaterial;
-    Health health;
+    Police police;
 
     protected override void Awake()
     {
@@ -18,27 +19,27 @@ public class HealthTracker : ServiceTrackerBase {
     {
         base.Start();
 
-        health = ReferenceManager.instance.health;
+        police = ReferenceManager.instance.police;
         AddService();
     }
 
     protected override void AddService()
     {
-        health.AddHealth(this);
-        health.addLocalHealth += DoEffect;
-        health.servicePayment += PayForService;
+        police.AddPolice(this);
+        police.addLocalPolice += DoEffect;
+        police.servicePayment += PayForService;
     }
 
     protected override void DoEffect()
     {
         base.DoEffect();
-        if(surroundingBuildings.Count <= amount)
+        if (surroundingBuildings.Count <= amount)
         {
             foreach (GameObject building in surroundingBuildings)
             {
                 if (building != gameObject && building.tag == "industrial" || building.tag == "commercial" || building.tag == "industrial")
                 {
-                    building.GetComponent<ItemTracker>().health = true;
+                    building.GetComponent<ItemTracker>().police = true;
                 }
             }
         }
@@ -48,7 +49,7 @@ public class HealthTracker : ServiceTrackerBase {
             {
                 if (surroundingBuildings[i] != gameObject)
                 {
-                    surroundingBuildings[i].GetComponent<ItemTracker>().health = true;
+                    surroundingBuildings[i].GetComponent<ItemTracker>().police = true;
                 }
             }
         }
@@ -61,6 +62,6 @@ public class HealthTracker : ServiceTrackerBase {
 
     protected override void PayForService()
     {
-        health.AddCost(cost);
+        police.AddCost(cost);
     }
 }

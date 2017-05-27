@@ -12,6 +12,10 @@ public class EconomyManager : MonoBehaviour {
     AudioManager audioManager;
 
     // Declare variables
+    [Header("Money")]
+    [Range(0.0001f, 1)]
+    [Tooltip("Multiplier for income to get per tick income")]
+    public float incomeMultiplier = 0.1f;
 	float balance;
 	int numRoads;
 	float income; // Net income, after expenses
@@ -67,6 +71,15 @@ public class EconomyManager : MonoBehaviour {
     [SerializeField]
     [Tooltip("[READ ONLY]  Total expenses for running education services")]
     float educationExpenses;
+    [SerializeField]
+    [Tooltip("[READ ONLY]  Total expenses for running health services")]
+    float healthExpenses;
+    [SerializeField]
+    [Tooltip("[READ ONLY]  Total expenses for running police services")]
+    float policeExpenses;
+    [SerializeField]
+    [Tooltip("[READ ONLY]  Total expenses for running fire services")]
+    float fireExpenses;
 
 
     [SerializeField]
@@ -196,7 +209,7 @@ public class EconomyManager : MonoBehaviour {
 	void UpdateBalance()
 	// Reduces balance by income and time
 	{
-		balance += income * Time.deltaTime * 100;
+		balance += income * incomeMultiplier;
 	}
 
 	void UpdateIncome()
@@ -206,7 +219,7 @@ public class EconomyManager : MonoBehaviour {
 		float residentialIncome = CalculateResidentialIncome();
         float commercialIncome = CalculateCommercialIncome();
         float industrialIncome = CalculateIndustrialIncome();
-        serviceExpenses = powerExpenses + educationExpenses;
+        serviceExpenses = powerExpenses + educationExpenses + healthExpenses + policeExpenses + fireExpenses;
 
         float expenses = roadExpenses + CalculateCapacityExpenses() + serviceExpenses;
         income = (rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses);
@@ -220,6 +233,21 @@ public class EconomyManager : MonoBehaviour {
     public void SetEducationExpense(float newEducationExpenses)
     {
         educationExpenses = newEducationExpenses;
+    }
+
+    public void SetHealthExpense(float newHealthExpenses)
+    {
+        healthExpenses = newHealthExpenses;
+    }
+
+    public void SetPoliceExpense(float newPoliceExpenses)
+    {
+        policeExpenses = newPoliceExpenses;
+    }
+
+    public void SetFireExpense(float newFireExpenses)
+    {
+        fireExpenses = newFireExpenses;
     }
 
     public void SetProduction(float newProduction)

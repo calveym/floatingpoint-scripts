@@ -3,52 +3,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : ServiceBase
+public class Fire : ServiceBase
 {
 
-    List<HealthTracker> health;
-    public delegate void AddLocalHealth();
-    public AddLocalHealth addLocalHealth;
+    List<FireTracker> fire;
+    public delegate void AddLocalFire();
+    public AddLocalFire addLocalFire;
 
 
     protected void Awake()
     {
-        health = new List<HealthTracker>();
+        fire = new List<FireTracker>();
     }
 
     protected override void ApplyGlobalDefecit()
     {
-        // TODO:A
+        //TODO:A
     }
 
     protected override void ApplyGlobalSurplus()
     {
-        // TODO:A
+        //TODO:A
     }
 
-    public void AddHealth(HealthTracker incomingHealth)
+    public void AddFire(FireTracker incomingFire)
     {
-        health.Add(incomingHealth);
+        fire.Add(incomingFire);
     }
 
     protected override void RunAddLocalAmounts()
     {
-        if(addLocalHealth != null)
+        if (addLocalFire != null)
         {
-            addLocalHealth();
+            addLocalFire();
         }
     }
 
     protected override void DeductCost()
     {
-        economyManager.SetHealthExpense(cost);
+        economyManager.SetFireExpense(cost);
     }
 
     protected override void ResetCommercial()
     {
         foreach (GameObject com in itemManager.commercial)
         {
-            com.GetComponent<ItemTracker>().health = false;
+            com.GetComponent<ItemTracker>().fire = false;
         }
     }
 
@@ -56,7 +56,7 @@ public class Health : ServiceBase
     {
         foreach (GameObject ind in itemManager.industrial)
         {
-            ind.GetComponent<ItemTracker>().health = false;
+            ind.GetComponent<ItemTracker>().fire = false;
         }
     }
 
@@ -64,7 +64,7 @@ public class Health : ServiceBase
     {
         foreach (GameObject res in itemManager.residential)
         {
-            res.GetComponent<ItemTracker>().health = false;
+            res.GetComponent<ItemTracker>().power = false;
         }
     }
 }

@@ -33,6 +33,9 @@ public class ReferenceManager : MonoBehaviour {
     [Space(5)]
     public Power power;
     public Education education;
+    public Health health;
+    public Police police;
+    public Fire fire;
 
     // Use this for initialization
     void Awake () {

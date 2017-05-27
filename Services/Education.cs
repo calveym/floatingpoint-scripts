@@ -18,12 +18,12 @@ public class Education : ServiceBase
 
     protected override void ApplyGlobalDefecit()
     {
-        
+        //TODO:A
     }
 
     protected override void ApplyGlobalSurplus()
     {
-        
+        //TODO:B
     }
 
     public void AddEducation(EducationTracker incomingEducation)

@@ -104,7 +104,7 @@ public class DisplayUI : MonoBehaviour {
         indc = transform.Find("Canvas/Menu/Component").gameObject.GetComponent<Image>();
         fol = transform.Find("Canvas/Menu/Foliage").gameObject.GetComponent<Image>();
         serv = transform.Find("Canvas/Menu/Service").gameObject.GetComponent<Image>();
-        //baseColor = fol.color;
+        baseColor = fol.color;
 
         spawnManager = ReferenceManager.instance.spawnManager;
         economyManager = ReferenceManager.instance.economyManager;

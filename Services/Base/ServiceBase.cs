@@ -13,8 +13,13 @@ public abstract class ServiceBase: MonoBehaviour {
     public string type; // Type of service, set in inspector
 
     // STATIC DEMAND VARIABLES, FOR ACCESS. NOT SET HERE, TAKEN FROM RELEVANT service.demand
+    [Header("Demand")]
     public static int powerDemand;
     public static int educationDemand;
+    public static int healthDemand;
+    public static int fireDemand;
+    public static int policeDemand;
+   
 
     protected float cost;  // All added costs from trackers
     protected float totalCost;  // Total cost, calculated with multiplier and cost, deducted from income
@@ -59,9 +64,21 @@ public abstract class ServiceBase: MonoBehaviour {
         {
             powerDemand = demand;
         }
-        else if(type == "education")
+        else if (type == "education")
         {
             educationDemand = demand;
+        }
+        else if (type == "health")
+        {
+            healthDemand = demand;
+        }
+        else if (type == "police")
+        {
+            policeDemand = demand;
+        }
+        else if(type == "fire")
+        {
+            fireDemand = demand;
         }
     }
 
@@ -124,6 +141,18 @@ public abstract class ServiceBase: MonoBehaviour {
         else if(type == "education")
         {
             return educationDemand;
+        }
+        else if(type == "health")
+        {
+            return healthDemand;
+        }
+        else if(type == "fire")
+        {
+            return fireDemand;
+        }
+        else if(type == "police")
+        {
+            return policeDemand;
         }
         else return 0;
     }

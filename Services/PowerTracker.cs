@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [SelectionBase]
-public class PowerTracker : ServiceTrackerBase {
+public class PowerTracker : ServiceTrackerBase
+{
 
     Material sphereMaterial;
     Power power;
@@ -14,7 +15,8 @@ public class PowerTracker : ServiceTrackerBase {
         base.Awake();
     }
 
-    protected override void Start () {
+    protected override void Start ()
+    {
         base.Start();
 
         power = ReferenceManager.instance.power;

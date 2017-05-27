@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [SelectionBase]
-public class HealthTracker : ServiceTrackerBase {
+public class FireTracker : ServiceTrackerBase {
 
     Material sphereMaterial;
-    Health health;
+    Fire fire;
 
     protected override void Awake()
     {
@@ -18,27 +18,27 @@ public class HealthTracker : ServiceTrackerBase {
     {
         base.Start();
 
-        health = ReferenceManager.instance.health;
+        fire = ReferenceManager.instance.fire;
         AddService();
     }
 
     protected override void AddService()
     {
-        health.AddHealth(this);
-        health.addLocalHealth += DoEffect;
-        health.servicePayment += PayForService;
+        fire.AddFire(this);
+        fire.addLocalFire += DoEffect;
+        fire.servicePayment += PayForService;
     }
 
     protected override void DoEffect()
     {
         base.DoEffect();
-        if(surroundingBuildings.Count <= amount)
+        if (surroundingBuildings.Count <= amount)
         {
             foreach (GameObject building in surroundingBuildings)
             {
                 if (building != gameObject && building.tag == "industrial" || building.tag == "commercial" || building.tag == "industrial")
                 {
-                    building.GetComponent<ItemTracker>().health = true;
+                    building.GetComponent<ItemTracker>().fire = true;
                 }
             }
         }
@@ -48,7 +48,7 @@ public class HealthTracker : ServiceTrackerBase {
             {
                 if (surroundingBuildings[i] != gameObject)
                 {
-                    surroundingBuildings[i].GetComponent<ItemTracker>().health = true;
+                    surroundingBuildings[i].GetComponent<ItemTracker>().fire = true;
                 }
             }
         }
@@ -61,6 +61,6 @@ public class HealthTracker : ServiceTrackerBase {
 
     protected override void PayForService()
     {
-        health.AddCost(cost);
+        fire.AddCost(cost);
     }
 }
