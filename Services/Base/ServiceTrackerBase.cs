@@ -6,11 +6,11 @@ public abstract class ServiceTrackerBase : SphereObject {
 
 
     [Tooltip("Capacity of Service")]
-    [Range(0, 100)]
+    [Range(100, 20000)]
     public int amount;  // Amount of effect of service
     [Tooltip("Type of service [power/health/police/education/fire]")]
     public string type;  // Type of service, used in logic
-    [Range(-50, 50)]
+    [Range(0, 10000)]
     [Tooltip("EcoTick cost of service")]
     public int cost;
     [Tooltip("Initial purchase cost of service")]
