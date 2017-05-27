@@ -46,8 +46,7 @@ public class Power : ServiceBase
 
     protected override void ResetCommercial()
     {
-        List<GameObject> allCom = itemManager.commercial;
-        foreach(GameObject com in allCom)
+        foreach(GameObject com in itemManager.commercial)
         {
             com.GetComponent<ItemTracker>().power = false;
         }
@@ -55,8 +54,7 @@ public class Power : ServiceBase
 
     protected override void ResetIndustrial()
     {
-        List<GameObject> allInd = itemManager.industrial;
-        foreach(GameObject ind in allInd)
+        foreach(GameObject ind in itemManager.industrial)
         {
             ind.GetComponent<ItemTracker>().power = false;
         }
@@ -64,8 +62,7 @@ public class Power : ServiceBase
 
     protected override void ResetResidential()
     {
-        List<GameObject> allRes = itemManager.residential;
-        foreach (GameObject res in allRes)
+        foreach (GameObject res in itemManager.residential)
         {
             res.GetComponent<ItemTracker>().power = false;
         }

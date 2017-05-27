@@ -15,6 +15,8 @@ public abstract class SphereObject : VRTK_InteractableObject {
 
     [Header("Main settings")]
     [Space(10)]
+    [Tooltip("Identifies if building is active")]
+    public bool active;
     [Range(0f, 50f)]
     [Tooltip("Range of service effect in global units")]
     public int radius;  // Radius of effect

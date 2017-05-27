@@ -18,6 +18,9 @@ public class DisplayUI : MonoBehaviour {
 
     GameObject menu;
 
+    [Header("Menu Colors")]
+    [Space(5)]
+    [Tooltip("Menu panel base color; menu panels are reset to this every swipe")]
     public Color baseColor;
     public Color residentialColor;
     public Color commercialColor;
@@ -25,7 +28,11 @@ public class DisplayUI : MonoBehaviour {
     public Color officeColor;
     public Color componentColor;
     public Color foliageColor;
+    public Color serviceColor;
 
+    [Space(10)]
+    [Header("UI References")]
+    [Space(5)]
     public GameObject globalStats;
     public GameObject buildingStats;
 
@@ -56,13 +63,17 @@ public class DisplayUI : MonoBehaviour {
     Image off;
     Image indc;
     Image fol;
+    Image serv;
 
     int menuSelection;  // which of the 6 menu panels is selected, used in logic
 
     List<string> text;
     bool updateRequired;  // Used to trigger a change between buildings and menu
+    [Tooltip("Controls main display coroutine")]
     public bool displaying;  // controlls main Display coroutine
+    [Tooltip("True if buildings and not menu are showing")]
     public bool showBuildings;  // true if menu hidden and buildings shown
+    [Tooltip("True if no presses before touch")]
     public bool firstTouch;
     public bool ignoreFirstTouch;
 
@@ -77,6 +88,10 @@ public class DisplayUI : MonoBehaviour {
         displaying = false;
         showingGlobalStats = false;
         menuSelection = 0;
+    }
+
+    private void Start()
+    {
         staticSpheres = transform.Find("StaticSpheres").gameObject;
         wheelBase = transform.Find("WheelBase").gameObject;
         canvas = transform.Find("Canvas").gameObject;
@@ -88,10 +103,9 @@ public class DisplayUI : MonoBehaviour {
         off = transform.Find("Canvas/Menu/Office").gameObject.GetComponent<Image>();
         indc = transform.Find("Canvas/Menu/Component").gameObject.GetComponent<Image>();
         fol = transform.Find("Canvas/Menu/Foliage").gameObject.GetComponent<Image>();
-    }
+        serv = transform.Find("Canvas/Menu/Service").gameObject.GetComponent<Image>();
+        //baseColor = fol.color;
 
-    private void Start()
-    {
         spawnManager = ReferenceManager.instance.spawnManager;
         economyManager = ReferenceManager.instance.economyManager;
         populationManager = ReferenceManager.instance.populationManager;
@@ -209,7 +223,7 @@ public class DisplayUI : MonoBehaviour {
 
     public void SendSwipe(float swipe)
     {
-        if(menuSelection <= 4 && swipe > 0)
+        if(menuSelection <= 5 && swipe > 0)
         {
             // swipe to the right
             menuSelection++;
@@ -241,33 +255,30 @@ public class DisplayUI : MonoBehaviour {
         switch(menuSelection)
         {
             case 0:
-                SetToBaseColor();
                 res.color = residentialColor;
                 break;
 
             case 1:
-                SetToBaseColor();
                 com.color = commercialColor;
                 break;
 
             case 2:
-                SetToBaseColor();
                 ind.color = industrialColor;
                 break;
 
             case 3:
-                SetToBaseColor();
                 off.color = residentialColor;
                 break;
 
             case 4:
-                SetToBaseColor();
                 indc.color = componentColor;
                 break;
 
             case 5:
-                SetToBaseColor();
                 fol.color = foliageColor;
+                break;
+            case 6:
+                serv.color = commercialColor;
                 break;
         }
     }
@@ -280,6 +291,7 @@ public class DisplayUI : MonoBehaviour {
         off.color = baseColor;
         indc.color = baseColor;
         fol.color = baseColor;
+        serv.color = baseColor;
     }
 
 	public void ShowUI()

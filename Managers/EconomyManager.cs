@@ -51,9 +51,9 @@ public class EconomyManager : MonoBehaviour {
     public int residentialTaxRate;
     public int commercialTaxRate;
     public int industrialTaxRate;
-    [Range(0, 100)]
+    [Range(0, 1000)]
     [Tooltip("Initial income, added every ecoTick to income")]
-    public int rawIncome = 25; // Gross
+    public int rawIncome = 200; // Gross
     bool keepUpdating;
     [Space(10)]
     [Header("Services")]
@@ -64,6 +64,10 @@ public class EconomyManager : MonoBehaviour {
     [SerializeField]
     [Tooltip("[READ ONLY]  Total expenses for running power services")]
     float powerExpenses;
+    [SerializeField]
+    [Tooltip("[READ ONLY]  Total expenses for running education services")]
+    float educationExpenses;
+
 
     [SerializeField]
     [Tooltip("[READ ONLY]  Production multiplier, influenced by power availability")]
@@ -202,7 +206,7 @@ public class EconomyManager : MonoBehaviour {
 		float residentialIncome = CalculateResidentialIncome();
         float commercialIncome = CalculateCommercialIncome();
         float industrialIncome = CalculateIndustrialIncome();
-        serviceExpenses = powerExpenses;
+        serviceExpenses = powerExpenses + educationExpenses;
 
         float expenses = roadExpenses + CalculateCapacityExpenses() + serviceExpenses;
         income = (rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses);
@@ -211,6 +215,11 @@ public class EconomyManager : MonoBehaviour {
     public void SetPowerExpense(float newPowerExpenses)
     {
         powerExpenses = newPowerExpenses;
+    }
+
+    public void SetEducationExpense(float newEducationExpenses)
+    {
+        educationExpenses = newEducationExpenses;
     }
 
     public void SetProduction(float newProduction)

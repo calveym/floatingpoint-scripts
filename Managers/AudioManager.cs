@@ -71,6 +71,7 @@ public class AudioManager : MonoBehaviour {
 
     public void PlaySingle(AudioClip clip)
     {
+        Debug.Log("Efx source: " + efxSource);
         efxSource.clip = clip;
         efxSource.Play();
     }

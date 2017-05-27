@@ -17,6 +17,7 @@ public class SpawnManager : MonoBehaviour {
     Object[] util;
     Object[] indc;
     Object[] fol;
+    Object[] serv;
 
     List<Object[]> buildingList;
 
@@ -151,6 +152,7 @@ public class SpawnManager : MonoBehaviour {
         util = Resources.LoadAll("util");
         indc = Resources.LoadAll("indc");
         fol = Resources.LoadAll("fol");
+        serv = Resources.LoadAll("serv");
 
         buildingList = new List<Object[]>();
         buildingList.Add(res);
@@ -159,5 +161,6 @@ public class SpawnManager : MonoBehaviour {
         buildingList.Add(off);
         buildingList.Add(indc);
         buildingList.Add(fol);
+        buildingList.Add(serv);
     }
 }

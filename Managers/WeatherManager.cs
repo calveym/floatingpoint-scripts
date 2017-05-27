@@ -3,9 +3,12 @@ using UnityEngine;
 
 public class WeatherManager : MonoBehaviour {
 
-    int weatherState = 0;  // 0 = Sun, 1 = cloudy, 2 = rainy
+    [Header("Controls")]
+    [Tooltip("Current weather state \n [0:sun, 1:cloudy, 2:rainy]")]
+    public int weatherState = 0;  // 0 = Sun, 1 = cloudy, 2 = rainy
     int oldWeatherState = 0;
-    bool randomiseWeather = true;
+    [Tooltip("Enable random weather updates")]
+    public bool randomiseWeather = true;
     System.Random r = new System.Random();
     TOD_Sky tod;
 

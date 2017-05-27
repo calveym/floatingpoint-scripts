@@ -14,6 +14,7 @@ public abstract class ServiceBase: MonoBehaviour {
 
     // STATIC DEMAND VARIABLES, FOR ACCESS. NOT SET HERE, TAKEN FROM RELEVANT service.demand
     public static int powerDemand;
+    public static int educationDemand;
 
     protected float cost;  // All added costs from trackers
     protected float totalCost;  // Total cost, calculated with multiplier and cost, deducted from income
@@ -57,6 +58,10 @@ public abstract class ServiceBase: MonoBehaviour {
         if (type == "power")
         {
             powerDemand = demand;
+        }
+        else if(type == "education")
+        {
+            educationDemand = demand;
         }
     }
 
@@ -110,10 +115,15 @@ public abstract class ServiceBase: MonoBehaviour {
     }
 
     public static int FindDemand(string type)
+    // Generalised function that allows easy access of demand
     {
         if (type == "power")
         {
             return powerDemand;
+        }
+        else if(type == "education")
+        {
+            return educationDemand;
         }
         else return 0;
     }

@@ -34,6 +34,7 @@ public class SpawnController : MonoBehaviour {
     CommercialTracker off;
     IndustrialComponent indc;
     FoliageTracker fol;
+    ServiceTrackerBase serv;
 
 
     private void Start()
@@ -59,7 +60,7 @@ public class SpawnController : MonoBehaviour {
     public void EnableBuilding()
     // Call this to spawn the building 
     {
-        if(!disablePurchase && economyManager.GetBalance() > price && containedBuilding)
+        if (!disablePurchase && economyManager.GetBalance() > price && containedBuilding)
         {
             SizeForPlay();
             DeselectBuilding();
@@ -96,6 +97,10 @@ public class SpawnController : MonoBehaviour {
             else if (containedType == 5)
             {
                 EnableFoliage();
+            }
+            else if (containedType == 6)
+            {
+                EnableService();
             }
 
             // Spawns new from here!!!!!
@@ -138,7 +143,7 @@ public class SpawnController : MonoBehaviour {
         sendList.Add(FancyBuyCost());
         displayUI.SendSelectedText(sendList);
         containedBuilding.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);
-        containedBuilding.transform.Rotate(new Vector3(0, 3f, 0));
+        containedBuilding.transform.Rotate(new Vector3(0, 2f, 0));
     }
 
     void DeselectBuilding()
@@ -167,7 +172,7 @@ public class SpawnController : MonoBehaviour {
             SelectBuilding();
         }
 
-        if (newBuilding.tag == "industrial")
+        if (newBuilding.tag == "industrial" || newBuilding.tag == "industrialComponent")
         // Smoke deactivation
         {
             foreach (Transform child in newBuilding.transform)
@@ -209,6 +214,9 @@ public class SpawnController : MonoBehaviour {
                 break;
             case 5:
                 level = 2;
+                break;
+            case 6:
+                level = 1;
                 break;
         }
     }
@@ -257,8 +265,14 @@ public class SpawnController : MonoBehaviour {
 
     void EnableFoliage()
     {
-        price = 25f;
+        price = containedBuilding.GetComponent<FoliageTracker>().buyCost;
         fol.happinessAffector.usable = true;
+    }
+
+    void EnableService()
+    {
+        price = serv.buyCost;
+        serv.active = true;
     }
 
     void DisablePhysics()
@@ -326,7 +340,12 @@ public class SpawnController : MonoBehaviour {
         else if (containedType == 5)
         {
             fol = containedBuilding.GetComponent<FoliageTracker>();
-            fol.happinessAffector.usable = false;
+            fol.active = false;
+        }
+        else if(containedType == 6)
+        {
+            serv = containedBuilding.GetComponent<ServiceTrackerBase>();
+            serv.active = true;
         }
     }
 
@@ -338,6 +357,7 @@ public class SpawnController : MonoBehaviour {
         off = null;
         indc = null;
         fol = null;
+        serv = null;
     }
 
     void SizeForMenu()
@@ -386,6 +406,8 @@ public class SpawnController : MonoBehaviour {
                 return "Component";
             case 5:
                 return "Foliage";
+            case 6:
+                return "Service";
         }
         return "";
     }
@@ -406,6 +428,8 @@ public class SpawnController : MonoBehaviour {
                 return "Production: " + indc.productionMulti;
             case 5:
                 return "";
+            case 6:
+                return "Max Buildings Covered: " + serv.amount;
         }
         return "";
     }
@@ -426,6 +450,8 @@ public class SpawnController : MonoBehaviour {
                 return "Level: " + indc.level;
             case 5:
                 return "";
+            case 6:
+                return "Level: " + serv.level;
         }
         return "";
     }
@@ -446,6 +472,8 @@ public class SpawnController : MonoBehaviour {
                 return "Weekly cost: $" + indc.baseCost;
             case 5:
                 return "";
+            case 6:
+                return "Weekly cost: $" + serv.cost;
         }
         return "";
     }
@@ -466,6 +494,8 @@ public class SpawnController : MonoBehaviour {
                 return "Buy Cost: $" + indc.buyCost;
             case 5:
                 return "";
+            case 6:
+                return "Buy Cost: $" + serv.buyCost;
         }
         return "";
     }

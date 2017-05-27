@@ -12,7 +12,11 @@ public abstract class ServiceTrackerBase : SphereObject {
     public string type;  // Type of service, used in logic
     [Range(-50, 50)]
     [Tooltip("EcoTick cost of service")]
-    public float cost;
+    public int cost;
+    [Tooltip("Initial purchase cost of service")]
+    public int buyCost;
+    [Tooltip("Level at which this building is unlocked")]
+    public int level;
 
     protected List<GameObject> surroundingBuildings;
     public int numSurroundingBuildings;
