@@ -53,9 +53,13 @@ public abstract class ComponentSnap : SphereObject {
     {
         RaycastHit hit;
         Physics.Raycast(transform.position, Vector3.down, out hit, 5f);
-        if (hit.collider.gameObject.name == "Island")
+        if(hit.collider)
         {
-            return true;
+            if (hit.collider.gameObject.name == "Island")
+            {
+                return true;
+            }
+            else return false;
         }
         else return false;
     }
@@ -66,8 +70,7 @@ public abstract class ComponentSnap : SphereObject {
         while(targetClear && snapAmount <= 1)
         {
             snapAmount += 0.05f;
-            Debug.Log("Start rotation: " + startRotation);
-            Debug.Log("IDentity: " + Quaternion.identity);
+         
             if(snapAmount <= 0.9f)
             {
                 transform.rotation = Quaternion.Slerp(startRotation, Quaternion.identity, snapAmount + 0.1f);

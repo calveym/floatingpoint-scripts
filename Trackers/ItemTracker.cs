@@ -96,6 +96,10 @@ public class ItemTracker : MonoBehaviour {
     public float goodsSold;
     public float goodsProduced;  // Goods produced in last economic tick
 
+    private void Awake()
+    {
+        // Wake up fool
+    }
 
     public void Start()
     // Sets start variables
@@ -103,7 +107,10 @@ public class ItemTracker : MonoBehaviour {
         longtermHappiness = 0;
         availableTransportation = 1;
         landValue = 10f;
-        land = gameObject.GetComponent<LandValue>();
+        if(!land)
+        {
+            land = gameObject.GetComponent<LandValue>();
+        }
         happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
@@ -119,6 +126,11 @@ public class ItemTracker : MonoBehaviour {
             GetComponent<Rigidbody>().isKinematic = false;
             GetComponent<Rigidbody>().useGravity = true;
         }
+    }
+
+    public void SetLandValue(LandValue newLand)
+    {
+        land = newLand;
     }
 
     public void UpdateLandValue()

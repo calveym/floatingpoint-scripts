@@ -35,6 +35,7 @@ public class BuildingNotificationTracker : MonoBehaviour {
         if(NoUsers() && !updating)
         {
             updating = true;
+            Debug.Log("Notification prefab: " + notificationPrefab);
             GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
             notificationObject.transform.parent = transform;
             displayingNotification = new Notification(1, noUsers, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
@@ -103,7 +104,6 @@ public class BuildingNotificationTracker : MonoBehaviour {
     void CheckRemove(int id)
     // Check if notification should still be displayed
     {
-        Debug.Log(IndividualCondition(id));
         if(!IndividualCondition(id))
         {
             RemoveNotification();
@@ -166,7 +166,13 @@ public class BuildingNotificationTracker : MonoBehaviour {
 
     bool HighUnemployment()
     {
-
+        if (tracker.unemployedPopulation != 0)
+        {
+            if (tracker.users / tracker.unemployedPopulation <= 5)
+                return true;
+            else return false;
+        }
+        else return false;
     }
 
     protected class Notification

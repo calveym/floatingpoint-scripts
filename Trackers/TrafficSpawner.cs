@@ -10,8 +10,6 @@ public class TrafficSpawner : MonoBehaviour {
     List<GameObject> cars;  // List of all cars in scene
     bool spawnCars;  // Controls car spawning
 
-    [Tooltip("If checked, car spawn check will emanate from target")]
-    public bool useTarget;
     [Tooltip("Alternate spawn check location")]
     public GameObject target;
 
@@ -19,6 +17,8 @@ public class TrafficSpawner : MonoBehaviour {
     public GameObject carB;
     public GameObject carC;
     List<GameObject> carList;  // List of spawnable cars
+
+    public GameObject testObject;
 
     private void Awake()
     {
@@ -38,28 +38,37 @@ public class TrafficSpawner : MonoBehaviour {
         StartCoroutine("CheckNumCars");
     }
 
-    void SpawnCars(int numToSpawn)
+    void SpawnCars(int maxCars)
     {
         List<GameObject> spawnLocations = GetSpawnLocations();
-        int side = Random.Range(0, 1);
-        if (spawnLocations.Count < numToSpawn)
+        
+        foreach(GameObject location in spawnLocations)
         {
-            for(int i = 0; i < spawnLocations.Count; i++)
+            Debug.Log(location + "LOCATIONNNN");
+            if (cars.Count >= maxCars)
+                break;
+            int side = Random.Range(0, 2);
+            if(side == 0)
             {
-                if (side == 0)
-                    SpawnCar(spawnLocations[i].transform.Find("StraightLeftStart").gameObject);
-                else
-                    SpawnCar(spawnLocations[i].transform.Find("StraightRightStart").gameObject);
+                foreach(Transform child in location.transform)
+                {
+                    if (child.name == "StraightRightStart")
+                    {
+                        SpawnCar(child.gameObject);
+                        break;
+                    }
+                }
             }
-        }
-        else if(spawnLocations.Count >= numToSpawn)
-        {
-            for(int i = 0; i < numToSpawn; i++)
+            else if(side == 1)
             {
-                if(side == 0)
-                    SpawnCar(spawnLocations[i].transform.Find("StraightLeftStart").gameObject);
-                else
-                    SpawnCar(spawnLocations[i].transform.Find("StraightRightStart").gameObject);
+                foreach (Transform child in location.transform)
+                {
+                    if (child.name == "StraightLeftStart")
+                    {
+                        SpawnCar(child.gameObject);
+                        break;
+                    }
+                }
             }
         }
     }
@@ -75,12 +84,23 @@ public class TrafficSpawner : MonoBehaviour {
 
     List<GameObject> GetSpawnLocations()
     {
-        if (!useTarget)
+        List<GameObject> allRoads;
+        if (testObject)
         {
-            return U.FindNearestRoads(transform.position, 25f);
+            allRoads = U.FindNearestRoads(testObject.transform.position, 25f);
         }
         else
-            return U.FindNearestRoads(target.transform.position, 25f);
+        {
+            allRoads = U.FindNearestRoads(transform.position, 25f);
+        }
+        List<GameObject> roadsToSpawn = new List<GameObject>();
+        Debug.Log("All roads count: " + allRoads.Count); 
+		foreach (GameObject road in allRoads) {
+			if (U.FindNearestBuildings (road.transform.position, 1.1f).Count > 0) {
+                roadsToSpawn.Add (road);
+            }
+		}
+		return roadsToSpawn;
     }
 
     void SpawnCar(GameObject node)
@@ -90,16 +110,32 @@ public class TrafficSpawner : MonoBehaviour {
         cars.Add(newCar);
     }
 
+	int carSpawnAndPopulationCheck(int carsToSpawn, int totalPopulation) {
+        Debug.Log("Total pop: " + totalPopulation);
+		if (carsToSpawn > totalPopulation) {
+			return totalPopulation;
+		} else {
+			return carsToSpawn;
+		}
+	}
+
     IEnumerator CheckNumCars()
     {
         while (spawnCars)
         {
-            int numRoads = RoadGenerator.instance.roads.Count;
-            int difference = numRoads - (cars.Count * 3);
-            if(difference >= 1 && ReferenceManager.instance.populationManager.totalPopulation >= 1)
+			int numRoads = RoadGenerator.instance.roads.Count;
+			int maxCars = Mathf.RoundToInt (numRoads / 3) * 2;
+            if(maxCars > ReferenceManager.instance.populationManager.totalPopulation)
             {
-                SpawnCars(difference);
+                maxCars = ReferenceManager.instance.populationManager.totalPopulation;
             }
+            Debug.Log(maxCars + "max Cars");
+            Debug.Log(cars.Count + "CARS");
+            if (maxCars >= 1) {
+        
+				SpawnCars (maxCars);
+			}
+
             yield return new WaitForSeconds(5);
         }
     }

@@ -22,7 +22,12 @@ public class LandValue : MonoBehaviour {
     {
         // Debug.Log("Waking up");
     }
-    
+
+    private void Start()
+    {
+        GetComponent<ItemTracker>().SetLandValue(this);
+    }
+
     public float RecalculateLandValue()
     // Controls recalculation process
     {

@@ -55,20 +55,20 @@ public class ProgressionManager : MonoBehaviour {
         AddIsland();
         levelReq = new Dictionary<int, int>();
         levelReq.Add(1, 10);
-        levelReq.Add(2, 25);
-        levelReq.Add(3, 50);
-        levelReq.Add(4, 100);
-        levelReq.Add(5, 175);
-        levelReq.Add(6, 225);
-        levelReq.Add(7, 300);
-        levelReq.Add(8, 500);
-        levelReq.Add(9, 750);
-        levelReq.Add(10, 1000);
-        levelReq.Add(11, 1500);
-        levelReq.Add(12, 2000);
-        levelReq.Add(13, 3000);
-        levelReq.Add(14, 5000);
-        levelReq.Add(15, 7500);
+        levelReq.Add(2, 100);
+        levelReq.Add(3, 250);
+        levelReq.Add(4, 500);
+        levelReq.Add(5, 1000);
+        levelReq.Add(6, 2000);
+        levelReq.Add(7, 3200);
+        levelReq.Add(8, 5000);
+        levelReq.Add(9, 7000);
+        levelReq.Add(10, 12000);
+        levelReq.Add(11, 18000);
+        levelReq.Add(12, 25000);
+        levelReq.Add(13, 34000);
+        levelReq.Add(14, 46000);
+        levelReq.Add(15, 60000);
         level = 14;
         StartCoroutine("SlowUpdate");
     }
@@ -78,7 +78,7 @@ public class ProgressionManager : MonoBehaviour {
         // Perform check to see whether next level that returns false from levelInfo can be completed.
         int currentLevelReq;
         levelReq.TryGetValue(level + 1, out currentLevelReq);
-        if(populationManager.totalPopulation >= currentLevelReq)
+        if(populationManager.totalPopulation * 0.01  >= currentLevelReq)
         {
             PerformLevelUp(level + 1);
         }

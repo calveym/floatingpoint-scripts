@@ -304,7 +304,6 @@ public class EconomyManager : MonoBehaviour {
 	{
 		balance += amount;
         ReferenceManager.instance.audioManager.PlaySingle(purchaseSound);
-        // TODO: ADD PURCHASE VISUAL FEEDBACK
 	}
 
     public void SellGoods(float numGoods)
