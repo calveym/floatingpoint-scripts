@@ -96,7 +96,7 @@ public class EconomyManager : MonoBehaviour {
         residentialTaxRate = 15;
         commercialTaxRate = 15;
         industrialTaxRate = 15;
-		balance = 1000;
+		balance = 100000;
         income = rawIncome;
         keepUpdating = true;
     }

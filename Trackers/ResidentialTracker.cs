@@ -192,14 +192,13 @@ public class ResidentialTracker : ItemTracker {
 
     void CalculateIncome()
     {
-        income = users * (1 + (landValue * 0.01f)) * (longtermHappiness / 20);
+        income = users * (1 + (landValue * 0.01f)) * (longtermHappiness / 50) * ReferenceManager.instance.residentialIncomeMultiplier;
         income -= baseCost;
         totalResidentialIncome += income;
     }
 
     void UpdateUnhappiness()
     {
-        Debug.Log("Updating unhappiness: " + cumulativeUnhappiness);
         if(currentHappiness < unhappinessMinimum && cumulativeUnhappiness < requiredUnhappiness)
         {
             cumulativeUnhappiness++;

@@ -22,7 +22,7 @@ public class IndustrialTracker : ItemTracker {
 
     public static float allGoods; // Base goods tracking figure for each economic tick
 
-    public float sellPrice;  // Base sell price
+    public float sellPrice = 1;  // Base sell price
     public float sellAmount;  // Base maximum amount sold per economy tick
 
     // Multipliers from components
@@ -70,7 +70,7 @@ public class IndustrialTracker : ItemTracker {
 
     void ProduceGoods()
     {
-        goodsProduced = users * productionMulti * longtermHappiness / 20;
+        goodsProduced = users * productionMulti * (longtermHappiness / 50);
 
         income = goodsProduced * sellPrice * (1 + (landValue * 0.01f));
         income -= baseCost;

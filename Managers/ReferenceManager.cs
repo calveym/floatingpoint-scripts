@@ -43,6 +43,13 @@ public class ReferenceManager : MonoBehaviour {
     public GameObject notificationPrefab;
     public GameObject spherePrefab;
 
+    [Space(10)]
+    [Header("Income modification")]
+    [Space(5)]
+    public float residentialIncomeMultiplier = 0.32f;
+    public float commercialIncomeMultiplier = 1.42f;
+    public float industrialIncomeMultiplier = 0.6f;
+
     // Use this for initialization
     void Awake () {
 		if(instance != this)

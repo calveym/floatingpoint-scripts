@@ -80,7 +80,7 @@ public class CommercialTracker : ItemTracker {
 
     void SellGoods()
     {
-        goodsSold = visitors * happinessState;
+        goodsSold = visitors;
         if(goodsSold > economyManager.goods)
         {
             goodsSold = economyManager.goods;
@@ -98,7 +98,7 @@ public class CommercialTracker : ItemTracker {
 
     void UpdateVisitors()
     {
-        visitors = U.NumResidents(U.ReturnResidentialTrackers(U.FindNearestBuildings(transform.position, users)));
+        visitors = (int)(U.NumResidents(U.ReturnResidentialTrackers(U.FindNearestBuildings(transform.position, users))) * 0.2f);
     }
 
     void UpdateSalesHappiness()
@@ -125,7 +125,7 @@ public class CommercialTracker : ItemTracker {
         UpdateTransportationValue();
         UpdateVisitors();
         SellGoods();
-        income = goodsSold * (1 + (landValue * 0.01f)) * (happinessState) - baseCost;
+        income = (goodsSold * (1 + (landValue * 0.01f)) * (longtermHappiness / 50)) * ReferenceManager.instance.commercialIncomeMultiplier - baseCost;
         totalCommercialIncome += income;
     }
 

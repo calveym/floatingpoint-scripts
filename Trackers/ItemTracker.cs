@@ -110,6 +110,7 @@ public class ItemTracker : MonoBehaviour {
         if(!land)
         {
             land = gameObject.GetComponent<LandValue>();
+
         }
         happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
