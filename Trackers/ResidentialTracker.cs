@@ -7,7 +7,6 @@ public class ResidentialTracker : ItemTracker {
     // Manages specific residential functions.
 
     public int employmentHappiness;
-    public int unemployedPopulation;
 
     float foliage;
     bool checkEnable;

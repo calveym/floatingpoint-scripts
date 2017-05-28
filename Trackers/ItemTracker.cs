@@ -23,10 +23,11 @@ public class ItemTracker : MonoBehaviour {
     public static float historicCommercialIncome;
     public static float totalIndustrialIncome;
     public static float historicIndustrialIncome;
-    [Space(10)]
 
+    [Space(10)]
     [Header("Basic attributes")]
     [Space(5)]
+
     [Tooltip("Note- currently not used")]
     public int level = 0;
     [Tooltip("Initial purchase price")]
@@ -43,6 +44,7 @@ public class ItemTracker : MonoBehaviour {
     public bool usable;
     public float income;
     public int users;
+    public int unemployedPopulation;
     public bool updateStarted;
     public bool validPosition;
     public float landValue;
@@ -78,14 +80,22 @@ public class ItemTracker : MonoBehaviour {
 
     protected int cumulativeUnhappiness = 0;  // Used to determine when people start moving out from unhappiness
     [Space(10)]
-
     [Header("Services")]
     [Space(5)]
+
     public bool power;
     public bool health;
     public bool education;
     public bool fire;
     public bool police;
+
+    [Space(10)]
+    [Header("Goods")]
+    [Space(5)]
+
+    public float goodsSold;
+    public float goodsProduced;  // Goods produced in last economic tick
+
 
     public void Start()
     // Sets start variables

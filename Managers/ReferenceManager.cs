@@ -10,7 +10,6 @@ public class ReferenceManager : MonoBehaviour {
     public GameObject leftController;
     public GameObject cameraEye;
 
-    public GameObject spherePrefab;
     public RoadGenerator roadGenerator;
     public TOD_Sky tod;
 
@@ -27,6 +26,7 @@ public class ReferenceManager : MonoBehaviour {
     public TutorialManager tutorialManager;
     public AudioManager audioManager;
     public SpawnManager spawnManager;
+    public BuildingNotificationManager buildingNotificationManager;
 
     [Space(10)]
     [Header("Services")]
@@ -36,6 +36,12 @@ public class ReferenceManager : MonoBehaviour {
     public Health health;
     public Police police;
     public Fire fire;
+
+    [Space(10)]
+    [Header("Prefabs")]
+    [Space(5)]
+    public GameObject notificationPrefab;
+    public GameObject spherePrefab;
 
     // Use this for initialization
     void Awake () {

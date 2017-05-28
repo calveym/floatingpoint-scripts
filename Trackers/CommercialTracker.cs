@@ -12,7 +12,6 @@ public class CommercialTracker : ItemTracker {
     public int visitors;
     public int lifetimeVisitors;
 
-    public float goodsSold;
     public float goodsAvailable;
     bool checkEnable;
 

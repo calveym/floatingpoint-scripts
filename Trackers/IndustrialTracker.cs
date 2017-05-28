@@ -20,8 +20,6 @@ public class IndustrialTracker : ItemTracker {
     public int visitors;
     public int lifetimeVisitors;
 
-    public float goodsCapacity;  // max amount of goods storeable
-    public float goodsProduced;  // Goods produced in last economic tick
     public static float allGoods; // Base goods tracking figure for each economic tick
 
     public float sellPrice;  // Base sell price
@@ -30,7 +28,6 @@ public class IndustrialTracker : ItemTracker {
     // Multipliers from components
     public float productionMulti;
 
-    float goodsSold;  // Number of goods sold last week
     bool checkEnable;
 
 
