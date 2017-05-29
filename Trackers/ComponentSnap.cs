@@ -5,7 +5,7 @@ using UnityEngine;
 
 public abstract class ComponentSnap : SphereObject {
 
-    [Range(0, 10000)]
+    [Range(0, 50000)]
     [Tooltip("Component purchase cost")]
     public int buyCost;  // Purchase cost of component
 

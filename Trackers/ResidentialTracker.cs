@@ -249,7 +249,7 @@ public class ResidentialTracker : ItemTracker {
 
     public string FancyTitle()
     {
-        return ValidPosition();
+        return buildingName;
     }
     
     IEnumerator CheckEnable()

@@ -30,6 +30,8 @@ public class ItemTracker : MonoBehaviour {
 
     [Tooltip("Note- currently not used")]
     public int level = 0;
+    [Tooltip("Building name")]
+    public string buildingName;
     [Tooltip("Initial purchase price")]
     public float buyCost;
     [Tooltip("Upkeep cost, deducted each ecoTick from income")]

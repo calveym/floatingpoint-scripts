@@ -47,7 +47,7 @@ public class ReferenceManager : MonoBehaviour {
     [Header("Income modification")]
     [Space(5)]
     public float residentialIncomeMultiplier = 0.32f;
-    public float commercialIncomeMultiplier = 1.42f;
+    public float commercialIncomeMultiplier = 0.152f;
     public float industrialIncomeMultiplier = 0.6f;
 
     // Use this for initialization

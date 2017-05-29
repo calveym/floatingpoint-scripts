@@ -11,6 +11,7 @@ public class CommercialTracker : ItemTracker {
     [Header("Instance Operation Variables")]
     public int visitors;
     public int lifetimeVisitors;
+    public int range = 10;
 
     public float goodsAvailable;
     bool checkEnable;
@@ -98,7 +99,7 @@ public class CommercialTracker : ItemTracker {
 
     void UpdateVisitors()
     {
-        visitors = (int)(U.NumResidents(U.ReturnResidentialTrackers(U.FindNearestBuildings(transform.position, users))) * 0.2f);
+        visitors = (int)(U.NumResidents(U.ReturnResidentialTrackers(U.FindNearestBuildings(transform.position, range))) * 0.2f);
     }
 
     void UpdateSalesHappiness()
@@ -125,7 +126,7 @@ public class CommercialTracker : ItemTracker {
         UpdateTransportationValue();
         UpdateVisitors();
         SellGoods();
-        income = (goodsSold * (1 + (landValue * 0.01f)) * (longtermHappiness / 50)) * ReferenceManager.instance.commercialIncomeMultiplier - baseCost;
+        income = (goodsSold * (1 + (landValue * 0.01f)) * (longtermHappiness / 50)) * ReferenceManager.instance.commercialIncomeMultiplier - baseCost + users;
         totalCommercialIncome += income;
     }
 
@@ -162,7 +163,7 @@ public class CommercialTracker : ItemTracker {
 
     public string FancyTitle()
     {
-        return ValidPosition();
+        return buildingName;
     }
 
     public string FancyGoods()

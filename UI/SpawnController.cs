@@ -35,6 +35,7 @@ public class SpawnController : MonoBehaviour {
     IndustrialComponent indc;
     FoliageTracker fol;
     ServiceTrackerBase serv;
+    ItemTracker tracker;
 
 
     private void Start()
@@ -312,6 +313,7 @@ public class SpawnController : MonoBehaviour {
     void SetTracker()
     {
         ClearTrackers();
+        tracker = containedBuilding.GetComponent<ItemTracker>();
         if (containedType == 0)
         {
             res = containedBuilding.GetComponent<ResidentialTracker>();
@@ -358,6 +360,7 @@ public class SpawnController : MonoBehaviour {
         indc = null;
         fol = null;
         serv = null;
+        tracker = null;
     }
 
     void SizeForMenu()
@@ -392,24 +395,7 @@ public class SpawnController : MonoBehaviour {
 
     string FancyType()
     {
-        switch (containedType)
-        {
-            case 0:
-                return "Residential";
-            case 1:
-                return "Commercial";
-            case 2:
-                return "Industrial";
-            case 3:
-                return "Office";
-            case 4:
-                return "Component";
-            case 5:
-                return "Foliage";
-            case 6:
-                return "Service";
-        }
-        return "";
+        return tracker.buildingName;
     }
 
     string FancyCapacity()

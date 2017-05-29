@@ -72,7 +72,7 @@ public class IndustrialTracker : ItemTracker {
     {
         goodsProduced = users * productionMulti * (longtermHappiness / 50);
 
-        income = goodsProduced * sellPrice * (1 + (landValue * 0.01f));
+        income = goodsProduced * sellPrice * (1 + (landValue * 0.01f)) * ReferenceManager.instance.industrialIncomeMultiplier;
         income -= baseCost;
         allGoods += goodsProduced;
     }
@@ -208,7 +208,7 @@ public class IndustrialTracker : ItemTracker {
     public string FancyTitle()
     {
         // TODO: NICE TITLES
-        return ValidPosition();
+        return buildingName;
     }
 
     public string FancyGoods()
