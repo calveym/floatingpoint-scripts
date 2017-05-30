@@ -23,7 +23,6 @@ public class IndustrialTracker : ItemTracker {
     public static float allGoods; // Base goods tracking figure for each economic tick
 
     public float sellPrice = 1;  // Base sell price
-    public float sellAmount;  // Base maximum amount sold per economy tick
 
     // Multipliers from components
     public float productionMulti;
@@ -34,7 +33,7 @@ public class IndustrialTracker : ItemTracker {
     void Awake()
     {
         rand = new System.Random(); //reuse this if generating many
-
+        sellPrice = 1;
         employees = new List<ResidentialTracker>();
         sales = new List<float>();
         components = new List<IndustrialComponent>();
@@ -51,18 +50,18 @@ public class IndustrialTracker : ItemTracker {
 
     void Update()
     {
-        if (!updateStarted && usable)
+        if (!updateStarted && usable && validPosition)
         {
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
             ReferenceManager.instance.itemManager.addIndustrial(capacity, gameObject);
         }
-        else if (updateStarted && !usable)
+        else if (updateStarted && !usable || !validPosition)
         {
             updateStarted = false;
             EconomyManager.ecoTick -= UpdateSecond;
         }
-        else if (!usable && !updateStarted)
+        else if (!usable && !updateStarted && validPosition)
         {
             checkEnable = true;
         }
@@ -72,7 +71,8 @@ public class IndustrialTracker : ItemTracker {
     {
         goodsProduced = users * productionMulti * (longtermHappiness / 50);
 
-        income = goodsProduced * sellPrice * (1 + (landValue * 0.01f)) * ReferenceManager.instance.industrialIncomeMultiplier;
+        income = goodsProduced * sellPrice * (1 + (landValue * 0.01f)); //* ReferenceManager.instance.industrialIncomeMultiplier;
+        Debug.Log("Income: " + goodsProduced * sellPrice * (1 + (landValue * 0.01f)));
         income -= baseCost;
         allGoods += goodsProduced;
     }

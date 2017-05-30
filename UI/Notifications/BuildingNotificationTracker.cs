@@ -14,7 +14,7 @@ public class BuildingNotificationTracker : MonoBehaviour {
     public Sprite noSales;
     public Sprite noProduction;
     public Sprite lowHappiness;
-    public Sprite imageSix;
+    public Sprite highUnemployment;
     public Sprite imageSeven;
     public Sprite imageEight;
 
@@ -32,46 +32,56 @@ public class BuildingNotificationTracker : MonoBehaviour {
 	void CheckConditions()
     // Check against conditions
     {
-        if(NoUsers() && !updating)
+        if(tracker.updateStarted)
         {
-            updating = true;
-            Debug.Log("Notification prefab: " + notificationPrefab);
-            GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
-            notificationObject.transform.parent = transform;
-            displayingNotification = new Notification(1, noUsers, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
-            RunNotification(displayingNotification);
-        }
-        else if(NoProduction() && !updating)
-        {
-            updating = true;
-            GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
-            notificationObject.transform.parent = transform;
-            displayingNotification = new Notification(2, noProduction, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
-            RunNotification(displayingNotification);
-        }
-        else if (NoSales() && !updating)
-        {
-            updating = true;
-            GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
-            notificationObject.transform.parent = transform;
-            displayingNotification = new Notification(3, noSales, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
-            RunNotification(displayingNotification);
-        }
-        else if (NoPower() && !updating)
-        {
-            updating = true;
-            GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
-            notificationObject.transform.parent = transform;
-            displayingNotification = new Notification(4, noPower, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
-            RunNotification(displayingNotification);
-        }
-        else if(LowHappiness() && !updating)
-        {
-            updating = true;
-            GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
-            notificationObject.transform.parent = transform;
-            displayingNotification = new Notification(5, lowHappiness, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
-            RunNotification(displayingNotification);
+            if (NoUsers() && !updating)
+            {
+                updating = true;
+                GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
+                notificationObject.transform.parent = gameObject.transform;
+                displayingNotification = new Notification(1, noUsers, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
+                RunNotification(displayingNotification);
+            }
+            else if (NoProduction() && !updating)
+            {
+                updating = true;
+                GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
+                notificationObject.transform.parent = transform;
+                displayingNotification = new Notification(2, noProduction, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
+                RunNotification(displayingNotification);
+            }
+            else if (NoSales() && !updating)
+            {
+                updating = true;
+                GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
+                notificationObject.transform.parent = transform;
+                displayingNotification = new Notification(3, noSales, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
+                RunNotification(displayingNotification);
+            }
+            else if (NoPower() && !updating)
+            {
+                updating = true;
+                GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
+                notificationObject.transform.parent = transform;
+                displayingNotification = new Notification(4, noPower, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
+                RunNotification(displayingNotification);
+            }
+            else if (LowHappiness() && !updating)
+            {
+                updating = true;
+                GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
+                notificationObject.transform.parent = transform;
+                displayingNotification = new Notification(5, lowHappiness, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
+                RunNotification(displayingNotification);
+            }
+            else if (HighUnemployment() && !updating)
+            {
+                updating = true;
+                GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
+                notificationObject.transform.parent = transform;
+                displayingNotification = new Notification(5, highUnemployment, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
+                RunNotification(displayingNotification);
+            }
         }
     }
 
@@ -98,6 +108,7 @@ public class BuildingNotificationTracker : MonoBehaviour {
     {
         updating = true;
         notification.SetPosition(transform.position);
+        time = 0;
         StartCoroutine("CheckNotification");
     }
 
@@ -121,7 +132,11 @@ public class BuildingNotificationTracker : MonoBehaviour {
         while(updating)
         {
             if (time >= 10)
+            {
                 RemoveNotification();
+                time = 0;
+                break;
+            }
             CheckRemove(displayingNotification.id);
             time += Time.deltaTime;
             yield return null;

@@ -112,7 +112,6 @@ public class ItemTracker : MonoBehaviour {
         if(!land)
         {
             land = gameObject.GetComponent<LandValue>();
-
         }
         happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
@@ -136,12 +135,23 @@ public class ItemTracker : MonoBehaviour {
         land = newLand;
     }
 
+    void GetLandValue()
+    {
+        Component[] allComponents = GetComponents(typeof(LandValue));
+        foreach(LandValue comp in allComponents)
+        {
+            if (comp.name == "LandValue")
+            {
+                land = comp;
+            }
+        }
+    }
+
     public void UpdateLandValue()
     {
         if(land == null)
         {
-            land = gameObject.GetComponent<LandValue>();
-            Debug.Log("Getting land value" + gameObject.name);
+            GetLandValue();
         }
         landValue = land.RecalculateLandValue();
         landValue += users * 1.2f;

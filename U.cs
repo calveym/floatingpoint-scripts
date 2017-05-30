@@ -6,6 +6,8 @@ using VRTK;
 public class U : MonoBehaviour {
 
     public static U instance;
+    SteamVR_Controller.Device rightDevice;
+    SteamVR_Controller.Device leftDevice;
 
     private void Awake()
     {
@@ -17,12 +19,18 @@ public class U : MonoBehaviour {
 
     private void Start()
     {
+        int rightIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Rightmost);
+        int leftIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Leftmost);
+
+        rightDevice = SteamVR_Controller.Input(rightIndex);
+        leftDevice = SteamVR_Controller.Input(leftIndex);
+
         GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn += LeftGrab;
         GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn += RightGrab;
         GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff += LeftGrab;
         GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff += RightGrab;
     }
-
+    
     public void LeftGrab(object sender, ControllerInteractionEventArgs e)
     {
         LeftPulse();
@@ -167,22 +175,22 @@ public class U : MonoBehaviour {
 
     public static void LeftPulse()
     {
-        SteamVR_Controller.Input(1).TriggerHapticPulse(500);
+        instance.leftDevice.TriggerHapticPulse(750);
     }
 
     public static void LeftPulse(int time)
     {
-        SteamVR_Controller.Input(1).TriggerHapticPulse((ushort)time);
+        instance.leftDevice.TriggerHapticPulse((ushort)time);
     }
 
     public static void RightPulse()
     {
-        SteamVR_Controller.Input(2).TriggerHapticPulse(500);
+        instance.rightDevice.TriggerHapticPulse(750);
     }
 
     public static void RightPulse(int time)
     {
-        SteamVR_Controller.Input(2).TriggerHapticPulse((ushort)time);
+        instance.rightDevice.TriggerHapticPulse((ushort)time);
     }
 
     public static void DisablePhysics(GameObject disableObject)

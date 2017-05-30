@@ -29,6 +29,12 @@ public class TrackpadFlight : MonoBehaviour {
         events = GetComponent<VRTK_ControllerEvents>();
         events.TouchpadTouchStart += new ControllerInteractionEventHandler(DoTouchpadTouchStart);
         events.TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
+        events.TouchpadPressed += new ControllerInteractionEventHandler(DoRightClick);
+    }
+
+    void DoRightClick(object sender, ControllerInteractionEventArgs e)
+    {
+        U.RightPulse();
     }
 
     void DoTouchpadTouchStart(object sender, ControllerInteractionEventArgs e)

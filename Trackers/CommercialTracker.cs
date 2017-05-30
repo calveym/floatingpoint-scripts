@@ -28,18 +28,18 @@ public class CommercialTracker : ItemTracker {
 
     void Update()
     {
-        if (!updateStarted && usable)
+        if (!updateStarted && usable && validPosition)
         {
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
             ReferenceManager.instance.itemManager.addCommercial(capacity, gameObject);
         }
-        else if (updateStarted && !usable)
+        else if (updateStarted && !usable && validPosition)
         {
             updateStarted = false;
             EconomyManager.ecoTick -= UpdateSecond;
         }
-        else if (!usable && !updateStarted)
+        else if (!usable && !updateStarted && validPosition)
         {
             checkEnable = true;
         }

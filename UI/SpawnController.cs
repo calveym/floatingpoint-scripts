@@ -266,7 +266,7 @@ public class SpawnController : MonoBehaviour {
 
     void EnableFoliage()
     {
-        price = containedBuilding.GetComponent<FoliageTracker>().buyCost;
+        price = fol.buyCost;
         fol.happinessAffector.usable = true;
     }
 
@@ -367,7 +367,7 @@ public class SpawnController : MonoBehaviour {
     {
         Vector3 size = containedRenderer.bounds.size;
         if (size.x > size.y && size.x > size.z)
-        {
+        {   
             // size x 
             scaleFactor = size.x;
         }
@@ -395,7 +395,9 @@ public class SpawnController : MonoBehaviour {
 
     string FancyType()
     {
-        return tracker.buildingName;
+        if (tracker != null)
+            return tracker.buildingName;
+        else return "Industrial Upgrade";
     }
 
     string FancyCapacity()

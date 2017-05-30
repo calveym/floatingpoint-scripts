@@ -57,6 +57,9 @@ public class DisplayUI : MonoBehaviour {
     public SpriteRenderer passive;
     public SpriteRenderer angry;
 
+    public AnimationClip openMenu;
+    public Animation menuAnimation;
+
     Image res;
     Image com;
     Image ind;

@@ -94,7 +94,6 @@ public class TrafficSpawner : MonoBehaviour {
             allRoads = U.FindNearestRoads(transform.position, 25f);
         }
         List<GameObject> roadsToSpawn = new List<GameObject>();
-        Debug.Log("All roads count: " + allRoads.Count); 
 		foreach (GameObject road in allRoads) {
 			if (U.FindNearestBuildings (road.transform.position, 1.1f).Count > 0) {
                 roadsToSpawn.Add (road);
@@ -111,7 +110,6 @@ public class TrafficSpawner : MonoBehaviour {
     }
 
 	int carSpawnAndPopulationCheck(int carsToSpawn, int totalPopulation) {
-        Debug.Log("Total pop: " + totalPopulation);
 		if (carsToSpawn > totalPopulation) {
 			return totalPopulation;
 		} else {
@@ -129,8 +127,6 @@ public class TrafficSpawner : MonoBehaviour {
             {
                 maxCars = ReferenceManager.instance.populationManager.totalPopulation;
             }
-            Debug.Log(maxCars + "max Cars");
-            Debug.Log(cars.Count + "CARS");
             if (maxCars >= 1) {
         
 				SpawnCars (maxCars);

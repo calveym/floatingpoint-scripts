@@ -22,7 +22,7 @@ public class BuildingNotificationManager : MonoBehaviour {
             {
                 notificationUpdater();
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(5.1f);
         }
     }
 }

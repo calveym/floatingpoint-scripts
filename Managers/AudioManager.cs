@@ -71,7 +71,6 @@ public class AudioManager : MonoBehaviour {
 
     public void PlaySingle(AudioClip clip)
     {
-        Debug.Log("Efx source: " + efxSource);
         efxSource.clip = clip;
         efxSource.Play();
     }
@@ -134,7 +133,7 @@ public class AudioManager : MonoBehaviour {
         else if (newTime >= 19 && newTime < 24)
             return 0;
         else
-            Debug.Log("Not passing...");
+            //Debug.Log("Not passing...");
             return 2;
     }
 
@@ -143,12 +142,12 @@ public class AudioManager : MonoBehaviour {
     {
         if (city)
         {
-            Debug.Log("NightCity");
+            //Debug.Log("NightCity");
             nightCity.TransitionTo(ambienceTransitionTime);
         }
         else
         {
-            Debug.Log("Night forest");
+            //Debug.Log("Night forest");
             nightForest.TransitionTo(ambienceTransitionTime);
         }
     }
@@ -158,12 +157,12 @@ public class AudioManager : MonoBehaviour {
     {
         if (city)
         {
-            Debug.Log("Twilight city");
+            //Debug.Log("Twilight city");
             sunsetCity.TransitionTo(ambienceTransitionTime);
         }
         else
         {
-            Debug.Log("Twilight forest");
+            //Debug.Log("Twilight forest");
             sunsetForest.TransitionTo(ambienceTransitionTime);
         }
     }
@@ -173,12 +172,12 @@ public class AudioManager : MonoBehaviour {
     {
         if (city)
         {
-            Debug.Log("Day city");
+            //Debug.Log("Day city");
             dayCity.TransitionTo(ambienceTransitionTime);
         }
         else
         {
-            Debug.Log("Day forest");
+            //Debug.Log("Day forest");
             dayForest.TransitionTo(ambienceTransitionTime);
         }
     }

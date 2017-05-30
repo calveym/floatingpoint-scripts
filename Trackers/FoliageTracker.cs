@@ -19,7 +19,11 @@ public class FoliageTracker : ComponentSnap {
     protected override void Start()
     {
         base.Start();
-        if(!itemManager)
+        if (!happinessAffector)
+        {
+            happinessAffector = GetComponent<HappinessAffector>();
+        }
+        if (!itemManager)
         {
             itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
         }
