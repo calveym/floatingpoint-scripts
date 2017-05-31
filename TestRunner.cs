@@ -30,6 +30,8 @@ public class TestRunner : MonoBehaviour
     public delegate void Third();
     public static Third third;
 
+    TOD_Sky tod;
+
     // Use this for initialization
     void Start()
     {
@@ -39,7 +41,8 @@ public class TestRunner : MonoBehaviour
         happinessManager = manager.GetComponent<HappinessManager>();
         progressionManager = manager.GetComponent<ProgressionManager>();
         itemGenerator = GetComponent<ItemGenerator>();
-        
+
+        tod = ReferenceManager.instance.tod;
         FindAllChildren();
         EnableAllChildren();
     }
@@ -56,6 +59,21 @@ public class TestRunner : MonoBehaviour
         if (Input.GetKeyDown("u")) SeventhTest();
         //if (Input.GetKeyDown("i")) EighthTest();
         //if (Input.GetKeyDown("o")) NinthTest();
+        if (Input.GetKeyDown("[7]")) SetTime(0);
+        if (Input.GetKeyDown("[8]")) SetTime(2.5f);
+        if (Input.GetKeyDown("[9]")) SetTime(5);
+        if (Input.GetKeyDown("[4]")) SetTime(7.5f);
+        if (Input.GetKeyDown("[5]")) SetTime(10);
+        if (Input.GetKeyDown("[6]")) SetTime(12.5f);
+        if (Input.GetKeyDown("[1]")) SetTime(15f);
+        if (Input.GetKeyDown("[2]")) SetTime(17.5f);
+        if (Input.GetKeyDown("[3]")) SetTime(20);
+
+    }
+
+    void SetTime(float time)
+    {
+        tod.Cycle.Hour = time;
     }
 
     void FirstTest()

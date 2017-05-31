@@ -180,12 +180,14 @@ public class U : MonoBehaviour {
 
     public static void LeftPulse(int time)
     {
-        instance.leftDevice.TriggerHapticPulse((ushort)time);
+        if (instance.leftDevice != null)
+            instance.leftDevice.TriggerHapticPulse((ushort)time);
     }
 
     public static void RightPulse()
     {
-        instance.rightDevice.TriggerHapticPulse(750);
+        if(instance.rightDevice != null)
+            instance.rightDevice.TriggerHapticPulse(750);
     }
 
     public static void RightPulse(int time)
