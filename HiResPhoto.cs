@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using VRTK;
 
 public class HiResPhoto : MonoBehaviour
 {
@@ -7,6 +8,13 @@ public class HiResPhoto : MonoBehaviour
     private int resHeight = 3264;
     private Camera cam;
     public GameObject target;
+    VRTK_ControllerEvents events;
+    int numShots = 0;
+
+    private void Start()
+    {
+        events = ReferenceManager.instance.rightEvents;
+    }
 
     private void Update()
     {
@@ -40,14 +48,19 @@ public class HiResPhoto : MonoBehaviour
         RenderTexture.active = null; // JC: added to avoid errors
         Destroy(rt);
         byte[] bytes = screenShot.EncodeToPNG();
-        string filename = ScreenShotName(resWidth, resHeight);
+        string filename = ScreenShotName(resWidth, resHeight) + numShots.ToString();
         System.IO.File.WriteAllBytes(filename, bytes);
         Debug.Log(string.Format("Took screenshot to: {0}", filename));
+        numShots++;
     }
 
     void LateUpdate()
     {
         if (Input.GetKeyDown("k"))
+        {
+            TakeHiResShot();
+        }
+        else if (events.touchpadPressed)
         {
             TakeHiResShot();
         }

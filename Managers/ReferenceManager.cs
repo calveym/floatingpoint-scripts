@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK;
 
 public class ReferenceManager : MonoBehaviour {
 
@@ -9,6 +10,9 @@ public class ReferenceManager : MonoBehaviour {
     public GameObject rightController;
     public GameObject leftController;
     public GameObject cameraEye;
+
+    public VRTK_ControllerEvents rightEvents;
+    public VRTK_ControllerEvents leftEvents;
 
     public RoadGenerator roadGenerator;
     public TOD_Sky tod;

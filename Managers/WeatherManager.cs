@@ -48,7 +48,6 @@ public class WeatherManager : MonoBehaviour {
                 Rainy();
                 break;
         }
-
     }
 
     void Sunny()
