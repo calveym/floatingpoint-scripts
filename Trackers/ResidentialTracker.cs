@@ -15,7 +15,7 @@ public class ResidentialTracker : ItemTracker {
     {
         base.Start();
         foliage = 0;
-        StartCoroutine("CheckEnable");
+        //StartCoroutine("CheckEnable");
     }
 
     void Update()
@@ -254,17 +254,14 @@ public class ResidentialTracker : ItemTracker {
     
     IEnumerator CheckEnable()
     {
-        while(true)
+        while(checkEnable)
         {
-            if(checkEnable)
+            checkEnable = false;
+            if(transform.parent == null)
             {
-                checkEnable = false;
-                if(transform.parent == null)
-                {
-                    usable = true;
-                }
+                usable = true;
             }
-            yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(5);
         }
     }
 

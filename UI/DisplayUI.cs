@@ -179,7 +179,6 @@ public class DisplayUI : MonoBehaviour {
             {
                 if(showBuildings)
                 {
-                    Debug.Log("Purchasing building fam");
                     spawnManager.PurchaseBuilding();
                 }
                 else

@@ -8,7 +8,7 @@ public class WeatherManager : MonoBehaviour {
     public int weatherState = 0;  // 0 = Sun, 1 = cloudy, 2 = rainy
     int oldWeatherState = 0;
     [Tooltip("Enable random weather updates")]
-    public bool randomiseWeather = true;
+    public bool randomiseWeather = false;
     System.Random r = new System.Random();
     TOD_Sky tod;
 
@@ -24,7 +24,7 @@ public class WeatherManager : MonoBehaviour {
         tod = ReferenceManager.instance.tod;
         ToggleRain(false);
         ToggleClouds(0.1f);
-        StartCoroutine("MakeItRain");
+        //StartCoroutine("MakeItRain");
 
         TestRunner.first += Sunny;
         TestRunner.second += Cloudy;
@@ -65,7 +65,7 @@ public class WeatherManager : MonoBehaviour {
     {
         audioManager.StopRain();
         ToggleClouds(0.5f);
-        tod.Day.LightIntensity = 0.7f;
+        tod.Day.LightIntensity = 0.75f;
         tod.Day.AmbientMultiplier = 0.5f;
         //tod.Night.LightIntensity = 1.16f;
         //tod.Night.AmbientMultiplier = 2.72f;

@@ -249,7 +249,7 @@ public class RoadSnap : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Not building: " + hitcol);
+                    //Debug.Log("Not building: " + hitcol);
                 }
             }
         }
@@ -773,7 +773,7 @@ public class RoadSnap : MonoBehaviour
         // Switch the buildingLength if the object rotates 90 or 180 degrees
         if (Mathf.Round((transform.rotation.eulerAngles.y / 90)) % 2 != 0)
         {
-            Debug.Log("running!");
+            //Debug.Log("running!");
             buildingLength = new Vector3(buildingLength.z, 0, buildingLength.x);
         }
 

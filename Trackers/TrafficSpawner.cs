@@ -44,7 +44,7 @@ public class TrafficSpawner : MonoBehaviour {
         
         foreach(GameObject location in spawnLocations)
         {
-            Debug.Log(location + "LOCATIONNNN");
+            //Debug.Log(location + "LOCATIONNNN");
             if (cars.Count >= maxCars)
                 break;
             int side = Random.Range(0, 2);

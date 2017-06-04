@@ -177,6 +177,7 @@ public abstract class ServiceBase: MonoBehaviour {
     protected IEnumerator UpdateService()
     // Runs full update, 15s cycle
     {
+        yield return new WaitForSeconds(1f);
         while(serviceWorking)
         {
             cost = 0;

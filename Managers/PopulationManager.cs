@@ -234,7 +234,7 @@ public class PopulationManager : MonoBehaviour {
     // Tries to increase population
     {
         happiness = happinessManager.happiness;
-        residentialDemand += (0.1f + happiness) * Time.deltaTime * 250;
+        residentialDemand += 4 * Time.deltaTime * 250;
         if (residentialDemand >= 1 )
         {
             unallocatedPopulation++;

@@ -20,7 +20,7 @@ public class BuildingNotificationManager : MonoBehaviour {
         {
             if(notificationUpdater != null)
             {
-                notificationUpdater();
+                //notificationUpdater();
             }
             yield return new WaitForSeconds(5.1f);
         }

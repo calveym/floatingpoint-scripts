@@ -67,7 +67,7 @@ public class DisplayMenu : MonoBehaviour
     
     public void SetTier(int newTier)
     {
-        Debug.Log("New tier: " + newTier);
+        //Debug.Log("New tier: " + newTier);
         tier = newTier;
         if(newTier == 1)
         {

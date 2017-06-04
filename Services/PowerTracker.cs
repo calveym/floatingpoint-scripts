@@ -39,7 +39,9 @@ public class PowerTracker : ServiceTrackerBase
             {
                 if (building != gameObject && building.tag == "industrial" || building.tag == "commercial" || building.tag == "industrial")
                 {
-                    building.GetComponent<ItemTracker>().power = true;
+                    ItemTracker tempTracker = building.GetComponent<ItemTracker>();
+                    if(tempTracker)
+                        tempTracker.power = true;
                 }
             }
         }

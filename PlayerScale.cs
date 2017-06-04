@@ -10,12 +10,16 @@ public class PlayerScale : MonoBehaviour {
 	public bool isCameraSmall;
 	public Camera cameraEye;
 	private Vector3 previousCameraPosition;
+    private Vector3 previousRigPosition;
+
+    TrackpadFlight trackpadFlight;
 
 	void Start()
     {
         GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(DoButtonOnePressed);
         rb = cameraRig.GetComponent<Rigidbody>();
         isCameraSmall = false;
+        trackpadFlight = GetComponent<TrackpadFlight>();
     }
     
     void DoButtonOnePressed(object sender, ControllerInteractionEventArgs e)
@@ -32,22 +36,24 @@ public class PlayerScale : MonoBehaviour {
 
     void GoSmall()
     {
-        //rb.isKinematic = false;
-        //rb.useGravity = true;
+        previousCameraPosition = cameraEye.transform.position;
+        previousRigPosition = cameraRig.transform.position;
         cameraRig.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        cameraRig.transform.position = new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
+        Vector3 adjustVector = previousCameraPosition - cameraEye.transform.position;
+        cameraRig.transform.position += adjustVector;
+        cameraRig.transform.position = new Vector3(cameraRig.transform.position.x, 10f, cameraRig.transform.position.z);
         isCameraSmall = !isCameraSmall;
-        GetComponent<TrackpadFlight>().speedMultiplier = 0.2f;
+        trackpadFlight.speedMultiplier = 0.2f;
     }
 
     void GoBig()
     {
-        //previousCameraPosition = cameraEye.transform.position;
-        //rb.isKinematic = true;
-        //rb.useGravity = false;
+        Vector3 oldPosition = cameraEye.transform.position;
         cameraRig.transform.localScale = new Vector3(10f, 10f, 10f);
-        //cameraRig.transform.position -= new Vector3(previousCameraPosition.x, 10f, previousCameraPosition.z);
+        Vector3 adjustVector = oldPosition - cameraEye.transform.position;
+        cameraRig.transform.position += adjustVector;
+        cameraRig.transform.position = new Vector3(cameraRig.transform.position.x, previousRigPosition.y, cameraRig.transform.position.z);
         isCameraSmall = !isCameraSmall;
-        GetComponent<TrackpadFlight>().speedMultiplier = 2f;
+        trackpadFlight.speedMultiplier = 2f;
     }
 }

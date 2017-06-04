@@ -31,9 +31,9 @@ public class HiResPhoto : MonoBehaviour
 
     public string ScreenShotName(int width, int height)
     {
-        return string.Format("{0}/screen_{1}x{2}_{3}.png",
+        return string.Format("{0}/screen_{1}x{2}_{3}{4}.png",
                              Application.dataPath,
-                             width, height, gameObject.name);
+                             width, height, gameObject.name, numShots.ToString());
     }
 
     public void TakeHiResShot()
@@ -48,7 +48,7 @@ public class HiResPhoto : MonoBehaviour
         RenderTexture.active = null; // JC: added to avoid errors
         Destroy(rt);
         byte[] bytes = screenShot.EncodeToPNG();
-        string filename = ScreenShotName(resWidth, resHeight) + numShots.ToString();
+        string filename = ScreenShotName(resWidth, resHeight);
         System.IO.File.WriteAllBytes(filename, bytes);
         Debug.Log(string.Format("Took screenshot to: {0}", filename));
         numShots++;

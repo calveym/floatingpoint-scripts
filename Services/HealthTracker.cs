@@ -38,7 +38,9 @@ public class HealthTracker : ServiceTrackerBase {
             {
                 if (building != gameObject && building.tag == "industrial" || building.tag == "commercial" || building.tag == "industrial")
                 {
-                    building.GetComponent<ItemTracker>().health = true;
+                    ItemTracker tempTracker = building.GetComponent<ItemTracker>();
+                    if(tempTracker)
+                        tempTracker.health = true;
                 }
             }
         }

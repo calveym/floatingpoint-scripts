@@ -34,12 +34,12 @@ public class BuildingNotificationTracker : MonoBehaviour {
     {
         if(tracker.updateStarted)
         {
-            if (NoUsers() && !updating)
+            if (HighUnemployment() && !updating)
             {
                 updating = true;
                 GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
-                notificationObject.transform.parent = gameObject.transform;
-                displayingNotification = new Notification(1, noUsers, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
+                notificationObject.transform.parent = transform;
+                displayingNotification = new Notification(5, highUnemployment, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
                 RunNotification(displayingNotification);
             }
             else if (NoProduction() && !updating)
@@ -74,12 +74,12 @@ public class BuildingNotificationTracker : MonoBehaviour {
                 displayingNotification = new Notification(5, lowHappiness, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
                 RunNotification(displayingNotification);
             }
-            else if (HighUnemployment() && !updating)
+            else if (NoUsers() && !updating)
             {
                 updating = true;
                 GameObject notificationObject = Instantiate(notificationPrefab, transform.position, Quaternion.identity);
-                notificationObject.transform.parent = transform;
-                displayingNotification = new Notification(5, highUnemployment, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
+                notificationObject.transform.parent = gameObject.transform;
+                displayingNotification = new Notification(1, noUsers, notificationObject, transform.position + new Vector3(0f, 3f, 0f));
                 RunNotification(displayingNotification);
             }
         }
@@ -206,8 +206,15 @@ public class BuildingNotificationTracker : MonoBehaviour {
             notificationObject = newNotificationObject;
             notificationObject.transform.position = newPosition;
             notificationRend = notificationObject.GetComponent<SpriteRenderer>();
-            notificationRend.sprite = newSprite;
+            notificationRend.sprite = image;
             notificationObject.GetComponent<Animator>().enabled = true;
+        }
+
+        public void SetNewNotification(int newId, Sprite newSprite)
+        {
+            id = newId;
+            image = newSprite;
+            notificationRend.sprite = image;
         }
 
         public void DestroyNotification()

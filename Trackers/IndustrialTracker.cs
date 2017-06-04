@@ -72,7 +72,7 @@ public class IndustrialTracker : ItemTracker {
         goodsProduced = users * productionMulti * (longtermHappiness / 50);
 
         income = goodsProduced * sellPrice * (1 + (landValue * 0.01f)); //* ReferenceManager.instance.industrialIncomeMultiplier;
-        Debug.Log("Income: " + goodsProduced * sellPrice * (1 + (landValue * 0.01f)));
+        //Debug.Log("Income: " + goodsProduced * sellPrice * (1 + (landValue * 0.01f)));
         income -= baseCost;
         allGoods += goodsProduced;
     }
@@ -106,7 +106,7 @@ public class IndustrialTracker : ItemTracker {
     void RejectApplication(ResidentialTracker applicantTracker)
     {
         // TODO:
-        Debug.Log("Applicant rejected!!!");
+        //Debug.Log("Applicant rejected!!!");
     }
 
     public void RemoveAllUsers()

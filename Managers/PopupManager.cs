@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class PopupManager : MonoBehaviour {
 
+    public bool showUI;
     public GameObject popup;
     Text tooltip;
     public AudioClip notificationSound;
@@ -19,6 +20,7 @@ public class PopupManager : MonoBehaviour {
         WAIT_TIME = 10f;
         queuedPopups = new List<string>();
         tooltip = popup.transform.Find("TooltipCanvas/UIContainer/UITextFront").GetComponent<Text>();
+        popup.SetActive(false);
         QueuePopup("Welcome to CloudCity! It's time to start building your city!\n Fly over to the blue orb by touching the top half of the right trackpad ");
     }
 
@@ -30,7 +32,7 @@ public class PopupManager : MonoBehaviour {
 	void QueuePopup(string message)
     {
         queuedPopups.Add(message);
-        if(!running)
+        if(!running && showUI)
         {
             StartCoroutine("DoPopup");
         }
@@ -51,7 +53,7 @@ public class PopupManager : MonoBehaviour {
         }
         if (queuedPopups.Count == 0)
         {
-            Debug.Log("Popups all shown, deactivating");
+            //Debug.Log("Popups all shown, deactivating");
             popup.SetActive(false);
             running = false;
             yield return null;

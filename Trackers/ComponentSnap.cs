@@ -37,7 +37,7 @@ public abstract class ComponentSnap : SphereObject {
     void InitiateSnap()
     // Starts process of snapping to ground
     {
-        if (CheckAvailableSpace() && transform.position.y <= 12)
+        if (CheckAvailableSpace() && transform.position.y <= 11f)
         {
             startPosition = transform.position;
             endPosition = new Vector3(startPosition.x, 10.01f, startPosition.z);
@@ -55,7 +55,7 @@ public abstract class ComponentSnap : SphereObject {
         Physics.Raycast(transform.position, Vector3.down, out hit, 5f);
         if(hit.collider)
         {
-            if (hit.collider.gameObject.name == "Island")
+            if (hit.collider.gameObject.name == "Island" && hit.distance <= 1f)
             {
                 return true;
             }

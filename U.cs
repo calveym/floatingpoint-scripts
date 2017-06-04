@@ -153,7 +153,7 @@ public class U : MonoBehaviour {
         type.Add(4, "industrialComponent");
         type.Add(5, "foliage");
 
-        Debug.Log("typecount : " + type.Count);
+        //Debug.Log("typecount : " + type.Count);
         return type[value];
     }
 

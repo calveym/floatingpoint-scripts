@@ -38,7 +38,9 @@ public class FireTracker : ServiceTrackerBase {
             {
                 if (building != gameObject && building.tag == "industrial" || building.tag == "commercial" || building.tag == "industrial")
                 {
-                    building.GetComponent<ItemTracker>().fire = true;
+                    ItemTracker tempTracker = building.GetComponent<ItemTracker>();
+                    if(tempTracker)
+                        tempTracker.fire = true;
                 }
             }
         }

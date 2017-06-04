@@ -39,7 +39,9 @@ public class PoliceTracker : ServiceTrackerBase
             {
                 if (building != gameObject && building.tag == "industrial" || building.tag == "commercial" || building.tag == "industrial")
                 {
-                    building.GetComponent<ItemTracker>().police = true;
+                    ItemTracker tempTracker = building.GetComponent<ItemTracker>();
+                    if(tempTracker)
+                        tempTracker.police = true;
                 }
             }
         }
