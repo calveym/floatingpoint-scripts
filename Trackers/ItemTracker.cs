@@ -154,7 +154,7 @@ public class ItemTracker : MonoBehaviour {
             GetLandValue();
         }
         landValue = land.RecalculateLandValue();
-        landValue += users * 1.2f;
+        landValue += users / capacity * 30f;
         landValue += numSnappedRoads;
         if(education)
         {

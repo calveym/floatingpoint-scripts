@@ -158,11 +158,16 @@ public class ItemManager : MonoBehaviour {
         leisure.Remove(removeObject);
     }
 
-	public int getMaxPop()
+	public int GetMaxPop()
 	// Returns current maximum population
 	{
 		return residentialCap;
 	}
+
+    public int GetMaxJobs()
+    {
+        return industrialCap + commercialCap;
+    }
 
     void Empty()
     {

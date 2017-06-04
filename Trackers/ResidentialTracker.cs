@@ -64,11 +64,30 @@ public class ResidentialTracker : ItemTracker {
         populationManager.QueueUpdates();
     }
 
-    public void TryEmployWorker()
+    void CheckEmployment()
+    {
+        int amountToEmploy = 0;
+        if (unemployedPopulation >= 1 && unemployedPopulation < 10)
+            amountToEmploy = 1;
+        else if (unemployedPopulation >= 10 && unemployedPopulation < 50)
+            amountToEmploy = 9;
+        else if (unemployedPopulation >= 50 && unemployedPopulation < 250)
+            amountToEmploy = 49;
+        else if (unemployedPopulation >= 250)
+            amountToEmploy = 99;
+
+
+        for (int i = 0; i < amountToEmploy; i++)
+        {
+            TryEmployWorker();
+        }
+    }
+
+    void TryEmployWorker()
     // Called by populationManager
     {
         GameObject employmentLocation = FindPreferredEmployment();
-        if(employmentLocation)
+        if (employmentLocation)
         {
             ApplyForJob(employmentLocation);
         }
@@ -166,6 +185,7 @@ public class ResidentialTracker : ItemTracker {
         {
             return;
         }
+        CheckEmployment();
         UpdateLocalHappiness();
         UpdateEmploymentHappiness();
         UpdateHappiness();

@@ -14,7 +14,6 @@ public class LandValue : MonoBehaviour {
     float aggResidential;
     float aggCommercial;
     float aggIndustrial;
-    float aggLeisure;
 
     float landValue;
 
@@ -38,7 +37,10 @@ public class LandValue : MonoBehaviour {
 
     float CalculateFinalValue()
     {
-        return aggResidential + aggCommercial + aggIndustrial + aggLeisure;
+        float finalValue = aggResidential + aggCommercial + aggIndustrial;
+        if (finalValue < 200)
+            return finalValue;
+        else return 200;
     }
 
     void CalculateAggregates()
@@ -63,18 +65,7 @@ public class LandValue : MonoBehaviour {
 
     float CalculateIndustrialAggregate()
     {
-        float aggTemp = 0;
-        foreach(IndustrialTracker ind in surroundingIndustrial)
-        {
-            if(gameObject.tag == "industrial")
-            {
-                aggTemp ++;
-            }
-            else if(gameObject.tag == "residential")
-            {
-                aggTemp --;
-            }
-        }
+        float aggTemp = surroundingIndustrial.Count;
         return aggTemp;
     }
 
@@ -86,7 +77,7 @@ public class LandValue : MonoBehaviour {
 
     void UpdateValues()
     {
-        surroundingBuildings = U.FindNearestBuildings(gameObject.transform.position, 10f);
+        surroundingBuildings = U.FindNearestBuildings(gameObject.transform.position, 5f);
         surroundingResidential = U.ReturnResidentialTrackers(surroundingBuildings);
         surroundingCommercial = U.ReturnCommercialTrackers(surroundingBuildings);
         surroundingIndustrial = U.ReturnIndustrialTrackers(surroundingBuildings);

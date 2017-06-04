@@ -108,7 +108,7 @@ public class IndustrialComponent : ComponentSnap {
                 Link();
             }
         }
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(4.9f);
     }
 
     static IEnumerator StoppedCheck()

@@ -25,9 +25,6 @@ public class PopulationManager : MonoBehaviour {
     public float comUpdate;
     public float indUpdate;
 
-	float newPopulationSpawn;
-	float populationIncreaseRate;
-	float residentialDemand;
     float happiness;
     List<string> firstNames;
     List<string> lastNames;
@@ -35,7 +32,7 @@ public class PopulationManager : MonoBehaviour {
     public int population; // Population that are housed
     public int unallocatedPopulation; // Population that are not housed
     public int totalPopulation; // Total population
-	public int unemployedPopulation; // Unemployed population- subset of "population"
+	public int unemployedPopulation; // Unemployed population- subset of "population", meaning they must be housed first to enter this category
 
     int residentialCap;
     int industrialCap;
@@ -44,7 +41,6 @@ public class PopulationManager : MonoBehaviour {
     void Awake()
     {
         population = 0;
-        populationIncreaseRate = 0;
         resUpdate = 0;
         indUpdate = 0;
         comUpdate = 0;
@@ -206,7 +202,7 @@ public class PopulationManager : MonoBehaviour {
     void TryIncreasePopulation()
     // Run the check to increase population
     {
-        if (totalPopulation < itemManager.getMaxPop())
+        if (totalPopulation < itemManager.GetMaxPop())
         {
             IncreasePopulation();
         }
@@ -216,31 +212,66 @@ public class PopulationManager : MonoBehaviour {
     // TODO: allocate to either industrial or commercial, select type first, then allocate
     {
 
-        if (unemployedPopulation > 0 && residentialWithUnemployed.Count > 0 && AvailableJobs() > 0)
-		{
-			FindJob();
-		}
+        //if (unemployedPopulation > 0 && residentialWithUnemployed.Count > 0 && AvailableJobs() > 0)
+		//{
+		//	FindJob();
+		//}
 	}
 
 	void FindJob()
 	{
+//Debug.Log("max jobs: " + itemManager.GetMaxJobs());
+        //Debug.Log("Res with unemployed: " + residentialWithUnemployed.Count);
         // Finding job started
-        residentialWithUnemployed[0].TryEmployWorker();
-        QueueUpdates();
+        //foreach(ResidentialTracker res in residentialWithUnemployed)
+        //{
+           // if (itemManager.GetMaxJobs() > population)
+        //    {
+        //        res.TryEmployWorker();
+        //    }
+        //    else break;
+        //}
+
+        //QueueUpdates();
 		// itemTrackers allocate nearest jobs to their users
 	}
 
     void IncreasePopulation()
     // Tries to increase population
     {
-        happiness = happinessManager.happiness;
-        residentialDemand += 4 * Time.deltaTime * 250;
-        if (residentialDemand >= 1 )
+
+        if (totalPopulation < 2)
         {
             unallocatedPopulation++;
-            residentialDemand--;
-            resUpdate++;
         }
+        else if ((decimal)unemployedPopulation / (decimal)totalPopulation <= (decimal)0.1)
+        {
+            unallocatedPopulation += (IncomingPopulation());
+        }
+        else
+        {
+            Debug.Log("Too much unemployment to increase");
+        }
+        resUpdate++;
+    }
+
+    int IncomingPopulation()
+    {
+        float maxWorkAmount = itemManager.GetMaxJobs() * 1.1f;
+        float maxCapacity = itemManager.GetMaxPop();
+        if (maxWorkAmount - maxCapacity <= 3)
+            return (int)((maxCapacity - totalPopulation) * 0.2f);
+        else if (maxWorkAmount < maxCapacity - 1)
+        {
+            Debug.Log("Option 1");
+            return (int)((maxWorkAmount - totalPopulation) * 0.2f);
+        }
+        else if (maxWorkAmount > maxCapacity - 1)
+        {
+            Debug.Log("Option 2");
+            return (int)((maxCapacity - totalPopulation) * 0.2f);
+        }
+        else return (int)((maxCapacity - totalPopulation) * 0.2f);
     }
 
     public void DeallocateUsers(int numUsers, string type)
