@@ -204,6 +204,7 @@ public class PopulationManager : MonoBehaviour {
     {
         if (totalPopulation < itemManager.GetMaxPop())
         {
+            Debug.Log("Initial increase conditions met");
             IncreasePopulation();
         }
     }
@@ -239,7 +240,6 @@ public class PopulationManager : MonoBehaviour {
     void IncreasePopulation()
     // Tries to increase population
     {
-
         if (totalPopulation < 2)
         {
             unallocatedPopulation++;
@@ -259,8 +259,14 @@ public class PopulationManager : MonoBehaviour {
     {
         float maxWorkAmount = itemManager.GetMaxJobs() * 1.1f;
         float maxCapacity = itemManager.GetMaxPop();
-        if (maxWorkAmount - maxCapacity <= 3)
+        if(maxCapacity - totalPopulation <= 5)
+        {
+            return 1;
+        }
+        else if (maxWorkAmount - maxCapacity <= 3)
+        {
             return (int)((maxCapacity - totalPopulation) * 0.2f);
+        }
         else if (maxWorkAmount < maxCapacity - 1)
         {
             Debug.Log("Option 1");

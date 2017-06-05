@@ -60,8 +60,8 @@ public class TestRunner : MonoBehaviour
         //if (Input.GetKeyDown("i")) EighthTest();
         //if (Input.GetKeyDown("o")) NinthTest();
         if (Input.GetKeyDown("[7]")) SetTime(0);
-        if (Input.GetKeyDown("[8]")) SetTime(2.5f);
-        if (Input.GetKeyDown("[9]")) SetTime(5);
+        if (Input.GetKeyDown("[8]")) SetTime(5f);
+        if (Input.GetKeyDown("[9]")) SetTime(6);
         if (Input.GetKeyDown("[4]")) SetTime(7.5f);
         if (Input.GetKeyDown("[5]")) SetTime(10);
         if (Input.GetKeyDown("[6]")) SetTime(12.5f);
