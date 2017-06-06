@@ -13,7 +13,6 @@ public class ItemTracker : MonoBehaviour {
 
     [Header("Components")]
     [Space(5)]
-    public LandValue land;
     public float availableTransportation;
     public float numSnappedRoads;
 
@@ -51,6 +50,17 @@ public class ItemTracker : MonoBehaviour {
     public bool validPosition;
     public float landValue;
     [Space(10)]
+    List<GameObject> surroundingBuildings;
+    List<ResidentialTracker> surroundingResidential;
+    List<CommercialTracker> surroundingCommercial;
+    List<IndustrialTracker> surroundingIndustrial;
+    List<LeisureTracker> surroundingLeisure;
+
+    // Aggregate values
+    float aggResidential;
+    float aggCommercial;
+    float aggIndustrial;
+
 
     [Header("Unhappiness")]
     [Space(5)]
@@ -109,10 +119,6 @@ public class ItemTracker : MonoBehaviour {
         longtermHappiness = 0;
         availableTransportation = 1;
         landValue = 10f;
-        if(!land)
-        {
-            land = gameObject.GetComponent<LandValue>();
-        }
         happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
@@ -130,30 +136,60 @@ public class ItemTracker : MonoBehaviour {
         }
     }
 
-    public void SetLandValue(LandValue newLand)
+    float CalculateFinalValue()
     {
-        land = newLand;
+        float finalValue = aggResidential + aggCommercial + aggIndustrial;
+        if (finalValue < 200)
+            return finalValue;
+        else return 200;
     }
 
-    void GetLandValue()
+    void CalculateAggregates()
     {
-        Component[] allComponents = GetComponents(typeof(LandValue));
-        foreach(LandValue comp in allComponents)
-        {
-            if (comp.name == "LandValue")
-            {
-                land = comp;
-            }
-        }
+        aggResidential = CalculateResidentialAggregate() * 5;
+        aggCommercial = CalculateCommercialAggregate() * 5;
+        aggIndustrial = CalculateIndustrialAggregate() * 7;
+        // aggLeisure = CalculateLeisureAggregate();
+    }
+
+    float CalculateResidentialAggregate()
+    {
+        float aggTemp = surroundingResidential.Count;
+        return aggTemp;
+    }
+
+    float CalculateCommercialAggregate()
+    {
+        float aggTemp = surroundingCommercial.Count;
+        return aggTemp;
+    }
+
+    float CalculateIndustrialAggregate()
+    {
+        float aggTemp = surroundingIndustrial.Count;
+        return aggTemp;
+    }
+
+    float CalculateLeisureAggregate()
+    {
+        float aggTemp = surroundingLeisure.Count;
+        return aggTemp;
+    }
+
+    void UpdateValues()
+    {
+        surroundingBuildings = U.FindNearestBuildings(gameObject.transform.position, 5f);
+        surroundingResidential = U.ReturnResidentialTrackers(surroundingBuildings);
+        surroundingCommercial = U.ReturnCommercialTrackers(surroundingBuildings);
+        surroundingIndustrial = U.ReturnIndustrialTrackers(surroundingBuildings);
+        surroundingLeisure = U.ReturnLeisureTrackers(surroundingBuildings);
     }
 
     public void UpdateLandValue()
     {
-        if(land == null)
-        {
-            GetLandValue();
-        }
-        landValue = land.RecalculateLandValue();
+        UpdateValues();
+        CalculateAggregates();
+        landValue = CalculateFinalValue();
         landValue += users / capacity * 30f;
         landValue += numSnappedRoads;
         if(education)

@@ -156,6 +156,7 @@ public class DisplayUI : MonoBehaviour {
     void DoTouchpadPress(object sender, ControllerInteractionEventArgs e)
     {
         U.LeftPulse(750);
+        U.PlayClick();
         interruptRelease = true;
         updateRequired = true;
         if (firstTouch)

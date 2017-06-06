@@ -204,7 +204,7 @@ public class PopulationManager : MonoBehaviour {
     {
         if (totalPopulation < itemManager.GetMaxPop())
         {
-            Debug.Log("Initial increase conditions met");
+            //Debug.Log("Initial increase conditions met");
             IncreasePopulation();
         }
     }
@@ -250,7 +250,7 @@ public class PopulationManager : MonoBehaviour {
         }
         else
         {
-            Debug.Log("Too much unemployment to increase");
+            //Debug.Log("Too much unemployment to increase");
         }
         resUpdate++;
     }
@@ -269,12 +269,12 @@ public class PopulationManager : MonoBehaviour {
         }
         else if (maxWorkAmount < maxCapacity - 1)
         {
-            Debug.Log("Option 1");
+            //Debug.Log("Option 1");
             return (int)((maxWorkAmount - totalPopulation) * 0.2f);
         }
         else if (maxWorkAmount > maxCapacity - 1)
         {
-            Debug.Log("Option 2");
+            //Debug.Log("Option 2");
             return (int)((maxCapacity - totalPopulation) * 0.2f);
         }
         else return (int)((maxCapacity - totalPopulation) * 0.2f);

@@ -108,6 +108,10 @@ public class SpawnController : MonoBehaviour {
             showingBuilding = false;
             spawnManager.SpawnUIBuildings(displayUI.GetSelection(), thumb.angleIncrement);
         }
+        else
+        {
+            economyManager.FailedPurchase();
+        }
     }
 
     public void DeleteBuilding()
@@ -388,7 +392,7 @@ public class SpawnController : MonoBehaviour {
     {
         if(unit == 2)
         {
-            containedBuilding.transform.localScale *= 0.5f;
+            containedBuilding.transform.localScale *= scaleFactor * 2f;
         }
         containedBuilding.transform.localScale *= scaleFactor * 1f / 0.75f;
     }

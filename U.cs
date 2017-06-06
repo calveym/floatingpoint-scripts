@@ -6,6 +6,7 @@ using VRTK;
 public class U : MonoBehaviour {
 
     public static U instance;
+    public AudioClip click;
     SteamVR_Controller.Device rightDevice;
     SteamVR_Controller.Device leftDevice;
 
@@ -175,7 +176,7 @@ public class U : MonoBehaviour {
 
     public static void LeftPulse()
     {
-        instance.leftDevice.TriggerHapticPulse(750);
+        LeftPulse(750);
     }
 
     public static void LeftPulse(int time)
@@ -186,13 +187,13 @@ public class U : MonoBehaviour {
 
     public static void RightPulse()
     {
-        if(instance.rightDevice != null)
-            instance.rightDevice.TriggerHapticPulse(750);
+        RightPulse(750);
     }
 
     public static void RightPulse(int time)
     {
-        instance.rightDevice.TriggerHapticPulse((ushort)time);
+        if (instance.rightDevice != null)
+            instance.rightDevice.TriggerHapticPulse((ushort)time);
     }
 
     public static void DisablePhysics(GameObject disableObject)
@@ -207,5 +208,10 @@ public class U : MonoBehaviour {
         Rigidbody rb = enableObject.GetComponent<Rigidbody>();
         rb.useGravity = true;
         rb.isKinematic = false;
+    }
+
+    public static void PlayClick()
+    {
+        ReferenceManager.instance.audioManager.PlaySingle(instance.click);
     }
 }

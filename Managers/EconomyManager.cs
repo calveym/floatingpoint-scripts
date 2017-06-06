@@ -6,8 +6,8 @@ using UnityEngine;
 public class EconomyManager : MonoBehaviour {
 
     // Declare other managers
-	ItemManager itemManager;
-	PopulationManager populationManager;
+    ItemManager itemManager;
+    PopulationManager populationManager;
     HappinessManager happinessManager;
     AudioManager audioManager;
 
@@ -16,10 +16,10 @@ public class EconomyManager : MonoBehaviour {
     [Range(0.0001f, 1)]
     [Tooltip("Multiplier for income to get per tick income")]
     public float incomeMultiplier = 0.1f;
-	float balance;
-	int numRoads;
-	float income; // Net income, after expenses
-	int population;
+    public float balance = 0;
+    int numRoads;
+    float income; // Net income, after expenses
+    int population;
     float happiness;
 
     [SerializeField]
@@ -89,14 +89,14 @@ public class EconomyManager : MonoBehaviour {
     [Header("Audio")]
     [Space(5)]
     public AudioClip purchaseSound;
+    public AudioClip failSound;
 
-    void Awake ()
+    void Awake()
     // Finds instances of all objects and sets up values
     {
         residentialTaxRate = 15;
         commercialTaxRate = 15;
         industrialTaxRate = 15;
-		balance = 100000;
         income = rawIncome;
         keepUpdating = true;
     }
@@ -124,7 +124,7 @@ public class EconomyManager : MonoBehaviour {
             {
                 ecoTick();
             }
-            if(foliageTick != null)
+            if (foliageTick != null)
             {
                 foliageTick();
             }
@@ -151,17 +151,17 @@ public class EconomyManager : MonoBehaviour {
         goods += IndustrialTracker.allGoods * productionMultiplier;
         IndustrialTracker.allGoods = 0;
 
-        if(goods < goodsConsumption && enableImport)
+        if (goods < goodsConsumption && enableImport)
         {
             transferQueued = true;
             PrepareImport();
         }
-        else if((goods / 2) >= goodsConsumption && enableExport)
+        else if ((goods / 2) >= goodsConsumption && enableExport)
         {
             transferQueued = true;
             PrepareExport();
         }
-        if(transferQueued)
+        if (transferQueued)
             DoGoodsTransfer();
     }
 
@@ -185,10 +185,10 @@ public class EconomyManager : MonoBehaviour {
     // Imports required amount
     {
         import = goodsConsumption - goods;
-        if(balance <= import * 1.25f)
+        if (balance <= import * 1.25f)
         {
             import = 0;
-        }        
+        }
     }
 
     void PrepareExport()
@@ -206,24 +206,24 @@ public class EconomyManager : MonoBehaviour {
         industrialCap = itemManager.industrialCap;
     }
 
-	void UpdateBalance()
-	// Reduces balance by income and time
-	{
-		balance += income * incomeMultiplier;
-	}
+    void UpdateBalance()
+    // Reduces balance by income and time
+    {
+        balance += income * incomeMultiplier;
+    }
 
-	void UpdateIncome()
-	// Recalculates income
-	{
-		float roadExpenses = CalculateRoadExpenses();
-		float residentialIncome = CalculateResidentialIncome();
+    void UpdateIncome()
+    // Recalculates income
+    {
+        float roadExpenses = CalculateRoadExpenses();
+        float residentialIncome = CalculateResidentialIncome();
         float commercialIncome = CalculateCommercialIncome();
         float industrialIncome = CalculateIndustrialIncome();
         serviceExpenses = powerExpenses + educationExpenses + healthExpenses + policeExpenses + fireExpenses;
 
         float expenses = roadExpenses + CalculateCapacityExpenses() + serviceExpenses;
         income = (rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses);
-	}
+    }
 
     public void SetPowerExpense(float newPowerExpenses)
     {
@@ -261,50 +261,55 @@ public class EconomyManager : MonoBehaviour {
         return residentialCap + commercialCap + industrialCap;
     }
 
-	float CalculateResidentialIncome()
-	// Tax income from all residential properties
-	{
+    float CalculateResidentialIncome()
+    // Tax income from all residential properties
+    {
         return ResidentialTracker.totalResidentialIncome * (1 + 0.05f * residentialTaxRate);
-	}
+    }
 
-	  float CalculateCommercialIncome()
-	  // Tax income for all commercial buildings
-	  {
-	      if (commercialCap == 0 || population == 0)
-	      {
-	          return 0;
-	      }
-	      else
-	      {
-	          return CommercialTracker.totalCommercialIncome * (1 + 0.05f * commercialTaxRate);
-	      }
-	  }
+    float CalculateCommercialIncome()
+    // Tax income for all commercial buildings
+    {
+        if (commercialCap == 0 || population == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return CommercialTracker.totalCommercialIncome * (1 + 0.05f * commercialTaxRate);
+        }
+    }
 
-	  float CalculateIndustrialIncome()
-	  // Tax income for industrial buildings
-	  {
-	      if (industrialCap == 0)
-	      {
-	          return 0;
-	      }
-	      else
-	      {
-	          return IndustrialTracker.totalIndustrialIncome * (1 + 0.05f * industrialTaxRate);
-	      }
-	  }
+    float CalculateIndustrialIncome()
+    // Tax income for industrial buildings
+    {
+        if (industrialCap == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return IndustrialTracker.totalIndustrialIncome * (1 + 0.05f * industrialTaxRate);
+        }
+    }
 
-	float CalculateRoadExpenses()
-	// Calculates how much is spent on road maintenance
-	{
-		return numRoads / 5;
-	}
+    float CalculateRoadExpenses()
+    // Calculates how much is spent on road maintenance
+    {
+        return numRoads / 5;
+    }
 
-	public void MakePurchase(float amount)
-	// Modifies balance by "amount", plays sound
-	{
-		balance += amount;
+    public void MakePurchase(float amount)
+    // Modifies balance by "amount", plays sound
+    {
+        balance += amount;
         ReferenceManager.instance.audioManager.PlaySingle(purchaseSound);
-	}
+    }
+
+    public void FailedPurchase()
+    {
+        ReferenceManager.instance.audioManager.PlaySingle(failSound);
+    }
 
     public void SellGoods(float numGoods)
     {
