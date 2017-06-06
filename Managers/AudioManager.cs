@@ -56,7 +56,7 @@ public class AudioManager : MonoBehaviour {
         else if (instance != this)
             Destroy(gameObject);
 
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         checkTime = true;
         city = false;
         time = 0;

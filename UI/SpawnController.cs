@@ -16,6 +16,7 @@ public class SpawnController : MonoBehaviour {
     bool selectedStarted;  // Used to tell if coroutine already running- for starting
 
     GameObject containedBuilding;  // Building currently spawned in sphere. This reference will be used to delete it later on.
+    Vector3 oldScale;
     Renderer containedRenderer;  // Used to find size for scale up/ down
     float scaleFactor;
     int containedType;  // contained building type
@@ -147,14 +148,13 @@ public class SpawnController : MonoBehaviour {
         sendList.Add(FancyWeekCost());
         sendList.Add(FancyBuyCost());
         displayUI.SendSelectedText(sendList);
-        containedBuilding.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);
         containedBuilding.transform.Rotate(new Vector3(0, 2f, 0));
     }
 
     void DeselectBuilding()
     {
         selected = false;
-        containedBuilding.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+        //containedBuilding.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
     }
 
     public void DisableBuilding(SpawnManager sm, GameObject newBuilding)
@@ -174,6 +174,8 @@ public class SpawnController : MonoBehaviour {
 
         if (unit == 2)
         {
+            containedBuilding.transform.localScale *= 1.3f;
+
             SelectBuilding();
         }
 
@@ -373,28 +375,28 @@ public class SpawnController : MonoBehaviour {
         if (size.x > size.y && size.x > size.z)
         {   
             // size x 
-            scaleFactor = size.x;
+            scaleFactor = size.x * 2f;
         }
         else if (size.y > size.x && size.y > size.z)
         {
             // size y
-            scaleFactor = size.y;
+            scaleFactor = size.y * 2f;
         }
         else if (size.z > size.x && size.z > size.y)
         {
             // size z
-            scaleFactor = size.z;
+            scaleFactor = size.z * 2f;
         }
-        containedBuilding.transform.localScale *= (1 / scaleFactor) * 0.5f;
+        oldScale = containedBuilding.transform.localScale;
+        containedBuilding.transform.localScale *= (1 / scaleFactor);
     }
 
     void SizeForPlay()
     {
-        if(unit == 2)
+        if (unit == 2)
         {
-            containedBuilding.transform.localScale *= scaleFactor * 2f;
+            containedBuilding.transform.localScale = oldScale;
         }
-        containedBuilding.transform.localScale *= scaleFactor * 1f / 0.75f;
     }
 
     string FancyType()
