@@ -6,7 +6,6 @@ using UnityEngine;
 [SelectionBase]
 public class HealthTracker : ServiceTrackerBase {
 
-    Material sphereMaterial;
     Health health;
 
     protected override void Awake()
@@ -22,8 +21,9 @@ public class HealthTracker : ServiceTrackerBase {
         AddService();
     }
 
-    protected override void AddService()
+    public override void AddService()
     {
+        base.AddService();
         health.AddHealth(this);
         health.addLocalHealth += DoEffect;
         health.servicePayment += PayForService;

@@ -7,7 +7,6 @@ using UnityEngine;
 public class PoliceTracker : ServiceTrackerBase
 {
 
-    Material sphereMaterial;
     Police police;
 
     protected override void Awake()
@@ -23,8 +22,9 @@ public class PoliceTracker : ServiceTrackerBase
         AddService();
     }
 
-    protected override void AddService()
+    public override void AddService()
     {
+        base.AddService();
         police.AddPolice(this);
         police.addLocalPolice += DoEffect;
         police.servicePayment += PayForService;

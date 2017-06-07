@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using VRTK;
 using UnityEngine;
+using System;
 
 public class ItemTracker : MonoBehaviour {
-
+    
     // Declare variables
     protected PopulationManager populationManager;
     protected HappinessManager happinessManager;

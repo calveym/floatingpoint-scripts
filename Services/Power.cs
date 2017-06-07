@@ -48,7 +48,8 @@ public class Power : ServiceBase
     {
         foreach(GameObject com in itemManager.commercial)
         {
-            com.GetComponent<ItemTracker>().power = false;
+            if(com.tag == "commercial")
+                com.GetComponent<ItemTracker>().power = false;
         }
     }
 

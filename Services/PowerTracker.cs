@@ -7,7 +7,6 @@ using UnityEngine;
 public class PowerTracker : ServiceTrackerBase
 {
 
-    Material sphereMaterial;
     Power power;
 
     protected override void Awake()
@@ -23,8 +22,9 @@ public class PowerTracker : ServiceTrackerBase
         AddService();
     }
 
-    protected override void AddService()
+    public override void AddService()
     {
+        base.AddService();
         power.AddPower(this);
         power.addLocalPower += DoEffect;
         power.servicePayment += PayForService;
@@ -49,7 +49,7 @@ public class PowerTracker : ServiceTrackerBase
         {
             for(int i = 0; i < amount; i++)
             {
-                if (surroundingBuildings[i] != gameObject)
+                if (surroundingBuildings[i] != gameObject && surroundingBuildings[i].tag == "industrial" || surroundingBuildings[i].tag == "commercial" || surroundingBuildings[i].tag == "industrial")
                 {
                     surroundingBuildings[i].GetComponent<ItemTracker>().power = true;
                 }

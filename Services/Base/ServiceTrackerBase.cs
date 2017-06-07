@@ -17,6 +17,7 @@ public abstract class ServiceTrackerBase : SphereObject {
     public int buyCost;
     [Tooltip("Level at which this building is unlocked")]
     public int level;
+    public Material sphereMaterial;
 
     protected List<GameObject> surroundingBuildings;
     public int numSurroundingBuildings;
@@ -25,7 +26,6 @@ public abstract class ServiceTrackerBase : SphereObject {
         base.Start();
 
         economyManager = ReferenceManager.instance.economyManager;
-        EconomyManager.ecoTick += PayForService;
  	}
 
     protected virtual void DoEffect()
@@ -34,7 +34,10 @@ public abstract class ServiceTrackerBase : SphereObject {
         numSurroundingBuildings = surroundingBuildings.Count - 1;  // Minus one to remove the tracker itself
     }
 
-    protected abstract void AddService();
+    public virtual void AddService()
+    {
+        EconomyManager.ecoTick += PayForService;
+    }
 
     protected abstract void PayForService();  // Adds price to relevant manager in overrider class
 }

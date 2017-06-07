@@ -6,7 +6,6 @@ using UnityEngine;
 [SelectionBase]
 public class EducationTracker : ServiceTrackerBase {
 
-    Material sphereMaterial;
     Education education;
 
     protected override void Awake()
@@ -21,8 +20,9 @@ public class EducationTracker : ServiceTrackerBase {
         education = ReferenceManager.instance.education;
     }
 
-    protected override void AddService()
+    public override void AddService()
     {
+        base.AddService();
         education.AddEducation(this);
         education.addLocalEducation += DoEffect;
         education.servicePayment += PayForService;

@@ -74,6 +74,10 @@ public class SpawnController : MonoBehaviour {
                     child.gameObject.SetActive(true);
                 }
             }
+            else if(containedBuilding.tag == "service")
+            {
+                serv.AddService();
+            }
             economyManager.MakePurchase(price);
             EnablePhysics();
             if (containedType == 0)
@@ -371,24 +375,32 @@ public class SpawnController : MonoBehaviour {
 
     void SizeForMenu()
     {
-        Vector3 size = containedRenderer.bounds.size;
-        if (size.x > size.y && size.x > size.z)
-        {   
-            // size x 
-            scaleFactor = size.x * 2f;
-        }
-        else if (size.y > size.x && size.y > size.z)
+        if(containedRenderer)
         {
-            // size y
-            scaleFactor = size.y * 2f;
+            Vector3 size = containedRenderer.bounds.size;
+            if (size.x > size.y && size.x > size.z)
+            {
+                // size x 
+                scaleFactor = size.x * 2f;
+            }
+            else if (size.y > size.x && size.y > size.z)
+            {
+                // size y
+                scaleFactor = size.y * 2f;
+            }
+            else if (size.z > size.x && size.z > size.y)
+            {
+                // size z
+                scaleFactor = size.z * 2f;
+            }
+            oldScale = containedBuilding.transform.localScale;
+            containedBuilding.transform.localScale *= (1 / scaleFactor);
         }
-        else if (size.z > size.x && size.z > size.y)
+        else
         {
-            // size z
-            scaleFactor = size.z * 2f;
+            oldScale = containedBuilding.transform.localScale;
+            containedBuilding.transform.localScale *= (1 / 2);
         }
-        oldScale = containedBuilding.transform.localScale;
-        containedBuilding.transform.localScale *= (1 / scaleFactor);
     }
 
     void SizeForPlay()
@@ -403,7 +415,15 @@ public class SpawnController : MonoBehaviour {
     {
         if (tracker != null)
             return tracker.buildingName;
-        else return "Industrial Upgrade";
+        else if (containedBuilding.tag == "industrialComponent")
+            return "Industrial Upgrade";
+        else if (containedBuilding.tag == "service")
+            return "Service";
+        else if(containedBuilding.tag == "foliage")
+        {
+            return "Foliage";
+        }
+        else return " ";
     }
 
     string FancyCapacity()
@@ -421,7 +441,7 @@ public class SpawnController : MonoBehaviour {
             case 4:
                 return "Production: " + indc.productionMulti;
             case 5:
-                return "";
+                return "Range: " + fol.radius;
             case 6:
                 return "Max Buildings Covered: " + serv.amount;
         }
@@ -443,7 +463,7 @@ public class SpawnController : MonoBehaviour {
             case 4:
                 return "Level: " + indc.level;
             case 5:
-                return "";
+                return "Increase amount: " + fol.GetAffectAmount();
             case 6:
                 return "Level: " + serv.level;
         }

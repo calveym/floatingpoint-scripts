@@ -6,7 +6,6 @@ using UnityEngine;
 [SelectionBase]
 public class FireTracker : ServiceTrackerBase {
 
-    Material sphereMaterial;
     Fire fire;
 
     protected override void Awake()
@@ -19,11 +18,11 @@ public class FireTracker : ServiceTrackerBase {
         base.Start();
 
         fire = ReferenceManager.instance.fire;
-        AddService();
     }
 
-    protected override void AddService()
+    public override void AddService()
     {
+        base.AddService();
         fire.AddFire(this);
         fire.addLocalFire += DoEffect;
         fire.servicePayment += PayForService;

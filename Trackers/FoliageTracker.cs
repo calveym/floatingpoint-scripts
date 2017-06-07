@@ -16,12 +16,18 @@ public class FoliageTracker : ComponentSnap {
     private ItemManager itemManager;
 
 
+    public int GetAffectAmount()
+    {
+        return affectAmount;
+    }
+
     protected override void Start()
     {
         base.Start();
         if (!happinessAffector)
         {
             happinessAffector = GetComponent<HappinessAffector>();
+            affectAmount = happinessAffector.affectAmount;
         }
         if (!itemManager)
         {
@@ -50,6 +56,5 @@ public class FoliageTracker : ComponentSnap {
         }
         happinessAffector.enabled = true;
         happinessAffector.radius = radius;
-        affectAmount = happinessAffector.affectAmount;
     }
 }
