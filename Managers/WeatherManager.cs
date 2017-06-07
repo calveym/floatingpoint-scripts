@@ -14,7 +14,6 @@ public class WeatherManager : MonoBehaviour {
 
     [Header("-------Rain Objects-------")]
     public GameObject rainSystem;  // Contains rain particles and clouds
-    public GameObject rainScreen;  // Contains rain screen effects
 
     AudioManager audioManager;
 
@@ -92,7 +91,6 @@ public class WeatherManager : MonoBehaviour {
     void ToggleRain(bool toggle)
     {
         rainSystem.SetActive(toggle);
-        rainScreen.SetActive(toggle);
     }
 
     IEnumerator MakeItRain()
