@@ -15,7 +15,6 @@ public class SaveManager : MonoBehaviour {
     {
         foreach (LevelSerializer.SaveEntry sg in LevelSerializer.SavedGames[LevelSerializer.PlayerName])
         {
-            Debug.Log(sg.Name);
             if (sg.Name == slot)
             {
                 LevelSerializer.LoadSavedLevel(sg.Data);
@@ -25,43 +24,67 @@ public class SaveManager : MonoBehaviour {
 
     public void SaveSlotOne()
     {
-        Debug.Log("Saving slot 1");
-        Save("slot1");
+        if(Time.realtimeSinceStartup > 2)
+        {
+            Debug.Log("Saving slot 1...");
+            Save("slot1");
+        }
     }
 
     public void SaveSlotTwo()
     {
-        Save("slot2");
+        if (Time.realtimeSinceStartup > 2)
+        {
+            Save("slot2");
+        }
     }
 
     public void SaveSlotThree()
     {
-        Save("slot3");
+        if (Time.realtimeSinceStartup > 2)
+        {
+            Save("slot3");
+        }
     }
 
     public void LoadSlotThree()
     {
-        Load("slot3");
+        if (Time.realtimeSinceStartup > 2)
+        {
+            Load("slot3");
+        }
     }
 
     public void LoadSlotTwo()
     {
-        Load("slot2");
+        if (Time.realtimeSinceStartup > 2)
+        {
+            Load("slot2");
+        }
     }
 
     public void LoadSlotOne()
     {
-        Debug.Log("Loading slot 1");
-        Load("slot1");
+        if (Time.realtimeSinceStartup > 2)
+        {
+            Debug.Log("Loading slot 1");
+            Load("slot1");
+        }
     }
 
     public void LoadEmpty()
     {
-        SceneManager.LoadScene("_final-0.5.0-empty");
+        if (Time.realtimeSinceStartup > 2)
+        {
+            SceneManager.LoadScene("main-0.6.0");
+        }
     }
 
     public void LoadTutorial()
     {
-        SceneManager.LoadScene("_final-0.5.0-tutorial");
+        if (Time.realtimeSinceStartup > 2)
+        {
+            SceneManager.LoadScene("main-0.6.0");
+        }
     }
 }

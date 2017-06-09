@@ -38,7 +38,6 @@ public class PopupManager : MonoBehaviour {
         queuedPopups.Add(message);
         if(!running && showUI)
         {
-            Debug.Log("Popping in");
             StartCoroutine("DoPopup");
         }
     }
@@ -47,10 +46,8 @@ public class PopupManager : MonoBehaviour {
     // Goes through array of queued popups, with a WAIT_TIME (5s) delay
     {
         running = true;
-        Debug.Log("Starting");
         while (queuedPopups.Count > 0)
         {
-            Debug.Log("All the way thru");
             AudioManager.instance.PlaySingle(notificationSound);
             U.LeftPulse(1000);
             tooltip.text = queuedPopups[0];
