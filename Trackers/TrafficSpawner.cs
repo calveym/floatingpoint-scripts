@@ -38,10 +38,8 @@ public class TrafficSpawner : MonoBehaviour {
         StartCoroutine("CheckNumCars");
     }
 
-    void SpawnCars(int maxCars)
-    {
-        List<GameObject> spawnLocations = GetSpawnLocations();
-        
+    void SpawnCars(int maxCars, List<GameObject> spawnLocations)
+    {        
         foreach(GameObject location in spawnLocations)
         {
             //Debug.Log(location + "LOCATIONNNN");
@@ -122,14 +120,16 @@ public class TrafficSpawner : MonoBehaviour {
         while (spawnCars)
         {
 			int numRoads = RoadGenerator.instance.roads.Count;
-			int maxCars = Mathf.RoundToInt (numRoads / 3);
+			int maxCars = Mathf.RoundToInt (numRoads / 6);
             if(maxCars > ReferenceManager.instance.populationManager.totalPopulation)
             {
                 maxCars = ReferenceManager.instance.populationManager.totalPopulation;
             }
             if (maxCars >= 1) {
-        
-				SpawnCars (maxCars);
+                List<GameObject> spawnLocations = GetSpawnLocations();
+                if (spawnLocations.Count < maxCars)
+                    maxCars = spawnLocations.Count;
+                SpawnCars(maxCars, spawnLocations);
 			}
 
             yield return new WaitForSeconds(5);

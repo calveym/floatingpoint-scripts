@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ProgressionManager : MonoBehaviour {
 
+    static ProgressionManager instance;
+
     DisplayMenu displayMenu;
     PopulationManager populationManager;
     PopupManager popupManager;
@@ -16,6 +18,7 @@ public class ProgressionManager : MonoBehaviour {
     public static int level;
     public bool allowLevelUp;
     int pop;
+    public AudioClip levelUpSound;
 
     public static bool airportBought;
     public static bool trainBought;
@@ -31,7 +34,6 @@ public class ProgressionManager : MonoBehaviour {
     bool inPosition;
 
     Dictionary<int, int> levelReq; // Requirement for population to level up
-    Dictionary<int, bool> levelInfo; // Stores which levels have been unlocked
 
     public delegate void LevelUp();
 
@@ -39,6 +41,10 @@ public class ProgressionManager : MonoBehaviour {
 
     public void Start()
     {
+        if(instance == null)
+        {
+            instance = this;
+        }
         islandLerp = 0f;
         airportBought = false;
         trainBought = false;
@@ -55,30 +61,30 @@ public class ProgressionManager : MonoBehaviour {
         AddIsland();
         levelReq = new Dictionary<int, int>();
         levelReq.Add(1, 10);
-        levelReq.Add(2, 100);
-        levelReq.Add(3, 250);
-        levelReq.Add(4, 500);
-        levelReq.Add(5, 1000);
-        levelReq.Add(6, 2000);
-        levelReq.Add(7, 3200);
-        levelReq.Add(8, 5000);
-        levelReq.Add(9, 7000);
-        levelReq.Add(10, 12000);
-        levelReq.Add(11, 18000);
-        levelReq.Add(12, 25000);
-        levelReq.Add(13, 34000);
-        levelReq.Add(14, 46000);
-        levelReq.Add(15, 60000);
-        level = 14;
+        levelReq.Add(2, 45);
+        levelReq.Add(3, 150);
+        levelReq.Add(4, 250);
+        levelReq.Add(5, 500);
+        levelReq.Add(6, 750);
+        levelReq.Add(7, 1000);
+        levelReq.Add(8, 1500);
+        levelReq.Add(9, 2500);
+        levelReq.Add(10, 4000);
+        levelReq.Add(11, 7500);
+        levelReq.Add(12, 12000);
+        levelReq.Add(13, 15000);
+        levelReq.Add(14, 20000);
+        levelReq.Add(15, 32000);
+        level = 0;
         StartCoroutine("SlowUpdate");
     }
     
-    public void CheckLevelUp()
+    void CheckLevelUp()
     {
         // Perform check to see whether next level that returns false from levelInfo can be completed.
         int currentLevelReq;
         levelReq.TryGetValue(level + 1, out currentLevelReq);
-        if(populationManager.totalPopulation * 0.01  >= currentLevelReq)
+        if(populationManager.totalPopulation >= currentLevelReq)
         {
             PerformLevelUp(level + 1);
         }
@@ -86,11 +92,14 @@ public class ProgressionManager : MonoBehaviour {
 
     void PerformLevelUp(int newLevel)
     {
-        if(level + 1 == newLevel)
-        {
-            level = newLevel;
-            levelInfo[level] = true;
-        }
+        string levelUpString = string.Format("Level up! You are now Level {0} You have unlocked some new buildings!",
+                                             level);
+        PopupManager.Popup(levelUpString);
+
+        if (levelUp != null)
+            levelUp();
+        AudioManager.instance.PlaySingle(levelUpSound);
+        level = newLevel;
     }
 
     void UnlockBuildingTier()
@@ -146,6 +155,13 @@ public class ProgressionManager : MonoBehaviour {
         StartCoroutine(MoveIsland(secondIsland, secondIsland.transform.position, setPosition));
     }
 
+    public static string ToNextLevel()
+    {
+        int currentLevelReq;
+        instance.levelReq.TryGetValue(level + 1, out currentLevelReq);
+        return (currentLevelReq - instance.populationManager.population).ToString();
+    }
+
     IEnumerator MoveIsland(GameObject movingIsland, Vector3 source, Vector3 target)
     {
         while(inPosition == false)
@@ -171,25 +187,7 @@ public class ProgressionManager : MonoBehaviour {
             {
                 CheckLevelUp();
             }
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(1);
         }
-    }
-
-    public static float Airport()
-    {
-        if (airportBought)
-        {
-            return 1;
-        }
-        else return 0;
-    }
-
-    public static float Train()
-    {
-        if (trainBought)
-        {
-            return 1;
-        }
-        else return 0;
     }
 }

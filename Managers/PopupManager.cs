@@ -6,17 +6,20 @@ using UnityEngine.UI;
 
 public class PopupManager : MonoBehaviour {
 
-    public bool showUI;
+    static PopupManager instance;
+    public bool showUI = true;
     public GameObject popup;
     Text tooltip;
     public AudioClip notificationSound;
 
     List<string> queuedPopups;
     float WAIT_TIME;
-    bool running;
+    bool running = false;
 
     void Start()
     {
+        if (instance == null)
+            instance = this;
         WAIT_TIME = 10f;
         queuedPopups = new List<string>();
         tooltip = popup.transform.Find("TooltipCanvas/UIContainer/UITextFront").GetComponent<Text>();
@@ -26,7 +29,8 @@ public class PopupManager : MonoBehaviour {
 
     public static void Popup(string message)
     {
-        GameObject.Find("Managers").GetComponent<PopupManager>().QueuePopup(message);
+        Debug.Log("Popping up");
+        instance.QueuePopup(message);
     }
 
 	void QueuePopup(string message)
@@ -34,6 +38,7 @@ public class PopupManager : MonoBehaviour {
         queuedPopups.Add(message);
         if(!running && showUI)
         {
+            Debug.Log("Popping in");
             StartCoroutine("DoPopup");
         }
     }
@@ -42,8 +47,10 @@ public class PopupManager : MonoBehaviour {
     // Goes through array of queued popups, with a WAIT_TIME (5s) delay
     {
         running = true;
+        Debug.Log("Starting");
         while (queuedPopups.Count > 0)
         {
+            Debug.Log("All the way thru");
             AudioManager.instance.PlaySingle(notificationSound);
             U.LeftPulse(1000);
             tooltip.text = queuedPopups[0];

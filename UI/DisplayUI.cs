@@ -10,6 +10,7 @@ public class DisplayUI : MonoBehaviour {
     VRTK_ControllerEvents events;
     EconomyManager economyManager;
     PopulationManager populationManager;
+    ProgressionManager progressionManager;
     GameObject staticSpheres;
     GameObject wheelBase;
     GameObject canvas;
@@ -112,6 +113,7 @@ public class DisplayUI : MonoBehaviour {
         spawnManager = ReferenceManager.instance.spawnManager;
         economyManager = ReferenceManager.instance.economyManager;
         populationManager = ReferenceManager.instance.populationManager;
+        progressionManager = ReferenceManager.instance.progressionManager;
         thumbTracker = GetComponent<ThumbTracker>();
         events = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
         events.TouchpadTouchStart += DoTouchpadTouch;
@@ -424,7 +426,7 @@ public class DisplayUI : MonoBehaviour {
         globalTotalPopulation.text = populationManager.FancyTotalPopulation();
         globalUnemployedPopulation.text = populationManager.FancyUnemployedPopulation();
         globalLevel.text = "Level: " + ProgressionManager.level;
-        globalGoodsConsumed.text = economyManager.FancyGoods();
+        globalGoodsConsumed.text = "Level Up Population: " + ProgressionManager.ToNextLevel();
         SetHappiness();
     }
 

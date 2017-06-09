@@ -206,7 +206,7 @@ public class ItemTracker : MonoBehaviour {
     public void UpdateTransportationValue()
     // Updates available transportation depending on road presence and airport and train availability
     {
-        availableTransportation = RoadAccess() + ProgressionManager.Airport() + ProgressionManager.Train();
+        availableTransportation = RoadAccess();
     }
 
     public void UpdateLocalHappiness()

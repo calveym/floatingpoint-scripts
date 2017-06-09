@@ -199,8 +199,8 @@ public class SpawnController : MonoBehaviour {
         //Debug.Log("Level: " + level);
         if (level > ProgressionManager.level)
         {
-            //disablePurchase = true;
-            //containedBuilding.GetComponent<Renderer>().material = disablePurchaseMaterial;
+            disablePurchase = true;
+            containedBuilding.GetComponent<Renderer>().material = disablePurchaseMaterial;
         }
     }
 

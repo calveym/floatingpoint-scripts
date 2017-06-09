@@ -30,7 +30,6 @@ public class CommercialTracker : ItemTracker {
     {
         if (!updateStarted && usable && validPosition)
         {
-            Debug.Log(gameObject.name + " starting update"); 
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
             ReferenceManager.instance.itemManager.addCommercial(capacity, gameObject);

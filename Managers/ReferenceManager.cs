@@ -31,6 +31,7 @@ public class ReferenceManager : MonoBehaviour {
     public AudioManager audioManager;
     public SpawnManager spawnManager;
     public BuildingNotificationManager buildingNotificationManager;
+    public ProgressionManager progressionManager;
 
     [Space(10)]
     [Header("Services")]

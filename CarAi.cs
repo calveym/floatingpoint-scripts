@@ -28,7 +28,8 @@ public class CarAi : MonoBehaviour {
         if(TargetNode)
         {
             Vector3 dir = TargetNode.position - transform.position;
-
+            dir += new Vector3(0.001f, 0f, 0f);
+            
             Quaternion newLookRotation = Quaternion.LookRotation(dir);
 
             if (Physics.Raycast(transform.position, Vector3.forward, out hit))
@@ -39,7 +40,10 @@ public class CarAi : MonoBehaviour {
                 }
             }
             transform.position = Vector3.MoveTowards(transform.position, TargetNode.position, Time.deltaTime * speed);
-            transform.rotation = Quaternion.Slerp(transform.rotation, newLookRotation, rotationSpeed * Time.deltaTime);
+            if(transform.rotation != newLookRotation)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, newLookRotation, rotationSpeed * Time.deltaTime);
+            }
         }
     }
 
