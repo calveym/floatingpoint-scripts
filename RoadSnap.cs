@@ -15,15 +15,18 @@ public class RoadSnap : MonoBehaviour {
 	bool targetIsBlocked, snapObject, objectUsed;
 	VRTK_InteractableObject interact;
 
-	int roadLayer = 10;
+	int roadLayer = 11;
 	int buildingLayer = 8;
 	int layerMask;
 
 	public void updateTargetIsBlocked(bool status) {
 		targetIsBlocked = status;
 	}
-		
+
 	void Start () {
+
+		targetBoxPrefab.GetComponent<SnapPoints> ().bounds = GetComponent<BoxCollider> ().bounds; // fixes the target box rotating with building
+
 		layerMask = 1 << buildingLayer | 1 << roadLayer;
 
 		// Adds listeners for controller grab to both controllers
@@ -44,25 +47,24 @@ public class RoadSnap : MonoBehaviour {
 	void DoGrabRelease(object sender, ControllerInteractionEventArgs e)
 	{
 		if (!targetIsBlocked) {
-			snapObject = true;		
+			snapObject = true;
 		}
-		objectUsed = false;
 	}
 
 	void DoGrabStart(object sender, ControllerInteractionEventArgs e)
 	{
-		if(interact.IsGrabbed() == true) {
-			snapObject = false;
-			objectUsed = true;
-		}
+		objectUsed = true;
+		snapObject = false;
 	}
-	
+
 	void Update () {
-		if (objectUsed || manualUse) Main ();
+		if (objectUsed || manualUse) {
+			Main ();
+		}
 	}
 
 	void Main() {
-		
+
 		List<GameObject> closestObjects = FindClosestObjects ();
 
 		if (closestObjects.Count == 0)
@@ -79,28 +81,32 @@ public class RoadSnap : MonoBehaviour {
 
 		if (lastTargetBox != null)
 			Destroy (lastTargetBox);
-		
-		GameObject targetBox = GenerateTargetBox ();
-		targetBox.GetComponent<TargetCollisionCheck>().setNearestBuilding(closestRoad); // give target box nearest building for collision checking
 
 		if (ShouldObjectSnap(gameObject, snapPoint, closestRoad)) {
+			GameObject targetBox = GenerateTargetBox ();
+
+			targetBox.GetComponent<TargetCollisionCheck>().setNearestBuilding(closestRoad); // give target box nearest building for collision checking
+
 			SetRotation (targetBox, closestRoad);
 			SnapThis (targetBox, snapPoint, closestRoad);
-		}
-			
-		if (snapObject || manualSnap) {
-			
-			SetRotation (gameObject, closestRoad);
-			SnapThis (gameObject, snapPoint, closestRoad);
 
-			Destroy (targetBox);
-		}
+			lastTargetBox = targetBox;
 
-		lastTargetBox = targetBox;
+			if (snapObject || manualSnap) {
+				SetRotation (gameObject, closestRoad);
+				SnapThis (gameObject, snapPoint, closestRoad);
+
+				manualSnap = false;
+				objectUsed = false;
+				snapObject = false;
+
+				Destroy (lastTargetBox);
+			}
+		}
 	}
 
 	List<GameObject> FindClosestObjects () {
-		
+
 		Collider[] hitColliders = Physics.OverlapSphere (transform.position, 3f, layerMask); //  create a sphere to detect nearby objects
 
 		List<GameObject> nearestObjects = new List<GameObject>();
@@ -113,7 +119,7 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	bool CheckForBuilding (List<GameObject> gameObjects) {
-		
+
 		foreach (GameObject item in gameObjects) {
 			if ((item.layer == 8) && (item != gameObject)) return true;
 		}
@@ -122,7 +128,7 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	GameObject GetClosestRoad (List<GameObject> roads) {
-		
+
 		float closestDistance = 1000000;
 		GameObject closestRoad = null;
 
@@ -141,10 +147,10 @@ public class RoadSnap : MonoBehaviour {
 	Dictionary<string, Vector3> GetVerticalPoints (GameObject road) {
 
 		float halfWidth = road.GetComponent<MeshRenderer>().bounds.extents.z;
-			
+
 		Dictionary<string, Vector3> points = new Dictionary<string, Vector3>(); 
 
-		if ((road.transform.rotation.eulerAngles.y / 90) % 2 == 0) {
+		if ((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0) {
 			points.Add("bottom", new Vector3 (road.transform.position.x, road.transform.position.y, road.transform.position.z + halfWidth));
 			points.Add("top", new Vector3 (road.transform.position.x, road.transform.position.y, road.transform.position.z - halfWidth));
 		} else {
@@ -182,14 +188,14 @@ public class RoadSnap : MonoBehaviour {
 		}
 	}
 
-	KeyValuePair<string, Vector3> GetClosestSnapPoint (KeyValuePair<string, Vector3> roadSnapPoint, GameObject road) {
-		
-		Dictionary<string, Vector3> snapPoints = GetComponent<SnapPoints> ().GetCurrentPoints ();
+	KeyValuePair<string, Vector3> GetClosestSnapPoint (GameObject objectToSnap, KeyValuePair<string, Vector3> roadSnapPoint, GameObject road) {
+
+		Dictionary<string, Vector3> snapPoints = objectToSnap.GetComponent<SnapPoints> ().GetCurrentPoints ();
 
 		float closestDistance = 1000000;
 		KeyValuePair<string, Vector3> closestPoint = new KeyValuePair<string, Vector3>();
 
-		bool useXAxis = !((road.transform.rotation.eulerAngles.y / 90) % 2 == 0);
+		bool useXAxis = !((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0);
 
 		foreach(KeyValuePair<string, Vector3> point in snapPoints) {
 			float newDistance = CalculateDistance (point.Value, roadSnapPoint.Value, useXAxis);
@@ -204,7 +210,7 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	GameObject GenerateTargetBox () {
-		
+
 		GameObject targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, transform.rotation);
 
 		if (targetIsBlocked) {
@@ -223,14 +229,14 @@ public class RoadSnap : MonoBehaviour {
 
 	bool ShouldObjectSnap(GameObject objectToSnap, KeyValuePair<string, Vector3> roadSnapPoint, GameObject road) {
 
-		Dictionary<string, Vector3> snapPoints = GetComponent<SnapPoints> ().GetCurrentPoints ();
+		Dictionary<string, Vector3> snapPoints = gameObject.GetComponent<SnapPoints> ().GetCurrentPoints ();
 
 		bool moreThanZ = objectToSnap.transform.position.z > road.transform.position.z;
 		bool moreThanX = objectToSnap.transform.position.x > road.transform.position.x;	
 
 		foreach(KeyValuePair<string, Vector3> point in snapPoints) {
 
-			if ((road.transform.rotation.eulerAngles.y / 90) % 2 == 0) {
+			if ((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0) {
 
 				if ((point.Value.z < roadSnapPoint.Value.z) && moreThanZ || (point.Value.z > roadSnapPoint.Value.z) && !moreThanZ) {
 					return false;
@@ -248,20 +254,27 @@ public class RoadSnap : MonoBehaviour {
 		return true;
 	}
 
+
 	void SetRotation(GameObject objectToRotate, GameObject targetObject) {
-		
-		objectToRotate.transform.parent = targetObject.transform;
+
+		GameObject emptyParent = new GameObject(); // this is needed to prevent the object scale being changed when parented
+
+		targetObject.transform.parent = emptyParent.transform;
+		objectToRotate.transform.parent = emptyParent.transform;
 
 		float yAngle = Mathf.Round(objectToRotate.transform.localEulerAngles.y / 90) * 90;
 
 		objectToRotate.transform.localRotation = Quaternion.Euler(0, yAngle, 0);
 
 		objectToRotate.transform.parent = null;
+		targetObject.transform.parent = null;
+
+		Destroy (emptyParent);
 	}
 
 	void SnapThis (GameObject objectToSnap, KeyValuePair<string, Vector3> roadSnapPoint, GameObject road) {
 
-		KeyValuePair<string, Vector3> closestSnapPoint = GetClosestSnapPoint (roadSnapPoint, road);
+		KeyValuePair<string, Vector3> closestSnapPoint = GetClosestSnapPoint (objectToSnap, roadSnapPoint, road);
 
 		GameObject g1 = (GameObject)Instantiate (snapCube, closestSnapPoint.Value, objectToSnap.transform.rotation);
 
@@ -269,7 +282,7 @@ public class RoadSnap : MonoBehaviour {
 
 		Vector3 snapPosition;
 
-		if ((road.transform.rotation.eulerAngles.y / 90) % 2 == 0) {
+		if ((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0) {
 			snapPosition = new Vector3 (objectToSnap.transform.position.x, roadSnapPoint.Value.y, roadSnapPoint.Value.z);
 		} else {
 			snapPosition = new Vector3 (roadSnapPoint.Value.x, roadSnapPoint.Value.y, objectToSnap.transform.position.z);
@@ -281,5 +294,5 @@ public class RoadSnap : MonoBehaviour {
 
 		Destroy (g1);
 	}
-		
+
 }
