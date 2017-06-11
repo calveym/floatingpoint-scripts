@@ -15,7 +15,9 @@ public class WeatherManager : MonoBehaviour {
     [Header("-------Rain Objects-------")]
     public GameObject rainSystem;  // Contains rain particles and clouds
 	public GameObject drizzleSystem; // Contains drizzle particles and clouds
-    public GameObject stopRain;
+
+	public ParticleSystem[] rainParticleSystem;
+	public ParticleSystem[] drizzleParticleSystem;
 
     AudioManager audioManager;
 
@@ -25,8 +27,12 @@ public class WeatherManager : MonoBehaviour {
         tod = ReferenceManager.instance.tod;
         ToggleRain(false);
 		ToggleDrizzle (false);
+		rainSystem.SetActive (true);
+		drizzleSystem.SetActive (true);
         ToggleClouds(0.1f);
-        //StartCoroutine("MakeItRain");
+		rainParticleSystem = rainSystem.GetComponentsInChildren<ParticleSystem> ();
+		drizzleParticleSystem = drizzleSystem.GetComponentsInChildren<ParticleSystem> ();
+        StartCoroutine("MakeItRain");
 
 		TestRunner.first += Rainy;
         TestRunner.second += Cloudy;
@@ -62,7 +68,7 @@ public class WeatherManager : MonoBehaviour {
         audioManager.StopRain();
         ToggleClouds(0.1f);
         tod.Day.LightIntensity = 1f;
-        tod.Day.AmbientMultiplier = 0.5f;
+        tod.Day.AmbientMultiplier = 1f;
         //tod.Night.LightIntensity = 1.5f;
         //tod.Night.AmbientMultiplier = 4.26f;
         ToggleRain(false);
@@ -113,13 +119,38 @@ public class WeatherManager : MonoBehaviour {
 
     void ToggleRain(bool toggle)
     {
-        rainSystem.SetActive(toggle);
+		if (toggle == false) {
+			foreach(ParticleSystem rain in rainParticleSystem) {
+				rain.Stop ();
+                ParticleSystem.EmissionModule em = rain.emission;
+                em.enabled = false;
+            }
+		} else if (toggle == true) {
+			foreach(ParticleSystem rain in rainParticleSystem) {
+				rain.Play ();
+                ParticleSystem.EmissionModule em = rain.emission;
+                em.enabled = true;
+            }
+		}
     }
 
 	void ToggleDrizzle(bool toggle)
 	{
-		drizzleSystem.SetActive(toggle);
-        stopRain.SetActive(toggle);
+		if (toggle == false) {
+			foreach(ParticleSystem drizzle in drizzleParticleSystem) {
+                drizzleSystem.SetActive(false);
+                drizzle.Stop ();
+                ParticleSystem.EmissionModule em = drizzle.emission;
+                em.enabled = false;
+            }
+		} else if (toggle == true) {
+			foreach(ParticleSystem drizzle in drizzleParticleSystem) {
+                drizzleSystem.SetActive(true);
+                drizzle.Play ();
+                ParticleSystem.EmissionModule em = drizzle.emission;
+                em.enabled = true;
+            }
+		}
 	}
 
     IEnumerator MakeItRain()

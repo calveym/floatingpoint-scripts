@@ -4,37 +4,33 @@ using UnityEngine;
 
 public class NightTime : MonoBehaviour {
 
-	public Material Streetlight;
-	public Material Buildinglight;
-	public GameObject[] Lamps;
 	TOD_Sky tod;
+	private bool lightsOn = true;
+	public Material mat;
+	Color colour;
+	private float intensity;
 
 	void Start() 
 	{
-		Lamps = GameObject.FindGameObjectsWithTag ("StreetLight");
 		tod = ReferenceManager.instance.tod;
+		intensity = 0.75f;
+		StartCoroutine("LightUpBuildings");
 	}
 
-	void Update()
+	IEnumerator LightUpBuildings()
 	{
-		if (tod.IsNight == true) 
+		while(lightsOn)
 		{
-			Buildinglight.SetColor ("_EmissionColor", Color.yellow);
-			Streetlight.SetColor ("_EmissionColor", Color.yellow);
-			for(int i = 0; i < Lamps.Length; i++)
+			if (tod.Cycle.Hour >= 18.00 || tod.Cycle.Hour <= 6.00) 
 			{
-				Lamps [i].GetComponent<Light>().enabled = true;
-			}
-
-		} 
-		else 
-		{
-			Buildinglight.SetColor ("_EmissionColor", Color.black);
-			Streetlight.SetColor ("_EmissionColor", Color.black);
-			for(int i = 0; i < Lamps.Length; i++)
+				mat.SetColor ("_EmissionColor", Color.white * intensity);
+			} 
+			else 
 			{
-				Lamps [i].GetComponent<Light>().enabled = false;
+				mat.SetColor ("_EmissionColor", Color.black);
 			}
+				
+			yield return new WaitForSeconds(5);
 		}
 	}
 }
