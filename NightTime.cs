@@ -1,24 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using AC.TimeOfDaySystemFree;
 
 public class NightTime : MonoBehaviour {
 
 	public Material Streetlight;
 	public Material Buildinglight;
-	public float time;
-	private GameObject[] Lamps;
+	public GameObject[] Lamps;
+	TOD_Sky tod;
 
 	void Start() 
 	{
 		Lamps = GameObject.FindGameObjectsWithTag ("StreetLight");
+		tod = ReferenceManager.instance.tod;
 	}
 
 	void Update()
 	{
-		time = GameObject.FindGameObjectWithTag ("TimeManager").GetComponent<TimeOfDayManager> ().timeline;
-		if (time <= 5.49f || time>= 18.00f) 
+		if (tod.IsNight == true) 
 		{
 			Buildinglight.SetColor ("_EmissionColor", Color.yellow);
 			Streetlight.SetColor ("_EmissionColor", Color.yellow);

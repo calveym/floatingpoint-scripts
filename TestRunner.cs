@@ -30,6 +30,9 @@ public class TestRunner : MonoBehaviour
     public delegate void Third();
     public static Third third;
 
+    public delegate void Fourth();
+    public static Fourth fourth;
+
     TOD_Sky tod;
 
     // Use this for initialization
@@ -53,7 +56,7 @@ public class TestRunner : MonoBehaviour
         if (Input.GetKeyDown("z")) FirstTest();
         if (Input.GetKeyDown("x")) SecondTest();
         if (Input.GetKeyDown("c")) ThirdTest();
-        if (Input.GetKeyDown("r")) FourthTest();
+        if (Input.GetKeyDown("v")) FourthTest();
         if (Input.GetKeyDown("t")) FifthTest();
         if (Input.GetKeyDown("y")) SixthTest();
         if (Input.GetKeyDown("u")) SeventhTest();
@@ -97,10 +100,7 @@ public class TestRunner : MonoBehaviour
     public void FourthTest()
     {
         Debug.Log("Test 4 Running");
-        TooltipManager tooltip = manager.GetComponent<TooltipManager>();
-        TooltipManager.pressed = true;
-        tooltip.StartCoroutine("SecondTick");
-        tooltip.StartTooltips();
+        fourth();
     }
 
     void FifthTest()
@@ -112,6 +112,10 @@ public class TestRunner : MonoBehaviour
     void SixthTest()
     {
         Debug.Log("Test 6 Running");
+        TooltipManager tooltip = manager.GetComponent<TooltipManager>();
+        TooltipManager.pressed = true;
+        tooltip.StartCoroutine("SecondTick");
+        tooltip.StartTooltips();
     }
 
     void SeventhTest()

@@ -8,12 +8,14 @@ public class WeatherManager : MonoBehaviour {
     public int weatherState = 0;  // 0 = Sun, 1 = cloudy, 2 = rainy
     int oldWeatherState = 0;
     [Tooltip("Enable random weather updates")]
-    public bool randomiseWeather = false;
+    public bool randomiseWeather = true;
     System.Random r = new System.Random();
     TOD_Sky tod;
 
     [Header("-------Rain Objects-------")]
     public GameObject rainSystem;  // Contains rain particles and clouds
+	public GameObject drizzleSystem; // Contains drizzle particles and clouds
+    public GameObject stopRain;
 
     AudioManager audioManager;
 
@@ -22,12 +24,14 @@ public class WeatherManager : MonoBehaviour {
         audioManager = ReferenceManager.instance.audioManager;
         tod = ReferenceManager.instance.tod;
         ToggleRain(false);
+		ToggleDrizzle (false);
         ToggleClouds(0.1f);
         //StartCoroutine("MakeItRain");
 
-        TestRunner.first += Sunny;
+		TestRunner.first += Rainy;
         TestRunner.second += Cloudy;
-        TestRunner.third += Rainy;
+        TestRunner.third += Drizzle;
+        TestRunner.fourth += Sunny;
 	}
 	
     void ReloadWeather()
@@ -43,9 +47,13 @@ public class WeatherManager : MonoBehaviour {
                 Cloudy();
                 break;
             case 2:
-                // Rainy
-                Rainy();
+                // Drizzle
+                Drizzle();
                 break;
+			case 3:
+				// Rainy
+				Rainy();
+				break;
         }
     }
 
@@ -58,6 +66,7 @@ public class WeatherManager : MonoBehaviour {
         //tod.Night.LightIntensity = 1.5f;
         //tod.Night.AmbientMultiplier = 4.26f;
         ToggleRain(false);
+		ToggleDrizzle(false);
     }
 
     void Cloudy()
@@ -69,7 +78,20 @@ public class WeatherManager : MonoBehaviour {
         //tod.Night.LightIntensity = 1.16f;
         //tod.Night.AmbientMultiplier = 2.72f;
         ToggleRain(false);
+		ToggleDrizzle(false);
     }
+
+	void Drizzle()
+	{
+		audioManager.PlayRain();
+		ToggleClouds(0.6f);
+		tod.Day.LightIntensity = 0.7f;
+		tod.Day.AmbientMultiplier = 0.5f;
+		//tod.Night.LightIntensity = 1.16f;
+		//tod.Night.AmbientMultiplier = 2.72f;
+		ToggleRain(false);
+		ToggleDrizzle(true);
+	}
 
     void Rainy()
     {
@@ -80,6 +102,7 @@ public class WeatherManager : MonoBehaviour {
         //tod.Night.LightIntensity = 0.88f;
         //tod.Night.AmbientMultiplier = 4.54f;
         ToggleRain(true);
+		ToggleDrizzle(false);
     }
 
     void ToggleClouds(float intensity)
@@ -93,27 +116,39 @@ public class WeatherManager : MonoBehaviour {
         rainSystem.SetActive(toggle);
     }
 
+	void ToggleDrizzle(bool toggle)
+	{
+		drizzleSystem.SetActive(toggle);
+        stopRain.SetActive(toggle);
+	}
+
     IEnumerator MakeItRain()
     {
         while(randomiseWeather)
         {
-            if(weatherState == 0)
-            {
-                if(r.Next(100) <= 20)
-                {
-                    weatherState = 1;
-                }
-            }
-            else if(weatherState == 1)
-            {
-                if(r.Next(100) <= 65)
-                {
-                    weatherState = 0;
-                }
-            }
-            if (weatherState != oldWeatherState)
-                ReloadWeather();
-            yield return new WaitForSeconds(15);
+			int number = Random.Range(0, 11);
+
+			if (number == 1) {
+				if (weatherState == 3) {
+					yield return new WaitForSeconds (60);
+				} else {
+					weatherState = 3;
+				}
+			} else if (number == 2) {
+				if (weatherState == 2) {
+					yield return new WaitForSeconds (60);
+				} else {
+					weatherState = 2;
+				}
+			} else if (number == 3 || number == 4) {
+				weatherState = 1;
+			} else {
+				weatherState = 0;
+			}
+
+			ReloadWeather ();
+
+            yield return new WaitForSeconds(60);
         }
     }
 }

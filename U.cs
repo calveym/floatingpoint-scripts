@@ -214,4 +214,26 @@ public class U : MonoBehaviour {
     {
         ReferenceManager.instance.audioManager.PlaySingle(instance.click);
     }
+
+    public static void LerpValue(float floatToLerp, float endValue, float lerpTime = 1f)
+    {
+        float startValue = floatToLerp;
+        instance.LerpValue(floatToLerp, startValue, endValue, lerpTime);
+    }
+
+    private void LerpValue(float floatToLerp, float startValue, float endValue, float lerpTime)
+    {
+        StartCoroutine(instance.GradualLerp(floatToLerp, startValue, endValue, lerpTime));
+    }
+
+    IEnumerator GradualLerp(float lerpingFloat, float startValue, float endValue, float time)
+    {
+        float totalTime = 0;
+        while(totalTime < time)
+        {
+            totalTime += Time.deltaTime;
+            lerpingFloat = Mathf.Lerp(startValue, endValue, totalTime / time);
+            yield return null;
+        }
+    }
 }

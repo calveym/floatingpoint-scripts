@@ -31,7 +31,7 @@ public class HiResPhoto : MonoBehaviour
 
     public string ScreenShotName(int width, int height)
     {
-        return string.Format("{0}/screen_{1}x{2}_{3}{4}.png",
+        return string.Format("{0}\\..\\/screen_{1}x{2}_{3}{4}.png",
                              Application.dataPath,
                              width, height, gameObject.name, numShots.ToString());
     }
