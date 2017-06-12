@@ -83,7 +83,8 @@ public class IndustrialComponent : ComponentSnap {
         if(surroundingIndustrials.Count >= 1)
         {
             linkedTracker = surroundingIndustrials[0];
-            linkedTracker.LinkComponent(this);
+            if(linkedTracker)
+                linkedTracker.LinkComponent(this);
         }
     }
 

@@ -16,12 +16,15 @@ public class PopupManager : MonoBehaviour {
     float WAIT_TIME;
     bool running = false;
 
+    private void Awake()
+    {
+        instance = this;
+        queuedPopups = new List<string>();
+    }
+
     void Start()
     {
-        if (instance == null)
-            instance = this;
         WAIT_TIME = 10f;
-        queuedPopups = new List<string>();
         tooltip = popup.transform.Find("TooltipCanvas/UIContainer/UITextFront").GetComponent<Text>();
         popup.SetActive(false);
         QueuePopup("Welcome to CloudCity! It's time to start building your city!\n Fly over to the blue orb by touching the top half of the right trackpad ");
@@ -29,7 +32,6 @@ public class PopupManager : MonoBehaviour {
 
     public static void Popup(string message)
     {
-        Debug.Log("Popping up");
         instance.QueuePopup(message);
     }
 
@@ -46,6 +48,7 @@ public class PopupManager : MonoBehaviour {
     // Goes through array of queued popups, with a WAIT_TIME (5s) delay
     {
         running = true;
+        yield return new WaitForSeconds(2);
         while (queuedPopups.Count > 0)
         {
             AudioManager.instance.PlaySingle(notificationSound);

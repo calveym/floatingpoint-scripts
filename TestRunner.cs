@@ -99,7 +99,7 @@ public class TestRunner : MonoBehaviour
 
     public void FourthTest()
     {
-        Debug.Log("Test 4 Running");
+        Debug.Log("Test 4");
         fourth();
     }
 

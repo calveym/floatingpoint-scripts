@@ -4,20 +4,26 @@ using UnityEngine;
 public class WeatherManager : MonoBehaviour {
 
     [Header("Controls")]
-    [Tooltip("Current weather state \n [0:sun, 1:cloudy, 2:rainy]")]
-    public int weatherState = 0;  // 0 = Sun, 1 = cloudy, 2 = rainy
+    [Tooltip("Current weather state \n [0:sun, 1:cloudy, 2:drizzly, 3:rainy]")]
+    [Range(0, 3)]
+    public int weatherState = 0;  // 0 = Sun, 1 = cloudy, 2 = rainy, 3 = drizzle
     int oldWeatherState = 0;
     [Tooltip("Enable random weather updates")]
     public bool randomiseWeather = true;
+    [Tooltip("Enable fog")]
+    public bool enableFog = true;
     System.Random r = new System.Random();
     TOD_Sky tod;
 
     [Header("-------Rain Objects-------")]
     public GameObject rainSystem;  // Contains rain particles and clouds
 	public GameObject drizzleSystem; // Contains drizzle particles and clouds
+    public GameObject fogSystem;
 
+    public ParticleSystem fogParticleSystem;
 	public ParticleSystem[] rainParticleSystem;
 	public ParticleSystem[] drizzleParticleSystem;
+    ParticleSystem.EmissionModule fog;
 
     AudioManager audioManager;
 
@@ -32,11 +38,13 @@ public class WeatherManager : MonoBehaviour {
         ToggleClouds(0.1f);
 		rainParticleSystem = rainSystem.GetComponentsInChildren<ParticleSystem> ();
 		drizzleParticleSystem = drizzleSystem.GetComponentsInChildren<ParticleSystem> ();
+        fog = fogParticleSystem.emission;
         StartCoroutine("MakeItRain");
+        StartCoroutine("EnableFog");
 
 		TestRunner.first += Rainy;
-        TestRunner.second += Cloudy;
-        TestRunner.third += Drizzle;
+        TestRunner.second += Drizzle;
+        TestRunner.third += Cloudy;
         TestRunner.fourth += Sunny;
 	}
 	
@@ -65,6 +73,7 @@ public class WeatherManager : MonoBehaviour {
 
     void Sunny()
     {
+        Debug.Log("Sunny");
         audioManager.StopRain();
         ToggleClouds(0.1f);
         tod.Day.LightIntensity = 1f;
@@ -77,10 +86,11 @@ public class WeatherManager : MonoBehaviour {
 
     void Cloudy()
     {
+        Debug.Log("Cloudy");
         audioManager.StopRain();
         ToggleClouds(0.5f);
-        tod.Day.LightIntensity = 0.75f;
-        tod.Day.AmbientMultiplier = 0.5f;
+        tod.Day.LightIntensity = 0.9f;
+        tod.Day.AmbientMultiplier = 0.9f;
         //tod.Night.LightIntensity = 1.16f;
         //tod.Night.AmbientMultiplier = 2.72f;
         ToggleRain(false);
@@ -89,8 +99,9 @@ public class WeatherManager : MonoBehaviour {
 
 	void Drizzle()
 	{
+        Debug.Log("Drizzle");
 		audioManager.PlayRain();
-		ToggleClouds(0.6f);
+		ToggleClouds(0.85f);
 		tod.Day.LightIntensity = 0.7f;
 		tod.Day.AmbientMultiplier = 0.5f;
 		//tod.Night.LightIntensity = 1.16f;
@@ -101,6 +112,7 @@ public class WeatherManager : MonoBehaviour {
 
     void Rainy()
     {
+        Debug.Log("Rainy");
         audioManager.PlayRain();
         ToggleClouds(1f);
         tod.Day.LightIntensity = 0.38f;
@@ -111,10 +123,18 @@ public class WeatherManager : MonoBehaviour {
 		ToggleDrizzle(false);
     }
 
+    void CheckFog()
+    {
+        int numInd = ReferenceManager.instance.itemManager.industrialTrackers.Count;
+        fog.enabled = true;
+        fog.rateOverTime = numInd * 2;
+    }
+
     void ToggleClouds(float intensity)
     // Takes float between 0-1 for coverage
     {
-        tod.Clouds.Coverage = intensity;
+        StartCoroutine(GradualLerp(tod.Clouds.Coverage, intensity, 2f));
+        //tod.Clouds.Coverage = intensity;
     }
 
     void ToggleRain(bool toggle)
@@ -176,10 +196,30 @@ public class WeatherManager : MonoBehaviour {
 			} else {
 				weatherState = 0;
 			}
-
-			ReloadWeather ();
+            ReloadWeather();
 
             yield return new WaitForSeconds(60);
+        }
+    }
+
+    IEnumerator GradualLerp(float startValue, float endValue, float time)
+    {
+        float totalTime = 0;
+        while (totalTime < time)
+        {
+            Debug.Log("Tod clouds coverage: " + tod.Clouds.Coverage);
+            tod.Clouds.Coverage = Mathf.Lerp(startValue, endValue, totalTime / time);
+            totalTime += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    IEnumerator EnableFog()
+    {
+        while(enableFog)
+        {
+            CheckFog();
+            yield return new WaitForSeconds(5);
         }
     }
 }
