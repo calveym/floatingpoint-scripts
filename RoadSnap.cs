@@ -14,26 +14,24 @@ public class RoadSnap : MonoBehaviour {
 	bool wasSnapped = false;
 	bool targetIsBlocked, snapObject, objectUsed;
 	VRTK_InteractableObject interact;
+	Bounds originalBounds;
 
 	int roadLayer = 11;
-	int buildingLayer = 8;
 	int layerMask;
 
 	public void updateTargetIsBlocked(bool status) {
 		targetIsBlocked = status;
 	}
-
+		
 	void Start () {
+		GameObject clone = (GameObject)Instantiate (gameObject, Vector3.zero, Quaternion.identity);
+		originalBounds = clone.GetComponent<BoxCollider> ().bounds;
 
-		targetBoxPrefab.GetComponent<SnapPoints> ().bounds = GetComponent<BoxCollider> ().bounds; // fixes the target box rotating with building
+		Destroy (clone);
 
-		layerMask = 1 << buildingLayer | 1 << roadLayer;
+		layerMask = 1 << roadLayer;
 
-		// Adds listeners for controller grab to both controllers
-		GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn+=
-			new ControllerInteractionEventHandler(DoGrabStart);
-		GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOn +=
-			new ControllerInteractionEventHandler(DoGrabStart);
+		GetComponent<VRTK_InteractableObject>().InteractableObjectGrabbed += new InteractableObjectEventHandler(ObjectGrabbed);
 
 		// Add listeners for controller release to both controllers
 		GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff +=
@@ -41,38 +39,37 @@ public class RoadSnap : MonoBehaviour {
 		GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff +=
 			new ControllerInteractionEventHandler(DoGrabRelease);
 
-		interact = gameObject.GetComponent<VRTK_InteractableObject>();
+		interact = GetComponent<VRTK_InteractableObject>();
+	} 
+
+	void ObjectGrabbed(object sender, InteractableObjectEventArgs e) {
+		objectUsed = true;
+		snapObject = false;
+
 	}
 
 	void DoGrabRelease(object sender, ControllerInteractionEventArgs e)
 	{
+		//gameObject.GetComponent<SnapPoints> ().enabled = false;
 		if (!targetIsBlocked) {
 			snapObject = true;
 		}
 	}
-
-	void DoGrabStart(object sender, ControllerInteractionEventArgs e)
-	{
-		objectUsed = true;
-		snapObject = false;
-	}
-
+		
 	void Update () {
 		if (objectUsed || manualUse) {
+			Debug.Log ("originalBounds" + originalBounds.size);
+
 			Main ();
 		}
 	}
 
 	void Main() {
+		targetBoxPrefab.GetComponent<SnapPoints> ().bounds = originalBounds; // fixes the target box rotating with building
 
 		List<GameObject> closestObjects = FindClosestObjects ();
 
 		if (closestObjects.Count == 0)
-			return;
-
-		bool isNearbyBuilding = CheckForBuilding (closestObjects);
-
-		if (isNearbyBuilding)
 			return;
 
 		GameObject closestRoad = GetClosestRoad (closestObjects);
@@ -81,7 +78,7 @@ public class RoadSnap : MonoBehaviour {
 
 		if (lastTargetBox != null)
 			Destroy (lastTargetBox);
-
+		
 		if (ShouldObjectSnap(gameObject, snapPoint, closestRoad)) {
 			GameObject targetBox = GenerateTargetBox ();
 
@@ -106,7 +103,7 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	List<GameObject> FindClosestObjects () {
-
+		
 		Collider[] hitColliders = Physics.OverlapSphere (transform.position, 3f, layerMask); //  create a sphere to detect nearby objects
 
 		List<GameObject> nearestObjects = new List<GameObject>();
@@ -117,18 +114,9 @@ public class RoadSnap : MonoBehaviour {
 
 		return nearestObjects;
 	}
-
-	bool CheckForBuilding (List<GameObject> gameObjects) {
-
-		foreach (GameObject item in gameObjects) {
-			if ((item.layer == 8) && (item != gameObject)) return true;
-		}
-
-		return false;
-	}
-
+		
 	GameObject GetClosestRoad (List<GameObject> roads) {
-
+		
 		float closestDistance = 1000000;
 		GameObject closestRoad = null;
 
@@ -147,7 +135,7 @@ public class RoadSnap : MonoBehaviour {
 	Dictionary<string, Vector3> GetVerticalPoints (GameObject road) {
 
 		float halfWidth = road.GetComponent<MeshRenderer>().bounds.extents.z;
-
+			
 		Dictionary<string, Vector3> points = new Dictionary<string, Vector3>(); 
 
 		if ((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0) {
@@ -198,6 +186,7 @@ public class RoadSnap : MonoBehaviour {
 		bool useXAxis = !((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0);
 
 		foreach(KeyValuePair<string, Vector3> point in snapPoints) {
+
 			float newDistance = CalculateDistance (point.Value, roadSnapPoint.Value, useXAxis);
 
 			if (newDistance < closestDistance) {
@@ -210,13 +199,13 @@ public class RoadSnap : MonoBehaviour {
 	}
 
 	GameObject GenerateTargetBox () {
-
+		
 		GameObject targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, transform.rotation);
 
 		if (targetIsBlocked) {
 			targetBox.GetComponent<Renderer> ().material = blockedMaterial;
 		}
-
+			
 		targetBox.GetComponent<TargetCollisionCheck> ().parentBuilding = gameObject; // tell the targetBox that this object is it's parent (uses it for calling updateTargetIsBlocked on this object)
 
 		Vector3 thisSize = GetComponent<BoxCollider>().size;
@@ -253,7 +242,7 @@ public class RoadSnap : MonoBehaviour {
 
 		return true;
 	}
-
+		
 
 	void SetRotation(GameObject objectToRotate, GameObject targetObject) {
 
@@ -294,5 +283,5 @@ public class RoadSnap : MonoBehaviour {
 
 		Destroy (g1);
 	}
-
+		
 }

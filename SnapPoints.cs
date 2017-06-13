@@ -7,20 +7,19 @@ public class SnapPoints : MonoBehaviour {
 	public Dictionary<string, Vector3> originalPoints;
 	public GameObject snapCube;
 
-	Bounds bounds;
+	public Bounds bounds;
 
 	void Start () {
 		originalPoints = GetCurrentPoints ();
-		bounds = GetComponent<Collider> ().bounds;
+		if (bounds != null) bounds = GetComponent<BoxCollider> ().bounds;
 		originalPoints.Add ("center", bounds.center);
 	}
 
 	public Dictionary<string, Vector3> GetCurrentPoints () {
-		
-		Vector3 center = transform.position;
+		Vector3 center = GetComponent<BoxCollider> ().bounds.center;
 
 		float yAxis = transform.position.y, halfWidth = (bounds.size.x / 2), halfDepth = (bounds.size.z / 2);
-
+			
 		Dictionary<string, Vector3> currentPoints = new Dictionary<string, Vector3>()
 		{
 			{ "top", new Vector3(center.x, yAxis, center.z - halfDepth) },
@@ -40,6 +39,8 @@ public class SnapPoints : MonoBehaviour {
 
 		foreach (string key in keys) {
 			currentPoints[key] = RotatePointAroundPivot (currentPoints[key], transform.position, transform.eulerAngles);
+			//GameObject g1 = (GameObject)Instantiate (snapCube, currentPoints[key], transform.rotation);
+
 		}
 			
 		return currentPoints;
