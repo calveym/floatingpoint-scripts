@@ -8,9 +8,10 @@ public class TutorialManager : MonoBehaviour {
     VRTK_ControllerEvents leftEvents;
     VRTK_ControllerEvents rightEvents;
 
+    public bool checkTutorial;
     public AudioClip rewardEntry;
-    public static int tutorialProgress;
-    bool continueTutorial;
+    [Range(0, 15)]
+    public int tutorialProgress = 0;
 
     Dictionary<int, string> tutorialStrings;  // Strings for each level, printed via popup manager
     Dictionary<int, int> levelReq;  // Requirement for population to level up
@@ -32,10 +33,8 @@ public class TutorialManager : MonoBehaviour {
     private void Awake()
     {
         spheres = new Dictionary<int, TutorialTracker>();
-        tutorialProgress = 0;
         tutorialStrings = new Dictionary<int, string>();
         tutorialRequirements = new List<string>();
-        continueTutorial = true;
         tutorialRequirements.Add("000100001");
         tutorialRequirements.Add("101000000");
         tutorialRequirements.Add("100000000");
@@ -269,7 +268,7 @@ public class TutorialManager : MonoBehaviour {
 
     IEnumerator TutorialChecker()
     {
-        while(true)
+        while(checkTutorial)
         {
             CheckTutorialProgress();
             yield return new WaitForSeconds(0.5f);

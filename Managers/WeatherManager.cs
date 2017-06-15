@@ -41,6 +41,7 @@ public class WeatherManager : MonoBehaviour {
         fog = fogParticleSystem.emission;
         StartCoroutine("MakeItRain");
         StartCoroutine("EnableFog");
+        ReloadWeather();
 
 		TestRunner.first += Rainy;
         TestRunner.second += Drizzle;
@@ -69,15 +70,17 @@ public class WeatherManager : MonoBehaviour {
 				Rainy();
 				break;
         }
+        CheckFog();
     }
 
     void Sunny()
     {
         Debug.Log("Sunny");
         audioManager.StopRain();
-        ToggleClouds(0.1f);
-        tod.Day.LightIntensity = 1f;
-        tod.Day.AmbientMultiplier = 1f;
+        ToggleClouds(0.2f);
+        //tod.Day.LightIntensity = 1f;
+        //tod.Day.AmbientMultiplier = 1f;
+        tod.Atmosphere.Fogginess = 0;
         //tod.Night.LightIntensity = 1.5f;
         //tod.Night.AmbientMultiplier = 4.26f;
         ToggleRain(false);
@@ -89,8 +92,9 @@ public class WeatherManager : MonoBehaviour {
         Debug.Log("Cloudy");
         audioManager.StopRain();
         ToggleClouds(0.5f);
-        tod.Day.LightIntensity = 0.9f;
-        tod.Day.AmbientMultiplier = 0.9f;
+        //tod.Day.LightIntensity = 0.9f;
+        //tod.Day.AmbientMultiplier = 0.9f;
+        tod.Atmosphere.Fogginess = 0.4f;
         //tod.Night.LightIntensity = 1.16f;
         //tod.Night.AmbientMultiplier = 2.72f;
         ToggleRain(false);
@@ -102,11 +106,12 @@ public class WeatherManager : MonoBehaviour {
         Debug.Log("Drizzle");
 		audioManager.PlayRain();
 		ToggleClouds(0.85f);
-		tod.Day.LightIntensity = 0.7f;
-		tod.Day.AmbientMultiplier = 0.5f;
-		//tod.Night.LightIntensity = 1.16f;
-		//tod.Night.AmbientMultiplier = 2.72f;
-		ToggleRain(false);
+		//tod.Day.LightIntensity = 0.7f;
+		//tod.Day.AmbientMultiplier = 0.5f;
+        tod.Atmosphere.Fogginess = 0.6f;
+        //tod.Night.LightIntensity = 1.16f;
+        //tod.Night.AmbientMultiplier = 2.72f;
+        ToggleRain(false);
 		ToggleDrizzle(true);
 	}
 
@@ -115,8 +120,9 @@ public class WeatherManager : MonoBehaviour {
         Debug.Log("Rainy");
         audioManager.PlayRain();
         ToggleClouds(1f);
-        tod.Day.LightIntensity = 0.38f;
-        tod.Day.AmbientMultiplier = 0.6f;
+        //tod.Day.LightIntensity = 0.38f;
+        //tod.Day.AmbientMultiplier = 0.6f;
+        tod.Atmosphere.Fogginess = 1f;
         //tod.Night.LightIntensity = 0.88f;
         //tod.Night.AmbientMultiplier = 4.54f;
         ToggleRain(true);
@@ -133,7 +139,7 @@ public class WeatherManager : MonoBehaviour {
     void ToggleClouds(float intensity)
     // Takes float between 0-1 for coverage
     {
-        StartCoroutine(GradualLerp(tod.Clouds.Coverage, intensity, 2f));
+        StartCoroutine(GradualLerp(tod.Clouds.Coverage, intensity, 4f));
         //tod.Clouds.Coverage = intensity;
     }
 
@@ -207,7 +213,6 @@ public class WeatherManager : MonoBehaviour {
         float totalTime = 0;
         while (totalTime < time)
         {
-            Debug.Log("Tod clouds coverage: " + tod.Clouds.Coverage);
             tod.Clouds.Coverage = Mathf.Lerp(startValue, endValue, totalTime / time);
             totalTime += Time.deltaTime;
             yield return null;

@@ -66,7 +66,7 @@ public class SpawnController : MonoBehaviour {
         {
             SizeForPlay();
             DeselectBuilding();
-            if (containedBuilding.tag == "industrial")
+            if (containedBuilding.tag == "industrial" || containedBuilding.tag == "industrialComponent")
             // Smoke deactivation
             {
                 foreach (Transform child in containedBuilding.transform)
