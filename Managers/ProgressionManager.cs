@@ -61,21 +61,22 @@ public class ProgressionManager : MonoBehaviour {
         AddIsland();
         levelReq = new Dictionary<int, int>();
         levelReq.Add(1, 10);
-        levelReq.Add(2, 45);
-        levelReq.Add(3, 150);
-        levelReq.Add(4, 250);
-        levelReq.Add(5, 500);
-        levelReq.Add(6, 750);
-        levelReq.Add(7, 1000);
-        levelReq.Add(8, 1500);
-        levelReq.Add(9, 2500);
-        levelReq.Add(10, 4000);
-        levelReq.Add(11, 7500);
-        levelReq.Add(12, 12000);
-        levelReq.Add(13, 15000);
-        levelReq.Add(14, 20000);
-        levelReq.Add(15, 32000);
+        levelReq.Add(2, 25);
+        levelReq.Add(3, 50);
+        levelReq.Add(4, 100);
+        levelReq.Add(5, 175);
+        levelReq.Add(6, 225);
+        levelReq.Add(7, 300);
+        levelReq.Add(8, 500);
+        levelReq.Add(9, 750);
+        levelReq.Add(10, 1000);
+        levelReq.Add(11, 1500);
+        levelReq.Add(12, 2000);
+        levelReq.Add(13, 3000);
+        levelReq.Add(14, 5000);
+        levelReq.Add(15, 7500);
         level = 15;
+
         StartCoroutine("SlowUpdate");
     }
     

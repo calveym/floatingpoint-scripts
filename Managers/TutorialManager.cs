@@ -43,23 +43,6 @@ public class TutorialManager : MonoBehaviour {
         tutorialRequirements.Add("101000001");
         tutorialRequirements.Add("000000010");
         tutorialRequirements.Add("000000100");
-
-        levelReq = new Dictionary<int, int>();
-        levelReq.Add(1, 10);
-        levelReq.Add(2, 25);
-        levelReq.Add(3, 50);
-        levelReq.Add(4, 100);
-        levelReq.Add(5, 175);
-        levelReq.Add(6, 225);
-        levelReq.Add(7, 300);
-        levelReq.Add(8, 500);
-        levelReq.Add(9, 750);
-        levelReq.Add(10, 1000);
-        levelReq.Add(11, 1500);
-        levelReq.Add(12, 2000);
-        levelReq.Add(13, 3000);
-        levelReq.Add(14, 5000);
-        levelReq.Add(15, 7500);
     }
 
     // Use this for initialization
@@ -261,9 +244,9 @@ public class TutorialManager : MonoBehaviour {
         tutorialStrings.Add(3, "Good job. Now, to move your new building, try grabbing it with either controller's bumper buttons.\n When you are ready to continue, exit the building UI.");
         tutorialStrings.Add(4, "Try viewing the global info panel by touching the left trackpad with your thumb.");
         tutorialStrings.Add(5, "Your citizens are unhappy! You can manage happiness by adding jobs, shops and landscaping. \n Try adding a shop in now (Second menu panel)");
-        tutorialStrings.Add(6, "Great, now your citizens can find work! You can check on individual buildings' progress \n by viewing the building stats tooltip with the right menu button.");
+        tutorialStrings.Add(6, "Great, now your citizens can find work! The smaller the shop, the closer it needs to be to the workers. \nYou can check on individual buildings' progress by pressing the right menu button.");
         tutorialStrings.Add(7, "Now it's time to explore what you've created! \n Press the left menu button to toggle between first person mode. \n Flight in first person is limited to walking height.");
-        tutorialStrings.Add(8, "Ok, now it's up to you! Don't forget to add offices and factories as your population grows to keep them occupied!");
+        tutorialStrings.Add(8, "Finally, draw and delete roads with the right and left triggers respectively. \n Now it's your time to shine! Unlock new buildings by increasing your population.");
     }
 
     IEnumerator TutorialChecker()
