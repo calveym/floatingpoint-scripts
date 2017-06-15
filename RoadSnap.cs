@@ -22,49 +22,49 @@ public class RoadSnap : MonoBehaviour {
 	public void updateTargetIsBlocked(bool status) {
 		targetIsBlocked = status;
 	}
-		
-	void Start () {
-		GameObject clone = (GameObject)Instantiate (gameObject, Vector3.zero, Quaternion.identity);
-		originalBounds = clone.GetComponent<BoxCollider> ().bounds;
 
-		Destroy (clone);
+    void Start() {
+		GameObject clone = Instantiate (gameObject);
+		originalBounds = clone.GetComponent<BoxCollider> ().bounds;
+        Debug.Log("Original bounds at start: " + originalBounds);
+        Destroy (clone);
 
 		layerMask = 1 << roadLayer;
+        interact = GetComponent<VRTK_InteractableObject>();
 
-		GetComponent<VRTK_InteractableObject>().InteractableObjectGrabbed += new InteractableObjectEventHandler(ObjectGrabbed);
+        interact.InteractableObjectGrabbed += new InteractableObjectEventHandler(ObjectGrabbed);
 
 		// Add listeners for controller release to both controllers
-		GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff +=
+		ReferenceManager.instance.rightEvents.AliasGrabOff +=
 			new ControllerInteractionEventHandler(DoGrabRelease);
-		GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().AliasGrabOff +=
+		ReferenceManager.instance.leftEvents.AliasGrabOff +=
 			new ControllerInteractionEventHandler(DoGrabRelease);
-
-		interact = GetComponent<VRTK_InteractableObject>();
 	} 
 
 	void ObjectGrabbed(object sender, InteractableObjectEventArgs e) {
+        Debug.Log("Grabbing");
 		objectUsed = true;
 		snapObject = false;
-
 	}
 
 	void DoGrabRelease(object sender, ControllerInteractionEventArgs e)
-	{
-		//gameObject.GetComponent<SnapPoints> ().enabled = false;
-		if (!targetIsBlocked) {
+    {
+        Debug.Log("Releasing");
+        //gameObject.GetComponent<SnapPoints> ().enabled = false;
+        if (!targetIsBlocked) {
 			snapObject = true;
 		}
 	}
 		
 	void Update () {
 		if (objectUsed || manualUse) {
-			Debug.Log ("originalBounds" + originalBounds.size);
 
 			Main ();
 		}
 	}
 
 	void Main() {
+        //Debug.Log("Checking for snap");
 		targetBoxPrefab.GetComponent<SnapPoints> ().bounds = originalBounds; // fixes the target box rotating with building
 
 		List<GameObject> closestObjects = FindClosestObjects ();

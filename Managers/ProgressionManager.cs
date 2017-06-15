@@ -75,7 +75,7 @@ public class ProgressionManager : MonoBehaviour {
         levelReq.Add(13, 3000);
         levelReq.Add(14, 5000);
         levelReq.Add(15, 7500);
-        level = 15;
+        levelReq.Add(16, 100000);
 
         StartCoroutine("SlowUpdate");
     }

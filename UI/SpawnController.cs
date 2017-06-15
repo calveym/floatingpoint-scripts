@@ -108,8 +108,7 @@ public class SpawnController : MonoBehaviour {
             {
                 EnableService();
             }
-
-            // Spawns new from here!!!!!
+             // Spawns new from here!!!!!
             showingBuilding = false;
             spawnManager.SpawnUIBuildings(displayUI.GetSelection(), thumb.angleIncrement);
         }
