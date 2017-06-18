@@ -11,9 +11,18 @@ public class SnapPoints : MonoBehaviour {
 
 	void Start () {
 		originalPoints = GetCurrentPoints ();
-		if (bounds != null) bounds = GetComponent<BoxCollider> ().bounds;
+        if(gameObject.tag == "road")
+    		bounds = GetComponent<BoxCollider> ().bounds;
 		originalPoints.Add ("center", bounds.center);
 	}
+
+    public void SetupBounds(Bounds newBounds)
+    {
+        if(gameObject.layer == 8)
+        {
+
+        }
+    }
 
 	public Dictionary<string, Vector3> GetCurrentPoints () {
 		Vector3 center = GetComponent<BoxCollider> ().bounds.center;

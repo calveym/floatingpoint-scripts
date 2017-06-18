@@ -11,7 +11,7 @@ public class RoadSnap : MonoBehaviour {
 	public Material blockedMaterial;
 
 	GameObject lastTargetBox;
-	bool wasSnapped = false;
+	bool snapSetup = false;
 	bool targetIsBlocked, snapObject, objectUsed;
 	VRTK_InteractableObject interact;
 	Bounds originalBounds;
@@ -27,21 +27,26 @@ public class RoadSnap : MonoBehaviour {
 		layerMask = 1 << roadLayer;
         interact = GetComponent<VRTK_InteractableObject>();
         //Debug.Log(gameObject + " " + interact);
-
         interact.InteractableObjectGrabbed += new InteractableObjectEventHandler(ObjectGrabbed);
         interact.InteractableObjectUngrabbed += new InteractableObjectEventHandler(DoGrabRelease);
 	}
 
     public void SetupSnap()
     {
-        GameObject clone = Instantiate(gameObject, new Vector3(0f, 0f, 0f), Quaternion.Euler(new Vector3(0f, 0f, 0f)));
+        snapSetup = true;
+        GameObject clone = Instantiate(gameObject, Vector3.zero, Quaternion.identity);
         BoxCollider col = clone.GetComponent<BoxCollider>();
         col.enabled = true;
         originalBounds = col.bounds;
-        originalBounds.extents = new Vector3(0.5f, 0.3f, 0.5f);
         Debug.Log("Original bounds at start: " + originalBounds.extents);
         Debug.Log("Anticlone bounds at start: " + gameObject.GetComponent<BoxCollider>().bounds.extents);
+        SetBounds(originalBounds);
         Destroy(clone);
+    }
+
+    void SetBounds(Bounds setBounds)
+    {
+        GetComponent<SnapPoints>().SetupBounds(setBounds);
     }
 
     void ObjectGrabbed(object sender, InteractableObjectEventArgs e) {
