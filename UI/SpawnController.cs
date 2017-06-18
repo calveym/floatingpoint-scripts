@@ -167,10 +167,11 @@ public class SpawnController : MonoBehaviour {
         {
             spawnManager = sm;
         }
+        
         disablePurchase = false;
         UpdateContainedBuilding(newBuilding);
         SetTracker();
-
+        containedBuilding.GetComponent<RoadSnap>().SetupSnap();
         CheckLevel();
         DisablePhysics();
         SizeForMenu();

@@ -30,6 +30,7 @@ public class CommercialTracker : ItemTracker {
     {
         if (!updateStarted && usable && validPosition)
         {
+            EnableSnap();
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
             ReferenceManager.instance.itemManager.addCommercial(capacity, gameObject);

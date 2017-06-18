@@ -359,6 +359,12 @@ public class ItemTracker : MonoBehaviour {
         }
     }
 
+    protected void EnableSnap()
+    {
+        Debug.Log("Enabling snap");
+        //GetComponent<RoadSnap>().SetupSnap();
+    }
+
     protected IEnumerator MoveOut()
     {
         while (movingOut)

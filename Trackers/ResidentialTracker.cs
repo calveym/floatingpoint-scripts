@@ -22,6 +22,7 @@ public class ResidentialTracker : ItemTracker {
     {
         if (!updateStarted && usable && validPosition)
         {
+            EnableSnap();
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
             itemManager.addResidential(capacity, gameObject);

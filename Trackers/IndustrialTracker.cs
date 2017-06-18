@@ -52,6 +52,7 @@ public class IndustrialTracker : ItemTracker {
     {
         if (!updateStarted && usable && validPosition)
         {
+            EnableSnap();
             updateStarted = true;
             EconomyManager.ecoTick += UpdateSecond;
             ReferenceManager.instance.itemManager.addIndustrial(capacity, gameObject);

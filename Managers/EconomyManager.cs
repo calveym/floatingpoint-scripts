@@ -117,6 +117,7 @@ public class EconomyManager : MonoBehaviour {
 
     IEnumerator EconomicTick()
     {
+        yield return new WaitForSeconds(0.5f);
         while (keepUpdating)
         {
 

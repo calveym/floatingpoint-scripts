@@ -53,34 +53,34 @@ public class CarAi : MonoBehaviour {
         switch (Col.gameObject.name)
         {
             case "StraightLeftStart":
-                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("StraightLeftEnd");
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("StraightLeftEnd");
                 break;
             case "StraightRightStart":
-                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("StraightRightEnd");
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("StraightRightEnd");
                 break;
             case "TurnRightStart":
-                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TurnRight");
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TurnRight");
                 break;
             case "TurnRight":
-                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TurnRightEnd");
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TurnRightEnd");
                 break;
             case "TurnLeftStart":
-                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TurnLeft");
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TurnLeft");
                 break;
             case "TurnLeft":
-                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TurnLeftEnd");
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TurnLeftEnd");
                 break;
             case "TSectionRightStraightStart":
-                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TSectionTurnNodeRSS");
-                PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TSectionRightStraightStart");
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TSectionTurnNodeRSS");
+                PrevNode = Col.gameObject.transform.parent.gameObject.transform.Find("TSectionRightStraightStart");
                 break;
             case "TSectionLeftStraightStart":
-                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TSectionTurnNodeLSS");
-                PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TSectionLeftStraightStart");
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TSectionTurnNodeLSS");
+                PrevNode = Col.gameObject.transform.parent.gameObject.transform.Find("TSectionLeftStraightStart");
                 break;
             case "TSectionRightStart":
-                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TSectionTurnNodeRS");
-                PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TSectionRightStart");
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TSectionTurnNodeRS");
+                PrevNode = Col.gameObject.transform.parent.gameObject.transform.Find("TSectionRightStart");
                 break;
             case "TSectionTurnNodeRS":
                 if (PrevNode.name == "TSectionRightStart")
@@ -88,12 +88,12 @@ public class CarAi : MonoBehaviour {
                     int num = Random.Range(0, 2);
                     if (num == 0)
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TSectionLeftStraightEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TSectionLeftStraightEnd");
                         PrevNode = null;
                     }
                     else
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TSectionRightStraightEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TSectionRightStraightEnd");
                         PrevNode = null;
                     }
                 }
@@ -104,12 +104,12 @@ public class CarAi : MonoBehaviour {
                     int num = Random.Range(0, 2);
                     if (num == 0)
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TSectionLeftEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TSectionLeftEnd");
                         PrevNode = null;
                     }
                     else
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TSectionRightStraightEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TSectionRightStraightEnd");
                         PrevNode = null;
                     }
                 }
@@ -120,31 +120,31 @@ public class CarAi : MonoBehaviour {
                     int num = Random.Range(0, 2);
                     if (num == 0)
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TSectionLeftStraightEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TSectionLeftStraightEnd");
                         PrevNode = null;
                     }
                     else
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TSectionLeftEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TSectionLeftEnd");
                         PrevNode = null;
                     }
                 }
                 break;
             case "InterRightVerticalStart":
-                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TopLeftTurnNode");
-                PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightVerticalStart");
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TopLeftTurnNode");
+                PrevNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterRightVerticalStart");
                 break;
             case "InterLeftVerticalStart":
-                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("BottomRightTurnNode");
-                PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftVerticalStart");
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("BottomRightTurnNode");
+                PrevNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterLeftVerticalStart");
                 break;
             case "InterRightHorizontalStart":
-                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("TopRightTurnNode");
-                PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightHorizontalStart");
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("TopRightTurnNode");
+                PrevNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterRightHorizontalStart");
                 break;
             case "InterLeftHorizontalStart":
-                TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("BottomLeftTurnNode");
-                PrevNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftHorizontalStart");
+                TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("BottomLeftTurnNode");
+                PrevNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterLeftHorizontalStart");
                 break;
             case "TopLeftTurnNode":
                 if (PrevNode.name == "InterRightVerticalStart")
@@ -152,17 +152,17 @@ public class CarAi : MonoBehaviour {
                     int num = Random.Range(0, 3);
                     if (num == 0)
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightVerticalEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterRightVerticalEnd");
                         PrevNode = null;
                     }
                     else if (num == 1)
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightHorizontalEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterRightHorizontalEnd");
                         PrevNode = null;
                     }
                     else
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftHorizontalEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterLeftHorizontalEnd");
                         PrevNode = null;
                     }
                 }
@@ -173,17 +173,17 @@ public class CarAi : MonoBehaviour {
                     int num = Random.Range(0, 3);
                     if (num == 0)
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightVerticalEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterRightVerticalEnd");
                         PrevNode = null;
                     }
                     else if (num == 1)
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightHorizontalEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterRightHorizontalEnd");
                         PrevNode = null;
                     }
                     else
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftVerticalEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterLeftVerticalEnd");
                         PrevNode = null;
                     }
                 }
@@ -194,17 +194,17 @@ public class CarAi : MonoBehaviour {
                     int num = Random.Range(0, 3);
                     if (num == 0)
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftVerticalEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterLeftVerticalEnd");
                         PrevNode = null;
                     }
                     else if (num == 1)
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightHorizontalEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterRightHorizontalEnd");
                         PrevNode = null;
                     }
                     else
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftHorizontalEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterLeftHorizontalEnd");
                         PrevNode = null;
                     }
                 }
@@ -215,17 +215,17 @@ public class CarAi : MonoBehaviour {
                     int num = Random.Range(0, 3);
                     if (num == 0)
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterRightVerticalEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterRightVerticalEnd");
                         PrevNode = null;
                     }
                     else if (num == 1)
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftVerticalEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterLeftVerticalEnd");
                         PrevNode = null;
                     }
                     else
                     {
-                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.FindChild("InterLeftHorizontalEnd");
+                        TargetNode = Col.gameObject.transform.parent.gameObject.transform.Find("InterLeftHorizontalEnd");
                         PrevNode = null;
                     }
                 }

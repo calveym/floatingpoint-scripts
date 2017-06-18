@@ -24,32 +24,35 @@ public class RoadSnap : MonoBehaviour {
 	}
 
     void Start() {
-		GameObject clone = Instantiate (gameObject);
-		originalBounds = clone.GetComponent<BoxCollider> ().bounds;
-        Debug.Log("Original bounds at start: " + originalBounds);
-        Destroy (clone);
-
 		layerMask = 1 << roadLayer;
         interact = GetComponent<VRTK_InteractableObject>();
+        //Debug.Log(gameObject + " " + interact);
 
         interact.InteractableObjectGrabbed += new InteractableObjectEventHandler(ObjectGrabbed);
+        interact.InteractableObjectUngrabbed += new InteractableObjectEventHandler(DoGrabRelease);
+	}
 
-		// Add listeners for controller release to both controllers
-		ReferenceManager.instance.rightEvents.AliasGrabOff +=
-			new ControllerInteractionEventHandler(DoGrabRelease);
-		ReferenceManager.instance.leftEvents.AliasGrabOff +=
-			new ControllerInteractionEventHandler(DoGrabRelease);
-	} 
+    public void SetupSnap()
+    {
+        GameObject clone = Instantiate(gameObject, new Vector3(0f, 0f, 0f), Quaternion.Euler(new Vector3(0f, 0f, 0f)));
+        BoxCollider col = clone.GetComponent<BoxCollider>();
+        col.enabled = true;
+        originalBounds = col.bounds;
+        originalBounds.extents = new Vector3(0.5f, 0.3f, 0.5f);
+        Debug.Log("Original bounds at start: " + originalBounds.extents);
+        Debug.Log("Anticlone bounds at start: " + gameObject.GetComponent<BoxCollider>().bounds.extents);
+        Destroy(clone);
+    }
 
-	void ObjectGrabbed(object sender, InteractableObjectEventArgs e) {
-        Debug.Log("Grabbing");
+    void ObjectGrabbed(object sender, InteractableObjectEventArgs e) {
+        //Debug.Log("Grabbing");
 		objectUsed = true;
 		snapObject = false;
 	}
 
-	void DoGrabRelease(object sender, ControllerInteractionEventArgs e)
+	void DoGrabRelease(object sender, InteractableObjectEventArgs e)
     {
-        Debug.Log("Releasing");
+        //Debug.Log("Releasing");
         //gameObject.GetComponent<SnapPoints> ().enabled = false;
         if (!targetIsBlocked) {
 			snapObject = true;
@@ -134,8 +137,8 @@ public class RoadSnap : MonoBehaviour {
 
 	Dictionary<string, Vector3> GetVerticalPoints (GameObject road) {
 
-		float halfWidth = road.GetComponent<MeshRenderer>().bounds.extents.z;
-			
+		float halfWidth = 0.5f;
+
 		Dictionary<string, Vector3> points = new Dictionary<string, Vector3>(); 
 
 		if ((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0) {
@@ -236,10 +239,8 @@ public class RoadSnap : MonoBehaviour {
 				if ((point.Value.x < roadSnapPoint.Value.x) && moreThanX || (point.Value.x > roadSnapPoint.Value.x) && !moreThanX) {
 					return false;
 				}
-
 			}
 		}
-
 		return true;
 	}
 		
