@@ -38,8 +38,8 @@ public class RoadSnap : MonoBehaviour {
         BoxCollider col = clone.GetComponent<BoxCollider>();
         col.enabled = true;
         originalBounds = col.bounds;
-        Debug.Log("Original bounds at start: " + originalBounds.extents);
-        Debug.Log("Anticlone bounds at start: " + gameObject.GetComponent<BoxCollider>().bounds.extents);
+        //Debug.Log("Original bounds at start: " + originalBounds.extents);
+        //Debug.Log("Anticlone bounds at start: " + gameObject.GetComponent<BoxCollider>().bounds.extents);
         SetBounds(originalBounds);
         Destroy(clone);
     }

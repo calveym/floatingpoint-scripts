@@ -41,6 +41,7 @@ public class ProgressionManager : MonoBehaviour {
 
     public void Start()
     {
+        level = 10;
         if(instance == null)
         {
             instance = this;

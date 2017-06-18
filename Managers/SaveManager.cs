@@ -35,6 +35,8 @@ public class SaveManager : MonoBehaviour {
     {
         if (Time.realtimeSinceStartup > 2)
         {
+            Debug.Log("Saving slot 2...");
+
             Save("slot2");
         }
     }
@@ -43,6 +45,8 @@ public class SaveManager : MonoBehaviour {
     {
         if (Time.realtimeSinceStartup > 2)
         {
+            Debug.Log("Saving slot 3...");
+
             Save("slot3");
         }
     }
@@ -51,6 +55,8 @@ public class SaveManager : MonoBehaviour {
     {
         if (Time.realtimeSinceStartup > 2)
         {
+            Debug.Log("Loading slot 3...");
+
             Load("slot3");
         }
     }
@@ -59,6 +65,8 @@ public class SaveManager : MonoBehaviour {
     {
         if (Time.realtimeSinceStartup > 2)
         {
+            Debug.Log("Loading slot 2...");
+
             Load("slot2");
         }
     }
@@ -68,6 +76,7 @@ public class SaveManager : MonoBehaviour {
         if (Time.realtimeSinceStartup > 2)
         {
             Debug.Log("Loading slot 1");
+
             Load("slot1");
         }
     }
@@ -76,7 +85,7 @@ public class SaveManager : MonoBehaviour {
     {
         if (Time.realtimeSinceStartup > 2)
         {
-            SceneManager.LoadScene("main-0.6.0");
+            SceneManager.LoadScene("1.0.0-empty");
         }
     }
 
@@ -84,7 +93,7 @@ public class SaveManager : MonoBehaviour {
     {
         if (Time.realtimeSinceStartup > 2)
         {
-            SceneManager.LoadScene("main-0.6.0");
+            SceneManager.LoadScene("1.0.0-tutorial");
         }
     }
 }

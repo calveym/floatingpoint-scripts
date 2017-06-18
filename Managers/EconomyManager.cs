@@ -6,9 +6,13 @@ using UnityEngine;
 public class EconomyManager : MonoBehaviour {
 
     // Declare other managers
+    [SerializeField]
     ItemManager itemManager;
+    [SerializeField]
     PopulationManager populationManager;
+    [SerializeField]
     HappinessManager happinessManager;
+    [SerializeField]
     AudioManager audioManager;
 
     // Declare variables
@@ -17,9 +21,13 @@ public class EconomyManager : MonoBehaviour {
     [Tooltip("Multiplier for income to get per tick income")]
     public float incomeMultiplier = 0.1f;
     public float balance = 0;
+    [SerializeField]
     int numRoads;
+    [SerializeField]
     float income; // Net income, after expenses
+    [SerializeField]
     int population;
+    [SerializeField]
     float happiness;
 
     [SerializeField]
@@ -43,8 +51,11 @@ public class EconomyManager : MonoBehaviour {
     public float maxTransfer;
 
     // Tracked items
+    [SerializeField]
     int residentialCap;
+    [SerializeField]
     int commercialCap;
+    [SerializeField]
     int industrialCap;
 
     // Declares public variables
@@ -91,6 +102,13 @@ public class EconomyManager : MonoBehaviour {
     public AudioClip purchaseSound;
     public AudioClip failSound;
 
+    [DoNotSerialize]
+    bool ticking = false;
+    [DoNotSerialize]
+    bool isDeserializing = false;
+
+    int tick; // used to run once per second
+
     void Awake()
     // Finds instances of all objects and sets up values
     {
@@ -103,46 +121,68 @@ public class EconomyManager : MonoBehaviour {
 
     private void Start()
     {
-        itemManager = ReferenceManager.instance.itemManager;
-        populationManager = ReferenceManager.instance.populationManager;
-        happinessManager = ReferenceManager.instance.happinessManager;
-        audioManager = ReferenceManager.instance.audioManager;
-        StartCoroutine("EconomicTick");
+        if(!LevelSerializer.IsDeserializing)
+        {
+            tick = 0;
+            itemManager = ReferenceManager.instance.itemManager;
+            populationManager = ReferenceManager.instance.populationManager;
+            happinessManager = ReferenceManager.instance.happinessManager;
+            audioManager = ReferenceManager.instance.audioManager;
+            CheckCoroutines();
+        }
     }
 
+    void Update()
+    {
+        if (keepUpdating && tick % 60 == 0)
+            {
+                ticking = true;
+                Debug.Log("Running: " + itemManager);
+                if (ecoTick != null)
+                {
+                    ecoTick();
+                }
+                if (foliageTick != null)
+                {
+                    foliageTick();
+                }
+
+                ResidentialTracker.historicResidentialIncome = ResidentialTracker.totalResidentialIncome;
+                CommercialTracker.historicCommercialIncome = CommercialTracker.totalCommercialIncome;
+                IndustrialTracker.historicIndustrialIncome = IndustrialTracker.totalIndustrialIncome;
+
+                UpdateIncome();
+                TransferGoods();
+                UpdateBalance();
+
+                ResidentialTracker.totalResidentialIncome = 0;
+                CommercialTracker.totalCommercialIncome = 0;
+                IndustrialTracker.totalIndustrialIncome = 0;
+            }
+        tick++;
+    }
+
+    [SerializeField]
     public delegate void TickDelegate();
 
+    [SerializeField]
     public static TickDelegate ecoTick;  // Multicast delegate run once per economic tick
+    [SerializeField]
     public static TickDelegate foliageTick;  // Multicast delegate for foliage, extracted to reduce potential crashes
 
     IEnumerator EconomicTick()
     {
         yield return new WaitForSeconds(0.5f);
-        while (keepUpdating)
+
+    }
+
+    void CheckCoroutines()
+    {
+        if(!ticking)
         {
-
-            if (ecoTick != null)
-            {
-                ecoTick();
-            }
-            if (foliageTick != null)
-            {
-                foliageTick();
-            }
-
-            ResidentialTracker.historicResidentialIncome = ResidentialTracker.totalResidentialIncome;
-            CommercialTracker.historicCommercialIncome = CommercialTracker.totalCommercialIncome;
-            IndustrialTracker.historicIndustrialIncome = IndustrialTracker.totalIndustrialIncome;
-
-            UpdateIncome();
-            TransferGoods();
-            UpdateBalance();
-
-            ResidentialTracker.totalResidentialIncome = 0;
-            CommercialTracker.totalCommercialIncome = 0;
-            IndustrialTracker.totalIndustrialIncome = 0;
-
-            yield return new WaitForSeconds(2);
+            keepUpdating = true;
+            ticking = false;
+            StartCoroutine("EconomicTick");
         }
     }
 

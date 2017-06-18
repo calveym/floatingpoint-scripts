@@ -20,7 +20,7 @@ public class SnapPoints : MonoBehaviour {
     {
         if(gameObject.layer == 8)
         {
-
+            bounds = newBounds;
         }
     }
 
