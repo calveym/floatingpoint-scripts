@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class TestRunner : MonoBehaviour
 {
@@ -37,7 +38,7 @@ public class TestRunner : MonoBehaviour
 
     // Use this for initialization
     void Start()
-    {
+    {if (Serializer.IsLoading)	return;
         manager = GameObject.Find("Managers");
         economyManager = manager.GetComponent<EconomyManager>();
         itemManager = manager.GetComponent<ItemManager>();
@@ -76,6 +77,8 @@ public class TestRunner : MonoBehaviour
 
     void SetTime(float time)
     {
+        if (!tod)
+            tod = ReferenceManager.instance.tod;
         tod.Cycle.Hour = time;
     }
 
@@ -114,7 +117,8 @@ public class TestRunner : MonoBehaviour
         Debug.Log("Test 6 Running");
         TooltipManager tooltip = manager.GetComponent<TooltipManager>();
         TooltipManager.pressed = true;
-        tooltip.StartCoroutine("SecondTick");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "SecondTick");
         tooltip.StartTooltips();
     }
 

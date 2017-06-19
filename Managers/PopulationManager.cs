@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class PopulationManager : MonoBehaviour {
 
@@ -52,14 +53,14 @@ public class PopulationManager : MonoBehaviour {
         names = gameObject.GetComponent<NameGenerator>();
         firstNames = names.FirstNames();
         lastNames = names.LastNames();
-        itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-        happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
+        itemManager = ReferenceManager.instance.itemManager;
+        happinessManager = ReferenceManager.instance.happinessManager;
         EconomyManager.ecoTick += PopulationUpdate;
 
         QueueUpdates();
     }
 
-    void PopulationUpdate ()
+    public void PopulationUpdate ()
 	// Updates values & calls increasePopulation if conditions are met
 	{
         UpdateValues();
@@ -77,7 +78,10 @@ public class PopulationManager : MonoBehaviour {
 		industrialTrackers = itemManager.industrialTrackers;
         totalPopulation = population + unallocatedPopulation;
         happiness = happinessManager.happiness;
-        
+
+        if (residentialTrackers.Count >= 2)
+            foreach (ResidentialTracker res in residentialTrackers)
+                Debug.Log("Res: " + res.name);
         UpdateEmptyResidential();
         UpdateCommercialTrackers();
         UpdateIndustrialTrackers();

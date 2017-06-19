@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
+[System.Serializable]
 public class CommercialTracker : ItemTracker {
     // Manages individual stats of each commercial building.
 
@@ -19,21 +21,19 @@ public class CommercialTracker : ItemTracker {
     List<ResidentialTracker> employees;
 
 
-
     new void Start()
     {
         base.Start();
         employees = new List<ResidentialTracker>();
+        if (Serializer.IsLoading)
+            RemoveEcoTick();
     }
 
     void Update()
     {
         if (!updateStarted && usable && validPosition)
         {
-            EnableSnap();
-            updateStarted = true;
-            EconomyManager.ecoTick += UpdateSecond;
-            ReferenceManager.instance.itemManager.addCommercial(capacity, gameObject);
+            AddEcoTick();
         }
         else if (updateStarted && !usable && validPosition)
         {
@@ -44,6 +44,31 @@ public class CommercialTracker : ItemTracker {
         {
             checkEnable = true;
         }
+        if (ReferenceManager.instance.tick % 5 == 0)
+        {
+            if (checkEnable)
+            {
+                checkEnable = false;
+                if (transform.parent == null)
+                {
+                    usable = true;
+                }
+            }
+        }
+    }
+
+    public void AddEcoTick()
+    {
+        EnableSnap();
+        updateStarted = true;
+        EconomyManager.ecoTick += UpdateSecond;
+        ReferenceManager.instance.itemManager.addCommercial(capacity, gameObject);
+    }
+
+    void RemoveEcoTick()
+    {
+        updateStarted = false;
+        EconomyManager.ecoTick -= UpdateSecond;
     }
 
     public void Apply(float applicantLandValue, ResidentialTracker applicantTracker)
@@ -52,11 +77,11 @@ public class CommercialTracker : ItemTracker {
         // an impact on the final decision, along with an element of chance
         float landValueDifference = landValue - applicantLandValue;
         landValueDifference = Mathf.Abs(landValueDifference);
-        if(landValueDifference < landValue / 3 && usable && users < capacity)
+        if(landValueDifference < landValue / 3 && usable && users < capacity && !Serializer.IsLoading)
         {
             AcceptApplication(applicantTracker);
         }
-        else if (Random.Range(0, 5) > 3)
+        else if (Random.Range(0, 5) > 3 && !Serializer.IsLoading)
         {
             AcceptApplication(applicantTracker);
         }
@@ -65,6 +90,8 @@ public class CommercialTracker : ItemTracker {
 
     void AcceptApplication(ResidentialTracker applicantTracker)
     {
+        if (!applicantTracker.isActiveAndEnabled)
+            return;
         if (applicantTracker.unemployedPopulation >= 1)
         {
             AddUsers(1);
@@ -111,7 +138,7 @@ public class CommercialTracker : ItemTracker {
         else salesHappiness = 0;
     }
 
-    void UpdateSecond()
+    public void UpdateSecond()
     // Updates values once per second
     {
         updateStarted = true;
@@ -179,21 +206,5 @@ public class CommercialTracker : ItemTracker {
     public string FancyLandValue()
     {
         return "Land Value: $" + landValue;
-    }
-
-    IEnumerator CheckEnable()
-    {
-        while (true)
-        {
-            if (checkEnable)
-            {
-                checkEnable = false;
-                if (transform.parent.transform.parent.transform.parent.gameObject.name != "UI")
-                {
-                    usable = true;
-                }
-            }
-            yield return new WaitForSeconds(5);
-        }
     }
 }

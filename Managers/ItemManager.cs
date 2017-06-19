@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class ItemManager : MonoBehaviour {
 
@@ -35,12 +36,7 @@ public class ItemManager : MonoBehaviour {
 	public int transportCap;
 	public int leisureCap;
 	public int foliageCap;
-
-    public delegate void FiveSecondUpdate();
-    public static FiveSecondUpdate fiveUpdate;
-
-    public delegate void TenSecondUpdate();
-    public static TenSecondUpdate tenUpdate;
+    
 
     void Awake()
     {
@@ -50,17 +46,103 @@ public class ItemManager : MonoBehaviour {
     void Start ()
 	// Get manager instances
 	{
-        fiveUpdate += Empty;
-        tenUpdate += Empty;
+        Debug.Log("Commercial trackers: " + commercialTrackers.Count);
 		economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
 		roadGenerator = GameObject.Find("Island").GetComponent<RoadGenerator>();
         // contractmanager = GameObject.Find("Managers").GetComponent<ContractManager>();
-        StartCoroutine("FiveUpdate");
-        StartCoroutine("TenUpdate");
 	}
 
-	public int getNumRoads()
+    public void AddTrackersToEcoTick()
+    {
+        foreach(ResidentialTracker res in residentialTrackers)
+        {
+            res.AddEcoTick();
+        }
+        foreach(CommercialTracker com in commercialTrackers)
+        {
+            com.AddEcoTick();
+        }
+    }
+
+    public void ResetItems()
+    {
+        Debug.Log("Resetting items");
+        GetResidential();
+        GetCommercial();
+        GetIndustrial();
+    }
+
+    void GetResidential()
+    {
+        residentialTrackers = new List<ResidentialTracker>();
+        residential = new List<GameObject>();
+        ResidentialTracker[] residentials = GameObject.FindObjectsOfType<ResidentialTracker>();
+        foreach(ResidentialTracker res in residentials)
+        {
+            residentialTrackers.Add(res);
+            residential.Add(res.gameObject);
+        }
+        residentialCap = GetCapacity(residentialTrackers);
+    }
+
+    void GetCommercial()
+    {
+        commercialTrackers = new List<CommercialTracker>();
+        commercial = new List<GameObject>();
+        CommercialTracker[] commercials = GameObject.FindObjectsOfType<CommercialTracker>();
+        foreach(CommercialTracker com in commercials)
+        {
+            commercialTrackers.Add(com);
+            commercial.Add(com.gameObject);
+        }
+        commercialCap = GetCapacity(commercialTrackers);
+    }
+
+    void GetIndustrial()
+    {
+        industrialTrackers = new List<IndustrialTracker>();
+        industrial = new List<GameObject>();
+        IndustrialTracker[] industrials = GameObject.FindObjectsOfType<IndustrialTracker>();
+        foreach(IndustrialTracker ind in industrials)
+        {
+            industrialTrackers.Add(ind);
+            industrial.Add(ind.gameObject);
+        }
+        industrialCap = GetCapacity(industrialTrackers);
+    }
+
+    int GetCapacity(List<ResidentialTracker> items)
+    {
+        int returnValue = 0;
+        foreach(ResidentialTracker item in items)
+        {
+            returnValue += item.capacity;
+        }
+        return returnValue;
+    }
+
+    int GetCapacity(List<CommercialTracker> items)
+    {
+        int returnValue = 0;
+        foreach (CommercialTracker item in items)
+        {
+            returnValue += item.capacity;
+        }
+        return returnValue;
+    }
+
+    int GetCapacity(List<IndustrialTracker> items)
+    {
+        int returnValue = 0;
+        foreach (IndustrialTracker item in items)
+        {
+            returnValue += item.capacity;
+        }
+        return returnValue;
+    }
+
+    public int getNumRoads()
 	// Returns number of roads on the map
 	{
 		return roadGenerator.numRoads;
@@ -69,29 +151,38 @@ public class ItemManager : MonoBehaviour {
 	public void addResidential(int capacity, GameObject newObject)
 	// Adds a residential building to the total
 	{
-		residentialCap += (capacity);
-		numResidential += 1;
-		residential.Add(newObject);
-		residentialTrackers.Add(newObject.GetComponent<ResidentialTracker>());
+        if(!residential.Contains(newObject))
+        {
+            residentialCap += (capacity);
+            numResidential += 1;
+            residential.Add(newObject);
+            residentialTrackers.Add(newObject.GetComponent<ResidentialTracker>());
+        }
 	}
 
 	public void addCommercial(int capacity, GameObject newObject)
 	// Adds a commercial building to the total
 	{
-		commercialCap += (capacity);
-		numCommercial += 1;
-		commercial.Add(newObject);
-		commercialTrackers.Add(newObject.GetComponent<CommercialTracker>());
+        if(!commercial.Contains(newObject))
+        {
+            commercialCap += (capacity);
+            numCommercial += 1;
+            commercial.Add(newObject);
+            commercialTrackers.Add(newObject.GetComponent<CommercialTracker>());
+        }
     }
 
     public void addIndustrial(int capacity, GameObject newObject)
 	// Adds an industrial building to the total
 	{
-		industrialCap += (capacity);
-		numIndustrial += 1;
-		industrial.Add(newObject);
-		industrialTrackers.Add(newObject.GetComponent<IndustrialTracker>());
-		}
+        if(!industrial.Contains(newObject))
+        {
+            industrialCap += (capacity);
+            numIndustrial += 1;
+            industrial.Add(newObject);
+            industrialTrackers.Add(newObject.GetComponent<IndustrialTracker>());
+        }
+	}
 
     public void addLeisure(int capacity, GameObject newObject)
     // Add a leisure building
@@ -112,7 +203,9 @@ public class ItemManager : MonoBehaviour {
     public void removeResidential(GameObject removeObject)
     // Removes residential building
     {
+        Debug.Log("Removing...");
         ResidentialTracker temp = removeObject.GetComponent<ResidentialTracker>();
+        EconomyManager.ecoTick -= temp.UpdateSecond;
         residentialCap -= removeObject.GetComponent<ResidentialTracker>().GetCapacity();
         temp.RemoveAllUsers();
         populationManager.DeallocateUsers(temp.users, "residential");
@@ -124,6 +217,7 @@ public class ItemManager : MonoBehaviour {
     // Removes commercial building
     {
         CommercialTracker temp = removeObject.GetComponent<CommercialTracker>();
+        EconomyManager.ecoTick -= temp.UpdateSecond;
         commercialCap -= temp.capacity;
         temp.RemoveAllUsers();
         populationManager.DeallocateUsers(temp.users, "commercial");
@@ -135,6 +229,7 @@ public class ItemManager : MonoBehaviour {
     // Remove an industrial building
     {
         IndustrialTracker temp = removeObject.GetComponent<IndustrialTracker>();
+        EconomyManager.ecoTick -= temp.UpdateSecond;
         industrialCap -= temp.capacity;
         temp.RemoveAllUsers();
         populationManager.DeallocateUsers(temp.users, "commercial");
@@ -171,23 +266,5 @@ public class ItemManager : MonoBehaviour {
 
     void Empty()
     {
-    }
-
-    IEnumerator FiveUpdate()
-    {
-        while(true)
-        {
-            fiveUpdate();
-            yield return new WaitForSeconds(5);
-        }
-    }
-
-    IEnumerator TenUpdate()
-    {
-        while(true)
-        {
-            tenUpdate();
-            yield return new WaitForSeconds(10);
-        }
     }
 }

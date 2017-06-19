@@ -2,7 +2,9 @@ using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
+[System.Serializable]
 public class ResidentialTracker : ItemTracker {
     // Manages specific residential functions.
 
@@ -15,6 +17,9 @@ public class ResidentialTracker : ItemTracker {
     {
         base.Start();
         foliage = 0;
+
+        if (Serializer.IsLoading)
+            RemoveEcoTick();
         //StartCoroutine("CheckEnable");
     }
 
@@ -22,10 +27,7 @@ public class ResidentialTracker : ItemTracker {
     {
         if (!updateStarted && usable && validPosition)
         {
-            EnableSnap();
-            updateStarted = true;
-            EconomyManager.ecoTick += UpdateSecond;
-            itemManager.addResidential(capacity, gameObject);
+            AddEcoTick();
         }
         else if(updateStarted && !usable && validPosition)
         {
@@ -36,6 +38,35 @@ public class ResidentialTracker : ItemTracker {
         {
             checkEnable = true;
         }
+        if (ReferenceManager.instance.tick % 5 == 0)
+        {
+            if (checkEnable)
+            {
+                checkEnable = false;
+                if (transform.parent == null)
+                {
+                    usable = true;
+                }
+            }
+        }
+        if(ReferenceManager.instance.tick % 10 == 0)
+        {
+            UpdateUnhappiness();
+        }
+    }
+
+    public void AddEcoTick()
+    {
+        EnableSnap();
+        updateStarted = true;
+        EconomyManager.ecoTick += UpdateSecond;
+        itemManager.addResidential(capacity, gameObject);
+    }
+
+    void RemoveEcoTick()
+    {
+        updateStarted = false;
+        EconomyManager.ecoTick -= UpdateSecond;
     }
 
     public override void AddUsers(int numUsers)
@@ -181,6 +212,7 @@ public class ResidentialTracker : ItemTracker {
     public void UpdateSecond()
     // Updates values once per second
     {
+        Debug.Log("Tick");
         updateStarted = true;
         if(!usable || !validPosition)
         {
@@ -235,7 +267,8 @@ public class ResidentialTracker : ItemTracker {
         if(cumulativeUnhappiness >= requiredUnhappiness)
         {
             movingOut = true;
-            StartCoroutine("MoveOut");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "MoveOut");
         }
     }
 
@@ -271,27 +304,5 @@ public class ResidentialTracker : ItemTracker {
     public string FancyTitle()
     {
         return buildingName;
-    }
-    
-    IEnumerator CheckEnable()
-    {
-        while(checkEnable)
-        {
-            checkEnable = false;
-            if(transform.parent == null)
-            {
-                usable = true;
-            }
-        yield return new WaitForSeconds(5);
-        }
-    }
-
-    IEnumerator LongtermUnhappiness()
-    {
-        while(usable && updateStarted)
-        {
-            UpdateUnhappiness();
-        }
-        yield return new WaitForSeconds(10f);
     }
 }

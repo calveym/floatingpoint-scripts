@@ -1,9 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using VRTK;
 using UnityEngine;
 using System;
+using Autelia.Serialization;
 
+[Serializable]
 public class ItemTracker : MonoBehaviour {
     
     // Declare variables
@@ -11,6 +13,9 @@ public class ItemTracker : MonoBehaviour {
     protected HappinessManager happinessManager;
     protected EconomyManager economyManager;
     protected ItemManager itemManager;
+
+    [Header("Identifiable Info")]
+
 
     [Header("Components")]
     [Space(5)]
@@ -179,11 +184,14 @@ public class ItemTracker : MonoBehaviour {
 
     void UpdateValues()
     {
-        surroundingBuildings = U.FindNearestBuildings(gameObject.transform.position, 5f);
-        surroundingResidential = U.ReturnResidentialTrackers(surroundingBuildings);
-        surroundingCommercial = U.ReturnCommercialTrackers(surroundingBuildings);
-        surroundingIndustrial = U.ReturnIndustrialTrackers(surroundingBuildings);
-        surroundingLeisure = U.ReturnLeisureTrackers(surroundingBuildings);
+        if(gameObject.transform)
+        {
+            surroundingBuildings = U.FindNearestBuildings(gameObject.transform.position, 5f);
+            surroundingResidential = U.ReturnResidentialTrackers(surroundingBuildings);
+            surroundingCommercial = U.ReturnCommercialTrackers(surroundingBuildings);
+            surroundingIndustrial = U.ReturnIndustrialTrackers(surroundingBuildings);
+            surroundingLeisure = U.ReturnLeisureTrackers(surroundingBuildings);
+        }
     }
 
     public void UpdateLandValue()
@@ -361,7 +369,6 @@ public class ItemTracker : MonoBehaviour {
 
     protected void EnableSnap()
     {
-        Debug.Log("Enabling snap");
         //GetComponent<RoadSnap>().SetupSnap();
     }
 

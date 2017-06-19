@@ -1,7 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
+using Autelia.Serialization;
 
 public class PlayerScale : MonoBehaviour {
 
@@ -15,7 +16,7 @@ public class PlayerScale : MonoBehaviour {
     TrackpadFlight trackpadFlight;
 
 	void Start()
-    {
+    {if (Serializer.IsLoading)	return;
         GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(DoButtonOnePressed);
         rb = cameraRig.GetComponent<Rigidbody>();
         isCameraSmall = false;

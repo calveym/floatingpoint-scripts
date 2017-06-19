@@ -6,19 +6,29 @@ using UnityEngine.SceneManagement;
 
 public class SaveManager : MonoBehaviour {
 
+    private void Update()
+    {
+        //if (Input.GetKeyDown(KeyCode.F5))
+        //{
+        //    SaveSlotOne();
+        //}
+        //else if (Input.GetKeyDown(KeyCode.F8))
+        //    LoadSlotOne();
+    }
+
     void Save (string slot)
     {
-        LevelSerializer.SaveGame(slot);
+        //LevelSerializer.SaveGame(slot);
     }
 
     void Load(string slot)
     {
-        foreach (LevelSerializer.SaveEntry sg in LevelSerializer.SavedGames[LevelSerializer.PlayerName])
+        //foreach (LevelSerializer.SaveEntry sg in LevelSerializer.SavedGames[LevelSerializer.PlayerName])
         {
-            if (sg.Name == slot)
-            {
-                LevelSerializer.LoadSavedLevel(sg.Data);
-            }
+            //if (sg.Name == slot)
+            //{
+              //  LevelSerializer.LoadSavedLevel(sg.Data);
+           // }
         }
     }
 

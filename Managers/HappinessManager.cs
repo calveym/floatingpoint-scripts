@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,7 +20,8 @@ public class HappinessManager : MonoBehaviour {
     {
         happiness = 0;
         keepUpdating = true;
-        StartCoroutine("UpdateHappiness");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateHappiness");
     }
 
     IEnumerator UpdateHappiness()

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,7 +20,8 @@ public class CarAi : MonoBehaviour {
         checkCar = true;
         oldPosition = transform.position;
         firstTick = true;
-        StartCoroutine("CheckCar");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "CheckCar");
     }
 
 	// Update is called once per frame

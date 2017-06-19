@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +11,8 @@ public class industrialSmokeNightDisable : MonoBehaviour {
 	void Start() 
 	{
 		tod = ReferenceManager.instance.tod;
-		StartCoroutine("turnOffSmokeAtNight");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "turnOffSmokeAtNight");
 	}
 
 	IEnumerator turnOffSmokeAtNight()

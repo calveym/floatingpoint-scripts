@@ -1,7 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
+using Autelia.Serialization;
 
 public abstract class SphereObject : VRTK_InteractableObject {
 
@@ -22,7 +23,7 @@ public abstract class SphereObject : VRTK_InteractableObject {
     public int radius;  // Radius of effect
 
     protected virtual void Start()
-    {
+    {if (Serializer.IsLoading)	return;
         spherePrefab = ReferenceManager.instance.spherePrefab;
         economyManager = ReferenceManager.instance.economyManager;
         InteractableObjectGrabbed += new InteractableObjectEventHandler(DoGrabStart);

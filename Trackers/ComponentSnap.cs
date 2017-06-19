@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using VRTK;
 using UnityEngine;
@@ -45,7 +45,8 @@ public abstract class ComponentSnap : SphereObject {
             targetClear = true;
             snapAmount = 0;
             U.DisablePhysics(gameObject);
-            StartCoroutine("Snap");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "Snap");
         }
     }
 

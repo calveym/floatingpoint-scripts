@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
-
+[System.Serializable]
 public class EconomyManager : MonoBehaviour {
 
     // Declare other managers
@@ -102,9 +103,7 @@ public class EconomyManager : MonoBehaviour {
     public AudioClip purchaseSound;
     public AudioClip failSound;
 
-    [DoNotSerialize]
     bool ticking = false;
-    [DoNotSerialize]
     bool isDeserializing = false;
 
     int tick; // used to run once per second
@@ -112,6 +111,7 @@ public class EconomyManager : MonoBehaviour {
     void Awake()
     // Finds instances of all objects and sets up values
     {
+        if (Serializer.IsLoading) return;
         residentialTaxRate = 15;
         commercialTaxRate = 15;
         industrialTaxRate = 15;
@@ -121,23 +121,26 @@ public class EconomyManager : MonoBehaviour {
 
     private void Start()
     {
-        if(!LevelSerializer.IsDeserializing)
+        tick = 0;
+        keepUpdating = true;
+        itemManager = ReferenceManager.instance.itemManager;
+        populationManager = ReferenceManager.instance.populationManager;
+        happinessManager = ReferenceManager.instance.happinessManager;
+        audioManager = ReferenceManager.instance.audioManager;
+
+        if (Serializer.IsLoading)
         {
-            tick = 0;
-            itemManager = ReferenceManager.instance.itemManager;
-            populationManager = ReferenceManager.instance.populationManager;
-            happinessManager = ReferenceManager.instance.happinessManager;
-            audioManager = ReferenceManager.instance.audioManager;
-            CheckCoroutines();
+            ResetEcoTick();
+            ResetItems();
         }
     }
 
     void Update()
     {
-        if (keepUpdating && tick % 60 == 0)
+        CheckReferences();
+        if (keepUpdating && tick % 90 == 0 && tick >= 5)
             {
                 ticking = true;
-                Debug.Log("Running: " + itemManager);
                 if (ecoTick != null)
                 {
                     ecoTick();
@@ -162,6 +165,29 @@ public class EconomyManager : MonoBehaviour {
         tick++;
     }
 
+    void CheckReferences()
+    {
+        if (!itemManager)
+        {
+            itemManager = ReferenceManager.instance.itemManager;
+        }
+        if (!populationManager)
+            populationManager = ReferenceManager.instance.populationManager;
+    }
+
+    void ResetItems()
+    {
+        itemManager.ResetItems();
+    }
+
+    void ResetEcoTick()
+    {
+        ecoTick = null;
+        itemManager.AddTrackersToEcoTick();
+        Debug.Log("Setting up ecoTick");
+        ecoTick += populationManager.PopulationUpdate;
+    }
+
     [SerializeField]
     public delegate void TickDelegate();
 
@@ -169,22 +195,6 @@ public class EconomyManager : MonoBehaviour {
     public static TickDelegate ecoTick;  // Multicast delegate run once per economic tick
     [SerializeField]
     public static TickDelegate foliageTick;  // Multicast delegate for foliage, extracted to reduce potential crashes
-
-    IEnumerator EconomicTick()
-    {
-        yield return new WaitForSeconds(0.5f);
-
-    }
-
-    void CheckCoroutines()
-    {
-        if(!ticking)
-        {
-            keepUpdating = true;
-            ticking = false;
-            StartCoroutine("EconomicTick");
-        }
-    }
 
     void TransferGoods()
     {

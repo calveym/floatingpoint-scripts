@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
+[System.Serializable]
 public class IndustrialComponent : ComponentSnap {
 
     [Header("Tracker functionality setup")]
@@ -33,11 +35,12 @@ public class IndustrialComponent : ComponentSnap {
     public static StopCheck stopCheck;
 
     protected override void Start()
-    {
+    {if (Serializer.IsLoading)	return;
         base.Start();
 
         checkStop = true;
-        StartCoroutine("WaitForStop");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "WaitForStop");
     }
 
     protected override void Ungrab()
@@ -45,7 +48,8 @@ public class IndustrialComponent : ComponentSnap {
         base.Ungrab();
 
         checkStop = true;
-        StartCoroutine("WaitForStop");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "WaitForStop");
     }
 
     protected override void SetSphereMaterial()
@@ -95,7 +99,8 @@ public class IndustrialComponent : ComponentSnap {
         linkedTracker.UnlinkComponent(this);
 
         checkStop = true;
-        StartCoroutine("WaitForStop");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "WaitForStop");
     }
 
     IEnumerator WaitForStop()

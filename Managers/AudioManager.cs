@@ -1,7 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using Autelia.Serialization;
 
 public class AudioManager : MonoBehaviour {
 
@@ -50,7 +51,7 @@ public class AudioManager : MonoBehaviour {
     // State 2 = Day
 
 	// Use this for initialization
-	void Awake () {
+	void Awake () {if (Serializer.IsLoading)	return;
         if (instance == null)
             instance = this;
         else if (instance != this)
@@ -66,7 +67,8 @@ public class AudioManager : MonoBehaviour {
 
     void Start()
     {
-        StartCoroutine("TimeCheck");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "TimeCheck");
     }
 
     public void PlaySingle(AudioClip clip)

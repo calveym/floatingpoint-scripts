@@ -1,7 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
+using Autelia.Serialization;
+using Autelia.Serialization;
 
 public class TutorialManager : MonoBehaviour {
 
@@ -31,7 +33,7 @@ public class TutorialManager : MonoBehaviour {
     bool triggerEntry;
 
     private void Awake()
-    {
+    {if (Serializer.IsLoading)	return;
         spheres = new Dictionary<int, TutorialTracker>();
         tutorialStrings = new Dictionary<int, string>();
         tutorialRequirements = new List<string>();
@@ -46,7 +48,7 @@ public class TutorialManager : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
+    void Start () {if (Serializer.IsLoading)	return;
         leftEvents = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
         rightEvents = GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>();
 
@@ -63,7 +65,8 @@ public class TutorialManager : MonoBehaviour {
         rightEvents.AliasMenuOn += DoRightMenuPress;
 
         SetupTutorial();
-        StartCoroutine("TutorialChecker");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "TutorialChecker");
 	}
 
     void DoLeftTouchpadPress(object sender, ControllerInteractionEventArgs e)

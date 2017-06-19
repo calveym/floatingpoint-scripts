@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
+using Autelia.Serialization;
 
+[System.Serializable]
 public class IndustrialTracker : ItemTracker {
     // Manages individual stats of each industrial building.
 
@@ -14,6 +17,7 @@ public class IndustrialTracker : ItemTracker {
     List<IndustrialComponent> components;
     List<float> sales; // List of recent sales counted in goodsSold
     List<ResidentialTracker> employees;
+
 
     public float productionHappiness; // Happiness from reaching sales targets
 
@@ -29,9 +33,9 @@ public class IndustrialTracker : ItemTracker {
 
     bool checkEnable;
 
-
     void Awake()
     {
+        if (Serializer.IsLoading)	return;
         rand = new System.Random(); //reuse this if generating many
         sellPrice = 1;
         employees = new List<ResidentialTracker>();
@@ -39,23 +43,23 @@ public class IndustrialTracker : ItemTracker {
         components = new List<IndustrialComponent>();
         goodsSold = 0;
         productionMulti = 1;
-        StartCoroutine("CheckEnable");
+
+        Autelia.Coroutines.CoroutineController.StartCoroutine(this, "CheckEnable");
     }
 
     new void Start()
     {
         base.Start();
         markerPrefab = GameObject.Find("MarkerPrefab");
+        if (Serializer.IsLoading)
+            RemoveEcoTick();
     }
 
     void Update()
     {
         if (!updateStarted && usable && validPosition)
         {
-            EnableSnap();
-            updateStarted = true;
-            EconomyManager.ecoTick += UpdateSecond;
-            ReferenceManager.instance.itemManager.addIndustrial(capacity, gameObject);
+            AddEcoTick();
         }
         else if (updateStarted && !usable || !validPosition)
         {
@@ -66,6 +70,31 @@ public class IndustrialTracker : ItemTracker {
         {
             checkEnable = true;
         }
+        if (ReferenceManager.instance.tick % 5 == 0)
+        {
+            if (checkEnable)
+            {
+                checkEnable = false;
+                if (transform.parent == null)
+                {
+                    usable = true;
+                }
+            }
+        }
+    }
+
+    void AddEcoTick()
+    {
+        EnableSnap();
+        updateStarted = true;
+        EconomyManager.ecoTick += UpdateSecond;
+        ReferenceManager.instance.itemManager.addIndustrial(capacity, gameObject);
+    }
+
+    void RemoveEcoTick()
+    {
+        updateStarted = false;
+        EconomyManager.ecoTick -= UpdateSecond;
     }
 
     void ProduceGoods()
@@ -95,11 +124,15 @@ public class IndustrialTracker : ItemTracker {
 
     void AcceptApplication(ResidentialTracker applicantTracker)
     {
-        if (applicantTracker.unemployedPopulation >= 1)
+        if (applicantTracker.unemployedPopulation >= 1 && !Serializer.IsLoading)
         {
             AddUsers(1);
             employees.Add(applicantTracker);
             applicantTracker.AcceptApplication();
+        }
+        else if (Random.Range(0, 5) > 3 && !Serializer.IsLoading)
+        {
+            AcceptApplication(applicantTracker);
         }
         else RejectApplication(applicantTracker);
     }
@@ -157,7 +190,7 @@ public class IndustrialTracker : ItemTracker {
         else productionHappiness = 0;
     }
 
-    void UpdateSecond()
+    public void UpdateSecond()
     // Updates values once per second, economic tick
     {
         updateStarted = true;
@@ -223,22 +256,7 @@ public class IndustrialTracker : ItemTracker {
     }
     public void MarkWithComponent()
     {
-        StartCoroutine("MarkWithComponent");
-    }
 
-    IEnumerator CheckEnable()
-    {
-        while (true)
-        {
-            if (checkEnable)
-            {
-                checkEnable = false;
-                if (transform.parent == null)
-                {
-                    usable = true;
-                }
-            }
-            yield return new WaitForSeconds(5);
-        }
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "MarkWithComponent");
     }
 }

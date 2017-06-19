@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class Education : ServiceBase
 {
@@ -12,7 +13,7 @@ public class Education : ServiceBase
 
 
     protected void Awake()
-    {
+    {if (Serializer.IsLoading)	return;
         education = new List<EducationTracker>();
     }
 
