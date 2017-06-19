@@ -67,10 +67,7 @@ public class ItemManager : MonoBehaviour {
 
     public void ResetItems()
     {
-        Debug.Log("Resetting items");
-        GetResidential();
-        GetCommercial();
-        GetIndustrial();
+        Autelia.Coroutines.CoroutineController.StartCoroutine(this, "ResetItemRoutine");
     }
 
     void GetResidential()
@@ -266,5 +263,14 @@ public class ItemManager : MonoBehaviour {
 
     void Empty()
     {
+    }
+
+    public IEnumerator ResetItemRoutine()
+    {
+        while(Serializer.IsLoading)
+            yield return new WaitForSeconds(1f);
+        GetResidential();
+        GetCommercial();
+        GetIndustrial();
     }
 }

@@ -54,6 +54,7 @@ Autelia.Coroutines.CoroutineController.StartCoroutine(this, "EnableFog");
 	
     void ReloadWeather()
     {
+        CheckFog();
         switch (weatherState)
         {
             case 0:
@@ -73,7 +74,6 @@ Autelia.Coroutines.CoroutineController.StartCoroutine(this, "EnableFog");
 				Rainy();
 				break;
         }
-        CheckFog();
     }
 
     void Sunny()
