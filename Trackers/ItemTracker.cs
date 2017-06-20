@@ -256,7 +256,7 @@ public class ItemTracker : MonoBehaviour {
     {
         if (users > capacity)
         {
-            RemoveUsers(capacity -= 1);
+            RemoveUsers(users - capacity);
         }
     }
 

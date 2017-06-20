@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public interface IEmployer : IPersonContainer
+public interface IEmployer
 {
 
+    bool ApplyForJob();
+    bool ProcessApplication();
     
 }

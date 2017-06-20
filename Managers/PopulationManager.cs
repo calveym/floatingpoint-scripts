@@ -160,7 +160,6 @@ public class PopulationManager : MonoBehaviour {
     {
         TryIncreasePopulation();
         TryAllocatePopulation();
-		TryFindJob();
     }
 
     void TryAllocatePopulation()
@@ -212,34 +211,6 @@ public class PopulationManager : MonoBehaviour {
             IncreasePopulation();
         }
     }
-
-	void TryFindJob()
-    // TODO: allocate to either industrial or commercial, select type first, then allocate
-    {
-
-        //if (unemployedPopulation > 0 && residentialWithUnemployed.Count > 0 && AvailableJobs() > 0)
-		//{
-		//	FindJob();
-		//}
-	}
-
-	void FindJob()
-	{
-//Debug.Log("max jobs: " + itemManager.GetMaxJobs());
-        //Debug.Log("Res with unemployed: " + residentialWithUnemployed.Count);
-        // Finding job started
-        //foreach(ResidentialTracker res in residentialWithUnemployed)
-        //{
-           // if (itemManager.GetMaxJobs() > population)
-        //    {
-        //        res.TryEmployWorker();
-        //    }
-        //    else break;
-        //}
-
-        //QueueUpdates();
-		// itemTrackers allocate nearest jobs to their users
-	}
 
     void IncreasePopulation()
     // Tries to increase population
@@ -333,5 +304,18 @@ public class PopulationManager : MonoBehaviour {
             return "Unemployed: %" + (unemployedPopulation / totalPopulation * 100).ToString();
         }
         else return "0 Unemployed";
+    }
+
+    public bool AvailablePopulation()
+        // Returns true if unallocatedPopulation >= 1
+    {
+        if (unallocatedPopulation >= 1) return true;
+        else return false;
+    }
+
+    public void ConfirmHoused(int numHoused)
+    {
+        population += numHoused;
+        unallocatedPopulation -= numHoused;
     }
 }
