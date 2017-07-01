@@ -8,7 +8,7 @@ public class DestroyPlane : MonoBehaviour {
     ItemManager itemManager;
 
     private void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
     }
 

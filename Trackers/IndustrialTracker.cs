@@ -43,12 +43,10 @@ public class IndustrialTracker : ItemTracker {
         components = new List<IndustrialComponent>();
         goodsSold = 0;
         productionMulti = 1;
-
-        Autelia.Coroutines.CoroutineController.StartCoroutine(this, "CheckEnable");
     }
 
     new void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;
         base.Start();
         markerPrefab = GameObject.Find("MarkerPrefab");
         if (Serializer.IsLoading)
@@ -253,10 +251,5 @@ public class IndustrialTracker : ItemTracker {
     public string FancyLandValue()
     {
         return "Land Value: $" + landValue;
-    }
-    public void MarkWithComponent()
-    {
-
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "MarkWithComponent");
     }
 }

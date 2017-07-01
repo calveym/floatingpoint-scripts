@@ -1,40 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 using UnityEngine.SceneManagement;
 
 
 public class SaveManager : MonoBehaviour {
 
-    private void Update()
-    {
-        //if (Input.GetKeyDown(KeyCode.F5))
-        //{
-        //    SaveSlotOne();
-        //}
-        //else if (Input.GetKeyDown(KeyCode.F8))
-        //    LoadSlotOne();
-    }
+    public SerializerHook hook;
 
-    void Save (string slot)
+    void Save(string slot)
     {
-        //LevelSerializer.SaveGame(slot);
+        hook.Save(slot);
     }
 
     void Load(string slot)
     {
-        //foreach (LevelSerializer.SaveEntry sg in LevelSerializer.SavedGames[LevelSerializer.PlayerName])
-        {
-            //if (sg.Name == slot)
-            //{
-              //  LevelSerializer.LoadSavedLevel(sg.Data);
-           // }
-        }
+        hook.Load(slot);
     }
+
 
     public void SaveSlotOne()
     {
-        if(Time.realtimeSinceStartup > 2)
+        if (Time.timeSinceLevelLoad > 2)
         {
             Debug.Log("Saving slot 1...");
             Save("slot1");
@@ -43,7 +31,7 @@ public class SaveManager : MonoBehaviour {
 
     public void SaveSlotTwo()
     {
-        if (Time.realtimeSinceStartup > 2)
+        if (Time.timeSinceLevelLoad > 2)
         {
             Debug.Log("Saving slot 2...");
 
@@ -53,7 +41,7 @@ public class SaveManager : MonoBehaviour {
 
     public void SaveSlotThree()
     {
-        if (Time.realtimeSinceStartup > 2)
+        if (Time.timeSinceLevelLoad > 2)
         {
             Debug.Log("Saving slot 3...");
 
@@ -63,7 +51,7 @@ public class SaveManager : MonoBehaviour {
 
     public void LoadSlotThree()
     {
-        if (Time.realtimeSinceStartup > 2)
+        if (Time.timeSinceLevelLoad > 2)
         {
             Debug.Log("Loading slot 3...");
 
@@ -73,7 +61,7 @@ public class SaveManager : MonoBehaviour {
 
     public void LoadSlotTwo()
     {
-        if (Time.realtimeSinceStartup > 2)
+        if (Time.timeSinceLevelLoad > 2)
         {
             Debug.Log("Loading slot 2...");
 
@@ -83,7 +71,7 @@ public class SaveManager : MonoBehaviour {
 
     public void LoadSlotOne()
     {
-        if (Time.realtimeSinceStartup > 2)
+        if (Time.timeSinceLevelLoad > 2)
         {
             Debug.Log("Loading slot 1");
 
@@ -93,7 +81,7 @@ public class SaveManager : MonoBehaviour {
 
     public void LoadEmpty()
     {
-        if (Time.realtimeSinceStartup > 2)
+        if (Time.timeSinceLevelLoad > 2)
         {
             SceneManager.LoadScene("1.0.0-empty");
         }
@@ -101,7 +89,7 @@ public class SaveManager : MonoBehaviour {
 
     public void LoadTutorial()
     {
-        if (Time.realtimeSinceStartup > 2)
+        if (Time.timeSinceLevelLoad > 2)
         {
             SceneManager.LoadScene("1.0.0-tutorial");
         }

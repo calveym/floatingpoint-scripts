@@ -22,7 +22,7 @@ public class CommercialTracker : ItemTracker {
 
 
     new void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;
         base.Start();
         employees = new List<ResidentialTracker>();
         if (Serializer.IsLoading)

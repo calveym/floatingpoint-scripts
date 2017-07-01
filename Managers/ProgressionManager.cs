@@ -16,7 +16,7 @@ public class ProgressionManager : MonoBehaviour {
     public bool allowRemoveMountain;
     public bool allowAddIsland;
 
-    public static int level;
+    public static int level = 0;
     public bool allowLevelUp;
     int pop;
     public AudioClip levelUpSound;
@@ -41,8 +41,7 @@ public class ProgressionManager : MonoBehaviour {
     LevelUp levelUp;
 
     public void Start()
-    {if (Serializer.IsLoading)	return;
-        level = 10;
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         if(instance == null)
         {
             instance = this;

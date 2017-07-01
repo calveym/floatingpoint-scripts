@@ -31,7 +31,7 @@ public class ResidentialTooltip : MonoBehaviour
 
     // Use this for initialization
     void Start()
-    {if (Serializer.IsLoading)	return;
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         residentialTracker = GetComponent<ResidentialTracker>();
         referencesUpdated = false;
         stareat = GameObject.Find("Camera (eye)").transform;

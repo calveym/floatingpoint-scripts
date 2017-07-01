@@ -96,7 +96,7 @@ public class DisplayUI : MonoBehaviour {
     }
 
     private void Start()
-    {if (Serializer.IsLoading)	return;
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         staticSpheres = transform.Find("StaticSpheres").gameObject;
         wheelBase = transform.Find("WheelBase").gameObject;
         canvas = transform.Find("Canvas").gameObject;

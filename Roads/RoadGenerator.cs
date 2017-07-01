@@ -80,7 +80,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 	}
 
     private void Start()
-    {if (Serializer.IsLoading)	return;
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         controller = GameObject.Find("RightController");
         events = controller.GetComponent<VRTK_ControllerEvents>();
     }

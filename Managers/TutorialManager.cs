@@ -48,7 +48,7 @@ public class TutorialManager : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {if (Serializer.IsLoading)	return;
+    void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         leftEvents = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
         rightEvents = GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>();
 

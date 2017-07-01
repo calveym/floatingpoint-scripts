@@ -31,7 +31,7 @@ public class IndustrialTooltip : MonoBehaviour {
     SpriteRenderer angry;
 
 	// Use this for initialization
-	void Start () {if (Serializer.IsLoading)	return;
+	void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         industrialTracker = GetComponent<IndustrialTracker>();
         referencesUpdated = false;
         stareat = GameObject.Find("Camera (eye)").transform;

@@ -49,7 +49,7 @@ public class PopulationManager : MonoBehaviour {
 
     void Start ()
 	// Set values pre-initialization
-	{
+	{if (Serializer.IsLoading)	return;
         names = gameObject.GetComponent<NameGenerator>();
         firstNames = names.FirstNames();
         lastNames = names.LastNames();
@@ -78,10 +78,6 @@ public class PopulationManager : MonoBehaviour {
 		industrialTrackers = itemManager.industrialTrackers;
         totalPopulation = population + unallocatedPopulation;
         happiness = happinessManager.happiness;
-
-        if (residentialTrackers.Count >= 2)
-            foreach (ResidentialTracker res in residentialTrackers)
-                Debug.Log("Res: " + res.name);
         UpdateEmptyResidential();
         UpdateCommercialTrackers();
         UpdateIndustrialTrackers();

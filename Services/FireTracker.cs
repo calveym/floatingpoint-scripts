@@ -15,7 +15,7 @@ public class FireTracker : ServiceTrackerBase {
     }
 
     protected override void Start()
-    {if (Serializer.IsLoading)	return;
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         base.Start();
 
         fire = ReferenceManager.instance.fire;

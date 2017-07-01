@@ -19,7 +19,7 @@ public class TooltipManager : MonoBehaviour {
     public static bool pressed;
 
 	// Use this for initialization
-	void Start () {if (Serializer.IsLoading)	return;
+	void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         headset = GameObject.Find("Headset");
         if(!testTooltipObject)
             testTooltipObject = GameObject.Find("TestSphere");

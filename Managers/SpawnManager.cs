@@ -44,7 +44,7 @@ public class SpawnManager : MonoBehaviour {
     }
 
     private void Start()
-    {if (Serializer.IsLoading)	return;
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         FindSpheres();
         events = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
     }

@@ -23,7 +23,7 @@ public abstract class SphereObject : VRTK_InteractableObject {
     public int radius;  // Radius of effect
 
     protected virtual void Start()
-    {if (Serializer.IsLoading)	return;
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         spherePrefab = ReferenceManager.instance.spherePrefab;
         economyManager = ReferenceManager.instance.economyManager;
         InteractableObjectGrabbed += new InteractableObjectEventHandler(DoGrabStart);

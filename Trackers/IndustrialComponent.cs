@@ -35,7 +35,7 @@ public class IndustrialComponent : ComponentSnap {
     public static StopCheck stopCheck;
 
     protected override void Start()
-    {if (Serializer.IsLoading)	return;
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         base.Start();
 
         checkStop = true;

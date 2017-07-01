@@ -51,7 +51,7 @@ public class AudioManager : MonoBehaviour {
     // State 2 = Day
 
 	// Use this for initialization
-	void Awake () {if (Serializer.IsLoading)	return;
+	void Awake () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         if (instance == null)
             instance = this;
         else if (instance != this)

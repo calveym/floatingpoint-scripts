@@ -121,7 +121,7 @@ public class ItemTracker : MonoBehaviour {
 
     public void Start()
     // Sets start variables
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         longtermHappiness = 0;
         availableTransportation = 1;
         landValue = 10f;
@@ -238,7 +238,7 @@ public class ItemTracker : MonoBehaviour {
         {
             fillRateHappiness = ((float)users / (float)capacity) * 20;
         }
-        happinessManager.SendHappiness(happinessState);
+        ReferenceManager.instance.happinessManager.SendHappiness(happinessState);
     }
 
     float RoadAccess()

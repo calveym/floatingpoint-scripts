@@ -45,7 +45,7 @@ public class ItemManager : MonoBehaviour {
 
     void Start ()
 	// Get manager instances
-	{
+	{if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         Debug.Log("Commercial trackers: " + commercialTrackers.Count);
 		economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();

@@ -15,7 +15,7 @@ public class HealthTracker : ServiceTrackerBase {
     }
 
     protected override void Start()
-    {if (Serializer.IsLoading)	return;
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         base.Start();
 
         health = ReferenceManager.instance.health;

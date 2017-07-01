@@ -32,7 +32,7 @@ public class CommercialTooltip : MonoBehaviour
 
     // Use this for initialization
     void Start()
-    {if (Serializer.IsLoading)	return;
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         commercialTracker = GetComponent<CommercialTracker>();
         referencesUpdated = false;
         stareat = GameObject.Find("Camera (eye)").transform;

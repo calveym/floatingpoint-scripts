@@ -38,7 +38,7 @@ public class TestRunner : MonoBehaviour
 
     // Use this for initialization
     void Start()
-    {if (Serializer.IsLoading)	return;
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         manager = GameObject.Find("Managers");
         economyManager = manager.GetComponent<EconomyManager>();
         itemManager = manager.GetComponent<ItemManager>();

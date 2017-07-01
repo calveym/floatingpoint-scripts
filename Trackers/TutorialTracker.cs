@@ -22,7 +22,7 @@ public class TutorialTracker : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {if (Serializer.IsLoading)	return;
+	void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         manager = GameObject.Find("Managers").GetComponent<TutorialManager>();
         manager.AddSphere(this);
         rend = GetComponent<MeshRenderer>();

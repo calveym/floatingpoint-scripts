@@ -23,7 +23,7 @@ public abstract class ServiceTrackerBase : SphereObject {
     protected List<GameObject> surroundingBuildings;
     public int numSurroundingBuildings;
 
-    protected override void Start () {if (Serializer.IsLoading)	return;
+    protected override void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         base.Start();
 
         economyManager = ReferenceManager.instance.economyManager;

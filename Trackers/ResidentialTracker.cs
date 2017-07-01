@@ -14,7 +14,7 @@ public class ResidentialTracker : ItemTracker {
     bool checkEnable;
 
     new void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;
         base.Start();
         foliage = 0;
 
@@ -31,14 +31,13 @@ public class ResidentialTracker : ItemTracker {
         }
         else if(updateStarted && !usable && validPosition)
         {
-            updateStarted = false;
-            EconomyManager.ecoTick -= UpdateSecond;
+            RemoveEcoTick();
         }
         else if(!usable && !updateStarted && validPosition)
         {
             checkEnable = true;
         }
-        if (ReferenceManager.instance.tick % 5 == 0)
+        if (ReferenceManager.instance.tick % 5 == 0 && !updateStarted)
         {
             if (checkEnable)
             {
@@ -49,7 +48,7 @@ public class ResidentialTracker : ItemTracker {
                 }
             }
         }
-        if(ReferenceManager.instance.tick % 10 == 0)
+        if(ReferenceManager.instance.tick % 10 == 0 && updateStarted)
         {
             UpdateUnhappiness();
         }
@@ -60,7 +59,7 @@ public class ResidentialTracker : ItemTracker {
         EnableSnap();
         updateStarted = true;
         EconomyManager.ecoTick += UpdateSecond;
-        itemManager.addResidential(capacity, gameObject);
+        ReferenceManager.instance.itemManager.addResidential(capacity, gameObject);
     }
 
     void RemoveEcoTick()
@@ -212,7 +211,6 @@ public class ResidentialTracker : ItemTracker {
     public void UpdateSecond()
     // Updates values once per second
     {
-        Debug.Log("Tick");
         updateStarted = true;
         if(!usable || !validPosition)
         {
