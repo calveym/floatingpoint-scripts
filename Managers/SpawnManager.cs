@@ -1,8 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VRTK;
+using Autelia.Serialization;
+using Autelia.Serialization;
 
 public class SpawnManager : MonoBehaviour {
 
@@ -37,12 +39,12 @@ public class SpawnManager : MonoBehaviour {
     VRTK_ControllerEvents events;
 
     private void Awake()
-    {
+    {if (Serializer.IsLoading)	return;
         LoadAllBuildings();
     }
 
     private void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         FindSpheres();
         events = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
     }

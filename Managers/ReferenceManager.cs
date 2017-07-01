@@ -51,9 +51,11 @@ public class ReferenceManager : MonoBehaviour {
     [Space(10)]
     [Header("Income modification")]
     [Space(5)]
-    public float residentialIncomeMultiplier = 0.32f;
+    public float residentialIncomeMultiplier = 0.52f;
     public float commercialIncomeMultiplier = 0.152f;
     public float industrialIncomeMultiplier = 0.6f;
+
+    public int tick = 0;
 
     // Use this for initialization
     void Awake () {
@@ -62,4 +64,9 @@ public class ReferenceManager : MonoBehaviour {
             instance = this;
         }
 	}
+
+    private void Update()
+    {
+        tick++;
+    }
 }

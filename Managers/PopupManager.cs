@@ -1,8 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using VRTK;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Autelia.Serialization;
+using Autelia.Serialization;
 
 public class PopupManager : MonoBehaviour {
 
@@ -17,13 +19,13 @@ public class PopupManager : MonoBehaviour {
     bool running = false;
 
     private void Awake()
-    {
+    {if (Serializer.IsLoading)	return;
         instance = this;
         queuedPopups = new List<string>();
     }
 
     void Start()
-    {
+    {if (Serializer.IsLoading)	return;
         WAIT_TIME = 10f;
         tooltip = popup.transform.Find("TooltipCanvas/UIContainer/UITextFront").GetComponent<Text>();
         popup.SetActive(false);
@@ -40,7 +42,8 @@ public class PopupManager : MonoBehaviour {
         queuedPopups.Add(message);
         if(!running && showUI)
         {
-            StartCoroutine("DoPopup");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "DoPopup");
         }
     }
 

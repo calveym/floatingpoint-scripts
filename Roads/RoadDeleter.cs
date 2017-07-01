@@ -1,7 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
+using Autelia.Serialization;
 
 public class RoadDeleter : VRTK_InteractableObject {
 
@@ -11,7 +12,7 @@ public class RoadDeleter : VRTK_InteractableObject {
     private RaycastHit hit;
 
 	void Start ()
-	{
+	{if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
 		controller = GameObject.Find("LeftController");
         events = controller.GetComponent<VRTK_ControllerEvents>();
 		roadGenerator = GameObject.Find("Island").GetComponent<RoadGenerator>();

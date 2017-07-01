@@ -1,12 +1,14 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
+using Autelia.Serialization;
 
-public class SpawnController : MonoBehaviour {
+public class SpawnController : MonoBehaviour
+{
 
     SpawnManager spawnManager;  // Reference saved to help spawn in new building on enable of old
-    EconomyManager economyManager; 
+    EconomyManager economyManager;
     ThumbTracker thumb;
 
     int level;
@@ -41,6 +43,7 @@ public class SpawnController : MonoBehaviour {
 
     private void Start()
     {
+        if (Serializer.IsLoading) return;
         displayUI = transform.parent.transform.parent.GetComponent<DisplayUI>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         thumb = transform.parent.transform.parent.GetComponent<ThumbTracker>();
@@ -64,6 +67,7 @@ public class SpawnController : MonoBehaviour {
     {
         if (!disablePurchase && economyManager.GetBalance() > price && containedBuilding)
         {
+            economyManager.MakePurchase(price);
             SizeForPlay();
             DeselectBuilding();
             if (containedBuilding.tag == "industrial" || containedBuilding.tag == "industrialComponent")
@@ -74,11 +78,10 @@ public class SpawnController : MonoBehaviour {
                     child.gameObject.SetActive(true);
                 }
             }
-            else if(containedBuilding.tag == "service")
+            else if (containedBuilding.tag == "service")
             {
                 serv.AddService();
             }
-            economyManager.MakePurchase(price);
             EnablePhysics();
             if (containedType == 0)
             {
@@ -108,7 +111,6 @@ public class SpawnController : MonoBehaviour {
             {
                 EnableService();
             }
-
             // Spawns new from here!!!!!
             showingBuilding = false;
             spawnManager.SpawnUIBuildings(displayUI.GetSelection(), thumb.angleIncrement);
@@ -168,10 +170,12 @@ public class SpawnController : MonoBehaviour {
         {
             spawnManager = sm;
         }
+
         disablePurchase = false;
         UpdateContainedBuilding(newBuilding);
         SetTracker();
-
+        if (containedBuilding.tag != "industrialComponent" && containedBuilding.tag != "foliage")
+            containedBuilding.GetComponent<RoadSnap>().SetupSnap();
         CheckLevel();
         DisablePhysics();
         SizeForMenu();
@@ -250,12 +254,12 @@ public class SpawnController : MonoBehaviour {
 
     void EnableCommercial()
     {
-        if(com)
+        if (com)
         {
             price = com.buyCost;
             com.usable = true;
         }
-        else if(off)
+        else if (off)
         {
             price = off.buyCost;
             off.usable = true;
@@ -354,7 +358,7 @@ public class SpawnController : MonoBehaviour {
             fol = containedBuilding.GetComponent<FoliageTracker>();
             fol.active = false;
         }
-        else if(containedType == 6)
+        else if (containedType == 6)
         {
             serv = containedBuilding.GetComponent<ServiceTrackerBase>();
             serv.active = true;
@@ -375,7 +379,7 @@ public class SpawnController : MonoBehaviour {
 
     void SizeForMenu()
     {
-        if(containedRenderer)
+        if (containedRenderer)
         {
             Vector3 size = containedRenderer.bounds.size;
             if (size.x > size.y && size.x > size.z)
@@ -419,7 +423,7 @@ public class SpawnController : MonoBehaviour {
             return "Industrial Upgrade";
         else if (containedBuilding.tag == "service")
             return "Service";
-        else if(containedBuilding.tag == "foliage")
+        else if (containedBuilding.tag == "foliage")
         {
             return "Foliage";
         }
@@ -457,7 +461,7 @@ public class SpawnController : MonoBehaviour {
             case 1:
                 return "Level: " + com.level;
             case 2:
-                return "Level: " + ind.level ;
+                return "Level: " + ind.level;
             case 3:
                 return "Level: " + off.level;
             case 4:

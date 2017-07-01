@@ -1,9 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using VRTK;
 using UnityEngine;
 using System;
+using Autelia.Serialization;
 
+[Serializable]
 public class ItemTracker : MonoBehaviour {
     
     // Declare variables
@@ -11,6 +13,9 @@ public class ItemTracker : MonoBehaviour {
     protected HappinessManager happinessManager;
     protected EconomyManager economyManager;
     protected ItemManager itemManager;
+
+    [Header("Identifiable Info")]
+
 
     [Header("Components")]
     [Space(5)]
@@ -116,7 +121,7 @@ public class ItemTracker : MonoBehaviour {
 
     public void Start()
     // Sets start variables
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         longtermHappiness = 0;
         availableTransportation = 1;
         landValue = 10f;
@@ -179,11 +184,14 @@ public class ItemTracker : MonoBehaviour {
 
     void UpdateValues()
     {
-        surroundingBuildings = U.FindNearestBuildings(gameObject.transform.position, 5f);
-        surroundingResidential = U.ReturnResidentialTrackers(surroundingBuildings);
-        surroundingCommercial = U.ReturnCommercialTrackers(surroundingBuildings);
-        surroundingIndustrial = U.ReturnIndustrialTrackers(surroundingBuildings);
-        surroundingLeisure = U.ReturnLeisureTrackers(surroundingBuildings);
+        if(gameObject.transform)
+        {
+            surroundingBuildings = U.FindNearestBuildings(gameObject.transform.position, 5f);
+            surroundingResidential = U.ReturnResidentialTrackers(surroundingBuildings);
+            surroundingCommercial = U.ReturnCommercialTrackers(surroundingBuildings);
+            surroundingIndustrial = U.ReturnIndustrialTrackers(surroundingBuildings);
+            surroundingLeisure = U.ReturnLeisureTrackers(surroundingBuildings);
+        }
     }
 
     public void UpdateLandValue()
@@ -230,7 +238,7 @@ public class ItemTracker : MonoBehaviour {
         {
             fillRateHappiness = ((float)users / (float)capacity) * 20;
         }
-        happinessManager.SendHappiness(happinessState);
+        ReferenceManager.instance.happinessManager.SendHappiness(happinessState);
     }
 
     float RoadAccess()
@@ -248,7 +256,7 @@ public class ItemTracker : MonoBehaviour {
     {
         if (users > capacity)
         {
-            RemoveUsers(capacity -= 1);
+            RemoveUsers(users - capacity);
         }
     }
 
@@ -357,6 +365,11 @@ public class ItemTracker : MonoBehaviour {
         {
             happinessState = 4;
         }
+    }
+
+    protected void EnableSnap()
+    {
+        //GetComponent<RoadSnap>().SetupSnap();
     }
 
     protected IEnumerator MoveOut()

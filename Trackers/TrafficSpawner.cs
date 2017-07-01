@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class TrafficSpawner : MonoBehaviour {
 
@@ -21,7 +22,7 @@ public class TrafficSpawner : MonoBehaviour {
     public GameObject testObject;
 
     private void Awake()
-    {
+    {if (Serializer.IsLoading)	return;
         if (instance != this)
             instance = this;
         cars = new List<GameObject>();
@@ -35,7 +36,8 @@ public class TrafficSpawner : MonoBehaviour {
 
     private void Start()
     {
-        StartCoroutine("CheckNumCars");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "CheckNumCars");
     }
 
     void SpawnCars(int maxCars, List<GameObject> spawnLocations)

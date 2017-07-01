@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public abstract class ServiceBase: MonoBehaviour {
 
@@ -47,13 +48,15 @@ public abstract class ServiceBase: MonoBehaviour {
 
 
     protected virtual void Start()
-    {
+    {if (Serializer.IsLoading)	return;
         populationManager = ReferenceManager.instance.populationManager;
         economyManager = ReferenceManager.instance.economyManager;
         itemManager = ReferenceManager.instance.itemManager;
         serviceUpdater = UpdateServices;
 
-        StartCoroutine("UpdateService");
+
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateService");
     }
 
     protected void UpdateDemand()

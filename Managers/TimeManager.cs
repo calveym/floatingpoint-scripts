@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +8,8 @@ public class TimeManager : MonoBehaviour {
 
     private void Start()
     {
-        StartCoroutine("CheckLamp");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "CheckLamp");
     }
 
     IEnumerator CheckLamp()

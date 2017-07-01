@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class ProgressionManager : MonoBehaviour {
 
@@ -15,7 +16,7 @@ public class ProgressionManager : MonoBehaviour {
     public bool allowRemoveMountain;
     public bool allowAddIsland;
 
-    public static int level;
+    public static int level = 0;
     public bool allowLevelUp;
     int pop;
     public AudioClip levelUpSound;
@@ -40,7 +41,7 @@ public class ProgressionManager : MonoBehaviour {
     LevelUp levelUp;
 
     public void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         if(instance == null)
         {
             instance = this;
@@ -75,9 +76,11 @@ public class ProgressionManager : MonoBehaviour {
         levelReq.Add(13, 3000);
         levelReq.Add(14, 5000);
         levelReq.Add(15, 7500);
-        level = 15;
+        levelReq.Add(16, 100000);
 
-        StartCoroutine("SlowUpdate");
+
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "SlowUpdate");
     }
     
     void CheckLevelUp()
@@ -153,7 +156,8 @@ public class ProgressionManager : MonoBehaviour {
     public void AddIsland()
     {
         inPosition = false;
-        StartCoroutine(MoveIsland(secondIsland, secondIsland.transform.position, setPosition));
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(MoveIsland(secondIsland, secondIsland.transform.position, setPosition));
     }
 
     public static string ToNextLevel()

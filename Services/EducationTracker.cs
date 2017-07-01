@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 [SelectionBase]
 public class EducationTracker : ServiceTrackerBase {
@@ -14,7 +15,7 @@ public class EducationTracker : ServiceTrackerBase {
     }
 
     protected override void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         base.Start();
 
         education = ReferenceManager.instance.education;

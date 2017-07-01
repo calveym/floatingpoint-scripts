@@ -1,7 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
+using Autelia.Serialization;
 
 public class TrackpadFlight : MonoBehaviour {
 
@@ -20,7 +21,7 @@ public class TrackpadFlight : MonoBehaviour {
     int forward;
 
     // Use this for initialization
-    void Start() {
+    void Start() {if (Serializer.IsLoading)	return;
         speedMultiplier = 2;
         rig = GameObject.Find("[CameraRig]");
         rb = rig.GetComponent<Rigidbody>();
@@ -41,7 +42,8 @@ public class TrackpadFlight : MonoBehaviour {
     {
         stop = false;
         AudioManager.instance.PlayLoop(wind);
-        StartCoroutine("Fly");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "Fly");
     }
     
     void DoTouchpadTouchEnd(object sender, ControllerInteractionEventArgs e)

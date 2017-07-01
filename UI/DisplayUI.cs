@@ -1,8 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using VRTK;
+using Autelia.Serialization;
 
 public class DisplayUI : MonoBehaviour {
 
@@ -95,7 +96,7 @@ public class DisplayUI : MonoBehaviour {
     }
 
     private void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         staticSpheres = transform.Find("StaticSpheres").gameObject;
         wheelBase = transform.Find("WheelBase").gameObject;
         canvas = transform.Find("Canvas").gameObject;
@@ -138,7 +139,8 @@ public class DisplayUI : MonoBehaviour {
             HideBuildings();
             HideMenu();
             showingGlobalStats = true;
-            StartCoroutine("UpdateGlobalStats");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateGlobalStats");
         }
 
         else if(displaying)
@@ -172,7 +174,8 @@ public class DisplayUI : MonoBehaviour {
             ShowMenu();
             thumbTracker.StartTracking();
             ResetMenuColors();
-            StartCoroutine("UpdateGlobalStats");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateGlobalStats");
         }
 
         else if(!firstTouch)
@@ -188,7 +191,8 @@ public class DisplayUI : MonoBehaviour {
                 {
                     ShowBuildings();
                     showingGlobalStats = false;
-                    StartCoroutine("UpdateBuildings");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateBuildings");
                 }
             }
             else if(!TopButton())
@@ -201,7 +205,8 @@ public class DisplayUI : MonoBehaviour {
                     showingGlobalStats = true;
                     ShowMenu();
                     thumbTracker.ForceStopTrackingAngle();
-                    StartCoroutine("UpdateGlobalStats");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateGlobalStats");
                 }
                 else if(!showBuildings)
                     // Hide UI

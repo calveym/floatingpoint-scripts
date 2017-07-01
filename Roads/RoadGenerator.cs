@@ -1,7 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
+using Autelia.Serialization;
+using Autelia.Serialization;
 
 [SelectionBase]
 public class RoadGenerator : VRTK_InteractableObject {
@@ -27,7 +29,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 
     protected override void Awake()
 	// Initiates all of the dictionaries for lookups and all other variables that need to be initialized
-	{
+	{if (Serializer.IsLoading)	return;
         base.Awake();
         if(instance != this)
             instance = this;
@@ -78,7 +80,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 	}
 
     private void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         controller = GameObject.Find("RightController");
         events = controller.GetComponent<VRTK_ControllerEvents>();
     }

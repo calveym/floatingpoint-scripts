@@ -1,7 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using VRTK;
 using UnityEngine;
+using Autelia.Serialization;
 
 public abstract class ComponentSnap : SphereObject {
 
@@ -21,7 +22,7 @@ public abstract class ComponentSnap : SphereObject {
     bool targetClear;  // Target location clear
 
     protected override void Grab()
-    {
+    {if (Serializer.IsDeserializing)	return;
         base.Grab();
 
         targetClear = false;
@@ -45,7 +46,8 @@ public abstract class ComponentSnap : SphereObject {
             targetClear = true;
             snapAmount = 0;
             U.DisablePhysics(gameObject);
-            StartCoroutine("Snap");
+
+            Autelia.Coroutines.CoroutineController.StartCoroutine(Snap());
         }
     }
 

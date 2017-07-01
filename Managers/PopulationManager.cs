@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class PopulationManager : MonoBehaviour {
 
@@ -48,18 +49,18 @@ public class PopulationManager : MonoBehaviour {
 
     void Start ()
 	// Set values pre-initialization
-	{
+	{if (Serializer.IsLoading)	return;
         names = gameObject.GetComponent<NameGenerator>();
         firstNames = names.FirstNames();
         lastNames = names.LastNames();
-        itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-        happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
+        itemManager = ReferenceManager.instance.itemManager;
+        happinessManager = ReferenceManager.instance.happinessManager;
         EconomyManager.ecoTick += PopulationUpdate;
 
         QueueUpdates();
     }
 
-    void PopulationUpdate ()
+    public void PopulationUpdate ()
 	// Updates values & calls increasePopulation if conditions are met
 	{
         UpdateValues();
@@ -77,7 +78,6 @@ public class PopulationManager : MonoBehaviour {
 		industrialTrackers = itemManager.industrialTrackers;
         totalPopulation = population + unallocatedPopulation;
         happiness = happinessManager.happiness;
-        
         UpdateEmptyResidential();
         UpdateCommercialTrackers();
         UpdateIndustrialTrackers();
@@ -156,7 +156,6 @@ public class PopulationManager : MonoBehaviour {
     {
         TryIncreasePopulation();
         TryAllocatePopulation();
-		TryFindJob();
     }
 
     void TryAllocatePopulation()
@@ -208,34 +207,6 @@ public class PopulationManager : MonoBehaviour {
             IncreasePopulation();
         }
     }
-
-	void TryFindJob()
-    // TODO: allocate to either industrial or commercial, select type first, then allocate
-    {
-
-        //if (unemployedPopulation > 0 && residentialWithUnemployed.Count > 0 && AvailableJobs() > 0)
-		//{
-		//	FindJob();
-		//}
-	}
-
-	void FindJob()
-	{
-//Debug.Log("max jobs: " + itemManager.GetMaxJobs());
-        //Debug.Log("Res with unemployed: " + residentialWithUnemployed.Count);
-        // Finding job started
-        //foreach(ResidentialTracker res in residentialWithUnemployed)
-        //{
-           // if (itemManager.GetMaxJobs() > population)
-        //    {
-        //        res.TryEmployWorker();
-        //    }
-        //    else break;
-        //}
-
-        //QueueUpdates();
-		// itemTrackers allocate nearest jobs to their users
-	}
 
     void IncreasePopulation()
     // Tries to increase population
@@ -329,5 +300,18 @@ public class PopulationManager : MonoBehaviour {
             return "Unemployed: %" + (unemployedPopulation / totalPopulation * 100).ToString();
         }
         else return "0 Unemployed";
+    }
+
+    public bool AvailablePopulation()
+        // Returns true if unallocatedPopulation >= 1
+    {
+        if (unallocatedPopulation >= 1) return true;
+        else return false;
+    }
+
+    public void ConfirmHoused(int numHoused)
+    {
+        population += numHoused;
+        unallocatedPopulation -= numHoused;
     }
 }

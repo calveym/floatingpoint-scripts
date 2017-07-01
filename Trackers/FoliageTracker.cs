@@ -1,8 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using VRTK;
 using UnityEngine;
 using UnityEngine.Events;
 using System;
+using Autelia.Serialization;
 
 public class FoliageTracker : ComponentSnap {
 
@@ -22,7 +23,7 @@ public class FoliageTracker : ComponentSnap {
     }
 
     protected override void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         base.Start();
         if (!happinessAffector)
         {

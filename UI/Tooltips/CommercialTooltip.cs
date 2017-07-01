@@ -1,8 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using VRTK;
+using Autelia.Serialization;
 
 public class CommercialTooltip : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class CommercialTooltip : MonoBehaviour
 
     // Use this for initialization
     void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         commercialTracker = GetComponent<CommercialTracker>();
         referencesUpdated = false;
         stareat = GameObject.Find("Camera (eye)").transform;

@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 [SelectionBase]
 public class HealthTracker : ServiceTrackerBase {
@@ -14,7 +15,7 @@ public class HealthTracker : ServiceTrackerBase {
     }
 
     protected override void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         base.Start();
 
         health = ReferenceManager.instance.health;

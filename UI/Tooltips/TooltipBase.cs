@@ -10,7 +10,7 @@ public abstract class TooltipBase : MonoBehaviour {
 
     protected virtual void Awake()
     {
-
+        // giiiiit
     }
 
 	protected virtual void Start()

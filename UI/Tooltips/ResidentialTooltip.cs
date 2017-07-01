@@ -1,8 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using VRTK;
+using Autelia.Serialization;
 
 public class ResidentialTooltip : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class ResidentialTooltip : MonoBehaviour
 
     // Use this for initialization
     void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         residentialTracker = GetComponent<ResidentialTracker>();
         referencesUpdated = false;
         stareat = GameObject.Find("Camera (eye)").transform;

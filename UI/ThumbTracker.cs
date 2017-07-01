@@ -1,7 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
+using Autelia.Serialization;
 
 public class ThumbTracker : MonoBehaviour {
 
@@ -28,7 +29,7 @@ public class ThumbTracker : MonoBehaviour {
 
     private void Start()
     // Sets up references
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         angleIncrement = 0;
         swipeReq = 0.2f;
         controller = GameObject.Find("LeftController");

@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public abstract class ServiceTrackerBase : SphereObject {
 
@@ -22,7 +23,7 @@ public abstract class ServiceTrackerBase : SphereObject {
     protected List<GameObject> surroundingBuildings;
     public int numSurroundingBuildings;
 
-    protected override void Start () {
+    protected override void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         base.Start();
 
         economyManager = ReferenceManager.instance.economyManager;

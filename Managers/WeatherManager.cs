@@ -1,5 +1,6 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class WeatherManager : MonoBehaviour {
 
@@ -28,7 +29,7 @@ public class WeatherManager : MonoBehaviour {
     AudioManager audioManager;
 
 	// Use this for initialization
-	void Start () {
+	void Start () {if (Serializer.IsLoading)	return;
         audioManager = ReferenceManager.instance.audioManager;
         tod = ReferenceManager.instance.tod;
         ToggleRain(false);
@@ -39,8 +40,10 @@ public class WeatherManager : MonoBehaviour {
 		rainParticleSystem = rainSystem.GetComponentsInChildren<ParticleSystem> ();
 		drizzleParticleSystem = drizzleSystem.GetComponentsInChildren<ParticleSystem> ();
         fog = fogParticleSystem.emission;
-        StartCoroutine("MakeItRain");
-        StartCoroutine("EnableFog");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "MakeItRain");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "EnableFog");
         ReloadWeather();
 
 		TestRunner.first += Rainy;
@@ -51,6 +54,7 @@ public class WeatherManager : MonoBehaviour {
 	
     void ReloadWeather()
     {
+        CheckFog();
         switch (weatherState)
         {
             case 0:
@@ -70,7 +74,6 @@ public class WeatherManager : MonoBehaviour {
 				Rainy();
 				break;
         }
-        CheckFog();
     }
 
     void Sunny()
@@ -139,7 +142,8 @@ public class WeatherManager : MonoBehaviour {
     void ToggleClouds(float intensity)
     // Takes float between 0-1 for coverage
     {
-        StartCoroutine(GradualLerp(tod.Clouds.Coverage, intensity, 4f));
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(GradualLerp(tod.Clouds.Coverage, intensity, 4f));
         //tod.Clouds.Coverage = intensity;
     }
 

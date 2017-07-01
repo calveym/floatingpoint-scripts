@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class HappinessAffector : MonoBehaviour {
 
@@ -23,7 +24,7 @@ public class HappinessAffector : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
+    void Start () {if (Serializer.IsLoading)	return;
         EconomyManager.foliageTick += StartAffect;
 	}
 	

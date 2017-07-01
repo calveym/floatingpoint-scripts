@@ -1,13 +1,14 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class DestroyPlane : MonoBehaviour {
 
     ItemManager itemManager;
 
-    private void Awake()
-    {
+    private void Start()
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
     }
 

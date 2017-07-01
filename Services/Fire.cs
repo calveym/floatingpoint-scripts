@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class Fire : ServiceBase
 {
@@ -12,7 +13,7 @@ public class Fire : ServiceBase
 
 
     protected void Awake()
-    {
+    {if (Serializer.IsLoading)	return;
         fire = new List<FireTracker>();
     }
 

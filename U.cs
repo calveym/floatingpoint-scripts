@@ -1,7 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
+using Autelia.Serialization;
 
 public class U : MonoBehaviour {
 
@@ -19,7 +20,7 @@ public class U : MonoBehaviour {
     }
 
     private void Start()
-    {
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         int rightIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Rightmost);
         int leftIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Leftmost);
 
@@ -223,7 +224,8 @@ public class U : MonoBehaviour {
 
     private void LerpValue(float floatToLerp, float startValue, float endValue, float lerpTime)
     {
-        StartCoroutine(instance.GradualLerp(floatToLerp, startValue, endValue, lerpTime));
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(instance.GradualLerp(floatToLerp, startValue, endValue, lerpTime));
     }
 
     IEnumerator GradualLerp(float lerpingFloat, float startValue, float endValue, float time)

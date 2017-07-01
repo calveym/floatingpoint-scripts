@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,7 +14,8 @@ public class NightTime : MonoBehaviour {
 	{
 		tod = ReferenceManager.instance.tod;
 		intensity = 0.75f;
-		StartCoroutine("LightUpBuildings");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "LightUpBuildings");
 	}
 
 	IEnumerator LightUpBuildings()

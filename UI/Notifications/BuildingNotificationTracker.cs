@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class BuildingNotificationTracker : MonoBehaviour {
 
@@ -22,7 +23,7 @@ public class BuildingNotificationTracker : MonoBehaviour {
     GameObject notificationPrefab;
 
 	// Use this for initialization
-	void Start () {
+	void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         manager = ReferenceManager.instance.buildingNotificationManager;
         BuildingNotificationManager.notificationUpdater += CheckConditions;
         tracker = GetComponent<ItemTracker>();
@@ -109,7 +110,8 @@ public class BuildingNotificationTracker : MonoBehaviour {
         updating = true;
         notification.SetPosition(transform.position);
         time = 0;
-        StartCoroutine("CheckNotification");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "CheckNotification");
     }
 
     void CheckRemove(int id)

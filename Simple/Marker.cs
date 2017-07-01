@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +15,8 @@ public class Marker : MonoBehaviour {
     public void StartRotation()
     {
         rotating = 0;
-        StartCoroutine("Rotate", gameObject);
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "Rotate", gameObject);
     }
 
     IEnumerator Rotate(GameObject rotateObject)

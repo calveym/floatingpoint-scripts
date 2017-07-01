@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +11,8 @@ public class BuildingNotificationManager : MonoBehaviour {
 
     private void Start()
     {
-        StartCoroutine("UpdateBuildingNotifications");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateBuildingNotifications");
     }
 
     IEnumerator UpdateBuildingNotifications()

@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class NameGenerator : MonoBehaviour {
 
@@ -8,7 +9,7 @@ public class NameGenerator : MonoBehaviour {
     List<string> lastNames;
 
     void Awake()
-    {
+    {if (Serializer.IsLoading)	return;
         firstNames = new List<string>();
         lastNames = new List<string>();
         SetupNames();

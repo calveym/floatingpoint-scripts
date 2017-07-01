@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
@@ -23,7 +23,8 @@ public class Sphere : MonoBehaviour
     {
         parent = connectObject;
         linked = true;
-        StartCoroutine("AdjustPosition");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "AdjustPosition");
     }
 
     public void UnlinkSphere()

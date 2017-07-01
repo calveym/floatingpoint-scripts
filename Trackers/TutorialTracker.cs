@@ -1,6 +1,7 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class TutorialTracker : MonoBehaviour {
 
@@ -21,7 +22,7 @@ public class TutorialTracker : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {
+	void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         manager = GameObject.Find("Managers").GetComponent<TutorialManager>();
         manager.AddSphere(this);
         rend = GetComponent<MeshRenderer>();
@@ -42,7 +43,8 @@ public class TutorialTracker : MonoBehaviour {
 
     void SendTriggerEntry()
     {
-        StartCoroutine("DoEntry");
+
+Autelia.Coroutines.CoroutineController.StartCoroutine(this, "DoEntry");
         manager.TutorialTriggerEnter(trackerLevel, this);
     }
 

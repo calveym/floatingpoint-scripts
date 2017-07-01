@@ -1,7 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
+using Autelia.Serialization;
 
 public class TooltipManager : MonoBehaviour {
 
@@ -18,13 +19,21 @@ public class TooltipManager : MonoBehaviour {
     public static bool pressed;
 
 	// Use this for initialization
-	void Start () {
+	void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         headset = GameObject.Find("Headset");
         if(!testTooltipObject)
             testTooltipObject = GameObject.Find("TestSphere");
         rightController = GameObject.Find("RightController");
         rightController.GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
         rightController.GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
+    }
+
+    private void Update()
+    {
+        if (ReferenceManager.instance.tick % 90 == 0 && updateTooltips != null)
+        {
+            updateTooltips();
+        }
     }
 
     void EnableObjectTooltip(object sender, ControllerInteractionEventArgs e)
@@ -57,7 +66,6 @@ public class TooltipManager : MonoBehaviour {
         {
             EnableTooltips(building);
         }
-        StartCoroutine("SecondTick");
     }
 
     void EnableTooltips(GameObject building)
@@ -102,18 +110,6 @@ public class TooltipManager : MonoBehaviour {
             {
                 building.GetComponent<TooltipBase>().DisableTooltip();
             }
-        }
-    }
-
-    IEnumerator SecondTick()
-    {
-        while(pressed)
-        {
-            if(updateTooltips != null)
-            {
-                updateTooltips();
-            }
-            yield return new WaitForSeconds(1);
         }
     }
 }

@@ -1,7 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Autelia.Serialization;
 
 public class IndustrialTooltip : MonoBehaviour {
 
@@ -30,7 +31,7 @@ public class IndustrialTooltip : MonoBehaviour {
     SpriteRenderer angry;
 
 	// Use this for initialization
-	void Start () {
+	void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         industrialTracker = GetComponent<IndustrialTracker>();
         referencesUpdated = false;
         stareat = GameObject.Find("Camera (eye)").transform;
