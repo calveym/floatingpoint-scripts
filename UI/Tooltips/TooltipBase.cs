@@ -45,8 +45,8 @@ public abstract class TooltipBase : MonoBehaviour {
     {
         if (referencesUpdated == false)
         {
-            referencesUpdated = true;
             UpdateReferences();
+            referencesUpdated = true;
         }
         if (referencesUpdated == true)
         {
