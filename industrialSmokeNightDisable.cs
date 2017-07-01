@@ -34,17 +34,23 @@ Autelia.Coroutines.CoroutineController.StartCoroutine(this, "turnOffSmokeAtNight
 
 	void turnOffSmokeObject() {
 		foreach (Transform child in transform) {
-			ps = child.gameObject.GetComponent<ParticleSystem> ();
-			ps.Stop();
-			ps.enableEmission = false;
-		}
+            if (child.tag != "overlay")
+            {
+                ps = child.gameObject.GetComponent<ParticleSystem> ();
+			    ps.Stop();
+                //ps.enableEmission = false;
+            }
+        }
 	}
 
 	void turnOnSmokeObject() {
 		foreach (Transform child in transform) {
-			ps = child.gameObject.GetComponent<ParticleSystem> ();
-			ps.Play ();
-			ps.enableEmission = true;
+            if(child.tag != "overlay")
+            {
+                ps = child.gameObject.GetComponent<ParticleSystem>();
+                ps.Play();
+                //ps.enableEmission = true;
+            }
 		}
 	}
 }

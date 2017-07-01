@@ -11,7 +11,6 @@ public class BuildingTooltipBase : TooltipBase
     protected int income;
 
     protected TextMesh userText;
-    protected TextMesh capacityText;
     protected TextMesh incomeText;
 
     // Happiness sprites
@@ -21,10 +20,16 @@ public class BuildingTooltipBase : TooltipBase
     SpriteRenderer passive;
     SpriteRenderer angry;
 
+    protected override void Start()
+    {
+        base.Start();
+        tracker = gameObject.GetComponent<ItemTracker>();
+        Debug.Log("Tracker: " + tracker);
+    }
+
     protected override void UpdateReferences()
     {
         userText = tooltip.transform.Find("UserText").GetComponent<TextMesh>();
-        capacityText = tooltip.transform.Find("CapacityText").GetComponent<TextMesh>();
         incomeText = tooltip.transform.Find("IncomeText").GetComponent<TextMesh>();
 
         dead = tooltip.transform.Find("Icons/Dead").GetComponent<SpriteRenderer>();
@@ -36,18 +41,27 @@ public class BuildingTooltipBase : TooltipBase
 
     protected override void UpdateText()
     {
-        userText.text = users.ToString();
-        capacityText.text = users.ToString();
-        incomeText.text = users.ToString();
+        userText.text = tracker.users.ToString() + " / " + capacity.ToString();
+        incomeText.text = income.ToString();
+        if (income > 0)
+            incomeText.color = ReferenceManager.instance.moneyGreen.color;
+        else incomeText.color = ReferenceManager.instance.moneyRed.color;
     }
 
     protected override void UpdateValues()
     {
+        if (!tracker)
+            //ResetTracker();
         users = tracker.users;
         capacity = tracker.capacity;
         income = (int)tracker.income;
         base.UpdateValues();
         UpdateSprites();
+    }
+
+    protected virtual void ResetTracker()
+    {
+        tracker = gameObject.GetComponent<ItemTracker>();
     }
 
     protected virtual void UpdateSprites()

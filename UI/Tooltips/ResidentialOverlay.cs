@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ResidentialOverlay : BuildingTooltipBase
 {
 
     int numEmployed;
     TextMesh employmentText;
+
+    protected override void Start()
+    {
+        base.Start();
+        tooltipPrefab = ReferenceManager.instance.residentialTooltipPrefab;
+        EnableTooltip(gameObject.transform);
+    }
 
     protected override void UpdateReferences()
     {

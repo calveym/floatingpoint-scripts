@@ -11,8 +11,6 @@ public class CommercialTracker : ItemTracker {
     float salesHappiness;
 
     [Header("Instance Operation Variables")]
-    public int visitors;
-    public int lifetimeVisitors;
     public int range = 10;
 
     public float goodsAvailable;
@@ -159,7 +157,7 @@ public class CommercialTracker : ItemTracker {
 
     void UpdateHappiness()
     {
-        currentHappiness = localHappiness + salesHappiness + fillRateHappiness;
+        currentHappiness = localHappiness + salesHappiness + fillRateHappiness + 20;
         CalculateLongtermHappiness();
         CalculateHappinessState();
     }
