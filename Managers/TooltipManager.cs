@@ -19,13 +19,14 @@ public class TooltipManager : MonoBehaviour {
     public static bool pressed;
 
 	// Use this for initialization
-	void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+	void Start () {
+        if (Serializer.IsLoading)	return;
         headset = ReferenceManager.instance.cameraEye;
-        if(!testTooltipObject)
-            testTooltipObject = ReferenceManager.instance.spherePrefab;
         rightController = ReferenceManager.instance.rightController;
-        ReferenceManager.instance.rightEvents.ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
-        ReferenceManager.instance.rightEvents.ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
+        if (!headset)
+            testTooltipObject = ReferenceManager.instance.spherePrefab;
+        rightController.GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
+        rightController.GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
     }
 
     private void Update()
@@ -38,6 +39,7 @@ public class TooltipManager : MonoBehaviour {
 
     void EnableObjectTooltip(object sender, ControllerInteractionEventArgs e)
     {
+        Debug.Log("Trying to enable");
         StartTooltips();
     }
 
@@ -50,11 +52,12 @@ public class TooltipManager : MonoBehaviour {
     // Used in conjunction with test runner to create tooltips without headset and controllers
     {
         pressed = true;
-        if(!testTooltipObject)
+        if(headset)
         // Used during play
         {
+            Debug.Log("Headset found, trying to enable");
             stareat = headset.transform;
-            nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 10f);
+            nearestBuildings = U.FindNearestBuildings(headset.transform.position, 10f);
         }
         else
         // For testing
