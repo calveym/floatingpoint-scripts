@@ -53,7 +53,7 @@ public class TooltipManager : MonoBehaviour {
         if(!testTooltipObject)
         // Used during play
         {
-            stareat = rightController.transform;
+            stareat = headset.transform;
             nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 10f);
         }
         else
@@ -70,22 +70,8 @@ public class TooltipManager : MonoBehaviour {
 
     void EnableTooltips(GameObject building)
     {
-        if(building.tag == "residential")
-        {
-            building.GetComponent<ResidentialTooltip>().EnableObjectTooltip();
-        }
-        if(building.tag == "commercial")
-        {
-            building.GetComponent<CommercialTooltip>().EnableObjectTooltip();
-        }
-        if (building.tag == "industrial")
-        {
-            building.GetComponent<IndustrialTooltip>().EnableObjectTooltip();
-        }
-        if (building.tag == "service")
-        {
+        if(building.tag == "residential" || building.tag == "service" || building.tag == "industrial" || building.tag == "commercial")
             building.GetComponent<TooltipBase>().EnableTooltip(stareat);
-        }
     }
 
     public void DisableTooltips()
@@ -94,19 +80,7 @@ public class TooltipManager : MonoBehaviour {
         pressed = false;
         foreach (GameObject building in nearestBuildings)
         {
-            if (building.tag == "residential")
-            {
-                building.GetComponent<ResidentialTooltip>().DisableObjectTooltip();
-            }
-            if (building.tag == "commercial")
-            {
-                building.GetComponent<CommercialTooltip>().DisableObjectTooltip();
-            }
-            if (building.tag == "industrial")
-            {
-                building.GetComponent<IndustrialTooltip>().DisableObjectTooltip();
-            }
-            if (building.tag == "service")
+            if (building.tag == "residential" || building.tag == "service" || building.tag == "industrial" || building.tag == "commercial")
             {
                 building.GetComponent<TooltipBase>().DisableTooltip();
             }

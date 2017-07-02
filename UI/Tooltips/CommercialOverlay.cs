@@ -11,7 +11,6 @@ public class CommercialOverlay : BuildingTooltipBase
         base.Start();
         tooltipPrefab = ReferenceManager.instance.commercialTooltipPrefab;
         tracker = GetComponent<CommercialTracker>();
-        EnableTooltip(gameObject.transform);
     }
 
     protected override void UpdateReferences()
