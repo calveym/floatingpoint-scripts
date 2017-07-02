@@ -11,8 +11,6 @@ public class CommercialTracker : ItemTracker {
     float salesHappiness;
 
     [Header("Instance Operation Variables")]
-    public int visitors;
-    public int lifetimeVisitors;
     public int range = 10;
 
     public float goodsAvailable;
@@ -108,11 +106,12 @@ public class CommercialTracker : ItemTracker {
 
     void SellGoods()
     {
-        goodsSold = visitors;
-        if(goodsSold > economyManager.goods)
+        goodsSold = Random.Range(0, 10) * visitors;
+        /*if(goodsSold > economyManager.goods)
         {
             goodsSold = economyManager.goods;
         }
+        */
         economyManager.goods -= goodsSold;
     }
 
@@ -154,12 +153,12 @@ public class CommercialTracker : ItemTracker {
         UpdateVisitors();
         SellGoods();
         income = (goodsSold * (1 + (landValue * 0.01f)) * (longtermHappiness / 50)) * ReferenceManager.instance.commercialIncomeMultiplier - baseCost + users;
-        totalCommercialIncome += income;
+        totalCommercialIncome += income * 10; // the jg multipier
     }
 
     void UpdateHappiness()
     {
-        currentHappiness = localHappiness + salesHappiness + fillRateHappiness;
+        currentHappiness = localHappiness + salesHappiness + fillRateHappiness + 20;
         CalculateLongtermHappiness();
         CalculateHappinessState();
     }

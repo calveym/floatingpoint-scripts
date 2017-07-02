@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class TooltipBase : MonoBehaviour {
 
     protected TooltipManager tooltipManager;
+    protected GameObject tooltipPrefab;
     protected GameObject tooltip;
     protected bool referencesUpdated;
 
@@ -17,6 +18,7 @@ public abstract class TooltipBase : MonoBehaviour {
     {
         tooltipManager = ReferenceManager.instance.tooltipManager;
         referencesUpdated = false;
+        tooltipPrefab = ReferenceManager.instance.serviceTooltipPrefab;
     }
 
     public virtual void EnableTooltip(Transform stareat)
@@ -25,9 +27,9 @@ public abstract class TooltipBase : MonoBehaviour {
         {
             Destroy(tooltip);
         }
-        tooltip = Instantiate(GameObject.Find("Tooltip"), gameObject.transform);
+        tooltip = Instantiate(tooltipPrefab, gameObject.transform);
         tooltip.transform.position = gameObject.transform.position + new Vector3(0f, 4f, 0f);
-        tooltip.transform.LookAt(2 * transform.position - stareat.position);
+        //tooltip.transform.LookAt(2 * transform.position - stareat.position);
         tooltipManager.updateTooltips += UpdateValues;
         UpdateValues();
     }
@@ -45,8 +47,8 @@ public abstract class TooltipBase : MonoBehaviour {
     {
         if (referencesUpdated == false)
         {
-            referencesUpdated = true;
             UpdateReferences();
+            referencesUpdated = true;
         }
         if (referencesUpdated == true)
         {

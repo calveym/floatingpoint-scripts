@@ -30,7 +30,7 @@ public class TooltipManager : MonoBehaviour {
 
     private void Update()
     {
-        if (ReferenceManager.instance.tick % 90 == 0 && updateTooltips != null)
+        if (ReferenceManager.instance.tick % 45 == 0 && updateTooltips != null)
         {
             updateTooltips();
         }

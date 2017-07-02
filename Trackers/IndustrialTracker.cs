@@ -18,11 +18,7 @@ public class IndustrialTracker : ItemTracker {
     List<float> sales; // List of recent sales counted in goodsSold
     List<ResidentialTracker> employees;
 
-
     public float productionHappiness; // Happiness from reaching sales targets
-
-    public int visitors;
-    public int lifetimeVisitors;
 
     public static float allGoods; // Base goods tracking figure for each economic tick
 
@@ -208,7 +204,7 @@ public class IndustrialTracker : ItemTracker {
     void UpdateHappiness()
     // Performs all necessary final happiness calculations, including longterm
     {
-        currentHappiness = localHappiness + productionHappiness + fillRateHappiness;
+        currentHappiness = localHappiness + productionHappiness + fillRateHappiness + 20;
         CalculateLongtermHappiness();
         CalculateHappinessState();
     }

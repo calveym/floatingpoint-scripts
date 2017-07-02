@@ -36,7 +36,7 @@ public class ResidentialTracker : ItemTracker {
         else if(!usable && !updateStarted && validPosition)
         {
             checkEnable = true;
-        }
+        } 
         if (ReferenceManager.instance.tick % 5 == 0 && !updateStarted)
         {
             if (checkEnable)

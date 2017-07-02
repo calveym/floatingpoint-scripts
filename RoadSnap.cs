@@ -4,37 +4,33 @@ using UnityEngine;
 using VRTK;
 using Autelia.Serialization;
 
-public class RoadSnap : MonoBehaviour
-{
+public class RoadSnap : MonoBehaviour {
 
-    public GameObject snapCube;
-    public bool manualUse, manualSnap;
-    public GameObject targetBoxPrefab;
-    public Material blockedMaterial;
+	public GameObject snapCube;
+	public bool manualUse, manualSnap;	
+	public GameObject targetBoxPrefab;
+	public Material blockedMaterial;
 
-    GameObject lastTargetBox;
-    bool snapSetup = false;
-    bool targetIsBlocked, snapObject, objectUsed;
-    VRTK_InteractableObject interact;
-    Bounds originalBounds;
+	GameObject lastTargetBox;
+	bool snapSetup = false;
+	bool targetIsBlocked, snapObject, objectUsed;
+	VRTK_InteractableObject interact;
+	Bounds originalBounds;
 
-    int roadLayer = 11;
-    int layerMask;
+	int roadLayer = 11;
+	int layerMask;
 
-    public void updateTargetIsBlocked(bool status)
-    {
-        targetIsBlocked = status;
-    }
+	public void updateTargetIsBlocked(bool status) {
+		targetIsBlocked = status;
+	}
 
-    void Start()
-    {
-        if (Serializer.IsLoading) return;
-        layerMask = 1 << roadLayer;
+    void Start() {if (Serializer.IsLoading)	return;
+		layerMask = 1 << roadLayer;
         interact = GetComponent<VRTK_InteractableObject>();
         //Debug.Log(gameObject + " " + interact);
         interact.InteractableObjectGrabbed += new InteractableObjectEventHandler(ObjectGrabbed);
         interact.InteractableObjectUngrabbed += new InteractableObjectEventHandler(DoGrabRelease);
-    }
+	}
 
     public void SetupSnap()
     {
@@ -54,285 +50,245 @@ public class RoadSnap : MonoBehaviour
         GetComponent<SnapPoints>().SetupBounds(setBounds);
     }
 
-    void ObjectGrabbed(object sender, InteractableObjectEventArgs e)
-    {
+    void ObjectGrabbed(object sender, InteractableObjectEventArgs e) {
         //Debug.Log("Grabbing");
-        objectUsed = true;
-        snapObject = false;
-    }
+		objectUsed = true;
+		snapObject = false;
+	}
 
-    void DoGrabRelease(object sender, InteractableObjectEventArgs e)
+	void DoGrabRelease(object sender, InteractableObjectEventArgs e)
     {
         //Debug.Log("Releasing");
         //gameObject.GetComponent<SnapPoints> ().enabled = false;
-        if (!targetIsBlocked)
-        {
-            snapObject = true;
-        }
-    }
+        if (!targetIsBlocked) {
+			snapObject = true;
+		}
+	}
+		
+	void Update () {
+		if (objectUsed || manualUse) {
 
-    void Update()
-    {
-        if (objectUsed || manualUse)
-        {
+			Main ();
+		}
+	}
 
-            Main();
-        }
-    }
-
-    void Main()
-    {
+	void Main() {
         //Debug.Log("Checking for snap");
-        targetBoxPrefab.GetComponent<SnapPoints>().bounds = originalBounds; // fixes the target box rotating with building
+		targetBoxPrefab.GetComponent<SnapPoints> ().bounds = originalBounds; // fixes the target box rotating with building
 
-        List<GameObject> closestObjects = FindClosestObjects();
+		List<GameObject> closestObjects = FindClosestObjects ();
 
-        if (closestObjects.Count == 0)
-            return;
+		if (closestObjects.Count == 0)
+			return;
 
-        GameObject closestRoad = GetClosestRoad(closestObjects);
+		GameObject closestRoad = GetClosestRoad (closestObjects);
 
-        KeyValuePair<string, Vector3> snapPoint = GetRoadSnapPoint(closestRoad);
+		KeyValuePair<string, Vector3> snapPoint = GetRoadSnapPoint (closestRoad);
 
-        if (lastTargetBox != null)
-            Destroy(lastTargetBox);
+		if (lastTargetBox != null)
+			Destroy (lastTargetBox);
+		
+		if (ShouldObjectSnap(gameObject, snapPoint, closestRoad)) {
+			GameObject targetBox = GenerateTargetBox ();
 
-        if (ShouldObjectSnap(gameObject, snapPoint, closestRoad))
-        {
-            GameObject targetBox = GenerateTargetBox();
+			targetBox.GetComponent<TargetCollisionCheck>().setNearestBuilding(closestRoad); // give target box nearest building for collision checking
 
-            targetBox.GetComponent<TargetCollisionCheck>().setNearestBuilding(closestRoad); // give target box nearest building for collision checking
+			SetRotation (targetBox, closestRoad);
+			SnapThis (targetBox, snapPoint, closestRoad);
 
-            SetRotation(targetBox, closestRoad);
-            SnapThis(targetBox, snapPoint, closestRoad);
+			lastTargetBox = targetBox;
 
-            lastTargetBox = targetBox;
+			if (snapObject || manualSnap) {
+				SetRotation (gameObject, closestRoad);
+				SnapThis (gameObject, snapPoint, closestRoad);
 
-            if (snapObject || manualSnap)
-            {
-                SetRotation(gameObject, closestRoad);
-                SnapThis(gameObject, snapPoint, closestRoad);
+				manualSnap = false;
+				objectUsed = false;
+				snapObject = false;
 
-                manualSnap = false;
-                objectUsed = false;
-                snapObject = false;
+				Destroy (lastTargetBox);
+			}
+		}
+	}
 
-                Destroy(lastTargetBox);
-            }
-        }
-    }
+	List<GameObject> FindClosestObjects () {
+		
+		Collider[] hitColliders = Physics.OverlapSphere (transform.position, 3f, layerMask); //  create a sphere to detect nearby objects
 
-    List<GameObject> FindClosestObjects()
-    {
+		List<GameObject> nearestObjects = new List<GameObject>();
 
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 3f, layerMask); //  create a sphere to detect nearby objects
+		foreach (Collider hitcol in hitColliders) {
+			if (hitcol.gameObject != gameObject) nearestObjects.Add (hitcol.gameObject);
+		}
 
-        List<GameObject> nearestObjects = new List<GameObject>();
+		return nearestObjects;
+	}
+		
+	GameObject GetClosestRoad (List<GameObject> roads) {
+		
+		float closestDistance = 1000000;
+		GameObject closestRoad = null;
 
-        foreach (Collider hitcol in hitColliders)
-        {
-            if (hitcol.gameObject != gameObject) nearestObjects.Add(hitcol.gameObject);
-        }
+		for (int i = 0; i < roads.Count; i++) {
+			float newDistance = Vector3.Distance (transform.position, roads[i].transform.position);
 
-        return nearestObjects;
-    }
+			if (newDistance < closestDistance) {
+				closestDistance = newDistance;
+				closestRoad = roads[i];
+			}
+		}
 
-    GameObject GetClosestRoad(List<GameObject> roads)
-    {
+		return closestRoad;
+	}
 
-        float closestDistance = 1000000;
-        GameObject closestRoad = null;
+	Dictionary<string, Vector3> GetVerticalPoints (GameObject road) {
 
-        for (int i = 0; i < roads.Count; i++)
-        {
-            float newDistance = Vector3.Distance(transform.position, roads[i].transform.position);
+		float halfWidth = 0.5f;
 
-            if (newDistance < closestDistance)
-            {
-                closestDistance = newDistance;
-                closestRoad = roads[i];
-            }
-        }
+		Dictionary<string, Vector3> points = new Dictionary<string, Vector3>(); 
 
-        return closestRoad;
-    }
+		if ((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0) {
+			points.Add("bottom", new Vector3 (road.transform.position.x, road.transform.position.y, road.transform.position.z + halfWidth));
+			points.Add("top", new Vector3 (road.transform.position.x, road.transform.position.y, road.transform.position.z - halfWidth));
+		} else {
+			points.Add("bottom", new Vector3 (road.transform.position.x + halfWidth, road.transform.position.y, road.transform.position.z));
+			points.Add("top", new Vector3 (road.transform.position.x - halfWidth, road.transform.position.y, road.transform.position.z));
+		}
 
-    Dictionary<string, Vector3> GetVerticalPoints(GameObject road)
-    {
+		return points;
+	}
 
-        float halfWidth = 0.5f;
+	KeyValuePair<string, Vector3> GetRoadSnapPoint (GameObject road) {
 
-        Dictionary<string, Vector3> points = new Dictionary<string, Vector3>();
+		Dictionary<string, Vector3> verticalPoints = GetVerticalPoints (road);
 
-        if ((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0)
-        {
-            points.Add("bottom", new Vector3(road.transform.position.x, road.transform.position.y, road.transform.position.z + halfWidth));
-            points.Add("top", new Vector3(road.transform.position.x, road.transform.position.y, road.transform.position.z - halfWidth));
-        }
-        else
-        {
-            points.Add("bottom", new Vector3(road.transform.position.x + halfWidth, road.transform.position.y, road.transform.position.z));
-            points.Add("top", new Vector3(road.transform.position.x - halfWidth, road.transform.position.y, road.transform.position.z));
-        }
+		float closestDistance = 1000000;
+		KeyValuePair<string, Vector3> closestPoint = new KeyValuePair<string, Vector3>();
 
-        return points;
-    }
+		foreach (KeyValuePair<string, Vector3> point in verticalPoints) {
+			float newDistance = Vector3.Distance (transform.position, point.Value);
 
-    KeyValuePair<string, Vector3> GetRoadSnapPoint(GameObject road)
-    {
+			if (newDistance < closestDistance) {
+				closestDistance = newDistance;
+				closestPoint = point;
+			}
+		}
 
-        Dictionary<string, Vector3> verticalPoints = GetVerticalPoints(road);
+		return closestPoint;
+	}
 
-        float closestDistance = 1000000;
-        KeyValuePair<string, Vector3> closestPoint = new KeyValuePair<string, Vector3>();
+	float CalculateDistance (Vector3 thisPoint, Vector3 targetPoint, bool useXAxis) {
+		if (useXAxis) {
+			return Mathf.Abs(targetPoint.x - thisPoint.x);
+		} else {
+			return Mathf.Abs(targetPoint.z - thisPoint.z);
+		}
+	}
 
-        foreach (KeyValuePair<string, Vector3> point in verticalPoints)
-        {
-            float newDistance = Vector3.Distance(transform.position, point.Value);
+	KeyValuePair<string, Vector3> GetClosestSnapPoint (GameObject objectToSnap, KeyValuePair<string, Vector3> roadSnapPoint, GameObject road) {
 
-            if (newDistance < closestDistance)
-            {
-                closestDistance = newDistance;
-                closestPoint = point;
-            }
-        }
+		Dictionary<string, Vector3> snapPoints = objectToSnap.GetComponent<SnapPoints> ().GetCurrentPoints ();
 
-        return closestPoint;
-    }
+		float closestDistance = 1000000;
+		KeyValuePair<string, Vector3> closestPoint = new KeyValuePair<string, Vector3>();
 
-    float CalculateDistance(Vector3 thisPoint, Vector3 targetPoint, bool useXAxis)
-    {
-        if (useXAxis)
-        {
-            return Mathf.Abs(targetPoint.x - thisPoint.x);
-        }
-        else
-        {
-            return Mathf.Abs(targetPoint.z - thisPoint.z);
-        }
-    }
+		bool useXAxis = !((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0);
 
-    KeyValuePair<string, Vector3> GetClosestSnapPoint(GameObject objectToSnap, KeyValuePair<string, Vector3> roadSnapPoint, GameObject road)
-    {
+		foreach(KeyValuePair<string, Vector3> point in snapPoints) {
 
-        Dictionary<string, Vector3> snapPoints = objectToSnap.GetComponent<SnapPoints>().GetCurrentPoints();
+			float newDistance = CalculateDistance (point.Value, roadSnapPoint.Value, useXAxis);
 
-        float closestDistance = 1000000;
-        KeyValuePair<string, Vector3> closestPoint = new KeyValuePair<string, Vector3>();
+			if (newDistance < closestDistance) {
+				closestDistance = newDistance;
+				closestPoint = point;
+			}
+		}
 
-        bool useXAxis = !((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0);
+		return closestPoint;
+	}
 
-        foreach (KeyValuePair<string, Vector3> point in snapPoints)
-        {
+	GameObject GenerateTargetBox () {
+		
+		GameObject targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, transform.rotation);
 
-            float newDistance = CalculateDistance(point.Value, roadSnapPoint.Value, useXAxis);
+		if (targetIsBlocked) {
+			targetBox.GetComponent<Renderer> ().material = blockedMaterial;
+		}
+			
+		targetBox.GetComponent<TargetCollisionCheck> ().parentBuilding = gameObject; // tell the targetBox that this object is it's parent (uses it for calling updateTargetIsBlocked on this object)
 
-            if (newDistance < closestDistance)
-            {
-                closestDistance = newDistance;
-                closestPoint = point;
-            }
-        }
+		Vector3 thisSize = GetComponent<BoxCollider>().size;
+		targetBox.transform.localScale = new Vector3 (thisSize.x / 10, 0.05f, thisSize.z / 10); // divides width and depth by 10 due to objects have x10 scale
 
-        return closestPoint;
-    }
+		targetBox.transform.position = new Vector3(targetBox.transform.position.x, 10.025f, targetBox.transform.position.z); // adjust vertical axis as it is too low by default
 
-    GameObject GenerateTargetBox()
-    {
+		return targetBox;
+	}
 
-        GameObject targetBox = (GameObject)Instantiate(targetBoxPrefab, transform.position, transform.rotation);
+	bool ShouldObjectSnap(GameObject objectToSnap, KeyValuePair<string, Vector3> roadSnapPoint, GameObject road) {
 
-        if (targetIsBlocked)
-        {
-            targetBox.GetComponent<Renderer>().material = blockedMaterial;
-        }
+		Dictionary<string, Vector3> snapPoints = gameObject.GetComponent<SnapPoints> ().GetCurrentPoints ();
 
-        targetBox.GetComponent<TargetCollisionCheck>().parentBuilding = gameObject; // tell the targetBox that this object is it's parent (uses it for calling updateTargetIsBlocked on this object)
+		bool moreThanZ = objectToSnap.transform.position.z > road.transform.position.z;
+		bool moreThanX = objectToSnap.transform.position.x > road.transform.position.x;	
 
-        Vector3 thisSize = GetComponent<BoxCollider>().size;
-        targetBox.transform.localScale = new Vector3(thisSize.x / 10, 0.05f, thisSize.z / 10); // divides width and depth by 10 due to objects have x10 scale
+		foreach(KeyValuePair<string, Vector3> point in snapPoints) {
 
-        targetBox.transform.position = new Vector3(targetBox.transform.position.x, 10.025f, targetBox.transform.position.z); // adjust vertical axis as it is too low by default
+			if ((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0) {
 
-        return targetBox;
-    }
+				if ((point.Value.z < roadSnapPoint.Value.z) && moreThanZ || (point.Value.z > roadSnapPoint.Value.z) && !moreThanZ) {
+					return false;
+				}
 
-    bool ShouldObjectSnap(GameObject objectToSnap, KeyValuePair<string, Vector3> roadSnapPoint, GameObject road)
-    {
+			} else {
 
-        Dictionary<string, Vector3> snapPoints = gameObject.GetComponent<SnapPoints>().GetCurrentPoints();
+				if ((point.Value.x < roadSnapPoint.Value.x) && moreThanX || (point.Value.x > roadSnapPoint.Value.x) && !moreThanX) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+		
 
-        bool moreThanZ = objectToSnap.transform.position.z > road.transform.position.z;
-        bool moreThanX = objectToSnap.transform.position.x > road.transform.position.x;
+	void SetRotation(GameObject objectToRotate, GameObject targetObject) {
 
-        foreach (KeyValuePair<string, Vector3> point in snapPoints)
-        {
+		GameObject emptyParent = new GameObject(); // this is needed to prevent the object scale being changed when parented
 
-            if ((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0)
-            {
+		targetObject.transform.parent = emptyParent.transform;
+		objectToRotate.transform.parent = emptyParent.transform;
 
-                if ((point.Value.z < roadSnapPoint.Value.z) && moreThanZ || (point.Value.z > roadSnapPoint.Value.z) && !moreThanZ)
-                {
-                    return false;
-                }
+		float yAngle = Mathf.Round(objectToRotate.transform.localEulerAngles.y / 90) * 90;
 
-            }
-            else
-            {
+		objectToRotate.transform.localRotation = Quaternion.Euler(0, yAngle, 0);
 
-                if ((point.Value.x < roadSnapPoint.Value.x) && moreThanX || (point.Value.x > roadSnapPoint.Value.x) && !moreThanX)
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+		objectToRotate.transform.parent = null;
+		targetObject.transform.parent = null;
 
+		Destroy (emptyParent);
+	}
 
-    void SetRotation(GameObject objectToRotate, GameObject targetObject)
-    {
+	void SnapThis (GameObject objectToSnap, KeyValuePair<string, Vector3> roadSnapPoint, GameObject road) {
 
-        GameObject emptyParent = new GameObject(); // this is needed to prevent the object scale being changed when parented
+		KeyValuePair<string, Vector3> closestSnapPoint = GetClosestSnapPoint (objectToSnap, roadSnapPoint, road);
 
-        targetObject.transform.parent = emptyParent.transform;
-        objectToRotate.transform.parent = emptyParent.transform;
+		GameObject g1 = (GameObject)Instantiate (snapCube, closestSnapPoint.Value, objectToSnap.transform.rotation);
 
-        float yAngle = Mathf.Round(objectToRotate.transform.localEulerAngles.y / 90) * 90;
+		objectToSnap.transform.parent = g1.transform;
 
-        objectToRotate.transform.localRotation = Quaternion.Euler(0, yAngle, 0);
+		Vector3 snapPosition;
 
-        objectToRotate.transform.parent = null;
-        targetObject.transform.parent = null;
+		if ((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0) {
+			snapPosition = new Vector3 (objectToSnap.transform.position.x, roadSnapPoint.Value.y, roadSnapPoint.Value.z);
+		} else {
+			snapPosition = new Vector3 (roadSnapPoint.Value.x, roadSnapPoint.Value.y, objectToSnap.transform.position.z);
+		}
 
-        Destroy(emptyParent);
-    }
+		g1.transform.position = snapPosition;
 
-    void SnapThis(GameObject objectToSnap, KeyValuePair<string, Vector3> roadSnapPoint, GameObject road)
-    {
+		objectToSnap.transform.parent = null;
 
-        KeyValuePair<string, Vector3> closestSnapPoint = GetClosestSnapPoint(objectToSnap, roadSnapPoint, road);
-
-        GameObject g1 = (GameObject)Instantiate(snapCube, closestSnapPoint.Value, objectToSnap.transform.rotation);
-
-        objectToSnap.transform.parent = g1.transform;
-
-        Vector3 snapPosition;
-
-        if ((Mathf.Round(road.transform.rotation.eulerAngles.y) / 90) % 2 == 0)
-        {
-            snapPosition = new Vector3(objectToSnap.transform.position.x, roadSnapPoint.Value.y, roadSnapPoint.Value.z);
-        }
-        else
-        {
-            snapPosition = new Vector3(roadSnapPoint.Value.x, roadSnapPoint.Value.y, objectToSnap.transform.position.z);
-        }
-
-        g1.transform.position = snapPosition;
-
-        objectToSnap.transform.parent = null;
-
-        Destroy(g1);
-    }
-
+		Destroy (g1);
+	}
+		
 }

@@ -55,6 +55,8 @@ public class ItemTracker : MonoBehaviour {
     public bool updateStarted;
     public bool validPosition;
     public float landValue;
+    public int visitors;
+
     [Space(10)]
     List<GameObject> surroundingBuildings;
     List<ResidentialTracker> surroundingResidential;
@@ -122,6 +124,7 @@ public class ItemTracker : MonoBehaviour {
     public void Start()
     // Sets start variables
     {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+        if (buyCost == 0) buyCost = baseCost * 500;
         longtermHappiness = 0;
         availableTransportation = 1;
         landValue = 10f;
