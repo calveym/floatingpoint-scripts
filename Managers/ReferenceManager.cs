@@ -7,6 +7,9 @@ public class ReferenceManager : MonoBehaviour {
 
     public static ReferenceManager instance;
 
+    [Space(10)]
+    [Header("VR Components")]
+    [Space(5)]
     public GameObject rightController;
     public GameObject leftController;
     public GameObject cameraEye;

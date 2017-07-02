@@ -20,12 +20,12 @@ public class TooltipManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
-        headset = GameObject.Find("Headset");
+        headset = ReferenceManager.instance.cameraEye;
         if(!testTooltipObject)
-            testTooltipObject = GameObject.Find("TestSphere");
-        rightController = GameObject.Find("RightController");
-        rightController.GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
-        rightController.GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
+            testTooltipObject = ReferenceManager.instance.spherePrefab;
+        rightController = ReferenceManager.instance.rightController;
+        ReferenceManager.instance.rightEvents.ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
+        ReferenceManager.instance.rightEvents.ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
     }
 
     private void Update()
