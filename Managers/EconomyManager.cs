@@ -1,57 +1,255 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
-
+[System.Serializable]
 public class EconomyManager : MonoBehaviour {
 
     // Declare other managers
-	ItemManager itemManager;
-	PopulationManager populationManager;
+    [SerializeField]
+    ItemManager itemManager;
+    [SerializeField]
+    PopulationManager populationManager;
+    [SerializeField]
+    HappinessManager happinessManager;
+    [SerializeField]
+    AudioManager audioManager;
 
     // Declare variables
-	float balance;
-	int numRoads;
-	float income; // Net income, after expenses
-	int population;
+    [Header("Money")]
+    [Range(0.0001f, 1)]
+    [Tooltip("Multiplier for income to get per tick income")]
+    public float incomeMultiplier = 0.1f;
+    public float balance = 0;
+    [SerializeField]
+    int numRoads;
+    [SerializeField]
+    float income; // Net income, after expenses
+    [SerializeField]
+    int population;
+    [SerializeField]
     float happiness;
 
+    [SerializeField]
+    float goodsProduction;
+    [SerializeField]
+    float goodsConsumption;
+    [SerializeField]
+    bool transferQueued;
+    float export;
+    float import;
+    float netGoodsTransfered;
+
+    [Header("Goods")]
+    [Tooltip("Total goods available")]
+    public float goods;
+    [Tooltip("Allow importing goods to make up for defecit")]
+    public bool enableImport;
+    [Tooltip("Allow exporting goods to make money from surplus")]
+    public bool enableExport;
+    [Tooltip("Maximum amount of goods that can be imported or exported, before bonuses")]
+    public float maxTransfer;
+
     // Tracked items
+    [SerializeField]
     int residentialCap;
+    [SerializeField]
     int commercialCap;
+    [SerializeField]
     int industrialCap;
-	
-    // Declares public variables 
+
+    // Declares public variables
+    [Space(10)]
+
+    [Header("Taxes")]
+    [Space(5)]
     public int residentialTaxRate;
     public int commercialTaxRate;
     public int industrialTaxRate;
-    public int rawIncome; // Gross income
+    [Range(0, 1000)]
+    [Tooltip("Initial income, added every ecoTick to income")]
+    public int rawIncome = 200; // Gross
+    bool keepUpdating;
+    [Space(10)]
+    [Header("Services")]
+    [Space(5)]
+    [SerializeField]
+    [Tooltip("[READ ONLY]  Total expenses for running all services")]
+    float serviceExpenses;
+    [SerializeField]
+    [Tooltip("[READ ONLY]  Total expenses for running power services")]
+    float powerExpenses;
+    [SerializeField]
+    [Tooltip("[READ ONLY]  Total expenses for running education services")]
+    float educationExpenses;
+    [SerializeField]
+    [Tooltip("[READ ONLY]  Total expenses for running health services")]
+    float healthExpenses;
+    [SerializeField]
+    [Tooltip("[READ ONLY]  Total expenses for running police services")]
+    float policeExpenses;
+    [SerializeField]
+    [Tooltip("[READ ONLY]  Total expenses for running fire services")]
+    float fireExpenses;
 
-    void Awake ()
+
+    [SerializeField]
+    [Tooltip("[READ ONLY]  Production multiplier, influenced by power availability")]
+    float productionMultiplier;
+    [Space(10)]
+    [Header("Audio")]
+    [Space(5)]
+    public AudioClip purchaseSound;
+    public AudioClip failSound;
+
+    bool ticking = false;
+    bool isDeserializing = false;
+
+    int tick; // used to run once per second
+
+    void Awake()
     // Finds instances of all objects and sets up values
     {
+        if (Serializer.IsLoading) return;
         residentialTaxRate = 15;
         commercialTaxRate = 15;
         industrialTaxRate = 15;
-        rawIncome = 25;
-		balance = 1000;
-		itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-		populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         income = rawIncome;
+        keepUpdating = true;
     }
 
-	void Update ()
-    // Updates state and recalculates balance and income
-	{
-		numRoads = itemManager.getNumRoads();
-		setPopulation();
-        setCapacity();
-   
-		updateBalance();
-		updateIncome();
-	}
+    private void Start()
+    {
+        tick = 0;
+        keepUpdating = true;
+        itemManager = ReferenceManager.instance.itemManager;
+        populationManager = ReferenceManager.instance.populationManager;
+        happinessManager = ReferenceManager.instance.happinessManager;
+        audioManager = ReferenceManager.instance.audioManager;
 
-    void setCapacity()
+        if (Serializer.IsLoading)
+        {
+            ResetEcoTick();
+            ResetItems();
+        }
+    }
+
+    void Update()
+    {
+        CheckReferences();
+        if (keepUpdating && tick % 90 == 0 && tick >= 5)
+            {
+                ticking = true;
+                if (ecoTick != null)
+                {
+                    ecoTick();
+                }
+                if (foliageTick != null)
+                {
+                    foliageTick();
+                }
+
+                ResidentialTracker.historicResidentialIncome = ResidentialTracker.totalResidentialIncome;
+                CommercialTracker.historicCommercialIncome = CommercialTracker.totalCommercialIncome;
+                IndustrialTracker.historicIndustrialIncome = IndustrialTracker.totalIndustrialIncome;
+
+                UpdateIncome();
+                TransferGoods();
+                UpdateBalance();
+
+                ResidentialTracker.totalResidentialIncome = 0;
+                CommercialTracker.totalCommercialIncome = 0;
+                IndustrialTracker.totalIndustrialIncome = 0;
+            }
+        tick++;
+    }
+
+    void CheckReferences()
+    {
+        if (!itemManager)
+        {
+            itemManager = ReferenceManager.instance.itemManager;
+        }
+        if (!populationManager)
+            populationManager = ReferenceManager.instance.populationManager;
+    }
+
+    void ResetItems()
+    {
+        itemManager.ResetItems();
+    }
+
+    void ResetEcoTick()
+    {
+        ecoTick = null;
+        itemManager.AddTrackersToEcoTick();
+        Debug.Log("Setting up ecoTick");
+        ecoTick += populationManager.PopulationUpdate;
+    }
+
+    [SerializeField]
+    public delegate void TickDelegate();
+
+    [SerializeField]
+    public static TickDelegate ecoTick;  // Multicast delegate run once per economic tick
+    [SerializeField]
+    public static TickDelegate foliageTick;  // Multicast delegate for foliage, extracted to reduce potential crashes
+
+    void TransferGoods()
+    {
+        UpdateGoods();
+        goods += IndustrialTracker.allGoods * productionMultiplier;
+        IndustrialTracker.allGoods = 0;
+
+        if (goods < goodsConsumption && enableImport)
+        {
+            transferQueued = true;
+            PrepareImport();
+        }
+        else if ((goods / 2) >= goodsConsumption && enableExport)
+        {
+            transferQueued = true;
+            PrepareExport();
+        }
+        if (transferQueued)
+            DoGoodsTransfer();
+    }
+
+    void UpdateGoods()
+    {
+        goodsConsumption = itemManager.residentialCap * happinessManager.happiness;
+        goodsProduction = itemManager.industrialCap * happinessManager.happiness;
+    }
+
+    void DoGoodsTransfer()
+    {
+        transferQueued = false;
+        goods -= export;
+        goods += import;
+
+        income -= import * 1.25f;
+        income += export * 0.75f;
+    }
+
+    void PrepareImport()
+    // Imports required amount
+    {
+        import = goodsConsumption - goods;
+        if (balance <= import * 1.25f)
+        {
+            import = 0;
+        }
+    }
+
+    void PrepareExport()
+    // Exports maximum amount
+    {
+        import = 0;
+        export = goodsProduction - goodsConsumption;
+    }
+
+    void SetCapacity()
     // Updates capacity from itemManager
     {
         residentialCap = itemManager.residentialCap;
@@ -59,83 +257,117 @@ public class EconomyManager : MonoBehaviour {
         industrialCap = itemManager.industrialCap;
     }
 
-	void updateBalance() 
-	// Reduces balance by income and time
-	{
-		balance += income * Time.deltaTime;
-	}
+    void UpdateBalance()
+    // Reduces balance by income and time
+    {
+        balance += income * incomeMultiplier;
+    }
 
-	void updateIncome()
-	// Recalculates income
-	{
-		float roadExpenses = calculateRoadExpenses();
-		float residentialIncome = calculateResidentialIncome();
-        float commercialIncome = calculateCommercialIncome();
-        float industrialIncome = calculateIndustrialIncome();
+    void UpdateIncome()
+    // Recalculates income
+    {
+        float roadExpenses = CalculateRoadExpenses();
+        float residentialIncome = CalculateResidentialIncome();
+        float commercialIncome = CalculateCommercialIncome();
+        float industrialIncome = CalculateIndustrialIncome();
+        serviceExpenses = powerExpenses + educationExpenses + healthExpenses + policeExpenses + fireExpenses;
 
-        float expenses = roadExpenses + calculateCapacityExpenses();
-		income = rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses;
-	}
+        float expenses = roadExpenses + CalculateCapacityExpenses() + serviceExpenses;
+        income = (rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses);
+    }
 
-    float calculateCapacityExpenses()
+    public void SetPowerExpense(float newPowerExpenses)
+    {
+        powerExpenses = newPowerExpenses;
+    }
+
+    public void SetEducationExpense(float newEducationExpenses)
+    {
+        educationExpenses = newEducationExpenses;
+    }
+
+    public void SetHealthExpense(float newHealthExpenses)
+    {
+        healthExpenses = newHealthExpenses;
+    }
+
+    public void SetPoliceExpense(float newPoliceExpenses)
+    {
+        policeExpenses = newPoliceExpenses;
+    }
+
+    public void SetFireExpense(float newFireExpenses)
+    {
+        fireExpenses = newFireExpenses;
+    }
+
+    public void SetProduction(float newProduction)
+    {
+        productionMultiplier = newProduction;
+    }
+
+    float CalculateCapacityExpenses()
     // Returns all expenses from capacity
     {
         return residentialCap + commercialCap + industrialCap;
     }
 
-	float calculateResidentialIncome()
-	// Tax income from all residential properties
-	{
-        return population * (1 + 0.01f * residentialTaxRate);
-	}
+    float CalculateResidentialIncome()
+    // Tax income from all residential properties
+    {
+        return ResidentialTracker.totalResidentialIncome * (1 + 0.05f * residentialTaxRate);
+    }
 
-    float calculateCommercialIncome()
+    float CalculateCommercialIncome()
     // Tax income for all commercial buildings
     {
         if (commercialCap == 0 || population == 0)
         {
             return 0;
         }
-        else if(population >= commercialCap)
-        {
-            return commercialCap * (1 + 0.01f * commercialTaxRate);
-        }
         else
         {
-            return population * (1 + 0.01f * commercialTaxRate);
+            return CommercialTracker.totalCommercialIncome * (1 + 0.05f * commercialTaxRate);
         }
     }
 
-    float calculateIndustrialIncome()
+    float CalculateIndustrialIncome()
     // Tax income for industrial buildings
     {
         if (industrialCap == 0)
         {
             return 0;
         }
-        else if (population >= industrialCap)
-        {
-            return industrialCap * (1 + 0.01f * industrialTaxRate);
-        }
         else
         {
-            return population * (1 + 0.01f * industrialTaxRate);
+            return IndustrialTracker.totalIndustrialIncome * (1 + 0.05f * industrialTaxRate);
         }
     }
 
-	float calculateRoadExpenses() 
-	// Calculates how much is spent on road maintenance
-	{
-		return numRoads / 5;
-	}
+    float CalculateRoadExpenses()
+    // Calculates how much is spent on road maintenance
+    {
+        return numRoads / 5;
+    }
 
-	void reduceBalance(float amount)
-	// Decreases balance by "amount"
-	{
-		balance -= amount;
-	}
+    public void MakePurchase(float amount)
+    // Modifies balance by "amount", plays sound
+    {
+        balance += amount;
+        ReferenceManager.instance.audioManager.PlaySingle(purchaseSound);
+    }
 
-	void setPopulation()
+    public void FailedPurchase()
+    {
+        ReferenceManager.instance.audioManager.PlaySingle(failSound);
+    }
+
+    public void SellGoods(float numGoods)
+    {
+        goods -= numGoods;
+    }
+
+	void SetPopulation()
 	// Retrieves population from the pop manager
 	{
 		population = populationManager.population;
@@ -159,5 +391,25 @@ public class EconomyManager : MonoBehaviour {
     public float GetHappiness()
     {
         return happiness;
+    }
+
+    public string FancyIncome()
+    {
+        return "+ " + income.ToString();
+    }
+
+    public string FancyBalance()
+    {
+        return "Balance: $" + Mathf.Round(balance).ToString();
+    }
+    
+    public string FancyGoods()
+    {
+        return "Goods produced: " + goods;
+    }
+
+    public string FancyGoodsConsumed()
+    {
+        return "Goods consumed: ";
     }
 }

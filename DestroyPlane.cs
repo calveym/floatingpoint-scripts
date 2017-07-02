@@ -1,13 +1,14 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Autelia.Serialization;
 
 public class DestroyPlane : MonoBehaviour {
 
     ItemManager itemManager;
 
-    private void Awake()
-    {
+    private void Start()
+    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
     }
 
@@ -29,9 +30,9 @@ public class DestroyPlane : MonoBehaviour {
         {
             itemManager.removeIndustrial(other.gameObject);
         }
-        else if(tag == "leisure")
+        else if(tag == "service")
         {
-            itemManager.removeLeisure(other.gameObject);
+            //itemManager.removeService(other.gameObject);
         }
         else if(tag == "foliage")
         {
