@@ -19,18 +19,19 @@ public class TooltipManager : MonoBehaviour {
     public static bool pressed;
 
 	// Use this for initialization
-	void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
-        headset = GameObject.Find("Headset");
-        if(!testTooltipObject)
-            testTooltipObject = GameObject.Find("TestSphere");
-        rightController = GameObject.Find("RightController");
+	void Start () {
+        if (Serializer.IsLoading)	return;
+        headset = ReferenceManager.instance.cameraEye;
+        rightController = ReferenceManager.instance.rightController;
+        if (!headset)
+            testTooltipObject = ReferenceManager.instance.spherePrefab;
         rightController.GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
         rightController.GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
     }
 
     private void Update()
     {
-        if (ReferenceManager.instance.tick % 90 == 0 && updateTooltips != null)
+        if (ReferenceManager.instance.tick % 45 == 0 && updateTooltips != null)
         {
             updateTooltips();
         }
@@ -38,6 +39,7 @@ public class TooltipManager : MonoBehaviour {
 
     void EnableObjectTooltip(object sender, ControllerInteractionEventArgs e)
     {
+        Debug.Log("Trying to enable");
         StartTooltips();
     }
 
@@ -50,11 +52,12 @@ public class TooltipManager : MonoBehaviour {
     // Used in conjunction with test runner to create tooltips without headset and controllers
     {
         pressed = true;
-        if(!testTooltipObject)
+        if(headset)
         // Used during play
         {
-            stareat = rightController.transform;
-            nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 10f);
+            Debug.Log("Headset found, trying to enable");
+            stareat = headset.transform;
+            nearestBuildings = U.FindNearestBuildings(headset.transform.position, 10f);
         }
         else
         // For testing
@@ -70,22 +73,8 @@ public class TooltipManager : MonoBehaviour {
 
     void EnableTooltips(GameObject building)
     {
-        if(building.tag == "residential")
-        {
-            building.GetComponent<ResidentialTooltip>().EnableObjectTooltip();
-        }
-        if(building.tag == "commercial")
-        {
-            building.GetComponent<CommercialTooltip>().EnableObjectTooltip();
-        }
-        if (building.tag == "industrial")
-        {
-            building.GetComponent<IndustrialTooltip>().EnableObjectTooltip();
-        }
-        if (building.tag == "service")
-        {
+        if(building.tag == "residential" || building.tag == "service" || building.tag == "industrial" || building.tag == "commercial")
             building.GetComponent<TooltipBase>().EnableTooltip(stareat);
-        }
     }
 
     public void DisableTooltips()
@@ -94,19 +83,7 @@ public class TooltipManager : MonoBehaviour {
         pressed = false;
         foreach (GameObject building in nearestBuildings)
         {
-            if (building.tag == "residential")
-            {
-                building.GetComponent<ResidentialTooltip>().DisableObjectTooltip();
-            }
-            if (building.tag == "commercial")
-            {
-                building.GetComponent<CommercialTooltip>().DisableObjectTooltip();
-            }
-            if (building.tag == "industrial")
-            {
-                building.GetComponent<IndustrialTooltip>().DisableObjectTooltip();
-            }
-            if (building.tag == "service")
+            if (building.tag == "residential" || building.tag == "service" || building.tag == "industrial" || building.tag == "commercial")
             {
                 building.GetComponent<TooltipBase>().DisableTooltip();
             }

@@ -7,6 +7,9 @@ public class ReferenceManager : MonoBehaviour {
 
     public static ReferenceManager instance;
 
+    [Space(10)]
+    [Header("VR Components")]
+    [Space(5)]
     public GameObject rightController;
     public GameObject leftController;
     public GameObject cameraEye;
@@ -47,6 +50,11 @@ public class ReferenceManager : MonoBehaviour {
     [Space(5)]
     public GameObject notificationPrefab;
     public GameObject spherePrefab;
+    public GameObject serviceTooltipPrefab;
+    public GameObject residentialTooltipPrefab;
+    public GameObject commercialTooltipPrefab;
+    public GameObject industrialTooltipPrefab;
+    public GameObject foliageTooltipPrefab;
 
     [Space(10)]
     [Header("Income modification")]
@@ -54,6 +62,12 @@ public class ReferenceManager : MonoBehaviour {
     public float residentialIncomeMultiplier = 0.52f;
     public float commercialIncomeMultiplier = 0.152f;
     public float industrialIncomeMultiplier = 0.6f;
+
+    [Space(10)]
+    [Header("Materials")]
+    [Space(5)]
+    public Material moneyGreen;
+    public Material moneyRed;
 
     public int tick = 0;
 

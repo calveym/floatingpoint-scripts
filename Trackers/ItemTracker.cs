@@ -55,6 +55,8 @@ public class ItemTracker : MonoBehaviour {
     public bool updateStarted;
     public bool validPosition;
     public float landValue;
+    public int visitors;
+
     [Space(10)]
     List<GameObject> surroundingBuildings;
     List<ResidentialTracker> surroundingResidential;
