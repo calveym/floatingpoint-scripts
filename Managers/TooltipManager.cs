@@ -39,7 +39,6 @@ public class TooltipManager : MonoBehaviour {
 
     void EnableObjectTooltip(object sender, ControllerInteractionEventArgs e)
     {
-        Debug.Log("Trying to enable");
         StartTooltips();
     }
 
@@ -55,7 +54,6 @@ public class TooltipManager : MonoBehaviour {
         if(headset)
         // Used during play
         {
-            Debug.Log("Headset found, trying to enable");
             stareat = headset.transform;
             nearestBuildings = U.FindNearestBuildings(headset.transform.position, 10f);
         }

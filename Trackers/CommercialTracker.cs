@@ -109,11 +109,12 @@ public class CommercialTracker : ItemTracker {
 
     void SellGoods()
     {
-        goodsSold = visitors;
-        if(goodsSold > economyManager.goods)
+        goodsSold = Random.Range(0, 10) * visitors;
+        /*if(goodsSold > economyManager.goods)
         {
             goodsSold = economyManager.goods;
         }
+        */
         economyManager.goods -= goodsSold;
     }
 
@@ -155,7 +156,7 @@ public class CommercialTracker : ItemTracker {
         UpdateVisitors();
         SellGoods();
         income = (goodsSold * (1 + (landValue * 0.01f)) * (longtermHappiness / 50)) * ReferenceManager.instance.commercialIncomeMultiplier - baseCost + users;
-        totalCommercialIncome += income;
+        totalCommercialIncome += income * 10; // the jg multipier
     }
 
     void UpdateHappiness()
