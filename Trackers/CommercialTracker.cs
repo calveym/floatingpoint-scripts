@@ -20,11 +20,14 @@ public class CommercialTracker : ItemTracker {
 
 
     new void Start()
-    {if (Serializer.IsDeserializing)	return;
+    {
+        if (Serializer.IsLoading)
+        {
+            RemoveEcoTick();
+            return;
+        }
         base.Start();
         employees = new List<ResidentialTracker>();
-        if (Serializer.IsLoading)
-            RemoveEcoTick();
     }
 
     void Update()

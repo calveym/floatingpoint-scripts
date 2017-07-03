@@ -14,12 +14,14 @@ public class ResidentialTracker : ItemTracker {
     bool checkEnable;
 
     new void Start()
-    {if (Serializer.IsDeserializing)	return;
+    {
+        if (Serializer.IsDeserializing)
+        {
+            RemoveEcoTick();
+            return;
+        }
         base.Start();
         foliage = 0;
-
-        if (Serializer.IsLoading)
-            RemoveEcoTick();
         //StartCoroutine("CheckEnable");
     }
 

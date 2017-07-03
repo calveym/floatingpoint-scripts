@@ -12,7 +12,6 @@ public class IndustrialOverlay : BuildingTooltipBase
         base.Start();
         tooltipPrefab = ReferenceManager.instance.commercialTooltipPrefab;
         tracker = GetComponent<IndustrialTracker>();
-        EnableTooltip(gameObject.transform);
     }
 
     protected override void UpdateReferences()

@@ -24,7 +24,6 @@ public class BuildingTooltipBase : TooltipBase
     {
         base.Start();
         tracker = gameObject.GetComponent<ItemTracker>();
-        Debug.Log("Tracker: " + tracker);
     }
 
     protected override void UpdateReferences()

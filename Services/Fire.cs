@@ -13,8 +13,9 @@ public class Fire : ServiceBase
 
 
     protected void Awake()
-    {if (Serializer.IsLoading)	return;
+    {
         fire = new List<FireTracker>();
+        if (Serializer.IsLoading) return;
     }
 
     protected override void ApplyGlobalDefecit()

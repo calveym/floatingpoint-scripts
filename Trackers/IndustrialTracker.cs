@@ -42,11 +42,14 @@ public class IndustrialTracker : ItemTracker {
     }
 
     new void Start()
-    {if (Serializer.IsDeserializing)	return;
+    {
+        if (Serializer.IsDeserializing)
+        {
+            RemoveEcoTick();
+            return;
+        }
         base.Start();
         markerPrefab = GameObject.Find("MarkerPrefab");
-        if (Serializer.IsLoading)
-            RemoveEcoTick();
     }
 
     void Update()

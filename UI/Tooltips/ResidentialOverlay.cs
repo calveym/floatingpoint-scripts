@@ -10,7 +10,6 @@ public class ResidentialOverlay : BuildingTooltipBase
     {
         base.Start();
         tooltipPrefab = ReferenceManager.instance.residentialTooltipPrefab;
-        EnableTooltip(gameObject.transform);
     }
 
     protected override void UpdateReferences()
