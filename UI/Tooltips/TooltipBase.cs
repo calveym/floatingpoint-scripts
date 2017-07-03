@@ -29,7 +29,7 @@ public abstract class TooltipBase : MonoBehaviour {
         }
         tooltip = Instantiate(tooltipPrefab, gameObject.transform);
         tooltip.transform.position = gameObject.transform.position + new Vector3(0f, 4f, 0f);
-        tooltip.transform.LookAt(stareat.position);
+        tooltip.transform.LookAt(2 * transform.position - stareat.position);
         tooltipManager.updateTooltips += UpdateValues;
         UpdateValues();
     }
