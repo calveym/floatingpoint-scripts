@@ -38,7 +38,7 @@ public class TestRunner : MonoBehaviour
 
     // Use this for initialization
     void Start()
-    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+    {
         manager = GameObject.Find("Managers");
         economyManager = manager.GetComponent<EconomyManager>();
         itemManager = manager.GetComponent<ItemManager>();
@@ -47,8 +47,6 @@ public class TestRunner : MonoBehaviour
         itemGenerator = GetComponent<ItemGenerator>();
 
         tod = ReferenceManager.instance.tod;
-        FindAllChildren();
-        EnableAllChildren();
     }
 
     // Update is called once per frame
@@ -136,28 +134,5 @@ Autelia.Coroutines.CoroutineController.StartCoroutine(this, "SecondTick");
     void NinthTest()
     {
         Debug.Log("Test 9 Running");
-    }
-
-    void FindAllChildren()
-    {
-        // residentialTrackers = transform.GetAllComponentsInChildren<ResidentialTracker>();
-        // commercialTrackers = transform.GetAllComponentsInChildren<CommercialTracker>();
-        // industrialTrackers = transform.GetAllComponentsInChildren<IndustrialTracker>();
-    }
-
-    void EnableAllChildren()
-    {
-        // for(int i = 0; i < residentialTrackers.Length; i++)
-        {
-            // residentialTrackers[i].SetUsable();
-        }
-        // for(int i = 0; i < commercialTrackers.Length; i++)
-        {
-            // commercialTrackers[i].SetUsable();
-        }
-        // for(int i = 0; i < industrialTrackers.Length; i++)
-        {
-            // industrialTrackers[i].SetUsable();
-        }
     }
 }

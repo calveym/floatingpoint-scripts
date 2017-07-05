@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Autelia.Serialization;
+using CloudCity;
 
 [System.Serializable]
 public class IndustrialTracker : ItemTracker {
