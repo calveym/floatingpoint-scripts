@@ -35,12 +35,12 @@ public class IndustrialComponent : ComponentSnap {
     public static StopCheck stopCheck;
 
     protected override void Start()
-    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+    {
         base.Start();
 
         checkStop = true;
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "WaitForStop");
+        Autelia.Coroutines.CoroutineController.StartCoroutine(WaitForStop());
     }
 
     protected override void Ungrab()
@@ -49,7 +49,7 @@ Autelia.Coroutines.CoroutineController.StartCoroutine(this, "WaitForStop");
 
         checkStop = true;
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "WaitForStop");
+        Autelia.Coroutines.CoroutineController.StartCoroutine(WaitForStop());
     }
 
     protected override void SetSphereMaterial()
@@ -89,6 +89,7 @@ Autelia.Coroutines.CoroutineController.StartCoroutine(this, "WaitForStop");
             linkedTracker = surroundingIndustrials[0];
             if(linkedTracker)
                 linkedTracker.LinkComponent(this);
+            Autelia.Coroutines.CoroutineController.StartCoroutine(StoppedCheck());
         }
     }
 
@@ -100,7 +101,7 @@ Autelia.Coroutines.CoroutineController.StartCoroutine(this, "WaitForStop");
 
         checkStop = true;
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "WaitForStop");
+        Autelia.Coroutines.CoroutineController.StartCoroutine(WaitForStop());
     }
 
     IEnumerator WaitForStop()

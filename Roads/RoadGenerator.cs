@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
 using Autelia.Serialization;
-using Autelia.Serialization;
 
 [SelectionBase]
+//[ExcludeFromSerialization(ExclusionOption.ExcludeGameObject)]
 public class RoadGenerator : VRTK_InteractableObject {
 
     public static RoadGenerator instance;
@@ -29,12 +29,13 @@ public class RoadGenerator : VRTK_InteractableObject {
 
     protected override void Awake()
 	// Initiates all of the dictionaries for lookups and all other variables that need to be initialized
-	{if (Serializer.IsLoading)	return;
+	{
         base.Awake();
         if(instance != this)
             instance = this;
+        if (Serializer.IsLoading) return;
 
-		roads = new Dictionary<Vector3, GameObject>();
+        roads = new Dictionary<Vector3, GameObject>();
 		surroundingRoads = new Dictionary<Vector3, string>();
 
 		Quaternion zero = new Quaternion(0, 0, 0, 1);
@@ -80,7 +81,7 @@ public class RoadGenerator : VRTK_InteractableObject {
 	}
 
     private void Start()
-    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+    {
         controller = GameObject.Find("RightController");
         events = controller.GetComponent<VRTK_ControllerEvents>();
     }

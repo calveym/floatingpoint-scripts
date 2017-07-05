@@ -12,10 +12,10 @@ public class RoadDeleter : VRTK_InteractableObject {
     private RaycastHit hit;
 
 	void Start ()
-	{if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
-		controller = GameObject.Find("LeftController");
-        events = controller.GetComponent<VRTK_ControllerEvents>();
-		roadGenerator = GameObject.Find("Island").GetComponent<RoadGenerator>();
+	{
+		controller = ReferenceManager.instance.leftController;
+        events = ReferenceManager.instance.leftEvents;
+		roadGenerator = ReferenceManager.instance.roadGenerator;
     }
 
 	public override void StartUsing (GameObject usingObject)

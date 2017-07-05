@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Autelia.Serialization;
-using Autelia.Serialization;
 
 [System.Serializable]
 public class IndustrialTracker : ItemTracker {
@@ -46,6 +45,8 @@ public class IndustrialTracker : ItemTracker {
         if (Serializer.IsDeserializing)
         {
             RemoveEcoTick();
+            productionMulti = 1;
+            components = new List<IndustrialComponent>();
             return;
         }
         base.Start();

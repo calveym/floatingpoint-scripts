@@ -16,7 +16,7 @@ public class PowerTracker : ServiceTrackerBase
     }
 
     protected override void Start ()
-    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+    {
         base.Start();
 
         power = ReferenceManager.instance.power;

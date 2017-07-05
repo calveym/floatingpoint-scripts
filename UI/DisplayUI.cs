@@ -96,7 +96,7 @@ public class DisplayUI : MonoBehaviour {
     }
 
     private void Start()
-    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+    {
         staticSpheres = transform.Find("StaticSpheres").gameObject;
         wheelBase = transform.Find("WheelBase").gameObject;
         canvas = transform.Find("Canvas").gameObject;
@@ -116,7 +116,7 @@ public class DisplayUI : MonoBehaviour {
         populationManager = ReferenceManager.instance.populationManager;
         progressionManager = ReferenceManager.instance.progressionManager;
         thumbTracker = GetComponent<ThumbTracker>();
-        events = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
+        events = ReferenceManager.instance.leftEvents;
         events.TouchpadTouchStart += DoTouchpadTouch;
         events.TouchpadPressed += DoTouchpadPress;
         events.TouchpadTouchEnd += DoTouchpadRelease;
@@ -140,7 +140,7 @@ public class DisplayUI : MonoBehaviour {
             HideMenu();
             showingGlobalStats = true;
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateGlobalStats");
+            Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateGlobalStats");
         }
 
         else if(displaying)
@@ -175,7 +175,7 @@ Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateGlobalStats")
             thumbTracker.StartTracking();
             ResetMenuColors();
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateGlobalStats");
+            Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateGlobalStats");
         }
 
         else if(!firstTouch)
@@ -192,7 +192,7 @@ Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateGlobalStats")
                     ShowBuildings();
                     showingGlobalStats = false;
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateBuildings");
+                    Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateBuildings");
                 }
             }
             else if(!TopButton())
@@ -206,7 +206,7 @@ Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateBuildings");
                     ShowMenu();
                     thumbTracker.ForceStopTrackingAngle();
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateGlobalStats");
+                    Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateGlobalStats");
                 }
                 else if(!showBuildings)
                     // Hide UI

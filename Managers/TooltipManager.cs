@@ -20,7 +20,6 @@ public class TooltipManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        if (Serializer.IsLoading)	return;
         headset = ReferenceManager.instance.cameraEye;
         rightController = ReferenceManager.instance.rightController;
         if (!headset)
@@ -39,7 +38,6 @@ public class TooltipManager : MonoBehaviour {
 
     void EnableObjectTooltip(object sender, ControllerInteractionEventArgs e)
     {
-        Debug.Log("Trying to enable");
         StartTooltips();
     }
 
@@ -57,7 +55,8 @@ public class TooltipManager : MonoBehaviour {
         {
             Debug.Log("Headset found, trying to enable");
             stareat = headset.transform;
-            nearestBuildings = U.FindNearestBuildings(headset.transform.position, 10f);
+            nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 10f);
+            Debug.Log(nearestBuildings.Count);
         }
         else
         // For testing
@@ -73,8 +72,12 @@ public class TooltipManager : MonoBehaviour {
 
     void EnableTooltips(GameObject building)
     {
-        if(building.tag == "residential" || building.tag == "service" || building.tag == "industrial" || building.tag == "commercial")
+        if (building.tag == "residential" || building.tag == "service" || building.tag == "industrial" || building.tag == "commercial")
+        {
+            Debug.Log("Enabling for " + building.name);
             building.GetComponent<TooltipBase>().EnableTooltip(stareat);
+
+        }
     }
 
     public void DisableTooltips()

@@ -29,7 +29,7 @@ public class WeatherManager : MonoBehaviour {
     AudioManager audioManager;
 
 	// Use this for initialization
-	void Start () {if (Serializer.IsLoading)	return;
+	void Start () {
         audioManager = ReferenceManager.instance.audioManager;
         tod = ReferenceManager.instance.tod;
         ToggleRain(false);
@@ -41,9 +41,9 @@ public class WeatherManager : MonoBehaviour {
 		drizzleParticleSystem = drizzleSystem.GetComponentsInChildren<ParticleSystem> ();
         fog = fogParticleSystem.emission;
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "MakeItRain");
+        Autelia.Coroutines.CoroutineController.StartCoroutine(this, "MakeItRain");
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "EnableFog");
+        Autelia.Coroutines.CoroutineController.StartCoroutine(this, "EnableFog");
         ReloadWeather();
 
 		TestRunner.first += Rainy;
@@ -143,7 +143,7 @@ Autelia.Coroutines.CoroutineController.StartCoroutine(this, "EnableFog");
     // Takes float between 0-1 for coverage
     {
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(GradualLerp(tod.Clouds.Coverage, intensity, 4f));
+        Autelia.Coroutines.CoroutineController.StartCoroutine(GradualLerp(tod.Clouds.Coverage, intensity, 4f));
         //tod.Clouds.Coverage = intensity;
     }
 

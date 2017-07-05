@@ -15,7 +15,7 @@ public class NightTime : MonoBehaviour {
 		tod = ReferenceManager.instance.tod;
 		intensity = 0.75f;
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "LightUpBuildings");
+        Autelia.Coroutines.CoroutineController.StartCoroutine(this, "LightUpBuildings");
 	}
 
 	IEnumerator LightUpBuildings()

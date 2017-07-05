@@ -24,7 +24,7 @@ public class RoadSnap : MonoBehaviour {
 		targetIsBlocked = status;
 	}
 
-    void Start() {if (Serializer.IsLoading)	return;
+    void Start() {
 		layerMask = 1 << roadLayer;
         interact = GetComponent<VRTK_InteractableObject>();
         //Debug.Log(gameObject + " " + interact);

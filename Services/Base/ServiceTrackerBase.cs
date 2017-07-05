@@ -22,13 +22,7 @@ public abstract class ServiceTrackerBase : SphereObject {
 
     protected List<GameObject> surroundingBuildings;
     public int numSurroundingBuildings;
-
-    protected override void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
-        base.Start();
-
-        economyManager = ReferenceManager.instance.economyManager;
- 	}
-
+    
     protected virtual void DoEffect()
     {
         surroundingBuildings = U.FindNearestBuildings(transform.position, radius);

@@ -19,8 +19,8 @@ public class ItemTracker : MonoBehaviour {
 
     [Header("Components")]
     [Space(5)]
-    public float availableTransportation;
-    public float numSnappedRoads;
+    public float availableTransportation = 1;
+    public float numSnappedRoads = 1;
 
     public static float totalResidentialIncome;
     public static float historicResidentialIncome;
@@ -123,15 +123,14 @@ public class ItemTracker : MonoBehaviour {
 
     public void Start()
     // Sets start variables
-    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
-        longtermHappiness = 0;
-        availableTransportation = 1;
-        landValue = 10f;
+    {
         happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
-        //usable = false;
+        if (Serializer.IsLoading)	return;
+        longtermHappiness = 0;
+        landValue = 10f;
     }
 
     void EnablePhysics()

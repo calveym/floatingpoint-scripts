@@ -22,7 +22,8 @@ public abstract class ComponentSnap : SphereObject {
     bool targetClear;  // Target location clear
 
     protected override void Grab()
-    {if (Serializer.IsDeserializing)	return;
+    {
+        if (Serializer.IsDeserializing)	return;
         base.Grab();
 
         targetClear = false;

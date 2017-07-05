@@ -22,7 +22,7 @@ public class TutorialTracker : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+	void Start () {
         manager = GameObject.Find("Managers").GetComponent<TutorialManager>();
         manager.AddSphere(this);
         rend = GetComponent<MeshRenderer>();
@@ -44,7 +44,7 @@ public class TutorialTracker : MonoBehaviour {
     void SendTriggerEntry()
     {
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "DoEntry");
+        Autelia.Coroutines.CoroutineController.StartCoroutine(this, "DoEntry");
         manager.TutorialTriggerEnter(trackerLevel, this);
     }
 

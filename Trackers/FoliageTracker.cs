@@ -23,8 +23,9 @@ public class FoliageTracker : ComponentSnap {
     }
 
     protected override void Start()
-    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+    {
         base.Start();
+
         if (!happinessAffector)
         {
             happinessAffector = GetComponent<HappinessAffector>();

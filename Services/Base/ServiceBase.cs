@@ -48,15 +48,12 @@ public abstract class ServiceBase: MonoBehaviour {
 
 
     protected virtual void Start()
-    {if (Serializer.IsLoading)	return;
+    {
         populationManager = ReferenceManager.instance.populationManager;
         economyManager = ReferenceManager.instance.economyManager;
         itemManager = ReferenceManager.instance.itemManager;
         serviceUpdater = UpdateServices;
-
-
-
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateService");
+        Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateService");
     }
 
     protected void UpdateDemand()

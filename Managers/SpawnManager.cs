@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using VRTK;
 using Autelia.Serialization;
-using Autelia.Serialization;
 
 public class SpawnManager : MonoBehaviour {
 
@@ -39,14 +38,14 @@ public class SpawnManager : MonoBehaviour {
     VRTK_ControllerEvents events;
 
     private void Awake()
-    {if (Serializer.IsLoading)	return;
+    {
         LoadAllBuildings();
     }
 
     private void Start()
-    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+    {
         FindSpheres();
-        events = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
+        events = ReferenceManager.instance.leftEvents;
     }
 
     public GameObject Spawn(Vector3 targetPosition, int type, int unit)
@@ -86,7 +85,7 @@ public class SpawnManager : MonoBehaviour {
     {
         GameObject newBuilding;
         ResetUIBuildings();
-        if(!sphere0 || !sphere1 || !sphere2 || !sphere3 || !sphere4)
+        if(!spawnController0 || !spawnController1 || !spawnController2 || !spawnController3 || !spawnController4)
         {
             FindSpheres();
         }

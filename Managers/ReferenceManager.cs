@@ -13,7 +13,6 @@ public class ReferenceManager : MonoBehaviour {
     public GameObject rightController;
     public GameObject leftController;
     public GameObject cameraEye;
-
     public VRTK_ControllerEvents rightEvents;
     public VRTK_ControllerEvents leftEvents;
 
@@ -78,6 +77,15 @@ public class ReferenceManager : MonoBehaviour {
             instance = this;
         }
 	}
+
+    private void Start()
+    {
+        cameraEye = GameObject.Find("Headset");
+        rightController = GameObject.Find("RightController");
+        leftController = GameObject.Find("LeftController");
+        leftEvents = leftController.GetComponent<VRTK_ControllerEvents>();
+        rightEvents = rightController.GetComponent<VRTK_ControllerEvents>();
+    }
 
     private void Update()
     {

@@ -43,7 +43,6 @@ public class SpawnController : MonoBehaviour
 
     private void Start()
     {
-        if (Serializer.IsLoading) return;
         displayUI = transform.parent.transform.parent.GetComponent<DisplayUI>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
         thumb = transform.parent.transform.parent.GetComponent<ThumbTracker>();

@@ -12,7 +12,7 @@ public class industrialSmokeNightDisable : MonoBehaviour {
 	{
 		tod = ReferenceManager.instance.tod;
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "turnOffSmokeAtNight");
+        Autelia.Coroutines.CoroutineController.StartCoroutine(this, "turnOffSmokeAtNight");
 	}
 
 	IEnumerator turnOffSmokeAtNight()

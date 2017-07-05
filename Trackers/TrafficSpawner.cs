@@ -121,7 +121,7 @@ Autelia.Coroutines.CoroutineController.StartCoroutine(this, "CheckNumCars");
     {
         while (spawnCars)
         {
-			int numRoads = RoadGenerator.instance.roads.Count;
+			int numRoads = ReferenceManager.instance.roadGenerator.roads.Count;
 			int maxCars = Mathf.RoundToInt (numRoads / 6);
             if(maxCars > ReferenceManager.instance.populationManager.totalPopulation)
             {

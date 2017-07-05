@@ -46,9 +46,9 @@ public class ItemManager : MonoBehaviour {
     void Start ()
     // Get manager instances
     {
-        economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();
-        populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
-        roadGenerator = GameObject.Find("Island").GetComponent<RoadGenerator>();
+        economyManager = ReferenceManager.instance.economyManager;
+        populationManager = ReferenceManager.instance.populationManager;
+        roadGenerator = ReferenceManager.instance.roadGenerator;
         if (Serializer.IsLoading)
         {
             ResetItems();

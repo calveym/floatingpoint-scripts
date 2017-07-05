@@ -13,7 +13,7 @@ public class Education : ServiceBase
 
 
     protected void Awake()
-    {if (Serializer.IsLoading)	return;
+    {
         education = new List<EducationTracker>();
     }
 

@@ -41,7 +41,7 @@ public class PopulationManager : MonoBehaviour {
 
     void Awake()
     {
-        population = 0;
+        if (Serializer.IsLoading) return;
         resUpdate = 0;
         indUpdate = 0;
         comUpdate = 0;
@@ -49,7 +49,7 @@ public class PopulationManager : MonoBehaviour {
 
     void Start ()
 	// Set values pre-initialization
-	{if (Serializer.IsLoading)	return;
+	{
         names = gameObject.GetComponent<NameGenerator>();
         firstNames = names.FirstNames();
         lastNames = names.LastNames();

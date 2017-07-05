@@ -268,7 +268,7 @@ public class ResidentialTracker : ItemTracker {
         {
             movingOut = true;
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "MoveOut");
+            Autelia.Coroutines.CoroutineController.StartCoroutine(this, "MoveOut");
         }
     }
 

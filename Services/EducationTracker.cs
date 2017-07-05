@@ -15,10 +15,10 @@ public class EducationTracker : ServiceTrackerBase {
     }
 
     protected override void Start()
-    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+    {
         base.Start();
-
         education = ReferenceManager.instance.education;
+        AddService();
     }
 
     public override void AddService()

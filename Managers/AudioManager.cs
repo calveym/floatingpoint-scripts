@@ -51,13 +51,11 @@ public class AudioManager : MonoBehaviour {
     // State 2 = Day
 
 	// Use this for initialization
-	void Awake () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+	void Awake () {
         if (instance == null)
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
-
-        //DontDestroyOnLoad(gameObject);
         checkTime = true;
         city = false;
         time = 0;
@@ -67,8 +65,7 @@ public class AudioManager : MonoBehaviour {
 
     void Start()
     {
-
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "TimeCheck");
+        Autelia.Coroutines.CoroutineController.StartCoroutine(this, "TimeCheck");
     }
 
     public void PlaySingle(AudioClip clip)
