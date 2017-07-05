@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
 using Autelia.Serialization;
+using CloudCity;
 
 public abstract class SphereObject : VRTK_InteractableObject {
 

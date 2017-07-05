@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
+using CloudCity;
 
 public class ReferenceManager : MonoBehaviour {
 
