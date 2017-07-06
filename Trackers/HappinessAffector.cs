@@ -24,7 +24,7 @@ public class HappinessAffector : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {if (Serializer.IsLoading)	return;
+    void Start () {
         EconomyManager.foliageTick += StartAffect;
 	}
 	
