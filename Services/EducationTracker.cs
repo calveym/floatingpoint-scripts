@@ -3,64 +3,69 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Autelia.Serialization;
+namespace CloudCity
+{
 
-[SelectionBase]
-public class EducationTracker : ServiceTrackerBase {
-
-    Education education;
-
-    protected override void Awake()
+    [SelectionBase]
+    public class EducationTracker : ServiceTrackerBase
     {
-        base.Awake();
-    }
 
-    protected override void Start()
-    {
-        base.Start();
-        education = ReferenceManager.instance.education;
-        AddService();
-    }
+        Education education;
 
-    public override void AddService()
-    {
-        base.AddService();
-        education.AddEducation(this);
-        education.addLocalEducation += DoEffect;
-        education.servicePayment += PayForService;
-    }
-
-    protected override void DoEffect()
-    {
-        base.DoEffect();
-        if (surroundingBuildings.Count <= amount)
+        protected override void Awake()
         {
-            foreach (GameObject building in surroundingBuildings)
+            base.Awake();
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            education = ReferenceManager.instance.education;
+            AddService();
+        }
+
+        public override void AddService()
+        {
+            base.AddService();
+            education.AddEducation(this);
+            education.addLocalEducation += DoEffect;
+            education.servicePayment += PayForService;
+        }
+
+        protected override void DoEffect()
+        {
+            base.DoEffect();
+            if (surroundingBuildings.Count <= amount)
             {
-                if (building != gameObject && building.tag == "industrial" || building.tag == "commercial" || building.tag == "residential")
+                foreach (GameObject building in surroundingBuildings)
                 {
-                    building.GetComponent<ItemTracker>().education = true;
+                    if (building != gameObject && building.tag == "industrial" || building.tag == "commercial" || building.tag == "residential")
+                    {
+                        building.GetComponent<ItemTracker>().education = true;
+                    }
+                }
+            }
+            else if (amount < surroundingBuildings.Count)
+            {
+                for (int i = 0; i < amount; i++)
+                {
+                    if (surroundingBuildings[i] != gameObject && surroundingBuildings[i].tag == "industrial" || surroundingBuildings[i].tag == "commercial" || surroundingBuildings[i].tag == "residential")
+                    {
+                        surroundingBuildings[i].GetComponent<ItemTracker>().education = true;
+                    }
                 }
             }
         }
-        else if (amount < surroundingBuildings.Count)
+
+        protected override void SetSphereMaterial()
         {
-            for (int i = 0; i < amount; i++)
-            {
-                if (surroundingBuildings[i] != gameObject && surroundingBuildings[i].tag == "industrial" || surroundingBuildings[i].tag == "commercial" || surroundingBuildings[i].tag == "residential")
-                {
-                    surroundingBuildings[i].GetComponent<ItemTracker>().education = true;
-                }
-            }
+            sphereScript.SetSphereMaterial(sphereMaterial);
+        }
+
+        protected override void PayForService()
+        {
+            education.AddCost(cost);
         }
     }
 
-    protected override void SetSphereMaterial()
-    {
-        sphereScript.SetSphereMaterial(sphereMaterial);
-    }
-
-    protected override void PayForService()
-    {
-        education.AddCost(cost);
-    }
 }

@@ -1,18 +1,19 @@
 ﻿using Newtonsoft.Json;
 using UnityEngine;
+using CloudCity;
 
 namespace Autelia.Serialization.Mementos.Unity
 {
     [JsonObject(MemberSerialization.Fields)]
     [System.Serializable]
-    public sealed class FireTrackerMemento : BehaviourMemento<FireTracker, FireTrackerMemento>
+    public sealed class HealthTrackerMemento : BehaviourMemento<HealthTracker, HealthTrackerMemento>
     {
         int _amount;
         string _type;
         int _cost;
         Material _sphereMaterial;
 
-        protected override bool Serialize(FireTracker originator)
+        protected override bool Serialize(HealthTracker originator)
         {
             base.Serialize(originator);
 
@@ -24,7 +25,7 @@ namespace Autelia.Serialization.Mementos.Unity
             return true;
         }
 
-        protected override void Deserialize(ref FireTracker behaviour)
+        protected override void Deserialize(ref HealthTracker behaviour)
         {
             base.Deserialize(ref behaviour);
             behaviour.buyCost = 0;
@@ -34,14 +35,14 @@ namespace Autelia.Serialization.Mementos.Unity
             behaviour.sphereMaterial = _sphereMaterial;
         }
 
-        public static implicit operator FireTrackerMemento(FireTracker fireTracker)
-        { return Create(fireTracker); }
+        public static implicit operator HealthTrackerMemento(HealthTracker healthTracker)
+        { return Create(healthTracker); }
 
-        public static implicit operator FireTracker(FireTrackerMemento fireTrackerMemento)
+        public static implicit operator HealthTracker(HealthTrackerMemento healthTrackerMemento)
         {
-            if (fireTrackerMemento == null)
+            if (healthTrackerMemento == null)
                 return null;
-            return fireTrackerMemento.Originator;
+            return healthTrackerMemento.Originator;
         }
     }
 }

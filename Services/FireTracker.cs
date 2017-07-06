@@ -3,65 +3,68 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Autelia.Serialization;
-
-[SelectionBase]
-public class FireTracker : ServiceTrackerBase {
-
-    Fire fire;
-
-    protected override void Awake()
+namespace CloudCity
+{
+    [SelectionBase]
+    public class FireTracker : ServiceTrackerBase
     {
-        base.Awake();
-    }
 
-    protected override void Start()
-    {
-        base.Start();
-        fire = ReferenceManager.instance.fire;
-    }
+        Fire fire;
 
-    public override void AddService()
-    {
-        base.AddService();
-        fire.AddFire(this);
-        fire.addLocalFire += DoEffect;
-        fire.servicePayment += PayForService;
-    }
-
-    protected override void DoEffect()
-    {
-        base.DoEffect();
-        if (surroundingBuildings.Count <= amount)
+        protected override void Awake()
         {
-            foreach (GameObject building in surroundingBuildings)
+            base.Awake();
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            fire = ReferenceManager.instance.fire;
+        }
+
+        public override void AddService()
+        {
+            base.AddService();
+            fire.AddFire(this);
+            fire.addLocalFire += DoEffect;
+            fire.servicePayment += PayForService;
+        }
+
+        protected override void DoEffect()
+        {
+            base.DoEffect();
+            if (surroundingBuildings.Count <= amount)
             {
-                if (building != gameObject && building.tag == "industrial" || building.tag == "commercial" || building.tag == "industrial")
+                foreach (GameObject building in surroundingBuildings)
                 {
-                    ItemTracker tempTracker = building.GetComponent<ItemTracker>();
-                    if(tempTracker)
-                        tempTracker.fire = true;
+                    if (building != gameObject && building.tag == "industrial" || building.tag == "commercial" || building.tag == "industrial")
+                    {
+                        ItemTracker tempTracker = building.GetComponent<ItemTracker>();
+                        if (tempTracker)
+                            tempTracker.fire = true;
+                    }
+                }
+            }
+            else if (amount < surroundingBuildings.Count)
+            {
+                for (int i = 0; i < amount; i++)
+                {
+                    if (surroundingBuildings[i] != gameObject)
+                    {
+                        surroundingBuildings[i].GetComponent<ItemTracker>().fire = true;
+                    }
                 }
             }
         }
-        else if (amount < surroundingBuildings.Count)
+
+        protected override void SetSphereMaterial()
         {
-            for (int i = 0; i < amount; i++)
-            {
-                if (surroundingBuildings[i] != gameObject)
-                {
-                    surroundingBuildings[i].GetComponent<ItemTracker>().fire = true;
-                }
-            }
+            sphereScript.SetSphereMaterial(sphereMaterial);
         }
-    }
 
-    protected override void SetSphereMaterial()
-    {
-        sphereScript.SetSphereMaterial(sphereMaterial);
-    }
-
-    protected override void PayForService()
-    {
-        fire.AddCost(cost);
+        protected override void PayForService()
+        {
+            fire.AddCost(cost);
+        }
     }
 }

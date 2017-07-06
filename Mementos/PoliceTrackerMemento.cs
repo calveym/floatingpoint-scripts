@@ -1,18 +1,19 @@
 ﻿using Newtonsoft.Json;
 using UnityEngine;
+using CloudCity;
 
 namespace Autelia.Serialization.Mementos.Unity
 {
     [JsonObject(MemberSerialization.Fields)]
     [System.Serializable]
-    public sealed class PowerTrackerMemento : BehaviourMemento<PowerTracker, PowerTrackerMemento>
+    public sealed class PoliceTrackerMemento : BehaviourMemento<PoliceTracker, PoliceTrackerMemento>
     {
         int _amount;
         string _type;
         int _cost;
         Material _sphereMaterial;
 
-        protected override bool Serialize(PowerTracker originator)
+        protected override bool Serialize(PoliceTracker originator)
         {
             base.Serialize(originator);
 
@@ -24,7 +25,7 @@ namespace Autelia.Serialization.Mementos.Unity
             return true;
         }
 
-        protected override void Deserialize(ref PowerTracker behaviour)
+        protected override void Deserialize(ref PoliceTracker behaviour)
         {
             base.Deserialize(ref behaviour);
             behaviour.buyCost = 0;
@@ -34,14 +35,14 @@ namespace Autelia.Serialization.Mementos.Unity
             behaviour.sphereMaterial = _sphereMaterial;
         }
 
-        public static implicit operator PowerTrackerMemento(PowerTracker powerTracker)
-        { return Create(powerTracker); }
+        public static implicit operator PoliceTrackerMemento(PoliceTracker policeTracker)
+        { return Create(policeTracker); }
 
-        public static implicit operator PowerTracker(PowerTrackerMemento powerTrackerMemento)
+        public static implicit operator PoliceTracker(PoliceTrackerMemento policeTrackerMemento)
         {
-            if (powerTrackerMemento == null)
+            if (policeTrackerMemento == null)
                 return null;
-            return powerTrackerMemento.Originator;
+            return policeTrackerMemento.Originator;
         }
     }
 }
