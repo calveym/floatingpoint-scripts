@@ -29,7 +29,8 @@ public abstract class TooltipBase : MonoBehaviour {
         }
         tooltip = Instantiate(tooltipPrefab, gameObject.transform);
         tooltip.transform.position = gameObject.transform.position + new Vector3(0f, 4f, 0f);
-        tooltip.transform.LookAt(stareat.position);
+        tooltip.transform.LookAt(2 * transform.position - stareat.position);
+        tooltip.transform.rotation = Quaternion.Euler(new Vector3(15f, transform.eulerAngles.y, transform.eulerAngles.z));
         tooltipManager.updateTooltips += UpdateValues;
         UpdateValues();
     }

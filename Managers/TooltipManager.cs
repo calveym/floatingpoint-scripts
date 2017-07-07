@@ -20,10 +20,9 @@ public class TooltipManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        headset = ReferenceManager.instance.cameraEye;
+        headset = ReferenceManager.instance.headset;
+        Debug.Log(headset);
         rightController = ReferenceManager.instance.rightController;
-        if (!headset)
-            testTooltipObject = ReferenceManager.instance.spherePrefab;
         rightController.GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
         rightController.GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
     }
