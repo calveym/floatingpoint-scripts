@@ -15,7 +15,7 @@ namespace Autelia.Serialization.Mementos.Unity
         int _baseCost;
         int _buyCost;
         bool _usable;
-        Material _industrialMaterial;
+        MaterialMemento _industrialMaterial;
 
         protected override bool Serialize(IndustrialComponent originator)
         {

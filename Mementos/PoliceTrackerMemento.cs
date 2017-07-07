@@ -11,7 +11,7 @@ namespace Autelia.Serialization.Mementos.Unity
         int _amount;
         string _type;
         int _cost;
-        Material _sphereMaterial;
+        MaterialMemento _sphereMaterial;
 
         protected override bool Serialize(PoliceTracker originator)
         {

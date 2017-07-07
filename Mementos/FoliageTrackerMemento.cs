@@ -13,8 +13,8 @@ namespace Autelia.Serialization.Mementos.Unity
         bool _active;
         int _buyCost;
         int _radius;
-        Material _sphereMaterial;
-        Sphere _sphereScript;
+        MaterialMemento _sphereMaterial;
+        IMemento _sphereScript;
 
         protected override bool Serialize(FoliageTracker originator)
         {
@@ -23,7 +23,7 @@ namespace Autelia.Serialization.Mementos.Unity
             _buyCost = originator.buyCost;
             _radius = originator.radius;
             _sphereMaterial = originator.sphereMaterial;
-            _sphereScript = originator.sphereScript;
+            _sphereScript = MementoFactory.CreateMemento(originator.sphereScript);
             return true;
         }
 
@@ -35,7 +35,8 @@ namespace Autelia.Serialization.Mementos.Unity
             r.buyCost = _buyCost;
             r.radius = _radius;
             r.sphereMaterial = _sphereMaterial;
-            r.sphereScript = _sphereScript;
+				if (_sphereScript != null)
+					r.sphereScript = (Sphere)_sphereScript.GetOriginator();
         }
 
         public static implicit operator FoliageTrackerMemento(FoliageTracker foliageTracker)
