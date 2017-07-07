@@ -15,13 +15,14 @@ public class TooltipManager : MonoBehaviour {
     Transform stareat;
     [Tooltip("Tooltips spawn from here if no controller present")]
     public GameObject testTooltipObject;
+    [Tooltip("Use headset if true, else use assigned object")]
+    public bool useHeadset;
 
     public static bool pressed;
 
 	// Use this for initialization
 	void Start () {
         headset = ReferenceManager.instance.headset;
-        Debug.Log(headset);
         rightController = ReferenceManager.instance.rightController;
         rightController.GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(EnableObjectTooltip);
         rightController.GetComponent<VRTK_ControllerEvents>().ButtonOneReleased += new ControllerInteractionEventHandler(DisableObjectTooltip);
@@ -49,13 +50,11 @@ public class TooltipManager : MonoBehaviour {
     // Used in conjunction with test runner to create tooltips without headset and controllers
     {
         pressed = true;
-        if(headset)
+        if(useHeadset)
         // Used during play
         {
-            Debug.Log("Headset found, trying to enable");
             stareat = headset.transform;
             nearestBuildings = U.FindNearestBuildings(rightController.transform.position, 10f);
-            Debug.Log(nearestBuildings.Count);
         }
         else
         // For testing
@@ -74,7 +73,7 @@ public class TooltipManager : MonoBehaviour {
         if (building.tag == "residential" || building.tag == "service" || building.tag == "industrial" || building.tag == "commercial")
         {
             Debug.Log("Enabling for " + building.name);
-            building.GetComponent<TooltipBase>().EnableTooltip(stareat);
+            building.GetComponent<TooltipBase>().EnableTooltip(stareat.transform.position - new Vector3(0, 10f, 0));
 
         }
     }

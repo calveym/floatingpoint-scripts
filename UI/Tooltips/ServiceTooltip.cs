@@ -32,7 +32,7 @@ public class ServiceTooltip : TooltipBase
         serviceTracker = GetComponent<ServiceTrackerBase>();
     }
 
-    public override void EnableTooltip(Transform stareat)
+    public override void EnableTooltip(Vector3 stareat)
     {
         base.EnableTooltip(stareat);
 

@@ -113,11 +113,8 @@ public class TestRunner : MonoBehaviour
     void SixthTest()
     {
         Debug.Log("Test 6 Running");
-        TooltipManager tooltip = manager.GetComponent<TooltipManager>();
         TooltipManager.pressed = true;
-
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "SecondTick");
-        tooltip.StartTooltips();
+        manager.GetComponent<TooltipManager>().StartTooltips();
     }
 
     void SeventhTest()

@@ -21,16 +21,16 @@ public abstract class TooltipBase : MonoBehaviour {
         tooltipPrefab = ReferenceManager.instance.serviceTooltipPrefab;
     }
 
-    public virtual void EnableTooltip(Transform stareat)
+    public virtual void EnableTooltip(Vector3 stareat)
     {
         if (tooltip != null)
         {
             Destroy(tooltip);
         }
         tooltip = Instantiate(tooltipPrefab, gameObject.transform);
+        tooltip.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
         tooltip.transform.position = gameObject.transform.position + new Vector3(0f, 4f, 0f);
-        tooltip.transform.LookAt(2 * transform.position - stareat.position);
-        tooltip.transform.rotation = Quaternion.Euler(new Vector3(15f, transform.eulerAngles.y, transform.eulerAngles.z));
+        tooltip.transform.LookAt(2 * transform.position - stareat);
         tooltipManager.updateTooltips += UpdateValues;
         UpdateValues();
     }
