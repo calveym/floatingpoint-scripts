@@ -72,8 +72,7 @@ public class TooltipManager : MonoBehaviour {
     {
         if (building.tag == "residential" || building.tag == "service" || building.tag == "industrial" || building.tag == "commercial")
         {
-            Debug.Log("Enabling for " + building.name);
-            building.GetComponent<TooltipBase>().EnableTooltip(stareat.transform.position - new Vector3(0, 10f, 0));
+            building.GetComponent<TooltipBase>().EnableTooltip(stareat.transform.position - new Vector3(0, 8f, 0));
 
         }
     }

@@ -201,7 +201,7 @@ public class SpawnController : MonoBehaviour
     {
         RetrieveLevel();
         //Debug.Log("Level: " + level);
-        if (level > ProgressionManager.level)
+        if (level > ReferenceManager.instance.progressionManager.level)
         {
             disablePurchase = true;
             containedBuilding.GetComponent<Renderer>().material = disablePurchaseMaterial;

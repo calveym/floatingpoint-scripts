@@ -48,8 +48,8 @@ public class TutorialManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        leftEvents = GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>();
-        rightEvents = GameObject.Find("RightController").GetComponent<VRTK_ControllerEvents>();
+        leftEvents = ReferenceManager.instance.leftEvents;
+        rightEvents = ReferenceManager.instance.rightEvents;
 
         leftEvents.TouchpadPressed += DoLeftTouchpadPress;
         rightEvents.TouchpadPressed += DoRightTouchpadPress;

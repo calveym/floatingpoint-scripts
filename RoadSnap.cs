@@ -66,6 +66,7 @@ public class RoadSnap : MonoBehaviour {
 	}
 		
 	void Update () {
+        if (Serializer.IsLoading) return;
 		if (objectUsed || manualUse) {
 
 			Main ();
@@ -74,6 +75,8 @@ public class RoadSnap : MonoBehaviour {
 
 	void Main() {
         //Debug.Log("Checking for snap");
+        if (!targetBoxPrefab)
+            targetBoxPrefab = ReferenceManager.instance.buildingTarget;
 		targetBoxPrefab.GetComponent<SnapPoints> ().bounds = originalBounds; // fixes the target box rotating with building
 
 		List<GameObject> closestObjects = FindClosestObjects ();

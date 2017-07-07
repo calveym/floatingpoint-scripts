@@ -120,7 +120,7 @@ public class TestRunner : MonoBehaviour
     void SeventhTest()
     {
         Debug.Log("Test 7 Running");
-        // SpawnManager.Spawn(transform.position, "res_a1_green");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
 
     void EighthTest()

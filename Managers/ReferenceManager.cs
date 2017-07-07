@@ -55,6 +55,7 @@ public class ReferenceManager : MonoBehaviour {
     public GameObject commercialTooltipPrefab;
     public GameObject industrialTooltipPrefab;
     public GameObject foliageTooltipPrefab;
+    public GameObject buildingTarget;
 
     [Space(10)]
     [Header("Income modification")]

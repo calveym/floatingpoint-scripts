@@ -430,8 +430,8 @@ public class DisplayUI : MonoBehaviour {
         globalBalance.text = economyManager.FancyBalance();
         globalTotalPopulation.text = populationManager.FancyTotalPopulation();
         globalUnemployedPopulation.text = populationManager.FancyUnemployedPopulation();
-        globalLevel.text = "Level: " + ProgressionManager.level;
-        globalGoodsConsumed.text = "Level Up Population: " + ProgressionManager.ToNextLevel();
+        globalLevel.text = "Level: " + ReferenceManager.instance.progressionManager.level;
+        globalGoodsConsumed.text = "Level Up Population: " + ReferenceManager.instance.progressionManager.ToNextLevel();
         SetHappiness();
     }
 
