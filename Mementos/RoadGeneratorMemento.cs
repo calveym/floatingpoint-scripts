@@ -20,7 +20,6 @@ namespace Autelia.Serialization.Mementos.Unity
 		protected override bool Serialize(RoadGenerator originator)
 		{
 			base.Serialize(originator);
-			Debug.Log("Serializing road gen");
 			_roads = originator.roads;
 			_surroundingRoads = originator.surroundingRoads;
 			_numRoads = originator.numRoads;

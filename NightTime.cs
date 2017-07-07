@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NightTime : MonoBehaviour {
 
+    public static NightTime instance;
 	TOD_Sky tod;
 	private bool lightsOn = true;
 	public Material mat;
@@ -12,11 +13,25 @@ public class NightTime : MonoBehaviour {
 
 	void Start() 
 	{
+        if (instance == null)
+            instance = this;
+        if (instance != this)
+            Destroy(this);
+
 		tod = ReferenceManager.instance.tod;
 		intensity = 0.75f;
 
+        Autelia.Serialization.Serializer.OnDeserializationStart -= StopAll;
+        Autelia.Serialization.Serializer.OnDeserializationStart += StopAll;
+
         Autelia.Coroutines.CoroutineController.StartCoroutine(this, "LightUpBuildings");
 	}
+
+    void StopAll()
+    {
+        Debug.Log("Stopping routines");
+        Autelia.Coroutines.CoroutineController.StopCoroutine(this, "LightUpBuildings");
+    }
 
 	IEnumerator LightUpBuildings()
 	{
