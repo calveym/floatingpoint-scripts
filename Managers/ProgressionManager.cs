@@ -63,14 +63,13 @@ public class ProgressionManager : MonoBehaviour {
 
     void PerformLevelUp(int newLevel)
     {
-        string levelUpString = string.Format("Level up! You are now Level {0} You have unlocked some new buildings!",
-                                             level);
-        PopupManager.Popup(levelUpString);
-
         if (levelUp != null)
             levelUp();
         AudioManager.instance.PlaySingle(levelUpSound);
         level = newLevel;
+        string levelUpString = string.Format("Level up! You are now Level {0} You have unlocked some new buildings!",
+                                         level);
+        PopupManager.Popup(levelUpString);
     }
 
     void UnlockBuildingTier()

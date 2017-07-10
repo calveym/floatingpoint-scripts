@@ -5,30 +5,31 @@ public class IndustrialOverlay : BuildingTooltipBase
 {
 
     int numVisitors;
-    TextMesh visitorText;
+    float productionMulti;
+    TextMesh productionText;
 
     protected override void Start()
     {
         base.Start();
-        tooltipPrefab = ReferenceManager.instance.commercialTooltipPrefab;
         tracker = GetComponent<IndustrialTracker>();
+        tooltipPrefab = ReferenceManager.instance.industrialTooltipPrefab;
     }
 
     protected override void UpdateReferences()
     {
         base.UpdateReferences();
-        visitorText = tooltip.transform.Find("VisitorText").GetComponent<TextMesh>();
+        productionText = tooltip.transform.Find("ProductionText").GetComponent<TextMesh>();
     }
 
     protected override void UpdateText()
     {
         base.UpdateText();
-        visitorText.text = numVisitors.ToString();
+        productionText.text = productionMulti.ToString();
     }
 
     protected override void UpdateValues()
     {
         base.UpdateValues();
-        numVisitors = tracker.visitors;
+        productionMulti = tracker.productionMulti;
     }
 }

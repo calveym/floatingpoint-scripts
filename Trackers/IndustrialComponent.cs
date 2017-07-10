@@ -28,7 +28,7 @@ namespace CloudCity
         [Tooltip("Material to change sphere to on grab")]
         public Material industrialMaterial;
 
-        IndustrialTracker linkedTracker;
+        public IndustrialTracker linkedTracker;
 
         bool checkStop;
         Vector3 oldPosition;
@@ -80,19 +80,30 @@ namespace CloudCity
             }
         }
 
-        void Link()
+        void Link(IndustrialTracker tempTracker)
         // Saves industrial tracker link and informs tracker of bonus
         {
+            Debug.Log("Tryna link");
+            linkedTracker = tempTracker;
+            Debug.Log("Linked tracker: " + linkedTracker);
+            if (linkedTracker)
+                linkedTracker.LinkComponent(this);
+            else return;
             stopCheck += UnlinkIfMoving;
 
+            Autelia.Coroutines.CoroutineController.StartCoroutine(StoppedCheck());
+        }
+
+        bool TryLink()
+        {
             List<IndustrialTracker> surroundingIndustrials = U.ReturnIndustrialTrackers(U.FindNearestBuildings(transform.position, radius));
-            if(surroundingIndustrials.Count >= 1)
+            Debug.Log(surroundingIndustrials.Count + "Industrials found");
+            if (surroundingIndustrials.Count >= 1)
             {
-                linkedTracker = surroundingIndustrials[0];
-                if(linkedTracker)
-                    linkedTracker.LinkComponent(this);
-                Autelia.Coroutines.CoroutineController.StartCoroutine(StoppedCheck());
+                Link(surroundingIndustrials[0]);
+                return true;
             }
+            else return false;
         }
 
         void Unlink()
@@ -109,15 +120,17 @@ namespace CloudCity
         IEnumerator WaitForStop()
         // Checks position until stopped, links component once stopped.
         {
+            yield return null;
             while(checkStop)
             {
                 if(CheckStopped())
                 {
-                    checkStop = false;
-                    Link();
+                    Debug.Log("Getting here");
+                    if (TryLink())
+                        checkStop = false;
                 }
+                yield return new WaitForSeconds(1f);
             }
-            yield return new WaitForSeconds(4.9f);
         }
 
         static IEnumerator StoppedCheck()
@@ -129,6 +142,7 @@ namespace CloudCity
                 {
                     stopCheck();
                 }
+                yield return new WaitForSeconds(1f);
             }
         }
     }

@@ -15,7 +15,6 @@ public class IndustrialTracker : ItemTracker {
     GameObject markerPrefab;
     Marker marker;
     List<IndustrialComponent> components;
-    List<float> sales; // List of recent sales counted in goodsSold
     List<ResidentialTracker> employees;
 
     public float productionHappiness; // Happiness from reaching sales targets
@@ -24,21 +23,18 @@ public class IndustrialTracker : ItemTracker {
 
     public float sellPrice = 1;  // Base sell price
 
-    // Multipliers from components
-    public float productionMulti;
-
     bool checkEnable;
 
     void Awake()
     {
-        if (Serializer.IsLoading)	return;
         rand = new System.Random(); //reuse this if generating many
         sellPrice = 1;
-        employees = new List<ResidentialTracker>();
-        sales = new List<float>();
         components = new List<IndustrialComponent>();
-        goodsSold = 0;
         productionMulti = 1;
+
+        if (Serializer.IsLoading) return;
+        employees = new List<ResidentialTracker>();
+        goodsSold = 0;
     }
 
     protected override void Start()
@@ -46,13 +42,7 @@ public class IndustrialTracker : ItemTracker {
         base.Start();
         markerPrefab = GameObject.Find("MarkerPrefab");
 
-        if (Serializer.IsDeserializing)
-        {
-            RemoveEcoTick();
-            productionMulti = 1;
-            components = new List<IndustrialComponent>();
-            return;
-        }
+        if (Serializer.IsDeserializing) { RemoveEcoTick(); }
     }
 
     void Update()
@@ -161,6 +151,7 @@ public class IndustrialTracker : ItemTracker {
     public void LinkComponent(IndustrialComponent component)
     // Sent from component, completes link
     {
+        Debug.Log("Linking yay");
         if(!components.Contains(component))
         {
             components.Add(component);

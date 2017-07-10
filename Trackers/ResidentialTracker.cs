@@ -15,19 +15,12 @@ public class ResidentialTracker : ItemTracker {
     protected override void Start()
     {
         base.Start();
-        Debug.Log("Start called");
         if (Serializer.IsDeserializing)
         {
             RemoveEcoTick();
             return;
         }
         //StartCoroutine("CheckEnable");
-    }
-
-    public void OnDestroy()
-    {
-        Debug.Log("Residential Tracker: " + gameObject.name + " is getting destroyed");
-        Debug.Log("Instance ID: " + GetInstanceID());
     }
 
     void Update()

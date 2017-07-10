@@ -116,10 +116,13 @@ public class ItemTracker : MonoBehaviour {
     public float goodsSold;
     public float goodsProduced;  // Goods produced in last economic tick
 
+    // Multipliers from components
+    public float productionMulti;
+
+
     private void Awake()
     {
         // Wake up fool
-        Debug.Log("Residential Tracker waking up");
     }
 
     protected virtual void Start()

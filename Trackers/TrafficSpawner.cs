@@ -120,6 +120,7 @@ public class TrafficSpawner : MonoBehaviour {
     {
         while (spawnCars)
         {
+            Debug.Log("Road Gen from refman: " + ReferenceManager.instance.roadGenerator);
 			int numRoads = ReferenceManager.instance.roadGenerator.roads.Count;
 			int maxCars = Mathf.RoundToInt (numRoads / 6);
             if(maxCars > ReferenceManager.instance.populationManager.totalPopulation)
