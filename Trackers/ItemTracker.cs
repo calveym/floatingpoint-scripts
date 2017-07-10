@@ -98,7 +98,7 @@ public class ItemTracker : MonoBehaviour {
     public float longtermHappiness; // Most important happiness figure, should be used in most significant income, landvalue etc calculations
     public int happinessState;
 
-    protected int cumulativeUnhappiness = 0;  // Used to determine when people start moving out from unhappiness
+    public int cumulativeUnhappiness = 0;  // Used to determine when people start moving out from unhappiness
     [Space(10)]
     [Header("Services")]
     [Space(5)]
@@ -119,9 +119,10 @@ public class ItemTracker : MonoBehaviour {
     private void Awake()
     {
         // Wake up fool
+        Debug.Log("Residential Tracker waking up");
     }
 
-    public void Start()
+    protected virtual void Start()
     // Sets start variables
     {
         happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();

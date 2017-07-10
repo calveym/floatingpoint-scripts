@@ -21,7 +21,7 @@ public class HappinessManager : MonoBehaviour {
         happiness = 0;
         keepUpdating = true;
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateHappiness");
+        Autelia.Coroutines.CoroutineController.StartCoroutine(this, "UpdateHappiness");
     }
 
     IEnumerator UpdateHappiness()

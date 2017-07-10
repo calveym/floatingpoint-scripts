@@ -11,7 +11,7 @@ public class HappinessAffector : MonoBehaviour {
     [Tooltip("[Optional Override]  Radius of happiness effect")]
     public float radius;
     [Range(-25, 25)]
-    [Tooltip("Amount of happiness added per foliage tick to surrounding buildings")]
+    [Tooltip("Amount of happiness added per tick to surrounding buildings")]
     public int affectAmount;
     [Tooltip("Type of effect \n[industrialReduce/ foliage]")]
     public string affectType;

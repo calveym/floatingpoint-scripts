@@ -21,7 +21,7 @@ public class CarAi : MonoBehaviour {
         oldPosition = transform.position;
         firstTick = true;
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "CheckCar");
+        Autelia.Coroutines.CoroutineController.StartCoroutine(this, "CheckCar");
     }
 
 	// Update is called once per frame

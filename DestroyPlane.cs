@@ -8,7 +8,7 @@ public class DestroyPlane : MonoBehaviour {
     ItemManager itemManager;
 
     private void Start()
-    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+    {
         itemManager = GameObject.Find("Managers").GetComponent<ItemManager>();
     }
 
@@ -38,6 +38,7 @@ public class DestroyPlane : MonoBehaviour {
         {
             itemManager.removeFoliage(other.gameObject);
         }
+        Debug.Log("Destroying " + tag);
 		Destroy(other.gameObject);
 	}
 }

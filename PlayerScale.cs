@@ -16,7 +16,7 @@ public class PlayerScale : MonoBehaviour {
     TrackpadFlight trackpadFlight;
 
 	void Start()
-    {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+    {
         GameObject.Find("LeftController").GetComponent<VRTK_ControllerEvents>().ButtonOnePressed += new ControllerInteractionEventHandler(DoButtonOnePressed);
         rb = cameraRig.GetComponent<Rigidbody>();
         isCameraSmall = false;

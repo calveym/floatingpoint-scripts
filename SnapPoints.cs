@@ -10,7 +10,8 @@ public class SnapPoints : MonoBehaviour {
 
 	public Bounds bounds;
 
-	void Start () {if (Serializer.IsLoading)	return;
+	void Start () {
+        if (Serializer.IsLoading)	return;
 		originalPoints = GetCurrentPoints ();
         if(gameObject.tag == "road")
     		bounds = GetComponent<BoxCollider> ().bounds;

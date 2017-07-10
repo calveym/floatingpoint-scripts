@@ -21,7 +21,7 @@ public class TrackpadFlight : MonoBehaviour {
     int forward;
 
     // Use this for initialization
-    void Start() {if (Serializer.IsLoading)	return;
+    void Start() {
         speedMultiplier = 2;
         rig = GameObject.Find("[CameraRig]");
         rb = rig.GetComponent<Rigidbody>();

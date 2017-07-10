@@ -1,10 +1,16 @@
 fileFormatVersion: 2
 guid: fbd1e2ee0c6dbb94c8ceac4848903f84
-timeCreated: 1483717500
-licenseType: Free
+timeCreated: 1499617587
+licenseType: Pro
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - itemManager: {instanceID: 0}
+  - populationManager: {instanceID: 0}
+  - happinessManager: {instanceID: 0}
+  - audioManager: {instanceID: 0}
+  - purchaseSound: {instanceID: 0}
+  - failSound: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

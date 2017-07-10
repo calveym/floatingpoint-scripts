@@ -41,8 +41,11 @@ public class IndustrialTracker : ItemTracker {
         productionMulti = 1;
     }
 
-    new void Start()
+    protected override void Start()
     {
+        base.Start();
+        markerPrefab = GameObject.Find("MarkerPrefab");
+
         if (Serializer.IsDeserializing)
         {
             RemoveEcoTick();
@@ -50,8 +53,6 @@ public class IndustrialTracker : ItemTracker {
             components = new List<IndustrialComponent>();
             return;
         }
-        base.Start();
-        markerPrefab = GameObject.Find("MarkerPrefab");
     }
 
     void Update()

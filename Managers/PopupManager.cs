@@ -18,7 +18,7 @@ public class PopupManager : MonoBehaviour {
     bool running = false;
 
     private void Awake()
-    {if (Serializer.IsLoading)	return;
+    {
         instance = this;
         queuedPopups = new List<string>();
     }

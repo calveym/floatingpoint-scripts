@@ -15,8 +15,6 @@ public class NightTime : MonoBehaviour {
 	{
         if (instance == null)
             instance = this;
-        if (instance != this)
-            Destroy(this);
 
 		tod = ReferenceManager.instance.tod;
 		intensity = 0.75f;

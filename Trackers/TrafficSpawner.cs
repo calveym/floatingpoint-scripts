@@ -22,7 +22,7 @@ public class TrafficSpawner : MonoBehaviour {
     public GameObject testObject;
 
     private void Awake()
-    {if (Serializer.IsLoading)	return;
+    {
         if (instance != this)
             instance = this;
         cars = new List<GameObject>();
@@ -36,8 +36,7 @@ public class TrafficSpawner : MonoBehaviour {
 
     private void Start()
     {
-
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "CheckNumCars");
+        StartCoroutine("CheckNumCars");
     }
 
     void SpawnCars(int maxCars, List<GameObject> spawnLocations)

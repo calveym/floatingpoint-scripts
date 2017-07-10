@@ -23,14 +23,11 @@ public abstract class BuildingBase : PersonContainer
     public int baseCost;
     [Tooltip("Building name, as shown to player on tooltips")]
     public string buildingName;
-    [Tooltip("Maximum user capacity")]
-    new public int capacity;
 
     [Space(10)]
     [Header("Generated Attributes")]
     [Space(5)]
     public float income;
-    new public int users;
     public int idleUsers;
     public bool snapped;
     public float landValue = 10;

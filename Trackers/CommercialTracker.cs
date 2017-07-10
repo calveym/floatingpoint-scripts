@@ -19,14 +19,15 @@ public class CommercialTracker : ItemTracker {
     List<ResidentialTracker> employees;
 
 
-    new void Start()
+    protected override void Start()
     {
+        base.Start();
+
         if (Serializer.IsLoading)
         {
             RemoveEcoTick();
             return;
         }
-        base.Start();
         employees = new List<ResidentialTracker>();
     }
 

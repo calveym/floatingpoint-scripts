@@ -10,19 +10,24 @@ public class ResidentialTracker : ItemTracker {
 
     public int employmentHappiness;
 
-    float foliage;
     bool checkEnable;
 
-    new void Start()
+    protected override void Start()
     {
+        base.Start();
+        Debug.Log("Start called");
         if (Serializer.IsDeserializing)
         {
             RemoveEcoTick();
             return;
         }
-        base.Start();
-        foliage = 0;
         //StartCoroutine("CheckEnable");
+    }
+
+    public void OnDestroy()
+    {
+        Debug.Log("Residential Tracker: " + gameObject.name + " is getting destroyed");
+        Debug.Log("Instance ID: " + GetInstanceID());
     }
 
     void Update()
@@ -80,7 +85,7 @@ public class ResidentialTracker : ItemTracker {
         }
         else
         {
-            Debug.Log("ERROR: user mismatch, aborting");
+            UnityEngine.Debug.Log("ERROR: user mismatch, aborting");
             populationManager.QueueUpdates();
         }
     }                     
@@ -140,6 +145,8 @@ public class ResidentialTracker : ItemTracker {
 
     GameObject FindPreferredEmployment()
     {
+        if (populationManager == null)
+            populationManager = ReferenceManager.instance.populationManager;
         List<IndustrialTracker> firstFiveIndustrial = populationManager.emptyIndustrial.Take(5).ToList();
         List<CommercialTracker> firstFiveCommercial = populationManager.emptyCommercial.Take(5).ToList();
         List<GameObject> allPotentialLocations = new List<GameObject>();

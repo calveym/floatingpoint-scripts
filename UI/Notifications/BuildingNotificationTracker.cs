@@ -23,7 +23,7 @@ public class BuildingNotificationTracker : MonoBehaviour {
     GameObject notificationPrefab;
 
 	// Use this for initialization
-	void Start () {if (Serializer.IsDeserializing)	return;if (Serializer.IsLoading)	return;
+	void Start () {
         manager = ReferenceManager.instance.buildingNotificationManager;
         BuildingNotificationManager.notificationUpdater += CheckConditions;
         tracker = GetComponent<ItemTracker>();

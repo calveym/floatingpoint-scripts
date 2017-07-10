@@ -9,7 +9,7 @@ public class TimeManager : MonoBehaviour {
     private void Start()
     {
 
-Autelia.Coroutines.CoroutineController.StartCoroutine(this, "CheckLamp");
+        Autelia.Coroutines.CoroutineController.StartCoroutine(this, "CheckLamp");
     }
 
     IEnumerator CheckLamp()

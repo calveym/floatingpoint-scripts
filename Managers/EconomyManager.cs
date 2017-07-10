@@ -21,15 +21,11 @@ public class EconomyManager : MonoBehaviour {
     [Range(0.0001f, 1)]
     [Tooltip("Multiplier for income to get per tick income")]
     public float incomeMultiplier = 0.1f;
-    public float balance = 0;
-    [SerializeField]
-    int numRoads;
+    public float balance = 10000;
     [SerializeField]
     float income; // Net income, after expenses
     [SerializeField]
     int population;
-    [SerializeField]
-    float happiness;
 
     [SerializeField]
     float goodsProduction;
@@ -39,7 +35,6 @@ public class EconomyManager : MonoBehaviour {
     bool transferQueued;
     float export;
     float import;
-    float netGoodsTransfered;
 
     [Header("Goods")]
     [Tooltip("Total goods available")]
@@ -103,15 +98,11 @@ public class EconomyManager : MonoBehaviour {
     public AudioClip purchaseSound;
     public AudioClip failSound;
 
-    bool ticking = false;
-    bool isDeserializing = false;
-
     int tick; // used to run once per second
 
     void Awake()
     // Finds instances of all objects and sets up values
     {
-        if (Serializer.IsLoading) return;
         residentialTaxRate = 15;
         commercialTaxRate = 15;
         industrialTaxRate = 15;
@@ -130,17 +121,18 @@ public class EconomyManager : MonoBehaviour {
 
         if (Serializer.IsLoading)
         {
+            Debug.Log("Setting up ecoTick");
             ResetEcoTick();
-            ResetItems();
         }
     }
 
     void Update()
     {
+        if (tick == 0)
+            Debug.Log("Starting eco update");
         CheckReferences();
         if (keepUpdating && tick % 90 == 0 && tick >= 5)
             {
-                ticking = true;
                 if (ecoTick != null)
                 {
                     ecoTick();
@@ -175,16 +167,10 @@ public class EconomyManager : MonoBehaviour {
             populationManager = ReferenceManager.instance.populationManager;
     }
 
-    void ResetItems()
-    {
-        itemManager.ResetItems();
-    }
-
     void ResetEcoTick()
     {
         ecoTick = null;
         itemManager.AddTrackersToEcoTick();
-        Debug.Log("Setting up ecoTick");
         ecoTick += populationManager.PopulationUpdate;
     }
 
@@ -347,7 +333,7 @@ public class EconomyManager : MonoBehaviour {
     float CalculateRoadExpenses()
     // Calculates how much is spent on road maintenance
     {
-        return numRoads / 5;
+        return ReferenceManager.instance.roadGenerator.numRoads / 5;
     }
 
     public void MakePurchase(float amount)
@@ -390,7 +376,7 @@ public class EconomyManager : MonoBehaviour {
 
     public float GetHappiness()
     {
-        return happiness;
+        return ReferenceManager.instance.happinessManager.happiness;
     }
 
     public string FancyIncome()

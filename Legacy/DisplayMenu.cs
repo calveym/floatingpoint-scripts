@@ -30,13 +30,13 @@ public class DisplayMenu : MonoBehaviour
     private void Start()
     // Sets listeners and deactivates all panels at start
     {
-        SetTier(3);
-        events = GetComponent<VRTK_ControllerEvents>();
-        GetComponent<VRTK_ControllerEvents>().TouchpadTouchStart += new ControllerInteractionEventHandler(DoTouchpadTouchStart);
-        GetComponent<VRTK_ControllerEvents>().TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
-        itemGenerator = GameObject.Find("LeftController").GetComponent<ItemGenerator>();
-        head = GameObject.Find("Camera(head)");
-        DeactivateAll();
+        //SetTier(3);
+       // events = GetComponent<VRTK_ControllerEvents>();
+        //GetComponent<VRTK_ControllerEvents>().TouchpadTouchStart += new ControllerInteractionEventHandler(DoTouchpadTouchStart);
+        //GetComponent<VRTK_ControllerEvents>().TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
+        //itemGenerator = GameObject.Find("LeftController").GetComponent<ItemGenerator>();
+        //head = GameObject.Find("Camera(head)");
+        //DeactivateAll();
     }
 
     void DoTouchpadTouchStart(object sender, ControllerInteractionEventArgs e)
