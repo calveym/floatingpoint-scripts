@@ -10,8 +10,6 @@ namespace Autelia.Serialization.Mementos.Unity
     public sealed class ResidentialTrackerMemento : BehaviourMemento<ResidentialTracker, ResidentialTrackerMemento>
     {
 
-        bool firstPass = true;
-
         string _buildingName;
         float _buyCost;
         float _baseCost;
@@ -60,8 +58,6 @@ namespace Autelia.Serialization.Mementos.Unity
             r.cumulativeUnhappiness = _cumulativeUnhappiness;
             r.usable = _usable;
             r.validPosition = _validPosition;
-            Debug.Log("Deserialized residential instance ID: " + r.GetInstanceID());
-            Debug.Log("Deserialized residential parent: " + r.gameObject.transform.parent);
         }
 
         public static implicit operator ResidentialTrackerMemento(ResidentialTracker residentialTracker)
