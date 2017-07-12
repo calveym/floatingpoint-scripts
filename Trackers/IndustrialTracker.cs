@@ -183,6 +183,7 @@ public class IndustrialTracker : ItemTracker {
     public void UpdateSecond()
     // Updates values once per second, economic tick
     {
+        if (Serializer.IsLoading) return;
         if (!Stationary()) return;
         updateStarted = true;
         if (!usable || !validPosition)

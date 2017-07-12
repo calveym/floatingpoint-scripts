@@ -119,6 +119,8 @@ public class ItemTracker : MonoBehaviour {
     // Multipliers from components
     public float productionMulti;
 
+    Vector3 oldPosition; // Used to detect movement;
+
 
     private void Awake()
     {
@@ -393,9 +395,11 @@ public class ItemTracker : MonoBehaviour {
 
     protected bool Stationary()
     {
-        if (Serializer.IsLoading) return false;
-        if (transform.rotation == Quaternion.Euler(0f, 0f, 0f))
-            return true;
-        else return false;
+        if (oldPosition != transform.position)
+        {
+            oldPosition = transform.position;
+            return false;
+        }
+        else return true;
     }
 }

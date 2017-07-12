@@ -212,6 +212,7 @@ public class ResidentialTracker : ItemTracker {
     public void UpdateSecond()
     // Updates values once per second
     {
+        if (Serializer.IsLoading) return;
         if (!Stationary()) return;
         updateStarted = true;
         if(!usable || !validPosition)

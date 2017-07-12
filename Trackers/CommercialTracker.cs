@@ -34,6 +34,7 @@ public class CommercialTracker : ItemTracker {
     {
         if (!updateStarted && usable && validPosition)
         {
+            Debug.Log("Adding eco tick");
             AddEcoTick();
         }
         else if (updateStarted && !usable && validPosition)
@@ -142,7 +143,9 @@ public class CommercialTracker : ItemTracker {
     public void UpdateSecond()
     // Updates values once per second
     {
+        if (Serializer.IsLoading) return;
         if (!Stationary()) return;
+        Debug.Log("Goin thru");
         updateStarted = true;
         if (!usable || !validPosition)
         {
