@@ -15,6 +15,7 @@ namespace Autelia.Serialization.Mementos.Unity
         int _baseCost;
         int _buyCost;
         bool _usable;
+        IndustrialTracker _linkedTracker;
         MaterialMemento _industrialMaterial;
 
         protected override bool Serialize(IndustrialComponent originator)
@@ -26,6 +27,7 @@ namespace Autelia.Serialization.Mementos.Unity
             _buyCost = originator.buyCost;
             _usable = originator.usable;
             _industrialMaterial = originator.industrialMaterial;
+            _linkedTracker = originator.linkedTracker;
 
             return true;
         }
