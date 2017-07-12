@@ -93,15 +93,8 @@ public class ReferenceManager : MonoBehaviour {
     void EnableModels()
     {
         Debug.Log("Enabling");
-        leftController.transform.parent.Find("Model").gameObject.SetActive(true);
-        rightController.transform.parent.Find("Model").gameObject.SetActive(true);
-        GameObject model = leftController.transform.parent.Find("Model").gameObject;
-        Component[] all = model.GetComponents(typeof(Component));
-        for (int i = 0; i < model.gameObject.transform.childCount; i++)
-        {
-            GameObject Go = model.gameObject.transform.GetChild(i).gameObject;
-            Component[] temp = Go.GetComponents(typeof(Component));
-        }
+        leftController.transform.parent.Find("Model").GetComponent<SteamVR_RenderModel>().ResetModels();
+        rightController.transform.parent.Find("Model").GetComponent<SteamVR_RenderModel>().ResetModels();
     }
 
     private void Update()
