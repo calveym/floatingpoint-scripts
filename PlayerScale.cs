@@ -6,6 +6,9 @@ using Autelia.Serialization;
 
 public class PlayerScale : MonoBehaviour {
 
+    public delegate void Action();
+    public static Action OnSizeChange;
+
 	public GameObject cameraRig;
     Rigidbody rb;
 	public bool isCameraSmall;
@@ -25,6 +28,8 @@ public class PlayerScale : MonoBehaviour {
     
     void DoButtonOnePressed(object sender, ControllerInteractionEventArgs e)
     {
+        if (OnSizeChange != null)
+            OnSizeChange();
     	if (isCameraSmall)  // Going big
     	{
             GoBig();

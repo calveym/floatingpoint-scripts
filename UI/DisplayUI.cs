@@ -121,6 +121,9 @@ public class DisplayUI : MonoBehaviour {
         events.TouchpadPressed += DoTouchpadPress;
         events.TouchpadTouchEnd += DoTouchpadRelease;
         HideUI();
+
+        Serializer.OnSerializationStart += ForceCloseUI;
+        PlayerScale.OnSizeChange += ForceCloseUI;
     }
 
     public int GetSelection()
@@ -212,7 +215,6 @@ public class DisplayUI : MonoBehaviour {
                     // Hide UI
                 {
                     thumbTracker.ForceStopTrackingAngle();
-                    menuSelection = 0;
                     showingGlobalStats = false;
                     showBuildings = false;
                     firstTouch = true;
@@ -221,6 +223,17 @@ public class DisplayUI : MonoBehaviour {
                 }
             }
         }
+    }
+
+    void ForceCloseUI()
+    {
+        thumbTracker.ForceStopTrackingAngle();
+        menuSelection = 0;
+        showingGlobalStats = false;
+        showBuildings = false;
+        firstTouch = true;
+        displaying = false;
+        HideUI();
     }
 
     bool TopButton()

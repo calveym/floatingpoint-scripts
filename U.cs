@@ -54,6 +54,7 @@ public class U : MonoBehaviour {
         {
             foreach (Collider hitcol in hitColliders)
             {
+                if (hitcol.gameObject.layer != 8) continue;
                 returnObjects.Add(hitcol.gameObject);
             }
         }

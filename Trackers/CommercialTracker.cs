@@ -22,13 +22,12 @@ public class CommercialTracker : ItemTracker {
     protected override void Start()
     {
         base.Start();
+        employees = new List<ResidentialTracker>();
 
         if (Serializer.IsLoading)
         {
             RemoveEcoTick();
-            return;
         }
-        employees = new List<ResidentialTracker>();
     }
 
     void Update()
@@ -143,6 +142,7 @@ public class CommercialTracker : ItemTracker {
     public void UpdateSecond()
     // Updates values once per second
     {
+        if (!Stationary()) return;
         updateStarted = true;
         if (!usable || !validPosition)
         {

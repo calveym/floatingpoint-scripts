@@ -14,7 +14,7 @@ public class Police : ServiceBase
 
 
     protected void Awake()
-    {if (Serializer.IsLoading)	return;
+    {
         police = new List<PoliceTracker>();
     }
 

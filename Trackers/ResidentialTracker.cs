@@ -18,7 +18,6 @@ public class ResidentialTracker : ItemTracker {
         if (Serializer.IsDeserializing)
         {
             RemoveEcoTick();
-            return;
         }
         //StartCoroutine("CheckEnable");
     }
@@ -213,6 +212,7 @@ public class ResidentialTracker : ItemTracker {
     public void UpdateSecond()
     // Updates values once per second
     {
+        if (!Stationary()) return;
         updateStarted = true;
         if(!usable || !validPosition)
         {

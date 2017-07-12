@@ -27,6 +27,10 @@ namespace Autelia.Serialization.Mementos.Unity
         protected override void Deserialize(ref PopulationManager r)
         {
             base.Deserialize(ref r);
+
+            r.population = _population;
+            r.unallocatedPopulation = _unallocatedPopulation;
+            r.unemployedPopulation = _unemployedPopulation;
         }
 
         public static implicit operator PopulationManagerMemento(PopulationManager populationManager)

@@ -15,8 +15,6 @@ namespace Autelia.Serialization.Mementos.Unity
         float _baseCost;
         string _type;
         int _capacity;
-        int _users;
-        int _unemployed;
         bool _grabbableObject;
         float _longtermHappiness;
         int _cumulativeUnhappiness;
@@ -25,7 +23,6 @@ namespace Autelia.Serialization.Mementos.Unity
 
         // Ind vars
         //List<ResidentialTracker> _employees;
-        bool _checkEnable;
         float _sellPrice;
 
         protected override bool Serialize(IndustrialTracker originator)
@@ -37,16 +34,12 @@ namespace Autelia.Serialization.Mementos.Unity
             _baseCost = originator.baseCost;
             _type = originator.type;
             _capacity = originator.capacity;
-            _users = originator.users;
-            _unemployed = originator.unemployedPopulation;
             _grabbableObject = originator.grabbableObject;
             _longtermHappiness = originator.longtermHappiness;
             _cumulativeUnhappiness = originator.cumulativeUnhappiness;
             _usable = originator.usable;
             _validPosition = originator.validPosition;
 
-            // _employees = originator.employees;
-            _checkEnable = originator.checkEnable;
             _sellPrice = originator.sellPrice;
 
             return true;
@@ -60,16 +53,14 @@ namespace Autelia.Serialization.Mementos.Unity
             r.baseCost = _baseCost;
             r.type = _type;
             r.capacity = _capacity;
-            r.users = _users;
-            r.unemployedPopulation = _unemployed;
+            r.users = 0;
             r.grabbableObject = _grabbableObject;
             r.longtermHappiness = _longtermHappiness;
             r.cumulativeUnhappiness = _cumulativeUnhappiness;
             r.usable = _usable;
             r.validPosition = _validPosition;
 
-            //r.employees = _employees;
-            r.checkEnable = _checkEnable;
+            r.checkEnable = true;
             r.sellPrice = _sellPrice;
         }
 

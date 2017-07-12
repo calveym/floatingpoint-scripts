@@ -14,7 +14,7 @@ public class Health : ServiceBase
 
 
     protected void Awake()
-    {if (Serializer.IsLoading)	return;
+    {
         health = new List<HealthTracker>();
     }
 

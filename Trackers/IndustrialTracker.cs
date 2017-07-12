@@ -15,7 +15,7 @@ public class IndustrialTracker : ItemTracker {
     GameObject markerPrefab;
     Marker marker;
     List<IndustrialComponent> components;
-    public List<ResidentialTracker> employees;
+    List<ResidentialTracker> employees;
 
     public float productionHappiness; // Happiness from reaching sales targets
 
@@ -32,7 +32,6 @@ public class IndustrialTracker : ItemTracker {
         components = new List<IndustrialComponent>();
         productionMulti = 1;
 
-        if (Serializer.IsLoading) return;
         employees = new List<ResidentialTracker>();
         goodsSold = 0;
     }
@@ -184,6 +183,7 @@ public class IndustrialTracker : ItemTracker {
     public void UpdateSecond()
     // Updates values once per second, economic tick
     {
+        if (!Stationary()) return;
         updateStarted = true;
         if (!usable || !validPosition)
         {

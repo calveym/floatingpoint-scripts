@@ -84,8 +84,24 @@ public class ReferenceManager : MonoBehaviour {
     {
         rightController = GameObject.Find("RightController");
         leftController = GameObject.Find("LeftController");
+        Invoke("EnableModels", 1f);
+
         leftEvents = leftController.GetComponent<VRTK_ControllerEvents>();
         rightEvents = rightController.GetComponent<VRTK_ControllerEvents>();
+    }
+
+    void EnableModels()
+    {
+        Debug.Log("Enabling");
+        leftController.transform.parent.Find("Model").gameObject.SetActive(true);
+        rightController.transform.parent.Find("Model").gameObject.SetActive(true);
+        GameObject model = leftController.transform.parent.Find("Model").gameObject;
+        Component[] all = model.GetComponents(typeof(Component));
+        for (int i = 0; i < model.gameObject.transform.childCount; i++)
+        {
+            GameObject Go = model.gameObject.transform.GetChild(i).gameObject;
+            Component[] temp = Go.GetComponents(typeof(Component));
+        }
     }
 
     private void Update()

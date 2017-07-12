@@ -27,8 +27,7 @@ namespace Autelia.Serialization.Mementos.Unity
             base.Deserialize(ref r);
             r.balance = _balance;
             r.goods = _goods;
-
-            Debug.Log("Restoring previous balance: " + r.balance);
+            
         }
 
         public static implicit operator EconomyManagerMemento(EconomyManager economyManager)

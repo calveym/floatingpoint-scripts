@@ -42,7 +42,7 @@ namespace CloudCity
 
             checkStop = true;
 
-            Autelia.Coroutines.CoroutineController.StartCoroutine(WaitForStop());
+            StartCoroutine(WaitForStop());
         }
 
         protected override void Ungrab()
@@ -51,7 +51,7 @@ namespace CloudCity
 
             checkStop = true;
 
-            Autelia.Coroutines.CoroutineController.StartCoroutine(WaitForStop());
+            StartCoroutine(WaitForStop());
         }
 
         protected override void SetSphereMaterial()
@@ -91,11 +91,12 @@ namespace CloudCity
             else return;
             stopCheck += UnlinkIfMoving;
 
-            Autelia.Coroutines.CoroutineController.StartCoroutine(StoppedCheck());
+            StartCoroutine(StoppedCheck());
         }
 
         bool TryLink()
         {
+            Debug.Log(U.FindNearestBuildings(transform.position, radius).Count);
             List<IndustrialTracker> surroundingIndustrials = U.ReturnIndustrialTrackers(U.FindNearestBuildings(transform.position, radius));
             Debug.Log(surroundingIndustrials.Count + "Industrials found");
             if (surroundingIndustrials.Count >= 1)
@@ -114,7 +115,7 @@ namespace CloudCity
 
             checkStop = true;
 
-            Autelia.Coroutines.CoroutineController.StartCoroutine(WaitForStop());
+            StartCoroutine(WaitForStop());
         }
 
         IEnumerator WaitForStop()
@@ -125,7 +126,6 @@ namespace CloudCity
             {
                 if(CheckStopped())
                 {
-                    Debug.Log("Getting here");
                     if (TryLink())
                         checkStop = false;
                 }

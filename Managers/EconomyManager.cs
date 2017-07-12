@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Autelia.Serialization;
 
-[System.Serializable]
+
 public class EconomyManager : MonoBehaviour {
 
     // Declare other managers

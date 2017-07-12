@@ -14,7 +14,7 @@ public class Power : ServiceBase
 
 
     protected void Awake()
-    {if (Serializer.IsLoading)	return;
+    {
         power = new List<PowerTracker>();
     }
 

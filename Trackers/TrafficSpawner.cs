@@ -9,7 +9,7 @@ public class TrafficSpawner : MonoBehaviour {
     public static TrafficSpawner instance;  // singleton instance
 
     List<GameObject> cars;  // List of all cars in scene
-    bool spawnCars;  // Controls car spawning
+    bool spawnCars = true, keepSpawning = true;  // Controls car spawning
 
     [Tooltip("Alternate spawn check location")]
     public GameObject target;
@@ -26,7 +26,6 @@ public class TrafficSpawner : MonoBehaviour {
         if (instance != this)
             instance = this;
         cars = new List<GameObject>();
-        spawnCars = true;
 
         carList = new List<GameObject>();
         carList.Add(carA);
@@ -37,6 +36,13 @@ public class TrafficSpawner : MonoBehaviour {
     private void Start()
     {
         StartCoroutine("CheckNumCars");
+        Serializer.OnSerializationStart += ClearCars;
+    }
+
+    void ClearCars()
+    {
+        foreach (GameObject car in cars)
+            DestroyImmediate(car);
     }
 
     void SpawnCars(int maxCars, List<GameObject> spawnLocations)
@@ -120,6 +126,7 @@ public class TrafficSpawner : MonoBehaviour {
     {
         while (spawnCars)
         {
+            if (!keepSpawning) yield return new WaitForSeconds(5f);
 			int numRoads = ReferenceManager.instance.roadGenerator.roads.Count;
 			int maxCars = Mathf.RoundToInt (numRoads / 6);
             if(maxCars > ReferenceManager.instance.populationManager.totalPopulation)

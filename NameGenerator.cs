@@ -9,7 +9,7 @@ public class NameGenerator : MonoBehaviour {
     List<string> lastNames;
 
     void Awake()
-    {if (Serializer.IsLoading)	return;
+    {
         firstNames = new List<string>();
         lastNames = new List<string>();
         SetupNames();

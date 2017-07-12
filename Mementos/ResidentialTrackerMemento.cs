@@ -16,7 +16,6 @@ namespace Autelia.Serialization.Mementos.Unity
         string _type;
         int _capacity;
         int _users;
-        int _unemployed;
         bool _grabbableObject;
         float _longtermHappiness;
         int _cumulativeUnhappiness;
@@ -33,7 +32,6 @@ namespace Autelia.Serialization.Mementos.Unity
             _type = originator.type;
             _capacity = originator.capacity;
             _users = originator.users;
-            _unemployed = originator.unemployedPopulation;
             _grabbableObject = originator.grabbableObject;
             _longtermHappiness = originator.longtermHappiness;
             _cumulativeUnhappiness = originator.cumulativeUnhappiness;
@@ -52,7 +50,7 @@ namespace Autelia.Serialization.Mementos.Unity
             r.type = _type;
             r.capacity = _capacity;
             r.users = _users;
-            r.unemployedPopulation = _unemployed;
+            r.unemployedPopulation = _users;
             r.grabbableObject = _grabbableObject;
             r.longtermHappiness = _longtermHappiness;
             r.cumulativeUnhappiness = _cumulativeUnhappiness;

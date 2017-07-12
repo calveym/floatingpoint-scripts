@@ -189,6 +189,7 @@ public class ItemTracker : MonoBehaviour {
 
     void UpdateValues()
     {
+        if (Serializer.IsLoading) return;
         if(gameObject.transform)
         {
             surroundingBuildings = U.FindNearestBuildings(gameObject.transform.position, 5f);
@@ -388,5 +389,12 @@ public class ItemTracker : MonoBehaviour {
             else movingOut = false;
             yield return new WaitForSeconds(2f);
         }
+    }
+
+    protected bool Stationary()
+    {
+        if (transform.rotation == Quaternion.Euler(0f, 0f, 0f))
+            return true;
+        else return false;
     }
 }
