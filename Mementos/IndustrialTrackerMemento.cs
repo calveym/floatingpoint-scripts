@@ -22,7 +22,6 @@ namespace Autelia.Serialization.Mementos.Unity
         bool _validPosition;
 
         // Ind vars
-        //List<ResidentialTracker> _employees;
         float _sellPrice;
 
         protected override bool Serialize(IndustrialTracker originator)
