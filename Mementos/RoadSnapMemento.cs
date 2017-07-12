@@ -11,9 +11,9 @@ namespace Autelia.Serialization.Mementos.Unity
     {
 
         MaterialMemento _blockedMaterial;
-        GameObject _snapCube;
+        GameObjectMemento _snapCube;
         bool _manualUse, _manualSnap;
-        GameObject _targetBoxPrefab;
+        GameObjectMemento _targetBoxPrefab;
 
         protected override bool Serialize(RoadSnap originator)
         {
