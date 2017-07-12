@@ -15,7 +15,7 @@ public class IndustrialTracker : ItemTracker {
     GameObject markerPrefab;
     Marker marker;
     List<IndustrialComponent> components;
-    List<ResidentialTracker> employees;
+    public List<ResidentialTracker> employees;
 
     public float productionHappiness; // Happiness from reaching sales targets
 
@@ -23,7 +23,7 @@ public class IndustrialTracker : ItemTracker {
 
     public float sellPrice = 1;  // Base sell price
 
-    bool checkEnable;
+    public bool checkEnable;
 
     void Awake()
     {

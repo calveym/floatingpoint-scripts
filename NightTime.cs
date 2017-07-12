@@ -8,7 +8,6 @@ public class NightTime : MonoBehaviour {
 	TOD_Sky tod;
 	private bool lightsOn = true;
 	public Material mat;
-	Color colour;
 	private float intensity;
 
 	void Start() 

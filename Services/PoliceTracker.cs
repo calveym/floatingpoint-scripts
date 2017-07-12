@@ -19,7 +19,6 @@ namespace CloudCity
 
         protected override void Start()
         {
-            if (Serializer.IsDeserializing) return; if (Serializer.IsLoading) return;
             base.Start();
 
             police = ReferenceManager.instance.police;
