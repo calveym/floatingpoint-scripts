@@ -17,10 +17,6 @@ public class ProgressionManager : MonoBehaviour {
 
     Dictionary<int, int> levelReq; // Requirement for population to level up
 
-    public delegate void LevelUp();
-
-    LevelUp levelUp;
-
     public void Start()
     {
         if(instance == null)
@@ -63,8 +59,6 @@ public class ProgressionManager : MonoBehaviour {
 
     void PerformLevelUp(int newLevel)
     {
-        if (levelUp != null)
-            levelUp();
         AudioManager.instance.PlaySingle(levelUpSound);
         level = newLevel;
         string levelUpString = string.Format("Level up! You are now Level {0} You have unlocked some new buildings!",
