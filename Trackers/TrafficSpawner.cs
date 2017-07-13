@@ -31,6 +31,7 @@ public class TrafficSpawner : MonoBehaviour {
         carList.Add(carA);
         carList.Add(carB);
         carList.Add(carC);
+        keepSpawning = true;
     }
 
     private void Start()
@@ -43,6 +44,7 @@ public class TrafficSpawner : MonoBehaviour {
     {
         foreach (GameObject car in cars)
             DestroyImmediate(car);
+        keepSpawning = false;
     }
 
     void SpawnCars(int maxCars, List<GameObject> spawnLocations)
@@ -126,6 +128,8 @@ public class TrafficSpawner : MonoBehaviour {
     {
         while (spawnCars)
         {
+            if (Serializer.IsSaving || Serializer.IsLoading || Serializer.IsBusy) yield return new WaitForSeconds(2f);
+            Debug.Log("Checking cars");
             if (!keepSpawning) yield return new WaitForSeconds(5f);
 			int numRoads = ReferenceManager.instance.roadGenerator.roads.Count;
 			int maxCars = Mathf.RoundToInt (numRoads / 6);

@@ -10,13 +10,13 @@ namespace Autelia.Serialization.Mementos.Unity
     public sealed class NightTimeMemento : BehaviourMemento<NightTime, NightTimeMemento>
     {
 
-        //MaterialMemento _mat;
+        MaterialMemento _mat;
 
         protected override bool Serialize(NightTime originator)
         {
             base.Serialize(originator);
 
-            //_mat = originator.mat;
+            _mat = originator.mat;
 
             return true;
         }
@@ -25,7 +25,7 @@ namespace Autelia.Serialization.Mementos.Unity
         {
             base.Deserialize(ref r);
 
-            //r.mat = _mat;
+            r.mat = _mat;
         }
 
         public static implicit operator NightTimeMemento(NightTime nightTime)
