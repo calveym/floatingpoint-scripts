@@ -253,12 +253,12 @@ public class EconomyManager : MonoBehaviour {
     // Recalculates income
     {
         float roadExpenses = CalculateRoadExpenses();
-        float residentialIncome = CalculateResidentialIncome();
-        float commercialIncome = CalculateCommercialIncome();
-        float industrialIncome = CalculateIndustrialIncome();
+        float residentialIncome = ItemTracker.totalResidentialIncome;
+        float commercialIncome = ItemTracker.totalCommercialIncome;
+        float industrialIncome = ItemTracker.totalIndustrialIncome;
         serviceExpenses = powerExpenses + educationExpenses + healthExpenses + policeExpenses + fireExpenses;
 
-        float expenses = roadExpenses + CalculateCapacityExpenses() + serviceExpenses;
+        float expenses = roadExpenses + serviceExpenses;
         income = (rawIncome + residentialIncome + commercialIncome + industrialIncome - expenses);
     }
 
@@ -292,16 +292,12 @@ public class EconomyManager : MonoBehaviour {
         productionMultiplier = newProduction;
     }
 
-    float CalculateCapacityExpenses()
-    // Returns all expenses from capacity
-    {
-        return residentialCap + commercialCap + industrialCap;
-    }
-
     float CalculateResidentialIncome()
     // Tax income from all residential properties
     {
-        return ResidentialTracker.totalResidentialIncome * (1 + 0.05f * residentialTaxRate);
+        if (residentialCap == 0)
+            return 0;
+        return ResidentialTracker.totalResidentialIncome;
     }
 
     float CalculateCommercialIncome()
@@ -313,7 +309,7 @@ public class EconomyManager : MonoBehaviour {
         }
         else
         {
-            return CommercialTracker.totalCommercialIncome * (1 + 0.05f * commercialTaxRate);
+            return CommercialTracker.totalCommercialIncome;
         }
     }
 
@@ -351,6 +347,11 @@ public class EconomyManager : MonoBehaviour {
     public void SellGoods(float numGoods)
     {
         goods -= numGoods;
+    }
+
+    public void IssueRefund(float amount)
+    {
+        balance += amount;
     }
 
 	void SetPopulation()

@@ -211,6 +211,7 @@ public class ItemManager : MonoBehaviour {
         temp.RemoveAllUsers();
         populationManager.DeallocateUsers(temp.users, "residential");
         numResidential--;
+        economyManager.IssueRefund(temp.buyCost);
         residential.Remove(removeObject);
     }
 
@@ -223,6 +224,7 @@ public class ItemManager : MonoBehaviour {
         temp.RemoveAllUsers();
         populationManager.DeallocateUsers(temp.users, "commercial");
         numCommercial--;
+        economyManager.IssueRefund(temp.buyCost);
         commercial.Remove(removeObject);
     }
 
@@ -235,6 +237,7 @@ public class ItemManager : MonoBehaviour {
         temp.RemoveAllUsers();
         populationManager.DeallocateUsers(temp.users, "commercial");
         numIndustrial--;
+        economyManager.IssueRefund(temp.buyCost);
         industrial.Remove(removeObject);
     }
 
@@ -243,6 +246,7 @@ public class ItemManager : MonoBehaviour {
     {
         leisureCap -= removeObject.GetComponent<ItemTracker>().GetCapacity();
         numLeisure--;
+        economyManager.IssueRefund(100);
         leisure.Remove(removeObject);
     }
 
@@ -251,6 +255,7 @@ public class ItemManager : MonoBehaviour {
     {
         foliageCap -= (int)removeObject.GetComponent<HappinessAffector>().affectAmount;
         numLeisure--;
+        economyManager.IssueRefund(100);
         leisure.Remove(removeObject);
     }
 

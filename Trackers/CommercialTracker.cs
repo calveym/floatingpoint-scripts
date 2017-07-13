@@ -110,12 +110,13 @@ public class CommercialTracker : ItemTracker {
 
     void SellGoods()
     {
-        goodsSold = visitors;
-        if(goodsSold > economyManager.goods)
-        {
-            goodsSold = economyManager.goods;
-        }
-        economyManager.goods -= goodsSold;
+        goodsSold = Random.Range(0, 10) * visitors;
+          /*if(goodsSold > economyManager.goods)
+          {
+              goodsSold = economyManager.goods;
+          }
+          */
+               economyManager.goods -= goodsSold;
     }
 
     public void RemoveAllUsers()
@@ -145,7 +146,6 @@ public class CommercialTracker : ItemTracker {
     {
         if (Serializer.IsLoading) return;
         if (!Stationary()) return;
-        Debug.Log("Goin thru");
         updateStarted = true;
         if (!usable || !validPosition)
         {
@@ -159,7 +159,7 @@ public class CommercialTracker : ItemTracker {
         UpdateVisitors();
         SellGoods();
         income = (goodsSold * (1 + (landValue * 0.01f)) * (longtermHappiness / 50)) * ReferenceManager.instance.commercialIncomeMultiplier - baseCost + users;
-        totalCommercialIncome += income;
+        totalCommercialIncome += income * 10; // the jg multipier
     }
 
     void UpdateHappiness()

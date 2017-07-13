@@ -130,6 +130,7 @@ public class ItemTracker : MonoBehaviour {
     protected virtual void Start()
     // Sets start variables
     {
+        if (buyCost == 0) buyCost = baseCost * 500;
         happinessManager = GameObject.Find("Managers").GetComponent<HappinessManager>();
         populationManager = GameObject.Find("Managers").GetComponent<PopulationManager>();
         economyManager = GameObject.Find("Managers").GetComponent<EconomyManager>();

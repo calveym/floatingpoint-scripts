@@ -18,8 +18,8 @@ public class NightTime : MonoBehaviour {
 		tod = ReferenceManager.instance.tod;
 		intensity = 0.75f;
 
-        Autelia.Serialization.Serializer.OnDeserializationStart -= StopAll;
-        Autelia.Serialization.Serializer.OnDeserializationStart += StopAll;
+        Autelia.Serialization.Serializer.OnSerializationStart -= StopAll;
+        Autelia.Serialization.Serializer.OnSerializationStart += StopAll;
 
         Autelia.Coroutines.CoroutineController.StartCoroutine(this, "LightUpBuildings");
 	}
